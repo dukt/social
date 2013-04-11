@@ -52,7 +52,7 @@
             {% if (service.token is defined and service.token|length == 0) or service.token is not defined %}
             <input class="btn submit" type="submit" value="{{ 'Save'|t }}">
             {% elseif service.id is defined %}
-                <a class="btn" href="{{actionUrl('campaigns/settings/resetServiceToken', {id:service.id})}}">Reset Token</a>
+                <a class="btn" href="{{actionUrl('connect/settings/resetServiceToken', {id:service.id})}}">Reset Token</a>
             {% endif %}
         </div>
 

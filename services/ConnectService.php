@@ -207,21 +207,29 @@ class ConnectService extends BaseApplicationComponent
 
     public function getProviders()
     {
-        $directory = CRAFT_PLUGINS_PATH.'campaigns/vendor/chrisnharvey/oauth/src/OAuth/Provider/';
+        $directory = CRAFT_PLUGINS_PATH.'connect/libraries/Dukt/Connect/';
 
         $result = array();
 
         $finder = new Finder();
 
-        $files = $finder->files()->depth(0)->in($directory);
+        $files = $finder->directories()->depth(0)->in($directory);
 
         foreach($files as $file)
         {
-            $filepath = $file->getRelativePathName();
+            $class = $file->getRelativePathName();
 
-            $class = substr($filepath, 0, -4);
+            //$class = substr($class, 0, -4);
 
-            $result[$class] = $class;
+            switch($class)
+            {
+                case "Common":
+
+                break;
+
+                default:
+                $result[$class] = $class;
+            }
         }
 
         return $result;
@@ -249,11 +257,11 @@ class ConnectService extends BaseApplicationComponent
         return $this->serviceRecord->deleteByPk($id);
     }
 
-    public function resetServiceToken($id)
+    public function resetServiceToken($providerClass)
     {
-        $serviceId = craft()->request->getParam('id');
+        $providerClass = craft()->request->getParam('providerClass');
 
-        $record = $this->serviceRecord->findByPk($serviceId);
+        $record = Connect_ServiceRecord::model()->find('providerClass=:providerClass', array(':providerClass' => $providerClass));
 
         if($record)
         {

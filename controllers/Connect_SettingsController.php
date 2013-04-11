@@ -38,22 +38,22 @@ class Connect_SettingsController extends BaseController
     {
         $id = craft()->request->getRequiredParam('id');
 
-        craft()->campaigns->deleteServiceById($id);
+        craft()->connect->deleteServiceById($id);
 
         craft()->userSession->setNotice(Craft::t('Service deleted.'));
 
-        $this->redirect('campaigns/settings');
+        $this->redirect('connect/settings');
     }
 
     public function actionResetServiceToken()
     {
-        $id = craft()->request->getRequiredParam('id');
+        $providerClass = craft()->request->getRequiredParam('providerClass');
 
-        craft()->campaigns->resetServiceToken($id);
+        craft()->connect->resetServiceToken($providerClass);
 
         craft()->userSession->setNotice(Craft::t('Token Reset.'));
 
-        $redirect = UrlHelper::getUrl('campaigns/settings/services/'.$id);
+        $redirect = UrlHelper::getUrl('connect/settings/'.$providerClass);
 
         $this->redirect($redirect);
 
@@ -61,6 +61,6 @@ class Connect_SettingsController extends BaseController
 
     public function actionServiceCallback()
     {
-        craft()->campaigns->connectService();
+        craft()->connect->connectService();
     }
 }
