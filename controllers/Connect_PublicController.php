@@ -17,9 +17,28 @@ class Connect_PublicController extends BaseController
     {
         $token = craft()->httpSession->get('connectToken');
 
-        var_dump($token);
+        $providerClass = craft()->request->getParam('provider');
 
-        die();
+        $user = false; // would be set with a user object
+
+        // Save the necessary info to the identity cookie.
+        
+        $seconds = 3600;
+        $sessionToken = StringHelper::UUID();
+        $hashedToken = craft()->security->hashString($sessionToken);
+        $uid = craft()->users->handleSuccessfulLogin($user, $hashedToken['hash']);
+        $userAgent = craft()->request->userAgent;
+
+        $data = array(
+            $this->getName(),
+            $sessionToken,
+            $uid,
+            $seconds,
+            $userAgent,
+            $this->saveIdentityStates(),
+        );
+
+        $this->saveCookie('', $data, $seconds);
     }
 
     public function actionAuthenticate()
