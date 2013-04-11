@@ -1,0 +1,25 @@
+{% extends "_layouts/cp" %}
+{% set centered = true %}
+
+{% set title = "Connect"|t %}
+
+
+{% set content %}
+
+    <table id="fields" class="data collapsible">
+        <thead>
+            <th scope="col">{{ "Name"|t }}</th>
+            <th scope="col">{{ "Settings"|t }}</th>
+        </thead>
+        <tbody>
+            {% for provider in craft.connect.getProviders() %}
+
+                <tr>
+                    <td>{{provider}}</td>
+                    <td><a href="{{ url('connect/settings/'~provider) }}">Settings</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endset %}
