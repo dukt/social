@@ -9,13 +9,13 @@ class Connect_SettingsController extends BaseController
     public function actionSaveService()
     {
         $class = craft()->request->getSegment(3);
-        
+
         $model = new Connect_ServiceModel();
 
 
 
         $attributes = craft()->request->getPost('service');
-        
+
         $attributes['providerClass'] = $class;
 
         $model->setAttributes($attributes);
@@ -25,7 +25,8 @@ class Connect_SettingsController extends BaseController
 
             craft()->userSession->setNotice(Craft::t('Service saved.'));
 
-            $this->redirect('connect');
+            $redirect = craft()->request->getPost('redirect');
+            $this->redirect($redirect);
         } else {
 
             craft()->userSession->setError(Craft::t("Couldn't save service."));

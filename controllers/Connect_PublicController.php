@@ -3,42 +3,68 @@
 namespace Craft;
 
 require(CRAFT_PLUGINS_PATH.'connect/vendor/autoload.php');
+require(CRAFT_PLUGINS_PATH."connect/etc/users/TokenIdentity.php");
 
 class Connect_PublicController extends BaseController
 {
     protected $allowAnonymous = true;
 
-    public function actionNow()
-    {
-        die('now');
-    }
 
     public function actionLogin()
     {
-        $token = craft()->httpSession->get('connectToken');
+        craft()->connect_userSession->loginToken();
 
-        $providerClass = craft()->request->getParam('provider');
 
-        $user = false; // would be set with a user object
+        // $providerClass = craft()->request->getParam('provider');
 
-        // Save the necessary info to the identity cookie.
-        
-        $seconds = 3600;
-        $sessionToken = StringHelper::UUID();
-        $hashedToken = craft()->security->hashString($sessionToken);
-        $uid = craft()->users->handleSuccessfulLogin($user, $hashedToken['hash']);
-        $userAgent = craft()->request->userAgent;
+        // // get the token
 
-        $data = array(
-            $this->getName(),
-            $sessionToken,
-            $uid,
-            $seconds,
-            $userAgent,
-            $this->saveIdentityStates(),
-        );
+        // $token = craft()->httpSession->get('connectToken.'.$providerClass);
+        // $token = base64_decode($token);
+        // $token = unserialize($token);
 
-        $this->saveCookie('', $data, $seconds);
+
+
+        // // create an identity and login
+
+        // //$identity = new TokenIdentity($token);
+
+        // $identity = new TokenIdentity();
+
+        // if ($identity->authenticate()) {
+        //     craft()->user->allowAutoLogin = true;
+        //     $ret = craft()->user->login($identity);
+
+
+        //     var_dump(craft()->user);
+
+        // } else {
+        //     echo $identity->errorMessage;
+        // }
+
+        // $user = craft()->users->getUserById(1);
+
+        // $seconds = 3600;
+        // $sessionToken = StringHelper::UUID();
+        // $hashedToken = craft()->security->hashString($sessionToken);
+        // $uid = craft()->users->handleSuccessfulLogin($user, $hashedToken['hash']);
+        // $userAgent = craft()->request->userAgent;
+
+        // $data = array(
+        //     craft()->user->getName(),
+        //     $sessionToken,
+        //     $uid,
+        //     $seconds,
+        //     $userAgent,
+        //     craft()->user->saveIdentityStates(),
+        // );
+
+        // $this->saveCookie('', $data, $seconds);
+
+
+        // die();
+
+        $this->redirect('connect');
     }
 
     public function actionAuthenticate()
@@ -49,6 +75,8 @@ class Connect_PublicController extends BaseController
 
 
         $className = $service->providerClass;
+
+
 
         $provider = \OAuth\OAuth::provider($className, array(
             'id' => $service->clientId,
@@ -75,11 +103,11 @@ class Connect_PublicController extends BaseController
 
         $token = base64_encode(serialize($token));
 
-        craft()->httpSession->add('connectToken', $token);
-        
-        $service->token = $token;
+        craft()->httpSession->add('connectToken.'.$className, $token);
 
-        $service->save();
+        // $service->token = $token;
+
+        // $service->save();
 
         $finalRedirect = 'connect';
 

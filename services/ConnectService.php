@@ -21,9 +21,12 @@ class ConnectService extends BaseApplicationComponent
 
     public function outputToken($providerClass)
     {
-        $provider = $this->getServiceByProviderClass($providerClass);
+        //$provider = $this->getServiceByProviderClass($providerClass);
 
-        die('output token');
+        $token = craft()->httpSession->get('connectToken.'.$providerClass);
+        $token = base64_decode($token);
+        $token = unserialize($token);
+        return $token;
 
         $service = $this->service($provider->id);
 
@@ -31,10 +34,10 @@ class ConnectService extends BaseApplicationComponent
     }
 
     public function getServiceByProviderClass($providerClass)
-    {        
-        
+    {
+
         // get the option
-        
+
         $record = Connect_ServiceRecord::model()->find('providerClass=:providerClass', array(':providerClass' => $providerClass));
 
         if ($record) {
@@ -83,7 +86,7 @@ class ConnectService extends BaseApplicationComponent
         return $model;
     }
 
-    
+
     public function connectService($record = false)
     {
         if(!$record)
@@ -136,7 +139,7 @@ class ConnectService extends BaseApplicationComponent
 
         $providerParams = array();
         $providerParams['id'] = $service->clientId;
-        $providerParams['secret'] = $service->clientSecret;    
+        $providerParams['secret'] = $service->clientSecret;
         $providerParams['redirect_url'] = "http://google.fr";
 
         try {
@@ -150,7 +153,7 @@ class ConnectService extends BaseApplicationComponent
             {
                 throw new \Exception('Invalid Token');
             }
-            
+
             $provider->setToken($token);
 
         } catch(\Exception $e)
@@ -174,7 +177,7 @@ class ConnectService extends BaseApplicationComponent
 
         $providerParams = array();
         $providerParams['id'] = $service->clientId;
-        $providerParams['secret'] = $service->clientSecret;    
+        $providerParams['secret'] = $service->clientSecret;
         $providerParams['redirect_url'] = "http://google.fr";
 
         try {
@@ -188,7 +191,7 @@ class ConnectService extends BaseApplicationComponent
             {
                 throw new \Exception('Invalid Token');
             }
-            
+
             $provider->setToken($token);
 
         } catch(\Exception $e)

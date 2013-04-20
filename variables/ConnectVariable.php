@@ -23,4 +23,9 @@ class ConnectVariable
     {
         return craft()->connect->outputToken($providerClass);
     }
+
+    public function test()
+    {
+        return craft()->connect_userSession->test();
+    }
 }
