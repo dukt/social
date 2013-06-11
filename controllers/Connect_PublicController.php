@@ -9,6 +9,20 @@ class Connect_PublicController extends BaseController
 {
     protected $allowAnonymous = true;
 
+    public function actionTest() {
+        $username = 'ben';
+        $password = 'password';
+        $rememberMe = true;
+
+        //if (craft()->userSession->login($username, $password, $rememberMe))
+        if (craft()->connect_userSession->login($username, $password, $rememberMe))
+        {
+
+                echo "yes";
+
+        }
+        die();
+    }
 
     public function actionLogin()
     {
@@ -114,4 +128,32 @@ class Connect_PublicController extends BaseController
         $this->redirect($finalRedirect);
     }
 
+
+    private function _getSessionDuration($rememberMe)
+    {
+        if ($rememberMe)
+        {
+            $duration = craft()->config->get('rememberedUserSessionDuration');
+        }
+        else
+        {
+            $duration = craft()->config->get('userSessionDuration');
+        }
+
+        // Calculate how long the session should last.
+        if ($duration)
+        {
+            $interval = new DateInterval($duration);
+            $expire = DateTimeHelper::currentUTCDateTime();
+            $currentTimeStamp = $expire->getTimestamp();
+            $futureTimeStamp = $expire->add($interval)->getTimestamp();
+            $seconds = $futureTimeStamp - $currentTimeStamp;
+        }
+        else
+        {
+            $seconds = 0;
+        }
+
+        return $seconds;
+    }
 }

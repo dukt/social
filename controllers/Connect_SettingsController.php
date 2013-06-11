@@ -26,6 +26,7 @@ class Connect_SettingsController extends BaseController
             craft()->userSession->setNotice(Craft::t('Service saved.'));
 
             $redirect = craft()->request->getPost('redirect');
+
             $this->redirect($redirect);
         } else {
 

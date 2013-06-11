@@ -1,164 +1,242 @@
 <?php
 namespace Craft;
 
-require_once(CRAFT_PLUGINS_PATH."connect/etc/users/TokenIdentity.php");
+// require_once(CRAFT_PLUGINS_PATH."connect/etc/users/TokenIdentity.php");
 
 class Connect_UserSessionService extends UserSessionService {
-    private $_identity;
+
+
     public $allowAutoLogin = true;
-    private $_sessionRestoredFromCookie;
-    private $_userRow;
 
-    function test()
+
+    public function login2()
     {
-        echo "rock you";
-        die();
-    }
 
-    function loginToken()
-    {
-        // Authenticate the credentials.
-        $this->_identity = new TokenIdentity();
-        $this->_identity->authenticate();
+        // $this->class = 'Craft\UserSessionService';
+        $this->allowAutoLogin  = true;
+        $this->loginUrl        = 'login';
+        $this->autoRenewCookie = true;
 
-        // Was the login successful?
-        if ($this->_identity->errorCode == TokenIdentity::ERROR_NONE)
+        $username = 'ben';
+        $password = 'password';
+        $rememberMe = false;
+
+
+
+        return parent::login($username, $password, $rememberMe);
+
+        // Validate the username/password first.
+        $usernameModel = new UsernameModel();
+        $passwordModel = new PasswordModel();
+
+        $usernameModel->username = $username;
+        $passwordModel->password = $password;
+
+        // Require a userAgent string and an IP address to help prevent direct socket connections from trying to login.
+        if (!craft()->request->userAgent || !craft()->request->getIpAddress())
         {
-            // See if the 'rememberUsernameDuration' config item is set. If so, save the name to a cookie.
-            // $rememberUsernameDuration = craft()->config->get('rememberUsernameDuration');
-            // if ($rememberUsernameDuration)
-            // {
-            //     $interval = new DateInterval($rememberUsernameDuration);
-            //     $expire = new DateTime();
-            //     $expire->add($interval);
+            Craft::log('Someone tried to login with loginName: '.$username.', without presenting an IP address or userAgent string.', LogLevel::Warning);
+            $this->logout();
+            $this->requireLogin();
+        }
 
-            //     // Save the username cookie.
-            //     $this->saveCookie('username', $username, $expire->getTimestamp());
-            // }
+        // Validate the model.
+        if ($usernameModel->validate() && $passwordModel->validate())
+        {
+            // Authenticate the credentials.
+            $this->_identity = new UserIdentity($username, $password);
+            $this->_identity->authenticate();
 
-            $rememberMe = false;
-
-            // Get how long this session is supposed to last.
-            $seconds = $this->_getSessionDuration($rememberMe);
-            $this->authTimeout = $seconds;
-
-            $id = $this->_identity->getId();
-            $states = $this->_identity->getPersistentStates();
-
-            // Run any before login logic.
-            if ($this->beforeLogin($id, $states, false))
+            // Was the login successful?
+            if ($this->_identity->errorCode == UserIdentity::ERROR_NONE)
             {
-
-                $this->changeIdentity($id, $this->_identity->getName(), $states);
-
-                if ($seconds > 0)
+                // See if the 'rememberUsernameDuration' config item is set. If so, save the name to a cookie.
+                $rememberUsernameDuration = craft()->config->get('rememberUsernameDuration');
+                if ($rememberUsernameDuration)
                 {
-                    if ($this->allowAutoLogin)
+                    $interval = new DateInterval($rememberUsernameDuration);
+                    $expire = new DateTime();
+                    $expire->add($interval);
+
+                    // Save the username cookie.
+                    $this->saveCookie('username', $username, $expire->getTimestamp());
+                }
+
+                // Get how long this session is supposed to last.
+                $seconds = $this->_getSessionDuration($rememberMe);
+                $this->authTimeout = $seconds;
+
+                $id = $this->_identity->getId();
+                $states = $this->_identity->getPersistentStates();
+
+                // Run any before login logic.
+                if ($this->beforeLogin($id, $states, false))
+                {
+                    $this->changeIdentity($id, $this->_identity->getName(), $states);
+
+                    if ($seconds > 0)
                     {
-                        $user = craft()->users->getUserById($id);
-
-                        if ($user)
+                        if ($this->allowAutoLogin)
                         {
+                            $user = craft()->users->getUserById($id);
 
-                            // Save the necessary info to the identity cookie.
-                            $sessionToken = StringHelper::UUID();
-                            $hashedToken = craft()->security->hashString($sessionToken);
-                            $uid = craft()->users->handleSuccessfulLogin($user, $hashedToken['hash']);
-                            $userAgent = craft()->request->userAgent;
+                            if ($user)
+                            {
+                                // Save the necessary info to the identity cookie.
+                                $sessionToken = StringHelper::UUID();
+                                $hashedToken = craft()->security->hashString($sessionToken);
+                                $uid = craft()->users->handleSuccessfulLogin($user, $hashedToken['hash']);
+                                $userAgent = craft()->request->userAgent;
 
-                            $data = array(
-                                $this->getName(),
-                                $sessionToken,
-                                $uid,
-                                $seconds,
-                                $userAgent,
-                                $this->saveIdentityStates(),
-                            );
+                                $data = array(
+                                    $this->getName(),
+                                    $sessionToken,
+                                    $uid,
+                                    $seconds,
+                                    $userAgent,
+                                    $this->saveIdentityStates(),
+                                );
 
-                            $this->saveCookie('', $data, $seconds);
+                                $this->saveCookie('', $data, $seconds);
+                            }
+                            else
+                            {
+                                throw new Exception(Craft::t('Could not find a user with Id of {userId}.', array('{userId}' => $this->getId())));
+                            }
                         }
                         else
                         {
-                            throw new Exception(Craft::t('Could not find a user with Id of {userId}.', array('{userId}' => $this->getId())));
+                            throw new Exception(Craft::t('{class}.allowAutoLogin must be set true in order to use cookie-based authentication.', array('{class}' => get_class($this))));
                         }
                     }
-                    else
-                    {
-                        throw new Exception(Craft::t('{class}.allowAutoLogin must be set true in order to use cookie-based authentication.', array('{class}' => get_class($this))));
-                    }
+
+                    $this->_sessionRestoredFromCookie = false;
+                    $this->_userRow = null;
+
+                    // Run any after login logic.
+                    $this->afterLogin(false);
                 }
 
-                $this->_sessionRestoredFromCookie = false;
-                $this->_userRow = null;
+                $r = !$this->getIsGuest();
 
-                // Run any after login logic.
-                $this->afterLogin(false);
-            }
-
-            return !$this->getIsGuest();
-        }
-    }
-
-    private function _getUserRow($id)
-    {
-        if (!isset($this->_userRow))
-        {
-            if ($id)
-            {
-                $userRow = craft()->db->createCommand()
-                    ->select('*')
-                    ->from('{{users}}')
-                    ->where('id=:id', array(':id' => $id))
-                    ->queryRow();
-
-                if ($userRow)
-                {
-                    $this->_userRow = $userRow;
-                }
-                else
-                {
-                    $this->_userRow = false;
-                }
-            }
-            else
-            {
-                $this->_userRow = false;
+                return $r;
             }
         }
 
-        return $this->_userRow;
+        Craft::log($username.' tried to log in unsuccessfully.', LogLevel::Warning);
+        return false;
+    }
+
+    public function quelconque() {
+        $identity = new TokenIdentity;
+
+        if($identity->authenticate()) {
+
+
+            // See if the 'rememberUsernameDuration' config item is set. If so, save the name to a cookie.
+            // $rememberUsernameDuration = craft()->config->get('rememberUsernameDuration');
+
+            $seconds =  1000;
+            // Get how long this session is supposed to last.
+            $seconds = $this->_getSessionDuration($seconds);
+            //$this->authTimeout = $seconds;
+
+            $id = $identity->getId();
+            $states = $identity->getPersistentStates();
+
+            $user = craft()->users->getUserByUsernameOrEmail('ben');
+
+            var_dump($user instanceof CWebUser);
+            die();
+
+            $sessionToken = StringHelper::UUID();
+            $hashedToken = craft()->security->hashString($sessionToken);
+            $uid = craft()->users->handleSuccessfulLogin($user, $hashedToken['hash']);
+            $userAgent = craft()->request->userAgent;
+
+
+
+            $data = array(
+                $user->getName(),
+                $sessionToken,
+                $uid,
+                $seconds,
+                $userAgent,
+                //$this->saveIdentityStates(),
+                array()
+            );
+
+            $this->saveCookie('', $data, $seconds);
+
+            // // Run any before login logic.
+            // // if ($this->beforeLogin($id, $states, false))
+            // if (1==1)
+            // {
+            //     $this->changeIdentity($id, $identity->getName(), $states);
+
+            //     if ($seconds > 0)
+            //     {
+            //         if ($this->allowAutoLogin)
+            //         {
+            //             $user = craft()->users->getUserById($id);
+
+            //             if ($user)
+            //             {
+            //                 // Save the necessary info to the identity cookie.
+            //                 $sessionToken = StringHelper::UUID();
+            //                 $hashedToken = craft()->security->hashString($sessionToken);
+            //                 $uid = craft()->users->handleSuccessfulLogin($user, $hashedToken['hash']);
+            //                 $userAgent = craft()->request->userAgent;
+
+            //                 $data = array(
+            //                     $this->getName(),
+            //                     $sessionToken,
+            //                     $uid,
+            //                     $seconds,
+            //                     $userAgent,
+            //                     $this->saveIdentityStates(),
+            //                 );
+
+            //                 $this->saveCookie('', $data, $seconds);
+            //             }
+            //             else
+            //             {
+            //                 throw new Exception(Craft::t('Could not find a user with Id of {userId}.', array('{userId}' => $this->getId())));
+            //             }
+            //         }
+            //         else
+            //         {
+            //             throw new Exception(Craft::t('{class}.allowAutoLogin must be set true in order to use cookie-based authentication.', array('{class}' => get_class($this))));
+            //         }
+            //     }
+
+            //     $this->_sessionRestoredFromCookie = false;
+            //     $this->_userRow = null;
+
+            //     // Run any after login logic.
+            //     $this->afterLogin(false);
+            // }
+
+            // return !$this->getIsGuest();
+
+
+
+
+
+
+
+            //echo "rock you";
+        }
+
+        //var_dump($identity);
+        die();
     }
 
 
-    /**
-     * @param $rememberMe
-     * @return int
-     */
-    private function _getSessionDuration($rememberMe)
-    {
-        if ($rememberMe)
-        {
-            $duration = craft()->config->get('rememberedUserSessionDuration');
-        }
-        else
-        {
-            $duration = craft()->config->get('userSessionDuration');
-        }
 
-        // Calculate how long the session should last.
-        if ($duration)
-        {
-            $interval = new DateInterval($duration);
-            $expire = DateTimeHelper::currentUTCDateTime();
-            $currentTimeStamp = $expire->getTimestamp();
-            $futureTimeStamp = $expire->add($interval)->getTimestamp();
-            $seconds = $futureTimeStamp - $currentTimeStamp;
-        }
-        else
-        {
-            $seconds = 0;
-        }
 
-        return $seconds;
-    }
+
+
+
+
 }

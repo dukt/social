@@ -8,15 +8,16 @@
 
     <table id="fields" class="data collapsible">
         <thead>
-            <th scope="col">{{ "Name"|t }}</th>
-            <th scope="col">{{ "Settings"|t }}</th>
+            <tr>
+                <th scope="col">{{ "Name"|t }}</th>
+                <th>{{ "Settings"|t }}</th>
+            </tr>
         </thead>
         <tbody>
             {% for provider in craft.connect.getProviders() %}
-
                 <tr>
                     <td>{{provider}}</td>
-                    <td><a href="{{ url('connect/settings/'~provider) }}">Settings</a></td>
+                    <td class="thin nowrap"><a class="btn small" href="{{ url('connect/settings/'~provider) }}">Settings</a></td>
                 </tr>
             {% endfor %}
         </tbody>

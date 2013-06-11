@@ -15,19 +15,33 @@ namespace Craft;
  * TokenIdentity represents the data needed to identify a user with a token and an email
  * It contains the authentication method that checks if the provided data can identity the user.
  */
-class TokenIdentity extends UserIdentity
+class TokenIdentity extends \CUserIdentity
 {
     private $_id;
 
-    public function __construct() {
+
+    public function __construct()
+    {
 
     }
-
+    /**
+     * Authenticates a user against the database.
+     *
+     * @return boolean whether authentication succeeds.
+     */
     public function authenticate()
     {
         $this->_id = 1;
         $this->username = 'ben';
         $this->errorCode = static::ERROR_NONE;
         return true;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->_id;
     }
 }
