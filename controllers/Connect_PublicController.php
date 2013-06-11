@@ -14,13 +14,16 @@ class Connect_PublicController extends BaseController
         $password = 'password';
         $rememberMe = true;
 
+
+        // works
         //if (craft()->userSession->login($username, $password, $rememberMe))
-        if (craft()->connect_userSession->login($username, $password, $rememberMe))
-        {
 
-                echo "yes";
+        // doesn't work
 
+        if (craft()->connect_userSession->login($username, $password, $rememberMe)) {
+            echo "yes";
         }
+
         die();
     }
 
