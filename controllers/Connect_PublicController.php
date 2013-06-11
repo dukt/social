@@ -9,7 +9,7 @@ class Connect_PublicController extends BaseController
 {
     protected $allowAnonymous = true;
 
-    public function actionTest() {
+    public function actionLogin() {
         $username = 'ben';
         $password = 'password';
         $rememberMe = true;
@@ -24,7 +24,7 @@ class Connect_PublicController extends BaseController
         die();
     }
 
-    public function actionLogin()
+    public function actionLoginToken()
     {
         craft()->connect_userSession->loginToken();
 
