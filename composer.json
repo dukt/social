@@ -1,7 +1,4 @@
 {
-    "autoload": {
-        "psr-0": { "Dukt\\Connect" : "libraries/" }
-    },
     "repositories": [
         {
             "type": "vcs",
@@ -12,6 +9,8 @@
         "php": ">=5.3.2",
         "chrisnharvey/oauth": "dev-dukt.videos",
         "symfony/finder": "2.2.*@dev",
-        "guzzle/http": "~3.0"
+        "guzzle/http": "~3.0",
+        "vipsoft/unzip": "dev-master",
+        "symfony/filesystem": "2.3.*@dev"
     }
 }

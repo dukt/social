@@ -2,13 +2,13 @@
 namespace Craft;
 
 /**
- * Connect by Dukt
+ * Social by Dukt
  *
- * @package   Connect
+ * @package   Social
  * @author    Benjamin David
  * @copyright Copyright (c) 2013, Dukt
- * @license   http://dukt.net/add-ons/craft/connect/
- * @link      http://dukt.net/add-ons/craft/connect/
+ * @license   http://dukt.net/add-ons/craft/social/
+ * @link      http://dukt.net/add-ons/craft/social/
  */
 
 /**
@@ -17,17 +17,42 @@ namespace Craft;
  */
 class TokenIdentity extends UserIdentity
 {
+    // --------------------------------------------------------------------
+
     private $_id;
+    public $token;
 
-    public function __construct() {
+    // --------------------------------------------------------------------
 
+    public function __construct($token)
+    {
+        $this->token = $token;
     }
+
+    // --------------------------------------------------------------------
 
     public function authenticate()
     {
-        $this->_id = 1;
-        $this->username = 'ben';
-        $this->errorCode = static::ERROR_NONE;
-        return true;
+        $tokenRecord = Oauth_TokenRecord::model()->find('token=:token', array(':token' => $this->token));
+
+        if($tokenRecord) {
+
+            $this->_id = $tokenRecord->user->id;
+            $this->username = $tokenRecord->user->username;
+            $this->errorCode = static::ERROR_NONE;
+
+            return true;
+        } else {
+            return false;
+        }
     }
+
+    // --------------------------------------------------------------------
+
+    public function getId()
+    {
+        return $this->_id;
+    }
+
+    // --------------------------------------------------------------------
 }

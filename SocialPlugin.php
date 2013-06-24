@@ -3,16 +3,16 @@
 
 namespace Craft;
 
-class ConnectPlugin extends BasePlugin
+class SocialPlugin extends BasePlugin
 {
     /**
      * Get Name
      */
     function getName()
     {
-        return Craft::t('Connect');
+        return Craft::t('Social');
     }
-    
+
     // --------------------------------------------------------------------
 
     /**
@@ -20,9 +20,9 @@ class ConnectPlugin extends BasePlugin
      */
     function getVersion()
     {
-        return '1.0';
+        return '0.9';
     }
-    
+
     // --------------------------------------------------------------------
 
     /**
@@ -32,7 +32,7 @@ class ConnectPlugin extends BasePlugin
     {
         return 'Dukt';
     }
-    
+
     // --------------------------------------------------------------------
 
     /**
@@ -42,7 +42,7 @@ class ConnectPlugin extends BasePlugin
     {
         return 'http://dukt.net/';
     }
-    
+
     // --------------------------------------------------------------------
 
     /**
@@ -52,7 +52,7 @@ class ConnectPlugin extends BasePlugin
     {
         return true;
     }
-    
+
     // --------------------------------------------------------------------
 
     /**
@@ -61,7 +61,7 @@ class ConnectPlugin extends BasePlugin
     public function hookRegisterCpRoutes()
     {
         return array(
-            'connect\/settings\/(?P<serviceProviderClass>.*)' => 'connect/_settings',
+            'social\/settings\/(?P<serviceProviderClass>.*)' => 'social/settings/_provider',
         );
     }
 }

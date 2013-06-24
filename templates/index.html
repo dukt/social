@@ -1,25 +1,49 @@
-{% extends "_layouts/cp" %}
-{% set centered = true %}
+{% if craft.oauth is not defined %}
+    {% redirect 'social/oauth' %}
+{% endif %}
 
-{% set title = "Connect"|t %}
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% set title = "Social"|t %}
+
+{% set extraPageHeaderHtml %}
+  <a class="btn settings icon" href="{{ url('social/settings') }}" title="{{ 'Settings'|t }}"></a>
+{% endset %}
 
 
 {% set content %}
 
-    <table id="fields" class="data collapsible">
+    <h2>Users Tokens</h2>
+
+    <table class="data collapsible">
         <thead>
             <tr>
-                <th scope="col">{{ "Name"|t }}</th>
-                <th>{{ "Settings"|t }}</th>
+                <th scope="col">{{ "User"|t }}</th>
+                <th scope="col">{{ "Namespace"|t }}</th>
+                <th scope="col">{{ "Provider"|t }}</th>
+                <th scope="col">{{ "Created"|t }}</th>
+                <th scope="col">{{ "Updated"|t }}</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
-            {% for provider in craft.connect.getProviders() %}
-                <tr>
-                    <td>{{provider}}</td>
-                    <td class="thin nowrap"><a class="btn small" href="{{ url('connect/settings/'~provider) }}">Settings</a></td>
-                </tr>
-            {% endfor %}
+            {% if craft.oauth is defined %}
+
+                {% set tokens = craft.oauth.getTokens('social.user') %}
+                {% for token in tokens %}
+                    <tr>
+                        <td>{{token.user.email}}</td>
+                        <td>{{token.namespace}}</td>
+                        <td>{{token.provider}}</td>
+                        <td>{{token.dateCreated}}</td>
+                        <td>{{token.dateUpdated}}</td>
+                    </tr>
+
+                {% endfor %}
+
+            {% endif %}
+
         </tbody>
     </table>
 

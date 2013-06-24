@@ -1,0 +1,29 @@
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% set title = "Social Installation"|t %}
+{% set providerClass = 'Google' %}
+{% set pluginHandle = 'social' %}
+
+{% includeCssResource pluginHandle~"/css/styles.css" %}
+{% includeJsResource pluginHandle~"/js/scripts.js" %}
+
+{% set content %}
+
+    {% if craft.oauth is defined %}
+        {% redirect pluginHandle~'/settings' %}
+    {% endif %}
+
+
+    <!-- INSTALL OAUTH PLUGIN -->
+
+    <div class="analytics-setting{% if craft.oauth is defined %} closed done{% endif %}">
+        <h2>Install OAuth plugin</h2>
+
+        <div class="analytics-setting-content">
+            {% include pluginHandle~'/oauth/_install' %}
+        </div>
+    </div>
+
+
+{% endset %}

@@ -1,0 +1,17 @@
+{% set scope = [
+    'https://www.googleapis.com/auth/userinfo.profile',
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/analytics'
+    ] %}
+
+{% if account %}
+
+    {% redirect pluginHandle~'/settings' %}
+
+    <p>Connected as {{account.email}}.</p>
+    <p><a class="btn" href="{{craft.oauth.disconnect(pluginHandle~'.system', providerClass)}}">Disconnect from {{providerClass}}</a></p>
+
+{% else %}
+    <p>Last but not least, authenticate with {{providerClass}} so we can start gathering data from the API.</p>
+    <p><a class="btn submit" href="{{ craft.oauth.connect(pluginHandle~'.system', providerClass, false, scope) }}">Authenticate with {{providerClass}}</a></p>
+{% endif %}

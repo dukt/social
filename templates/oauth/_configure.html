@@ -1,0 +1,42 @@
+{% set serviceProviderClass = providerClass %}
+
+<form method="post" action="" accept-charset="UTF-8">
+    <input type="hidden" name="action" value="oauth/settings/saveService">
+    <input type="hidden" name="redirect" value="{{pluginHandle}}/settings" />
+    <input type="hidden" name="serviceProviderClass" value="{{ serviceProviderClass }}" />
+
+    <p>Create an OAuth 2.0 application and enable Analytics service in the <a target="_blank" href="https://code.google.com/apis/console/">Google Console</a>.</p>
+
+    <p>Once created, configure the application with the following settings :</p>
+
+    <ul>
+        <li>Authorized Redirect URI : {{actionUrl('oauth/public/authenticate', {provider:serviceProviderClass})}}</li>
+        <li>Authorized JavaScript Origins : {{siteUrl}}</li>
+    </ul>
+
+    {{ forms.textField({
+        label: 'Client Id'|t,
+        required: true,
+        name: 'service[clientId]',
+        value: service ? service.clientId : null,
+        errors: service ? service.errors('clientId') : null,
+        disabled: ((service.token is defined and service.token|length) > 0 ? true : false)
+    }) }}
+
+    {{ forms.textField({
+        label: 'Client Secret'|t,
+        required: true,
+        name: 'service[clientSecret]',
+        value: service ? service.clientSecret : null,
+        errors: service ? service.errors('clientSecret') : null,
+        disabled: (service.token is defined and service.token|length > 0 ? true : false)
+    }) }}
+
+    <div class="buttons">
+        {% if (service.token is defined and service.token|length == 0) or service.token is not defined %}
+        <input class="btn submit" type="submit" value="{{ 'Save'|t }}">
+        {% elseif service.id is defined %}
+            <a class="btn" href="{{actionUrl(pluginHande~'/settings/resetServiceToken', {providerClass:serviceProviderClass})}}">Reset Token</a>
+        {% endif %}
+    </div>
+</form>

@@ -1,0 +1,18 @@
+{% set oauthPlugin = craft.plugins.getPlugin('Oauth', false) %}
+
+{% if not oauthPlugin %}
+
+    <p>OAuth plugin needs to be downloaded</p>
+    <p><a href="{{actionUrl(pluginHandle~'/oauth/download')}}" class="btn">Download OAuth Plugin</a></p>
+
+{% elseif oauthPlugin.isInstalled and not oauthPlugin.isEnabled %}
+
+    <p>OAuth plugin disabled</p>
+    <p><a href="{{actionUrl(pluginHandle~'/oauth/enable')}}" class="btn">Enable OAuth Plugin</a></p>
+
+{% elseif not oauthPlugin.isInstalled %}
+
+    <p>OAuth plugin not installed</p>
+    <p><a href="{{actionUrl(pluginHandle~'/oauth/install')}}" class="btn">Install OAuth Plugin</a></p>
+
+{% endif %}

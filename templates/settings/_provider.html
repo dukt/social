@@ -5,7 +5,7 @@
 
 {% if service is not defined %}
     {% if serviceProviderClass %}
-        {% set service = craft.connect.getServiceByProviderClass(serviceProviderClass) %}
+        {% set service = craft.oauth.getProvider(serviceProviderClass) %}
 
         {% if not service %}{% exit 404 %}{% endif %}
     {% else %}
@@ -17,14 +17,15 @@
 {% set title = serviceProviderClass~" Settings"|t %}
 
 {% set crumbs = [
-    { label: "Connect"|t, url: url('connect') }
+    { label: "Social"|t, url: url('social') },
+    { label: "Settings"|t, url: url('social/settings') }
 ] %}
 
 {% set content %}
 
     <form method="post" action="" accept-charset="UTF-8">
-        <input type="hidden" name="action" value="connect/settings/saveService">
-        <input type="hidden" name="redirect" value="connect" />
+        <input type="hidden" name="action" value="oauth/settings/saveService">
+        <input type="hidden" name="redirect" value="social/settings" />
         <input type="hidden" name="serviceProviderClass" value="{{ serviceProviderClass }}" />
 
 
@@ -50,12 +51,10 @@
             {% if (service.token is defined and service.token|length == 0) or service.token is not defined %}
             <input class="btn submit" type="submit" value="{{ 'Save'|t }}">
             {% elseif service.id is defined %}
-                <a class="btn" href="{{actionUrl('connect/settings/resetServiceToken', {providerClass:serviceProviderClass})}}">Reset Token</a>
+                <a class="btn" href="{{actionUrl('social/settings/resetServiceToken', {providerClass:serviceProviderClass})}}">Reset Token</a>
             {% endif %}
         </div>
 
-        {#{inspect(service.token)}#}
-        {#{inspect(craft.campaigns.serviceSend(service.id, 'campaigns'))}#}
     </form>
 
 {% endset %}
