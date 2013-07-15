@@ -36,7 +36,11 @@ class SocialService extends BaseApplicationComponent
 
     public function getAccount($providerClass)
     {
-        $account = craft()->oauth->getAccount('social.user', $providerClass, true);
+        try {
+            $account = craft()->oauth->getAccount('social.user', $providerClass, true);
+        } catch(\Exception $e) {
+            return false;
+        }
 
         return $account;
     }
