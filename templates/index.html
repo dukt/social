@@ -15,39 +15,42 @@
 
 {% set content %}
 
-    <h2>Users Tokens</h2>
+    <h2>Tokens</h2>
 
-    <table class="data collapsible">
-        <thead>
-            <tr>
-                <th scope="col">{{ "User ID"|t }}</th>
-                <th scope="col">{{ "User"|t }}</th>
-                <th scope="col">{{ "Namespace"|t }}</th>
-                <th scope="col">{{ "Provider"|t }}</th>
-                <th scope="col">{{ "Created"|t }}</th>
-                <th scope="col">{{ "Updated"|t }}</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if craft.oauth is defined %}
+    {% if craft.oauth is defined %}
 
-                {% set tokens = craft.oauth.getTokens('social.user') %}
-                {% for token in tokens %}
+        {% set tokens = craft.oauth.getTokens('social.user') %}
+    
+        {% if tokens|length > 0 %}
+            <table class="data collapsible">
+                <thead>
                     <tr>
-                        <td>{{token.user.id}}</td>
-                        <td>{{token.user.email}}</td>
-                        <td>{{token.namespace}}</td>
-                        <td>{{token.provider}}</td>
-                        <td>{{token.dateCreated}}</td>
-                        <td>{{token.dateUpdated}}</td>
+                        <th scope="col">{{ "User ID"|t }}</th>
+                        <th scope="col">{{ "User"|t }}</th>
+                        <th scope="col">{{ "Namespace"|t }}</th>
+                        <th scope="col">{{ "Provider"|t }}</th>
+                        <th scope="col">{{ "Created"|t }}</th>
+                        <th scope="col">{{ "Updated"|t }}</th>
+                        <th></th>
                     </tr>
+                </thead>
+                <tbody>
+                    {% for token in tokens %}
+                        <tr>
+                            <td>{{token.user.id}}</td>
+                            <td>{{token.user.email}}</td>
+                            <td>{{token.namespace}}</td>
+                            <td>{{token.provider}}</td>
+                            <td>{{token.dateCreated}}</td>
+                            <td>{{token.dateUpdated}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
 
-                {% endfor %}
-
-            {% endif %}
-
-        </tbody>
-    </table>
+        {% else %}
+            <p><em>No token found, it looks like no one got connected with Social yet.</em></p>
+        {% endif %}
+    {% endif %}
 
 {% endset %}
