@@ -17,9 +17,10 @@ Social plugin let's you connect to Craft CMS with the most popular service provi
 <a id="providers"></a>
 ## Supported providers
 
-- Google
 - Facebook
-- Twiiter
+- GitHub
+- Google
+- Twitter
 - Flickr
 
 <a id="login"></a>
