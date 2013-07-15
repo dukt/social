@@ -13,9 +13,23 @@ class SocialVariable
 
     // --------------------------------------------------------------------
 
-    public function logout($providerClass)
+    public function logout()
     {
-        return craft()->social->logout($providerClass);
+        return craft()->social->logout();
+    }
+
+    // --------------------------------------------------------------------
+
+    public function connect($providerClass)
+    {
+        return craft()->social->connect($providerClass);
+    }
+
+    // --------------------------------------------------------------------
+
+    public function disconnect($providerClass)
+    {
+        return craft()->social->disconnect($providerClass);
     }
 
     // --------------------------------------------------------------------

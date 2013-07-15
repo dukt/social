@@ -13,7 +13,21 @@ class SocialService extends BaseApplicationComponent
 
     // --------------------------------------------------------------------
 
-    public function logout($providerClass)
+    public function logout()
+    {
+        return UrlHelper::getActionUrl('social/public/logout');
+    }
+
+    // --------------------------------------------------------------------
+
+    public function connect($providerClass)
+    {
+        return craft()->oauth->connect('social.user', $providerClass, true);
+    }
+
+    // --------------------------------------------------------------------
+
+    public function disconnect($providerClass)
     {
         return craft()->oauth->disconnect('social.user', $providerClass);
     }
@@ -22,7 +36,7 @@ class SocialService extends BaseApplicationComponent
 
     public function getAccount($providerClass)
     {
-        $account = craft()->oauth->getAccount('social.user', $providerClass);
+        $account = craft()->oauth->getAccount('social.user', $providerClass, true);
 
         return $account;
     }

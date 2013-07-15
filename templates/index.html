@@ -12,6 +12,7 @@
 {% endset %}
 
 
+
 {% set content %}
 
     <h2>Users Tokens</h2>
@@ -19,6 +20,7 @@
     <table class="data collapsible">
         <thead>
             <tr>
+                <th scope="col">{{ "User ID"|t }}</th>
                 <th scope="col">{{ "User"|t }}</th>
                 <th scope="col">{{ "Namespace"|t }}</th>
                 <th scope="col">{{ "Provider"|t }}</th>
@@ -33,6 +35,7 @@
                 {% set tokens = craft.oauth.getTokens('social.user') %}
                 {% for token in tokens %}
                     <tr>
+                        <td>{{token.user.id}}</td>
                         <td>{{token.user.email}}</td>
                         <td>{{token.namespace}}</td>
                         <td>{{token.provider}}</td>
