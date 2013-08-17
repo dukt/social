@@ -67,12 +67,15 @@ class Social_PublicController extends BaseController
 
 	public function actionLoginCallback()
 	{
-		// get providerClass
+		// get httpSession variables
 
 		$providerClass = craft()->httpSession->get('oauth.providerClass');
-
 		$socialReferer = craft()->httpSession->get('oauth.socialReferer');
 
+
+        // ----------------------
+        // instantiate provider
+        // ----------------------
 
         // callbackUrl
 
@@ -82,45 +85,22 @@ class Social_PublicController extends BaseController
         );
 
 
-		$providerRecord = craft()->oauth->providerRecord($providerClass);
-
-
-        // provider options
-
-        $opts = array(
-            'id' => $providerRecord->clientId,
-            'secret' => $providerRecord->clientSecret,
-            'redirect_url' => $callbackUrl
-        );
-
-        $class = "\\Dukt\\Connect\\$providerRecord->providerClass\\Provider";
-
-
-        // instantiate provider object
-
-        $provider = new $class($opts);
-
-
         // set token
 
         $token = craft()->httpSession->get('oauth.token');
         $token = @unserialize(base64_decode($token));
 
-        @$provider->setToken($token);
+
+        // instantiate provider
+
+        // $provider = craft()->oauth->instantiateProvider($providerClass, $callbackUrl, $provider);
+
+        $provider = craft()->oauth->instantiateProvider($providerClass, $callbackUrl, $token);
 
 
         // get account
 
         $account = @$provider->getAccount();
-
-
-        // retrieve existing token from account mapping
-
-        // $tokenRecord = craft()->oauth->userTokenRecordFromMapping($providerClass, $account->mapping);
-
-        // if(!$tokenRecord) {
-
-        // }
 
 
         // ----------------------
@@ -159,7 +139,6 @@ class Social_PublicController extends BaseController
                 ':userMapping' => $account->mapping
                 );
 
-
             $tokenRecord = Oauth_TokenRecord::model()->find($criteriaConditions, $criteriaParams);
 
             if($tokenRecord) {
@@ -168,9 +147,6 @@ class Social_PublicController extends BaseController
             }
         }
 
-        // var_dump($user);
-
-        // die("die");
 
         // no matching user, create one
 
@@ -188,11 +164,6 @@ class Social_PublicController extends BaseController
             craft()->users->saveUser($newUser);
         }
 
-
-        // get fresh user
-
-        // $user = craft()->users->getUserByUsernameOrEmail($account->email);
- 
 
         // ----------------------
         // save token record
