@@ -62,3 +62,208 @@ class Social_PublicController extends BaseController
 		// script goes on in oauth/public/connect
 		// and then redirected to social/public/loginCallback
 	}
+
+	// --------------------------------------------------------------------
+
+	public function actionLoginCallback()
+	{
+		// get providerClass
+
+		$providerClass = craft()->httpSession->get('oauth.providerClass');
+
+		$socialReferer = craft()->httpSession->get('oauth.socialReferer');
+
+
+        // callbackUrl
+
+        $callbackUrl = UrlHelper::getSiteUrl(
+        	craft()->config->get('actionTrigger').'/oauth/public/connect',
+        	array('provider' => $providerClass)
+        );
+
+
+		$providerRecord = craft()->oauth->providerRecord($providerClass);
+
+
+        // provider options
+
+        $opts = array(
+            'id' => $providerRecord->clientId,
+            'secret' => $providerRecord->clientSecret,
+            'redirect_url' => $callbackUrl
+        );
+
+        $class = "\\Dukt\\Connect\\$providerRecord->providerClass\\Provider";
+
+
+        // instantiate provider object
+
+        $provider = new $class($opts);
+
+
+        // set token
+
+        $token = craft()->httpSession->get('oauth.token');
+        $token = @unserialize(base64_decode($token));
+
+        @$provider->setToken($token);
+
+
+        // get account
+
+        $account = @$provider->getAccount();
+
+
+        // retrieve existing token from account mapping
+
+        // $tokenRecord = craft()->oauth->userTokenRecordFromMapping($providerClass, $account->mapping);
+
+        // if(!$tokenRecord) {
+
+        // }
+
+
+        // ----------------------
+        // find a matching user
+        // ----------------------
+
+        $user = null;
+        $userId =  craft()->userSession->id;
+
+
+        // define user with current user
+
+        if($userId) {
+            $user = craft()->users->getUserById($userId);
+        }
+
+
+        // no user ? check with account email
+
+        if(!$user) {
+            $user = craft()->users->getUserByUsernameOrEmail($account->email);
+        }
+
+
+        // still no user ? check with account mapping
+
+        if(!$user) {
+
+            $criteriaConditions = '
+                provider=:provider AND
+                userMapping=:userMapping
+                ';
+
+            $criteriaParams = array(
+                ':provider' => $providerClass,
+                ':userMapping' => $account->mapping
+                );
+
+
+            $tokenRecord = Oauth_TokenRecord::model()->find($criteriaConditions, $criteriaParams);
+
+            if($tokenRecord) {
+                $userId = $tokenRecord->userId;
+                $user = craft()->users->getUserById($userId);
+            }
+        }
+
+        // var_dump($user);
+
+        // die("die");
+
+        // no matching user, create one
+
+        if(!$user) {
+
+        	// new user
+
+            $newUser = new UserModel();
+            $newUser->username = $account->email;
+            $newUser->email = $account->email;
+
+
+            // save user
+
+            craft()->users->saveUser($newUser);
+        }
+
+
+        // get fresh user
+
+        // $user = craft()->users->getUserByUsernameOrEmail($account->email);
+ 
+
+        // ----------------------
+        // save token record
+        // ----------------------
+
+
+        // try to find an existing token
+
+        $tokenRecord = null;
+
+        if($user) {
+	        $criteriaConditions = '
+	            provider=:provider AND 
+	            userMapping=:userMapping AND 
+	            userId is not null
+	            ';
+
+	        $criteriaParams = array(
+	            ':provider' => $providerClass,
+	            ':userMapping' => $account->mapping
+	            );
+
+	        $tokenRecord = Oauth_TokenRecord::model()->find($criteriaConditions, $criteriaParams);
+
+	        if($tokenRecord) {
+	        	if($tokenRecord->user->id != $user->id) {
+	        		// provider account already in use by another user
+	        		die('provider account already in use by another craft user');
+	        	}
+	        }
+        }
+
+
+        // or create a new one
+
+        if(!$tokenRecord) {
+            $tokenRecord = new Oauth_TokenRecord();
+            $tokenRecord->userId = $user->id;
+            $tokenRecord->provider = $providerClass;
+
+            $tokenRecord->userMapping = $account->mapping;
+        }
+        
+
+        // update token variables
+
+        $tokenRecord->token = base64_encode(serialize($provider->token));
+
+        $tokenRecord->scope = craft()->httpSession->get('oauth.scope');
+
+
+        // save token
+
+        $tokenRecord->save();
+
+
+        // login user to craft
+
+        if($provider->token) {
+            craft()->social_userSession->login(base64_encode(serialize($provider->token)));
+        }
+
+        // clean session variables
+
+		craft()->oauth->httpSessionClean();
+
+
+		// redirect
+
+		$this->redirect($socialReferer);
+	}
+
+    // --------------------------------------------------------------------
+}
