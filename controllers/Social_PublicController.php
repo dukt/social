@@ -93,9 +93,9 @@ class Social_PublicController extends BaseController
 
         // instantiate provider
 
-        // $provider = craft()->oauth->instantiateProvider($providerClass, $callbackUrl, $provider);
+        // $provider = craft()->oauth->providerInstantiate($providerClass, $callbackUrl, $provider);
 
-        $provider = craft()->oauth->instantiateProvider($providerClass, $callbackUrl, $token);
+        $provider = craft()->oauth->providerInstantiate($providerClass, $callbackUrl, $token);
 
 
         // get account
