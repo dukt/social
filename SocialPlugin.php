@@ -10,7 +10,7 @@ class SocialPlugin extends BasePlugin
      */
     function getName()
     {
-        return Craft::t('Social');
+        return Craft::t('Social Login');
     }
 
     // --------------------------------------------------------------------

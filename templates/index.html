@@ -15,6 +15,35 @@
 
 {% set content %}
 
+
+    <h2>Social</h2>
+
+    <table border="1">
+        {% for provider in craft.oauth.getProviders() %}
+            {% set account = craft.social.getAccount(provider) %}
+
+            {% if account %}
+                <tr>
+                    <td>{{provider}}</td>
+                    <td>{{account.email}}</td>
+                    <td><a href="{{craft.social.disconnect(provider)}}">Disconnect</a></td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td>{{provider}}</td>
+                    <td><em>Not authenticated</em></td>
+                    <td>
+                        {% if craft.oauth.providerIsConfigured(provider) %}
+                            <a href="{{ craft.social.connect(provider) }}">Connect</a>
+                        {% else %}
+                            <em>Authentication disabled</em>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+
     <h2>Tokens</h2>
 
     {% if craft.oauth is defined %}

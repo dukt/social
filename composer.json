@@ -11,6 +11,7 @@
         "symfony/finder": "2.2.*@dev",
         "guzzle/http": "~3.0",
         "vipsoft/unzip": "dev-master",
-        "symfony/filesystem": "2.3.*@dev"
+        "symfony/filesystem": "2.3.*@dev",
+        "facebook/php-sdk": "dev-master"
     }
 }
