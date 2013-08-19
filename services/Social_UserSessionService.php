@@ -1,4 +1,5 @@
 <?php
+
 namespace Craft;
 
 require(CRAFT_PLUGINS_PATH.'social/etc/users/TokenIdentity.php');

@@ -4,6 +4,8 @@ namespace Craft;
 
 class Social_TokenController extends BaseController
 {
+	// --------------------------------------------------------------------
+
 	public function actionRemove()
 	{
 		$tokenId = craft()->request->getParam('tokenId');
@@ -22,4 +24,6 @@ class Social_TokenController extends BaseController
 
 		$this->redirect($redirect);
 	}
+
+	// --------------------------------------------------------------------
 }

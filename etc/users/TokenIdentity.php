@@ -2,16 +2,6 @@
 namespace Craft;
 
 /**
- * Social by Dukt
- *
- * @package   Social
- * @author    Benjamin David
- * @copyright Copyright (c) 2013, Dukt
- * @license   http://dukt.net/add-ons/craft/social/
- * @link      http://dukt.net/add-ons/craft/social/
- */
-
-/**
  * TokenIdentity represents the data needed to identify a user with a token and an email
  * It contains the authentication method that checks if the provided data can identity the user.
  */

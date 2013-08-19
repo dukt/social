@@ -1,9 +1,0 @@
-{
-	"message" : "{{element.body|striptags|json_encode}}",
-	"url" : "{{element.fakeAsset}}",
-	"link" : "http://thelink.com/",
-	"name" : "the name",
-	"caption" : "the caption",
-	"description" : "the description",
-	"source":"http://thesource.com/"
-}
