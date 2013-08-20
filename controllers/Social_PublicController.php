@@ -29,12 +29,40 @@ class Social_PublicController extends BaseController
 
 	// --------------------------------------------------------------------
 
-	public function actionLogin()
+    public function actionLogin()
+    {
+        $providerClass = craft()->request->getParam('provider');
+        $redirect = craft()->request->getParam('redirect');
+
+
+        // social callbackUrl
+
+        $callbackUrl = UrlHelper::getSiteUrl(craft()->config->get('actionTrigger').'/social/public/loginCallback');
+
+
+        // set session variables
+
+        craft()->oauth->httpSessionClean();
+
+        craft()->httpSession->add('oauth.social', true);
+        craft()->oauth->httpSessionAdd('oauth.socialCallback', $callbackUrl);
+        craft()->oauth->httpSessionAdd('oauth.socialReferer', $redirect);
+
+        $this->redirect(UrlHelper::getSiteUrl(
+                craft()->config->get('actionTrigger').'/oauth/connect',
+                array('provider' => $providerClass)
+            ));
+    }
+	public function actionLogin2()
 	{
 		// providerClass
 
-		$providerClass = craft()->request->getParam('provider');
+        $providerClass = craft()->request->getParam('provider');
 
+
+        if(!$redirect) {
+            $redirect = $_SERVER['HTTP_REFERER'];
+        }
 
 		// social callbackUrl
 
@@ -43,9 +71,14 @@ class Social_PublicController extends BaseController
 
 		// set session variables
 
+        craft()->oauth->httpSessionClean();
+
 		craft()->oauth->httpSessionAdd('oauth.social', true);
 		craft()->oauth->httpSessionAdd('oauth.socialCallback', $callbackUrl);
-		craft()->oauth->httpSessionAdd('oauth.socialReferer', $_SERVER['HTTP_REFERER']);
+		craft()->oauth->httpSessionAdd('oauth.socialReferer', $redirect);
+        // echo $redirect;
+        // echo craft()->httpSession->get('oauth.socialReferer');
+        // die();
 		craft()->oauth->httpSessionAdd('oauth.userMode', true);
 		craft()->oauth->httpSessionAdd('oauth.providerClass', $providerClass);
 
@@ -72,6 +105,8 @@ class Social_PublicController extends BaseController
 		$providerClass = craft()->httpSession->get('oauth.providerClass');
 		$socialReferer = craft()->httpSession->get('oauth.socialReferer');
 
+        // echo craft()->httpSession->get('oauth.socialReferer');
+        // die('socialReferer');
 
         // ----------------------
         // instantiate provider
@@ -100,7 +135,7 @@ class Social_PublicController extends BaseController
 
         // get account
 
-        $account = @$provider->getAccount();
+        $account = $provider->getUserInfo();
 
 
         // ----------------------
@@ -121,7 +156,7 @@ class Social_PublicController extends BaseController
         // no user ? check with account email
 
         if(!$user) {
-            $user = craft()->users->getUserByUsernameOrEmail($account->email);
+            $user = craft()->users->getUserByUsernameOrEmail($account['email']);
         }
 
 
@@ -136,7 +171,7 @@ class Social_PublicController extends BaseController
 
             $criteriaParams = array(
                 ':provider' => $providerClass,
-                ':userMapping' => $account->mapping
+                ':userMapping' => $account['uid']
                 );
 
             $tokenRecord = Oauth_TokenRecord::model()->find($criteriaConditions, $criteriaParams);
@@ -155,8 +190,8 @@ class Social_PublicController extends BaseController
         	// new user
 
             $newUser = new UserModel();
-            $newUser->username = $account->email;
-            $newUser->email = $account->email;
+            $newUser->username = $account['uid'];
+            $newUser->email = $account['uid'].'@'.strtolower($providerClass);
 
 
             // save user
@@ -176,19 +211,20 @@ class Social_PublicController extends BaseController
 
         if($user) {
 	        $criteriaConditions = '
-	            provider=:provider AND 
-	            userMapping=:userMapping AND 
+	            provider=:provider AND
+	            userMapping=:userMapping AND
 	            userId is not null
 	            ';
 
 	        $criteriaParams = array(
 	            ':provider' => $providerClass,
-	            ':userMapping' => $account->mapping
+	            ':userMapping' => $account['uid']
 	            );
 
 	        $tokenRecord = Oauth_TokenRecord::model()->find($criteriaConditions, $criteriaParams);
 
 	        if($tokenRecord) {
+                var_dump($tokenRecord->user->id, $user->id);
 	        	if($tokenRecord->user->id != $user->id) {
 	        		// provider account already in use by another user
 	        		die('provider account already in use by another craft user');
@@ -204,15 +240,23 @@ class Social_PublicController extends BaseController
             $tokenRecord->userId = $user->id;
             $tokenRecord->provider = $providerClass;
 
-            $tokenRecord->userMapping = $account->mapping;
+            $tokenRecord->userMapping = $account['uid'];
         }
-        
+
+        //scope
+
+        $scope = craft()->httpSession->get('oauth.scope');
+
+        if(!$scope) {
+            $scope = $provider->scope;
+        }
+
 
         // update token variables
 
         $tokenRecord->token = base64_encode(serialize($provider->token));
 
-        $tokenRecord->scope = craft()->httpSession->get('oauth.scope');
+        $tokenRecord->scope = $scope;
 
 
         // save token

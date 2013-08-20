@@ -6,9 +6,9 @@ class SocialVariable
 {
     // --------------------------------------------------------------------
 
-    public function login($providerClass)
+    public function login($providerClass, $redirect = null)
     {
-        return craft()->social->login($providerClass);
+        return craft()->social->login($providerClass, $redirect);
     }
 
     // --------------------------------------------------------------------

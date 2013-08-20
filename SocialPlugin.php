@@ -46,11 +46,45 @@ class SocialPlugin extends BasePlugin
     // --------------------------------------------------------------------
 
     /**
+     * Define Settings
+     */
+    protected function defineSettings()
+    {
+        return array(
+            // 'publishTemplatePath' => AttributeType::String,
+        );
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Get Settings HTML
+     */
+    public function getSettingsHtml()
+    {
+        $variables = array(
+            'settings' => $this->getSettings()
+        );
+
+        $oauthPlugin = craft()->plugins->getPlugin('OAuth');
+
+        if($oauthPlugin) {
+            if($oauthPlugin->isInstalled && $oauthPlugin->isEnabled) {
+
+            }
+        }
+
+        return craft()->templates->render('social/settings', $variables);
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
      * Has CP Section
      */
     public function hasCpSection()
     {
-        return true;
+        return false;
     }
 
     // --------------------------------------------------------------------

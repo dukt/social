@@ -10,11 +10,15 @@ class SocialService extends BaseApplicationComponent
 {
     // --------------------------------------------------------------------
 
-    public function login($providerClass)
+    public function login($providerClass, $redirect = null)
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
 
         $params = array('provider' => $providerClass);
+
+        if($redirect) {
+            $params['redirect'] = $redirect;
+        }
 
         $url = UrlHelper::getSiteUrl(craft()->config->get('actionTrigger').'/social/public/login', $params);
 
@@ -34,21 +38,40 @@ class SocialService extends BaseApplicationComponent
 
     public function connect($providerClass)
     {
-        return craft()->oauth->connect($providerClass, null, null, true);
+        return craft()->oauth->connectUrl($providerClass, null, null, true);
     }
 
     // --------------------------------------------------------------------
 
     public function disconnect($providerClass)
     {
-        return craft()->oauth->disconnect('social.user', $providerClass);
+        return craft()->oauth->disconnectUrl($providerClass);
     }
 
     // --------------------------------------------------------------------
 
     public function getAccount($providerClass)
     {
-        return craft()->oauth->getAccount($providerClass, null, true);
+        // get token
+
+        $tokenRecord = craft()->oauth->tokenRecordByCurrentUser($providerClass);
+
+        if(!$tokenRecord) {
+            return null;
+        }
+
+        $token = unserialize(base64_decode($tokenRecord->token));
+
+        // provider
+
+        $callbackUrl = UrlHelper::getSiteUrl(
+            craft()->config->get('actionTrigger').'/oauth/public/connect',
+            array('provider' => $providerClass)
+        );
+
+        $provider = craft()->oauth->providerInstantiate($providerClass, $callbackUrl, $token);
+
+        return $provider->getAccount();
     }
 
     // --------------------------------------------------------------------

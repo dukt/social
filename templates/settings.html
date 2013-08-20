@@ -1,0 +1,100 @@
+{% import "_includes/forms" as forms %}
+
+{% set oauthPlugin = craft.plugins.getPlugin('OAuth', false) %}
+{% set pluginUrlParams = {pluginClass:'Oauth', pluginHandle:'oauth'} %}
+
+{% includeCssResource 'social/css/disableSave.css' %}
+
+{% if oauthPlugin is null %}
+
+	<h2 class="first">OAuth Plugin Installation</h2>
+
+	<p>Facebook plugin requires the OAuth plugin to be installed in order to be able to connect to Facebook API.</p>
+
+	<div class="buttons">
+		<a href="{{actionUrl('facebook/plugin/download', pluginUrlParams)}}" class="btn submit">Download &amp; Install OAuth Plugin</a>
+	</div>
+
+{% else %}
+
+	{% if not oauthPlugin.isInstalled %}
+
+		<h2 class="first">OAuth Plugin Installation</h2>
+
+		<p>Facebook plugin requires the OAuth plugin to be installed in order to be able to connect to Facebook API.</p>
+
+		<p>OAuth plugin has been found on your system but is not installed, you need to install it.</p>
+
+		<div class="buttons">
+			<a href="{{actionUrl('facebook/plugin/install', pluginUrlParams)}}" class="btn submit">Install OAuth Plugin</a>
+		</div>
+
+	{% elseif not oauthPlugin.isEnabled %}
+
+		<h2 class="first">OAuth Plugin Installation</h2>
+
+		<p>Facebook plugin requires the OAuth plugin to be installed in order to be able to connect to Facebook API.</p>
+
+		<p>OAuth plugin has been found on your system but is disabled, you need to enable it.</p>
+
+		<div class="buttons">
+			<a href="{{actionUrl('facebook/plugin/enable', pluginUrlParams)}}" class="btn submit">Enable OAuth Plugin</a>
+		</div>
+
+	{% else %}
+
+
+		{% set oauthUpdates = craft.facebook.pluginCheckUpdates('Oauth', 'oauth') %}
+		{% set facebookUpdates = craft.facebook.pluginCheckUpdates('Facebook', 'facebook') %}
+
+		{% if oauthUpdates or facebookUpdates %}
+			<h2 class="first">Updates</h2>
+
+			<p>There are updates available for the following plugins :</p>
+
+			<ul>
+				{% if oauthUpdates %}
+				<li>OAuth</li>
+				{% endif %}
+
+				{% if facebookUpdates %}
+				<li>Facebook</li>
+				{% endif %}
+			</ul>
+
+			<div class="buttons">
+				<a href="{{actionUrl('facebook/plugin/updateAllPlugins')}}" class="btn">Update Plugins</a>
+			</div>
+
+			<hr />
+
+		{% endif %}
+
+		<h2 class="first">Enabled Providers</h2>
+
+		<ul>
+			{% set oneFound = false %}
+
+	        {% for provider in craft.oauth.getProviders() %}
+
+	            {% set providerRecord = craft.oauth.getProvider(provider) %}
+
+	            {% if providerRecord.clientId is not null and providerRecord.clientSecret is not null %}
+	                {% if providerRecord.enabled %}
+	                	{% set oneFound = true %}
+						<li><span class="status on"></span> {{providerRecord.providerClass}}</li>
+	                {% endif %}
+	            {% endif %}
+	        {% endfor %}
+
+	        {% if not oneFound %}
+				<li><em>No provider configured</em></li>
+	        {% endif %}
+		</ul>
+
+		<h2>Provider settings</h2>
+
+		<p>Go to <a href="{{url('oauth')}}">OAuth plugin</a> in order to configure providers.</p>
+	{% endif %}
+
+{% endif %}
