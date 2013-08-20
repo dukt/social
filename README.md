@@ -1,10 +1,15 @@
 # Social <small>_for Craft CMS_</small>
 
-Social plugin let's you connect to Craft CMS with the most popular service providers : Google, Facebook, Twitter, Flickr, ...
+Social plugin let's you login to Craft CMS with popular service providers.
 
 - [Installation](#install)
 - [Supported providers](#providers)
-- [Login with OAuth providers](#login)
+- [Templating](#templating)
+    - [Login with an OAuth provider](#template-login)
+    - [Login with multiple OAuth providers](#template-login-multiple)
+    - [Provider account profile](#template-account)
+    - [Manage Apps](#template-apps)
+
 - [API Reference](#api)
 
 <a id="install"></a>
@@ -23,8 +28,19 @@ Social plugin let's you connect to Craft CMS with the most popular service provi
 - Twitter
 - Flickr
 
-<a id="login"></a>
-## Login with OAuth providers
+<a id="templating"></a>
+## Templating
+
+<a id="template-login"></a>
+### Login with an OAuth provider
+
+    {% set provider = 'Facebook' %}
+
+    <p><a href="{{ craft.social.login(provider) }}">Login with {{provider}}</a></p>
+
+
+<a id="template-login-multiple"></a>
+### Login with multiple OAuth providers
 
     <table border="1">
         {% for provider in craft.oauth.getProviders() %}
@@ -51,6 +67,16 @@ Social plugin let's you connect to Craft CMS with the most popular service provi
             {% endif %}
         {% endfor %}
     </table>
+
+
+<a id="template-account"></a>
+### Provider account profile
+
+
+<a id="template-apps"></a>
+### Manage Apps
+
+
 
 <a id="api"></a>
 ## API Reference
