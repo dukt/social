@@ -38,14 +38,14 @@ class SocialService extends BaseApplicationComponent
 
     public function connect($providerClass)
     {
-        return craft()->oauth->connectUrl($providerClass, null, null, true);
+        return craft()->oauth->connect($providerClass, null, null, true);
     }
 
     // --------------------------------------------------------------------
 
     public function disconnect($providerClass)
     {
-        return craft()->oauth->disconnectUrl($providerClass);
+        return craft()->oauth->disconnect($providerClass);
     }
 
     // --------------------------------------------------------------------
