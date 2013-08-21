@@ -64,12 +64,7 @@ class SocialService extends BaseApplicationComponent
 
         // provider
 
-        $callbackUrl = UrlHelper::getSiteUrl(
-            craft()->config->get('actionTrigger').'/oauth/public/connect',
-            array('provider' => $providerClass)
-        );
-
-        $provider = craft()->oauth->providerInstantiate($providerClass, $callbackUrl, $token);
+        $provider = craft()->oauth->providerInstantiate($providerClass, $token);
 
         return $provider->getAccount();
     }
