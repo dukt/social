@@ -112,13 +112,6 @@ class Social_PublicController extends BaseController
         // instantiate provider
         // ----------------------
 
-        // callbackUrl
-
-        $callbackUrl = UrlHelper::getSiteUrl(
-        	craft()->config->get('actionTrigger').'/oauth/public/connect',
-        	array('provider' => $providerClass)
-        );
-
 
         // set token
 
@@ -128,9 +121,7 @@ class Social_PublicController extends BaseController
 
         // instantiate provider
 
-        // $provider = craft()->oauth->providerInstantiate($providerClass, $callbackUrl, $provider);
-
-        $provider = craft()->oauth->providerInstantiate($providerClass, $callbackUrl, $token);
+        $provider = craft()->oauth->providerInstantiate($providerClass, $token);
 
 
         // get account
