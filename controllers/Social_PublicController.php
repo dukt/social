@@ -18,11 +18,15 @@ class Social_PublicController extends BaseController
 	{
 		craft()->userSession->logout(false);
 
-		$redirect = '';
+        $redirect = craft()->request->getParam('redirect');
 
-		if(isset($_SERVER['HTTP_REFERER'])) {
-			$redirect = $_SERVER['HTTP_REFERER'];
-		}
+        if(!$redirect) {
+            if(isset($_SERVER['HTTP_REFERER'])) {
+                $redirect = $_SERVER['HTTP_REFERER'];
+            }
+
+            $redirect = '';
+        }
 
 		$this->redirect($redirect);
 	}
@@ -33,6 +37,7 @@ class Social_PublicController extends BaseController
     {
         $providerClass = craft()->request->getParam('provider');
         $redirect = craft()->request->getParam('redirect');
+        $scope = craft()->request->getParam('scope');
 
 
         // social callbackUrl
@@ -50,7 +55,7 @@ class Social_PublicController extends BaseController
 
         $this->redirect(UrlHelper::getSiteUrl(
                 craft()->config->get('actionTrigger').'/oauth/connect',
-                array('provider' => $providerClass)
+                array('provider' => $providerClass, $scope)
             ));
     }
 	public function actionLogin2()
@@ -121,12 +126,13 @@ class Social_PublicController extends BaseController
 
         // instantiate provider
 
-        $provider = craft()->oauth->providerInstantiate($providerClass, $token);
+        $provider = craft()->oauth->getProvider($providerClass);
 
+        $provider->connect($token);
 
         // get account
 
-        $account = $provider->getUserInfo();
+        $account = $provider->getAccount();
 
 
         // ----------------------
@@ -147,7 +153,9 @@ class Social_PublicController extends BaseController
         // no user ? check with account email
 
         if(!$user) {
-            $user = craft()->users->getUserByUsernameOrEmail($account['email']);
+            if(isset($account->email)) {
+                $user = craft()->users->getUserByUsernameOrEmail($account['email']);
+            }
         }
 
 
@@ -239,13 +247,13 @@ class Social_PublicController extends BaseController
         $scope = craft()->httpSession->get('oauth.scope');
 
         if(!$scope) {
-            $scope = $provider->scope;
+            $scope = $provider->getScope();
         }
 
 
         // update token variables
 
-        $tokenRecord->token = base64_encode(serialize($provider->token));
+        $tokenRecord->token = base64_encode(serialize($provider->token()));
 
         $tokenRecord->scope = $scope;
 
@@ -257,8 +265,8 @@ class Social_PublicController extends BaseController
 
         // login user to craft
 
-        if($provider->token) {
-            craft()->social_userSession->login(base64_encode(serialize($provider->token)));
+        if($provider->token()) {
+            craft()->social_userSession->login(base64_encode(serialize($provider->token())));
         }
 
         // clean session variables

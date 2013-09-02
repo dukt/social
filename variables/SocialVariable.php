@@ -13,9 +13,9 @@ class SocialVariable
 
     // --------------------------------------------------------------------
 
-    public function logout()
+    public function logout($redirect = null)
     {
-        return craft()->social->logout();
+        return craft()->social->logout($redirect);
     }
 
     // --------------------------------------------------------------------
@@ -41,4 +41,22 @@ class SocialVariable
 
     // --------------------------------------------------------------------
 
+    public function getProvider($providerClass, $configuredOnly = true)
+    {
+        return craft()->oauth->getProvider($providerClass, $configuredOnly);
+    }
+
+    // --------------------------------------------------------------------
+
+    public function getProviders($configuredOnly = true)
+    {
+        return craft()->oauth->getProviders($configuredOnly);
+    }
+
+    // --------------------------------------------------------------------
+
+    public function getToken($providerClass)
+    {
+        return craft()->social->getToken($providerClass);
+    }
 }

@@ -10,7 +10,7 @@ class SocialService extends BaseApplicationComponent
 {
     // --------------------------------------------------------------------
 
-    public function login($providerClass, $redirect = null)
+    public function login($providerClass, $redirect = null, $scope = null)
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
 
@@ -18,6 +18,10 @@ class SocialService extends BaseApplicationComponent
 
         if($redirect) {
             $params['redirect'] = $redirect;
+        }
+
+        if($scope) {
+            $params['scope'] = base64_encode(serialize($scope));
         }
 
         $url = UrlHelper::getSiteUrl(craft()->config->get('actionTrigger').'/social/public/login', $params);
@@ -29,9 +33,11 @@ class SocialService extends BaseApplicationComponent
 
     // --------------------------------------------------------------------
 
-    public function logout()
+    public function logout($redirect = null)
     {
-        return UrlHelper::getActionUrl('social/public/logout');
+        $params = array('redirect' => $redirect);
+
+        return UrlHelper::getActionUrl('social/public/logout', $params);
     }
 
     // --------------------------------------------------------------------
@@ -54,7 +60,7 @@ class SocialService extends BaseApplicationComponent
     {
         // get token
 
-        $tokenRecord = craft()->oauth->tokenRecordByCurrentUser($providerClass);
+        $tokenRecord = craft()->oauth_tokens->tokenRecordByCurrentUser($providerClass);
 
         if(!$tokenRecord) {
             return null;
@@ -64,9 +70,26 @@ class SocialService extends BaseApplicationComponent
 
         // provider
 
-        $provider = craft()->oauth->providerInstantiate($providerClass, $token);
+        $provider = craft()->oauth->getProvider($providerClass);
 
-        return $provider->getAccount();
+        $provider->connect($token);
+
+        return $provider->getUserInfo();
+    }
+
+    // --------------------------------------------------------------------
+
+    public function getToken($providerClass)
+    {
+        $tokenRecord = craft()->oauth_tokens->tokenRecordByCurrentUser($providerClass);
+
+        if(!$tokenRecord) {
+            return null;
+        }
+
+        $token = unserialize(base64_decode($tokenRecord->token));
+
+        return $token;
     }
 
     // --------------------------------------------------------------------
