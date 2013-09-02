@@ -5,7 +5,7 @@ Social plugin let's you login to Craft CMS with popular service providers.
 - [Installation](#install)
 - [Supported providers](#providers)
 - [Templating](#templating)
-    - [Login with an OAuth provider](#template-login)
+    - [Login with a single OAuth provider](#template-login)
     - [Login with multiple OAuth providers](#template-login-multiple)
     - [Provider account profile](#template-account)
     - [Manage Apps](#template-apps)
@@ -43,7 +43,32 @@ Social plugin let's you login to Craft CMS with popular service providers.
 ### Login with multiple OAuth providers
 
     <table border="1">
+        {% for provider in craft.social.getProviders() %}
+
+            {% if provider.account %}
+                <tr>
+                    <td>{{provider.name}}</td>
+                    <td>{{provider.account.email}}</td>
+                    <td><a href="{{craft.social.logout(provider.classHandle)}}">Disconnect</a></td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td>{{provider.name}}</td>
+                    <td><em>Not authenticated</em></td>
+                    <td>
+                        {% if provider.isConfigured() %}
+                            <a href="{{ craft.social.login(provider.classHandle) }}">Authenticate</a>
+                        {% else %}
+                            <em>Authentication disabled</em>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endif %}
+
+        {% endfor %}
+
         {% for provider in craft.oauth.getProviders() %}
+
             {% set account = craft.social.getAccount(provider) %}
 
             {% if account %}
