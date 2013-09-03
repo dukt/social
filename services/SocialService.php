@@ -41,57 +41,5 @@ class SocialService extends BaseApplicationComponent
     }
 
     // --------------------------------------------------------------------
-
-    public function connect($providerClass)
-    {
-        return craft()->oauth->connect($providerClass, null, null, true);
-    }
-
-    // --------------------------------------------------------------------
-
-    public function disconnect($providerClass)
-    {
-        return craft()->oauth->disconnect($providerClass);
-    }
-
-    // --------------------------------------------------------------------
-
-    public function getAccount($providerClass)
-    {
-        // get token
-
-        $tokenRecord = craft()->oauth_tokens->tokenRecordByCurrentUser($providerClass);
-
-        if(!$tokenRecord) {
-            return null;
-        }
-
-        $token = unserialize(base64_decode($tokenRecord->token));
-
-        // provider
-
-        $provider = craft()->oauth->getProvider($providerClass);
-
-        $provider->connect($token);
-
-        return $provider->getUserInfo();
-    }
-
-    // --------------------------------------------------------------------
-
-    public function getToken($providerClass)
-    {
-        $tokenRecord = craft()->oauth_tokens->tokenRecordByCurrentUser($providerClass);
-
-        if(!$tokenRecord) {
-            return null;
-        }
-
-        $token = unserialize(base64_decode($tokenRecord->token));
-
-        return $token;
-    }
-
-    // --------------------------------------------------------------------
 }
 

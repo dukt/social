@@ -19,44 +19,4 @@ class SocialVariable
     }
 
     // --------------------------------------------------------------------
-
-    public function connect($providerClass)
-    {
-        return craft()->social->connect($providerClass);
-    }
-
-    // --------------------------------------------------------------------
-
-    public function disconnect($providerClass)
-    {
-        return craft()->social->disconnect($providerClass);
-    }
-
-    // --------------------------------------------------------------------
-
-    public function getAccount($providerClass)
-    {
-        return craft()->social->getAccount($providerClass);
-    }
-
-    // --------------------------------------------------------------------
-
-    public function getProvider($providerClass, $configuredOnly = true)
-    {
-        return craft()->oauth->getProvider($providerClass, $configuredOnly);
-    }
-
-    // --------------------------------------------------------------------
-
-    public function getProviders($configuredOnly = true)
-    {
-        return craft()->oauth->getProviders($configuredOnly);
-    }
-
-    // --------------------------------------------------------------------
-
-    public function getToken($providerClass)
-    {
-        return craft()->social->getToken($providerClass);
-    }
 }
