@@ -4,13 +4,15 @@ Social plugin let's you login to Craft CMS with popular service providers.
 
 - [Installation](#install)
 - [Supported providers](#providers)
-- [Templating](#templating)
-    - [Login with a single OAuth provider](#template-login)
-    - [Login with multiple OAuth providers](#template-login-multiple)
-    - [Provider account profile](#template-account)
-    - [Manage Apps](#template-apps)
-
-- [API Reference](#api)
+- [Login](#login)
+- [Logout](#logout)
+- [Advanced Usage](#advanced)
+    - [Login with multiple OAuth providers](#multiple-login)
+    - [Displaying account data](#account)
+- [Templating Reference](#templating)
+- [SocialService API](#api)
+- [Licensing](#license)
+- [Feedback](#feedback)
 
 <a id="install"></a>
 ## Installation
@@ -20,27 +22,46 @@ Social plugin let's you login to Craft CMS with popular service providers.
 2. Go to **Admin / Social** and follow the installation instructions.
 
 <a id="providers"></a>
-## Supported providers
+## Providers
 
 - Facebook
 - GitHub
+
 - Google
 - Twitter
 - Flickr
 
-<a id="templating"></a>
-## Templating
+The following providers are **not supported** but will be added soon :
 
-<a id="template-login"></a>
-### Login with an OAuth provider
+- Appnet
+- Dropbox
+- Foursquare
+- Instagram
+- LinkedIn
+- Mailchimp
+- PayPal
+- Tumblr
+- Vimeo
+
+
+<a id="login"></a>
+### Login
 
     {% set provider = 'Facebook' %}
 
     <p><a href="{{ craft.social.login(provider) }}">Login with {{provider}}</a></p>
 
+<a id="logout"></a>
+### Logout
 
-<a id="template-login-multiple"></a>
-### Login with multiple OAuth providers
+    <p><a href="{{ craft.social.logout() }}">Logout</a></p>
+
+<a id="advanced"></a>
+### Advanced Usage
+
+<a id="multiple-login"></a>
+#### Login with multiple OAuth providers
+
 
     <table border="1">
         {% for provider in craft.social.getProviders() %}
@@ -93,31 +114,96 @@ Social plugin let's you login to Craft CMS with popular service providers.
         {% endfor %}
     </table>
 
-
-<a id="template-account"></a>
-### Provider account profile
-
-
-<a id="template-apps"></a>
-### Manage Apps
+<a id="account"></a>
+#### Displaying account data
 
 
+    {% set account = craft.social.getAccount('Facebook') %}
 
-<a id="api"></a>
-## API Reference
+    <p>The email is : {{account.email}}</p>
 
-### craft.social.login(providerClass)
 
-Return a link for logging in with given provider.
+<a id="templating"></a>
+## Templating Reference
 
-### craft.social.logout(providerClass)
+<dl>
+    <dt><tt>login(providerClass, redirect = null)</tt></dt>
+    <dd>
+        <pre><code>{{craft.social.login(providerClass, redirect = null)}}</code></pre>
 
-Returns a link for logging out.
+        <p>Return a link for logging in with given provider.</p>
+    </dd>
+</dl>
 
-### craft.social.getProviders()
+<dl>
+    <dt><tt>logout(redirect = null)</tt></dt>
+    <dd>
+        <pre><code>{{craft.social.logout(redirect = null)}}</code></pre>
 
-Returns all providers as an array.
+        <p>Returns a link for logging out.</p>
+    </dd>
+</dl>
 
-### craft.social.getAccount(providerClass)
 
-Get account data from a provider.
+<dl>
+    <dt><tt>getProviders()</tt></dt>
+    <dd>
+        <pre><code>{{craft.social.getProviders()}}</code></pre>
+
+        <p>Returns all providers as an array.</p>
+    </dd>
+</dl>
+
+
+<dl>
+    <dt><tt>getAccount(providerClass)</tt></dt>
+    <dd>
+        <pre><code>{{craft.social.getAccount(providerClass)}}</code></pre>
+
+        <p>Get account data from a provider.</p>
+    </dd>
+</dl>
+
+
+<a id="templating"></a>
+## SocialService API
+
+<dl>
+    <dt><tt>login($providerClass, $redirect = null, $scope = null)</tt></dt>    
+</dl>
+
+<dl>
+    <dt><tt>logout($redirect = null)</tt></dt>    
+</dl>
+
+<dl>
+    <dt><tt>connect($providerClass)</tt></dt>    
+</dl>
+
+<dl>
+    <dt><tt>disconnect($providerClass)</tt></dt>    
+</dl>
+
+<dl>
+    <dt><tt>getAccount($providerClass)</tt></dt>    
+</dl>
+
+<dl>
+    <dt><tt>getToken($providerClass)</tt></dt>    
+</dl>
+
+
+<a id="license"></a>
+## Licensing
+
+OAuth plugin for Craft CMS is free to use for end users.
+
+If you are a developer and want to make use of the OAuth plugin in your plugins, please contact us at hello@dukt.net.
+
+<a id="feedback"></a>
+## Feedback
+
+**Please provide feedback!** We want this plugin to make fit your needs as much as possible.
+Please [get in touch](mailto:hello@dukt.net), and point out what you do and don't like. **No issue is too small.**
+
+This plugin is actively maintained by [Benjamin David](https://github.com/benjamindavid), from [Dukt](http://dukt.net/).
