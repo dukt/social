@@ -1,14 +1,17 @@
 # Social <small>_for Craft CMS_</small>
 
-Social plugin let's you login to Craft CMS with popular service providers.
+Let people login and register to your Craft website from their Facebook, GitHub, Google, Twitter or Flickr account.
 
 - [Installation](#install)
 - [Supported providers](#providers)
 - [Login](#login)
+    - [Login with Facebook](#login-facebook)
+    - [Login with GitHub](#login-github)
+    - [Login with Google](#login-google)
+    - [Login with Twitter](#login-twitter)
+    - [Login with Flickr](#login-flickr)
+    - [Login with multiple providers](#login-multiple)
 - [Logout](#logout)
-- [Advanced Usage](#advanced)
-    - [Login with multiple OAuth providers](#multiple-login)
-    - [Displaying account data](#account)
 - [Templating Reference](#templating)
 - [SocialService API](#api)
 - [Licensing](#license)
@@ -22,7 +25,7 @@ Social plugin let's you login to Craft CMS with popular service providers.
 2. Go to **Admin / Social** and follow the installation instructions.
 
 <a id="providers"></a>
-## Providers
+## Supported providers
 
 - Facebook
 - GitHub
@@ -47,89 +50,78 @@ The following providers are **not supported** but will be added soon :
 <a id="login"></a>
 ### Login
 
-    {% set provider = 'Facebook' %}
+<a id="login-facebook"></a>
+#### Login with Facebook
 
-    <p><a href="{{ craft.social.login(provider) }}">Login with {{provider}}</a></p>
+    {% set provider = 'Facebook' %}
+    {% set redirect = 'account' %}
+
+    <p><a href="{{ craft.social.login(provider, redirect) }}">Login with {{provider}}</a></p>
+
+
+<a id="login-github"></a>
+#### Login with GitHub
+
+    {% set provider = 'Github' %}
+    {% set redirect = 'account' %}
+
+    <p><a href="{{ craft.social.login(provider, redirect) }}">Login with {{provider}}</a></p>
+
+
+<a id="login-google"></a>
+#### Login with Google
+
+    {% set provider = 'Google' %}
+    {% set redirect = 'account' %}
+
+    <p><a href="{{ craft.social.login(provider, redirect) }}">Login with {{provider}}</a></p>
+
+
+<a id="login-twitter"></a>
+#### Login with Twitter
+
+    {% set provider = 'Twitter' %}
+    {% set redirect = 'account' %}
+
+    <p><a href="{{ craft.social.login(provider, redirect) }}">Login with {{provider}}</a></p>
+
+
+<a id="login-flickr"></a>
+#### Login with Flickr
+
+    {% set provider = 'Flickr' %}
+    {% set redirect = 'account' %}
+
+    <p><a href="{{ craft.social.login(provider, redirect) }}">Login with {{provider}}</a></p>
+
+<a id="login-multiple"></a>
+#### Login with multiple providers
+
+    {% for provider in craft.oauth.getProviders() %}
+        <p>
+            <a href="{{ craft.social.login(provider.classHandle, 'account') }}">
+                Login with {{provider.classHandle}}
+            </a>
+        </p>
+    {% endfor %}
+
 
 <a id="logout"></a>
 ### Logout
 
-    <p><a href="{{ craft.social.logout() }}">Logout</a></p>
+    {% set redirect = '' %}
 
-<a id="advanced"></a>
-### Advanced Usage
+    <p><a href="{{ craft.social.logout(redirect) }}">Logout</a></p>
 
-<a id="multiple-login"></a>
-#### Login with multiple OAuth providers
-
-
-    <table border="1">
-        {% for provider in craft.social.getProviders() %}
-
-            {% if provider.account %}
-                <tr>
-                    <td>{{provider.name}}</td>
-                    <td>{{provider.account.email}}</td>
-                    <td><a href="{{craft.social.logout(provider.classHandle)}}">Disconnect</a></td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td>{{provider.name}}</td>
-                    <td><em>Not authenticated</em></td>
-                    <td>
-                        {% if provider.isConfigured() %}
-                            <a href="{{ craft.social.login(provider.classHandle) }}">Authenticate</a>
-                        {% else %}
-                            <em>Authentication disabled</em>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endif %}
-
-        {% endfor %}
-
-        {% for provider in craft.oauth.getProviders() %}
-
-            {% set account = craft.social.getAccount(provider) %}
-
-            {% if account %}
-                <tr>
-                    <td>{{provider}}</td>
-                    <td>{{account.email}}</td>
-                    <td><a href="{{craft.social.logout(provider)}}">Disconnect</a></td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td>{{provider}}</td>
-                    <td><em>Not authenticated</em></td>
-                    <td>
-                        {% if craft.oauth.providerIsConfigured(provider) %}
-                            <a href="{{ craft.social.login(provider) }}">Authenticate</a>
-                        {% else %}
-                            <em>Authentication disabled</em>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endif %}
-        {% endfor %}
-    </table>
-
-<a id="account"></a>
-#### Displaying account data
-
-
-    {% set account = craft.social.getAccount('Facebook') %}
-
-    <p>The email is : {{account.email}}</p>
 
 
 <a id="templating"></a>
 ## Templating Reference
 
 <dl>
-    <dt><tt>login(providerClass, redirect = null)</tt></dt>
+    <dt><tt>login(providerClass, redirect = null, scope = null)</tt></dt>
     <dd>
-        <pre><code>{{craft.social.login(providerClass, redirect = null)}}</code></pre>
+        <pre><code>{{craft.social.login('Facebook', 'account')}}</code></pre>
 
         <p>Return a link for logging in with given provider.</p>
     </dd>
@@ -138,34 +130,13 @@ The following providers are **not supported** but will be added soon :
 <dl>
     <dt><tt>logout(redirect = null)</tt></dt>
     <dd>
-        <pre><code>{{craft.social.logout(redirect = null)}}</code></pre>
+        <pre><code>{{craft.social.logout()}}</code></pre>
 
         <p>Returns a link for logging out.</p>
     </dd>
 </dl>
 
-
-<dl>
-    <dt><tt>getProviders()</tt></dt>
-    <dd>
-        <pre><code>{{craft.social.getProviders()}}</code></pre>
-
-        <p>Returns all providers as an array.</p>
-    </dd>
-</dl>
-
-
-<dl>
-    <dt><tt>getAccount(providerClass)</tt></dt>
-    <dd>
-        <pre><code>{{craft.social.getAccount(providerClass)}}</code></pre>
-
-        <p>Get account data from a provider.</p>
-    </dd>
-</dl>
-
-
-<a id="templating"></a>
+<a id="api"></a>
 ## SocialService API
 
 <dl>
@@ -174,22 +145,6 @@ The following providers are **not supported** but will be added soon :
 
 <dl>
     <dt><tt>logout($redirect = null)</tt></dt>    
-</dl>
-
-<dl>
-    <dt><tt>connect($providerClass)</tt></dt>    
-</dl>
-
-<dl>
-    <dt><tt>disconnect($providerClass)</tt></dt>    
-</dl>
-
-<dl>
-    <dt><tt>getAccount($providerClass)</tt></dt>    
-</dl>
-
-<dl>
-    <dt><tt>getToken($providerClass)</tt></dt>    
 </dl>
 
 
