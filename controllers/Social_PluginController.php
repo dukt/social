@@ -6,14 +6,14 @@ class Social_PluginController extends BaseController
 {
     // --------------------------------------------------------------------
 
+    private $pluginHandle = 'social';
     private $pluginService;
-    private $referer;
 
     // --------------------------------------------------------------------
 
     public function __construct()
     {
-        $this->pluginService = craft()->social_plugin;
+        $this->pluginService = craft()->{$this->pluginHandle.'_plugin'};
     }
 
     // --------------------------------------------------------------------
@@ -33,7 +33,7 @@ class Social_PluginController extends BaseController
 
             $this->redirect(
                 UrlHelper::getActionUrl(
-                    'social/plugin/install',
+                    $this->pluginHandle.'/plugin/install',
                     array('plugin' => $pluginHandle, 'redirect' => $_SERVER['HTTP_REFERER'])
                 )
             );
