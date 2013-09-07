@@ -22,29 +22,28 @@ class Social_PluginController extends BaseController
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
 
-        $pluginClass = craft()->request->getParam('pluginClass');
-        $pluginHandle = craft()->request->getParam('pluginHandle');
+        $pluginHandle = craft()->request->getParam('plugin');
 
 
         // download plugin (includes download, unzip)
 
-        $download = $this->pluginService->download($pluginClass, $pluginHandle);
+        $download = $this->pluginService->download($pluginHandle, $pluginHandle);
 
         if($download['success'] == true) {
 
             // install plugin
 
-            if($this->pluginService->install($pluginClass)) {
+            if($this->pluginService->install($pluginHandle)) {
 
-                Craft::log(__METHOD__.' : '.$pluginClass.' plugin installed.', LogLevel::Info, true);
+                Craft::log(__METHOD__.' : '.$pluginHandle.' plugin installed.', LogLevel::Info, true);
 
-                craft()->userSession->setNotice(Craft::t($pluginClass.' plugin installed.'));
+                craft()->userSession->setNotice(Craft::t($pluginHandle.' plugin installed.'));
 
             } else {
 
                 // plugin couldn't be installed
 
-                Craft::log(__METHOD__.' : '.$pluginClass.' plugin not installed.', LogLevel::Info, true);
+                Craft::log(__METHOD__.' : '.$pluginHandle.' plugin not installed.', LogLevel::Info, true);
 
                 $this->redirect($_SERVER['HTTP_REFERER']);
             }
@@ -53,7 +52,7 @@ class Social_PluginController extends BaseController
 
             // download failure
 
-            $msg = 'Couldn’t install '.$pluginClass.' plugin.';
+            $msg = 'Couldn’t install '.$pluginHandle.' plugin.';
 
             if(isset($download['msg'])) {
                 $msg = $download['msg'];
@@ -76,9 +75,9 @@ class Social_PluginController extends BaseController
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
 
-        $pluginClass = craft()->request->getParam('pluginClass');
+        $pluginHandle = craft()->request->getParam('plugin');
 
-        $this->pluginService->enable($pluginClass);
+        $this->pluginService->enable($pluginHandle);
 
         $this->redirect($_SERVER['HTTP_REFERER']);
     }
@@ -89,27 +88,27 @@ class Social_PluginController extends BaseController
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
 
-        // pluginClass
+        // pluginHandle
 
-        $pluginClass = craft()->request->getParam('pluginClass');
+        $pluginHandle = craft()->request->getParam('plugin');
 
 
         // install plugin
 
-        if($this->pluginService->install($pluginClass)) {
+        if($this->pluginService->install($pluginHandle)) {
 
             // install success
 
-            Craft::log(__METHOD__." : ".$pluginClass.' plugin installed.', LogLevel::Info, true);
+            Craft::log(__METHOD__." : ".$pluginHandle.' plugin installed.', LogLevel::Info, true);
 
-            craft()->userSession->setNotice(Craft::t($pluginClass.' plugin installed.'));
+            craft()->userSession->setNotice(Craft::t($pluginHandle.' plugin installed.'));
         } else {
 
             // install failure
 
-            Craft::log(__METHOD__." : Couldn't install ".$pluginClass." plugin.", LogLevel::Info, true);
+            Craft::log(__METHOD__." : Couldn't install ".$pluginHandle." plugin.", LogLevel::Info, true);
 
-            craft()->userSession->setError(Craft::t("Couldn't install ".$pluginClass." plugin."));
+            craft()->userSession->setError(Craft::t("Couldn't install ".$pluginHandle." plugin."));
         }
 
 
