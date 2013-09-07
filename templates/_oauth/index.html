@@ -1,0 +1,11 @@
+{% set oauthPlugin = craft.plugins.getPlugin('oauth', false) %}
+
+{% if oauthPlugin is null %}
+	{% include 'facebook/_oauth/download' %}
+{% else %}
+	{% if not oauthPlugin.isInstalled %}
+		{% include 'facebook/_oauth/install' %}
+	{% elseif not oauthPlugin.isEnabled %}
+		{% include 'facebook/_oauth/enable' %}
+	{% endif %}
+{% endif %}
