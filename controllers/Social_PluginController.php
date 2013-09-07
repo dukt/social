@@ -27,26 +27,16 @@ class Social_PluginController extends BaseController
 
         // download plugin (includes download, unzip)
 
-        $download = $this->pluginService->download($pluginHandle, $pluginHandle);
+        $download = $this->pluginService->download($pluginHandle);
 
         if($download['success'] == true) {
 
-            // install plugin
-
-            if($this->pluginService->install($pluginHandle)) {
-
-                Craft::log(__METHOD__.' : '.$pluginHandle.' plugin installed.', LogLevel::Info, true);
-
-                craft()->userSession->setNotice(Craft::t('Plugin installed.'));
-
-            } else {
-
-                // plugin couldn't be installed
-
-                Craft::log(__METHOD__.' : '.$pluginHandle.' plugin not installed.', LogLevel::Info, true);
-
-                $this->redirect($_SERVER['HTTP_REFERER']);
-            }
+            $this->redirect(
+                UrlHelper::getActionUrl(
+                    'social/plugin/install',
+                    array('plugin' => $pluginHandle, 'redirect' => $_SERVER['HTTP_REFERER'])
+                )
+            );
 
         } else {
 
@@ -91,6 +81,11 @@ class Social_PluginController extends BaseController
         // pluginHandle
 
         $pluginHandle = craft()->request->getParam('plugin');
+        $redirect = craft()->request->getParam('redirect');
+
+        if (!$redirect) {
+            $redirect = $_SERVER['HTTP_REFERER'];
+        }
 
 
         // install plugin
