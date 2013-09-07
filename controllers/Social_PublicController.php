@@ -128,7 +128,7 @@ class Social_PublicController extends BaseController
 
         $provider = craft()->oauth->getProvider($providerClass);
 
-        $provider->connect($token);
+        $provider->setToken($token);
 
         // get account
 
