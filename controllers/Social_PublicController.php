@@ -47,11 +47,11 @@ class Social_PublicController extends BaseController
 
         // set session variables
 
-        craft()->oauth->httpSessionClean();
+        craft()->oauth->sessionClean();
 
         craft()->httpSession->add('oauth.social', true);
-        craft()->oauth->httpSessionAdd('oauth.socialCallback', $callbackUrl);
-        craft()->oauth->httpSessionAdd('oauth.socialReferer', $redirect);
+        craft()->oauth->sessionAdd('oauth.socialCallback', $callbackUrl);
+        craft()->oauth->sessionAdd('oauth.socialReferer', $redirect);
 
         $this->redirect(UrlHelper::getSiteUrl(
                 craft()->config->get('actionTrigger').'/oauth/connect',
@@ -76,16 +76,16 @@ class Social_PublicController extends BaseController
 
 		// set session variables
 
-        craft()->oauth->httpSessionClean();
+        craft()->oauth->sessionClean();
 
-		craft()->oauth->httpSessionAdd('oauth.social', true);
-		craft()->oauth->httpSessionAdd('oauth.socialCallback', $callbackUrl);
-		craft()->oauth->httpSessionAdd('oauth.socialReferer', $redirect);
+		craft()->oauth->sessionAdd('oauth.social', true);
+		craft()->oauth->sessionAdd('oauth.socialCallback', $callbackUrl);
+		craft()->oauth->sessionAdd('oauth.socialReferer', $redirect);
         // echo $redirect;
         // echo craft()->httpSession->get('oauth.socialReferer');
         // die();
-		craft()->oauth->httpSessionAdd('oauth.userMode', true);
-		craft()->oauth->httpSessionAdd('oauth.providerClass', $providerClass);
+		craft()->oauth->sessionAdd('oauth.userMode', true);
+		craft()->oauth->sessionAdd('oauth.providerClass', $providerClass);
 
 
 		// connect to provider (with default scope)
@@ -223,7 +223,6 @@ class Social_PublicController extends BaseController
 	        $tokenRecord = Oauth_TokenRecord::model()->find($criteriaConditions, $criteriaParams);
 
 	        if($tokenRecord) {
-                var_dump($tokenRecord->user->id, $user->id);
 	        	if($tokenRecord->user->id != $user->id) {
 	        		// provider account already in use by another user
 	        		die('provider account already in use by another craft user');
@@ -253,7 +252,7 @@ class Social_PublicController extends BaseController
 
         // update token variables
 
-        $tokenRecord->token = base64_encode(serialize($provider->token()));
+        $tokenRecord->token = base64_encode(serialize($provider->getToken()));
 
         $tokenRecord->scope = $scope;
 
@@ -265,13 +264,13 @@ class Social_PublicController extends BaseController
 
         // login user to craft
 
-        if($provider->token()) {
-            craft()->social_userSession->login(base64_encode(serialize($provider->token())));
+        if($provider->getToken()) {
+            craft()->social_userSession->login(base64_encode(serialize($provider->getToken())));
         }
 
         // clean session variables
 
-		craft()->oauth->httpSessionClean();
+		craft()->oauth->sessionClean();
 
 
 		// redirect
