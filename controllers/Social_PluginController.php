@@ -37,7 +37,7 @@ class Social_PluginController extends BaseController
 
                 Craft::log(__METHOD__.' : '.$pluginHandle.' plugin installed.', LogLevel::Info, true);
 
-                craft()->userSession->setNotice(Craft::t($pluginHandle.' plugin installed.'));
+                craft()->userSession->setNotice(Craft::t('Plugin installed.'));
 
             } else {
 
@@ -52,7 +52,7 @@ class Social_PluginController extends BaseController
 
             // download failure
 
-            $msg = 'Couldn’t install '.$pluginHandle.' plugin.';
+            $msg = 'Couldn’t install plugin.';
 
             if(isset($download['msg'])) {
                 $msg = $download['msg'];
@@ -101,14 +101,14 @@ class Social_PluginController extends BaseController
 
             Craft::log(__METHOD__." : ".$pluginHandle.' plugin installed.', LogLevel::Info, true);
 
-            craft()->userSession->setNotice(Craft::t($pluginHandle.' plugin installed.'));
+            craft()->userSession->setNotice(Craft::t('Plugin installed.'));
         } else {
 
             // install failure
 
             Craft::log(__METHOD__." : Couldn't install ".$pluginHandle." plugin.", LogLevel::Info, true);
 
-            craft()->userSession->setError(Craft::t("Couldn't install ".$pluginHandle." plugin."));
+            craft()->userSession->setError(Craft::t("Couldn't install plugin."));
         }
 
 
