@@ -160,6 +160,8 @@ class Social_PluginService extends BaseApplicationComponent
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
 
+        craft()->plugins->loadPlugins();
+
         $pluginComponent = craft()->plugins->getPlugin($pluginHandle, false);
 
         try {
