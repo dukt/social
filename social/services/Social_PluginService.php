@@ -93,7 +93,7 @@ class Social_PluginService extends BaseApplicationComponent
 
             // move new files to final destination
 
-            $filesystem->rename($pluginZipDir.$contents[0].'/', CRAFT_PLUGINS_PATH.$pluginHandle);
+            $filesystem->rename($pluginZipDir.$contents[0].'/'.$pluginHandle.'/', CRAFT_PLUGINS_PATH.$pluginHandle);
 
         } catch (\Exception $e) {
 
