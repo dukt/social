@@ -1,6 +1,6 @@
 *.log
 .DS_Store
-/vendor
+/social/vendor
 composer.lock
 composer.phar
 phpunit.xml

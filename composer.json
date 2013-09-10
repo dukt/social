@@ -1,4 +1,7 @@
 {
+    "config": {
+        "vendor-dir": "social/vendor/"
+    },
     "repositories": [
         {
             "type": "vcs",
