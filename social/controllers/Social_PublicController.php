@@ -150,7 +150,7 @@ class Social_PublicController extends BaseController
         }
 
 
-        // no user ? check with account email
+        // no current user ? check with account email
 
         if(!$user) {
             if(isset($account->email)) {
@@ -188,21 +188,34 @@ class Social_PublicController extends BaseController
 
         	// new user
 
+            if(isset($account['email'])) {
+                // define email
+
+                $usernameOrEmail = $account['email'];
+            } else {
+                // if no email, we create a fake one
+
+                $usernameOrEmail = $account['uid'].'@'.strtolower($providerClass).'.social.dukt.net';
+            }
+
             $newUser = new UserModel();
-            $newUser->username = $account['uid'];
-            $newUser->email = $account['uid'].'@'.strtolower($providerClass);
+            $newUser->username = $usernameOrEmail;
+            $newUser->email = $usernameOrEmail;
+
+            $newUser->newPassword = md5(base64_encode(serialize($provider->getToken())));
 
 
             // save user
 
             craft()->users->saveUser($newUser);
+
+            $user = craft()->users->getUserByUsernameOrEmail($usernameOrEmail);
         }
 
 
         // ----------------------
         // save token record
         // ----------------------
-
 
         // try to find an existing token
 
@@ -229,6 +242,7 @@ class Social_PublicController extends BaseController
 	        	}
 	        }
         }
+
 
 
         // or create a new one
