@@ -18,5 +18,20 @@ class SocialVariable
         return craft()->social->logout($redirect);
     }
 
+
+    // --------------------------------------------------------------------
+
+    public function userHasTemporaryEmail($userId)
+    {
+        return craft()->social->userHasTemporaryEmail($userId);
+    }
+
+    // --------------------------------------------------------------------
+
+    public function userHasTemporaryUsername($userId)
+    {
+        return craft()->social->userHasTemporaryUsername($userId);
+    }
+
     // --------------------------------------------------------------------
 }

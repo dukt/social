@@ -40,6 +40,34 @@ class SocialService extends BaseApplicationComponent
         return UrlHelper::getActionUrl('social/public/logout', $params);
     }
 
+
+    // --------------------------------------------------------------------
+
+    public function userHasTemporaryEmail($userId)
+    {
+        $user = craft()->users->getUserById($userId);
+
+        if(strpos($user->email, '.social.dukt.net') == false) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    // --------------------------------------------------------------------
+
+    public function userHasTemporaryUsername($userId)
+    {
+        $user = craft()->users->getUserById($userId);
+
+        if(strpos($user->username, '.social.dukt.net') == false) {
+            return true;
+        }
+
+        return false;
+    }
+
     // --------------------------------------------------------------------
 }
 
