@@ -29,22 +29,10 @@ Let people login and register to your Craft website from their Facebook, GitHub,
 
 - Facebook
 - GitHub
-
 - Google
 - Twitter
 - Flickr
 
-The following providers are **not supported** but will be added soon :
-
-- Appnet
-- Dropbox
-- Foursquare
-- Instagram
-- LinkedIn
-- Mailchimp
-- PayPal
-- Tumblr
-- Vimeo
 
 
 <a id="login"></a>
@@ -140,11 +128,11 @@ The following providers are **not supported** but will be added soon :
 ## SocialService API
 
 <dl>
-    <dt><tt>login($providerClass, $redirect = null, $scope = null)</tt></dt>    
+    <dt><tt>login($providerClass, $redirect = null, $scope = null)</tt></dt>
 </dl>
 
 <dl>
-    <dt><tt>logout($redirect = null)</tt></dt>    
+    <dt><tt>logout($redirect = null)</tt></dt>
 </dl>
 
 
