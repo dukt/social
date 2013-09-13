@@ -50,7 +50,7 @@ Let people login and register to your Craft website from their Facebook, GitHub,
 <a id="login-github"></a>
 #### Login with GitHub
 
-    {% set provider = 'Github' %}
+    {% set provider = 'github' %}
     {% set redirect = 'account' %}
 
     <p><a href="{{ craft.social.login(provider, redirect) }}">Login with {{provider}}</a></p>
@@ -59,7 +59,7 @@ Let people login and register to your Craft website from their Facebook, GitHub,
 <a id="login-google"></a>
 #### Login with Google
 
-    {% set provider = 'Google' %}
+    {% set provider = 'google' %}
     {% set redirect = 'account' %}
 
     <p><a href="{{ craft.social.login(provider, redirect) }}">Login with {{provider}}</a></p>
@@ -68,7 +68,7 @@ Let people login and register to your Craft website from their Facebook, GitHub,
 <a id="login-twitter"></a>
 #### Login with Twitter
 
-    {% set provider = 'Twitter' %}
+    {% set provider = 'twitter' %}
     {% set redirect = 'account' %}
 
     <p><a href="{{ craft.social.login(provider, redirect) }}">Login with {{provider}}</a></p>
@@ -77,7 +77,7 @@ Let people login and register to your Craft website from their Facebook, GitHub,
 <a id="login-flickr"></a>
 #### Login with Flickr
 
-    {% set provider = 'Flickr' %}
+    {% set provider = 'flickr' %}
     {% set redirect = 'account' %}
 
     <p><a href="{{ craft.social.login(provider, redirect) }}">Login with {{provider}}</a></p>
