@@ -13,6 +13,8 @@ class Social_UserSessionService extends UserSessionService {
 
     public function login($token)
     {
+        Craft::log(__METHOD__, LogLevel::Info, true);
+
         $this->_identity = new TokenIdentity($token);
         $this->_identity->authenticate();
 

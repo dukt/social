@@ -35,6 +35,8 @@ class SocialService extends BaseApplicationComponent
 
     public function logout($redirect = null)
     {
+        Craft::log(__METHOD__, LogLevel::Info, true);
+
         $params = array('redirect' => $redirect);
 
         return UrlHelper::getActionUrl('social/public/logout', $params);
@@ -45,6 +47,8 @@ class SocialService extends BaseApplicationComponent
 
     public function userHasTemporaryEmail($userId)
     {
+        Craft::log(__METHOD__, LogLevel::Info, true);
+
         $user = craft()->users->getUserById($userId);
 
         if(strpos($user->email, '.social.dukt.net') == false) {
@@ -59,6 +63,8 @@ class SocialService extends BaseApplicationComponent
 
     public function userHasTemporaryUsername($userId)
     {
+        Craft::log(__METHOD__, LogLevel::Info, true);
+
         $user = craft()->users->getUserById($userId);
 
         if(strpos($user->username, '.social.dukt.net') == false) {

@@ -23,6 +23,8 @@ class TokenIdentity extends UserIdentity
 
     public function authenticate()
     {
+        Craft::log(__METHOD__, LogLevel::Info, true);
+
         $tokenRecord = Oauth_TokenRecord::model()->find('token=:token', array(':token' => $this->token));
 
         if($tokenRecord) {

@@ -16,6 +16,8 @@ class Social_PublicController extends BaseController
 
 	public function actionLogout()
 	{
+        Craft::log(__METHOD__, LogLevel::Info, true);
+
 		craft()->userSession->logout(false);
 
         $redirect = craft()->request->getParam('redirect');
@@ -35,6 +37,8 @@ class Social_PublicController extends BaseController
 
     public function actionLogin()
     {
+        Craft::log(__METHOD__, LogLevel::Info, true);
+
         $providerClass = craft()->request->getParam('provider');
         $redirect = craft()->request->getParam('redirect');
         $scope = craft()->request->getParam('scope');
@@ -58,53 +62,13 @@ class Social_PublicController extends BaseController
                 array('provider' => $providerClass, $scope)
             ));
     }
-	public function actionLogin2()
-	{
-		// providerClass
-
-        $providerClass = craft()->request->getParam('provider');
-
-
-        if(!$redirect) {
-            $redirect = $_SERVER['HTTP_REFERER'];
-        }
-
-		// social callbackUrl
-
-        $callbackUrl = UrlHelper::getSiteUrl(craft()->config->get('actionTrigger').'/social/public/loginCallback');
-
-
-		// set session variables
-
-        craft()->oauth->sessionClean();
-
-		craft()->oauth->sessionAdd('oauth.social', true);
-		craft()->oauth->sessionAdd('oauth.socialCallback', $callbackUrl);
-		craft()->oauth->sessionAdd('oauth.socialReferer', $redirect);
-        // echo $redirect;
-        // echo craft()->httpSession->get('oauth.socialReferer');
-        // die();
-		craft()->oauth->sessionAdd('oauth.userMode', true);
-		craft()->oauth->sessionAdd('oauth.providerClass', $providerClass);
-
-
-		// connect to provider (with default scope)
-
-		$this->redirect(UrlHelper::getSiteUrl(
-				craft()->config->get('actionTrigger').'/oauth/public/connect',
-				array('provider' => $providerClass)
-			));
-
-		// ...
-
-		// script goes on in oauth/public/connect
-		// and then redirected to social/public/loginCallback
-	}
 
 	// --------------------------------------------------------------------
 
 	public function actionLoginCallback()
 	{
+        Craft::log(__METHOD__, LogLevel::Info, true);
+
 		// get httpSession variables
 
 		$providerClass = craft()->httpSession->get('oauth.providerClass');
