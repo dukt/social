@@ -41,7 +41,7 @@ Let people login and register to your Craft website from their Facebook, GitHub,
 <a id="login-facebook"></a>
 #### Login with Facebook
 
-    {% set provider = 'Facebook' %}
+    {% set provider = 'facebook' %}
     {% set redirect = 'account' %}
 
     <p><a href="{{ craft.social.login(provider, redirect) }}">Login with {{provider}}</a></p>
@@ -109,7 +109,7 @@ Let people login and register to your Craft website from their Facebook, GitHub,
 <dl>
     <dt><tt>login(providerClass, redirect = null, scope = null)</tt></dt>
     <dd>
-        <pre><code>{{craft.social.login('Facebook', 'account')}}</code></pre>
+        <pre><code>{{craft.social.login('facebook', 'account')}}</code></pre>
 
         <p>Return a link for logging in with given provider.</p>
     </dd>
