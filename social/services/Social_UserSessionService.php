@@ -44,8 +44,8 @@ class Social_UserSessionService extends UserSessionService {
                         {
                             // Save the necessary info to the identity cookie.
                             $sessionToken = StringHelper::UUID();
-                            $hashedToken = craft()->security->hashString($sessionToken);
-                            $uid = craft()->users->handleSuccessfulLogin($user, $hashedToken['hash']);
+                            $hashedToken = craft()->security->hashData(base64_encode(serialize($sessionToken)));
+                            $uid = craft()->users->handleSuccessfulLogin($user, $hashedToken);
                             $userAgent = craft()->request->userAgent;
 
                             $data = array(
