@@ -27,15 +27,15 @@
         {% endif %}
 	</ul>
 
-	<p>Go to <a href="{{url('oauth')}}">OAuth</a> in order to configure OAuth providers.</p>
+	<p><a href="{{url('oauth')}}" class="btn icon settings">OAuth providers</a></p>
 
 	<hr>
 
-	<h2>Social Login Settings</h2>
+	<h2>Fake Email Registration</h2>
 
     {{ forms.checkboxField({
-        label: 'Register user even if no email is available ?'|t,
-        instructions: "Allows you to connect the user right away and ask his email address afterward. If disabled, services not providing email addresses like Twitter will not work."|t,
+        label: 'Register user with a fake email if OAuth account email is not defined ?'|t,
+        instructions: "Some OAuth providers never provide account email address. This option allows you to register/login the user right away even if the OAuth provider doesn't provide an email. Drawback is that you can't send email to the user until he updates with a valid email."|t,
         first:true,
         required: true,
         name: 'allowFakeEmail',
