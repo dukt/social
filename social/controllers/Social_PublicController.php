@@ -186,7 +186,7 @@ class Social_PublicController extends BaseController
 
                     // no email, we create a fake one
 
-                    $usernameOrEmail = $account['uid'].'@'.strtolower($providerClass).'.social.dukt.net';
+                    $usernameOrEmail = md5($account['uid']).'@'.strtolower($providerClass).'.social.dukt.net';
                 } else {
                     // no email here ? we abort, craft requires at least a valid email
 
