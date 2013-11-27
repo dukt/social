@@ -1,7 +1,7 @@
 {% import "_includes/forms" as forms %}
 
 
-{% includeCssResource 'social/css/disableSave.css' %}
+{#% includeCssResource 'social/css/disableSave.css' %#}
 
 {% set oauth = craft.plugins.getPlugin('oauth') %}
 
@@ -27,9 +27,22 @@
         {% endif %}
 	</ul>
 
-	<h2>Provider settings</h2>
+	<p>Go to <a href="{{url('oauth')}}">OAuth</a> in order to configure OAuth providers.</p>
 
-	<p>Go to <a href="{{url('oauth')}}">OAuth plugin</a> in order to configure providers.</p>
+	<hr>
+
+	<h2>Social Login Settings</h2>
+
+    {{ forms.checkboxField({
+        label: 'Register user even if no email is available ?'|t,
+        instructions: "Allows you to connect the user right away and ask his email address afterward. If disabled, services not providing email addresses like Twitter will not work."|t,
+        first:true,
+        required: true,
+        name: 'allowFakeEmail',
+        value: 1,
+        checked: settings ? settings.allowFakeEmail : true,
+        errors: settings ? settings.errors('allowFakeEmail') : null
+    }) }}
 
 {% else %}
 

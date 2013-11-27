@@ -52,6 +52,7 @@ class SocialPlugin extends BasePlugin
     {
         return array(
             // 'publishTemplatePath' => AttributeType::String,
+            'allowFakeEmail' => AttributeType::Bool,
         );
     }
 

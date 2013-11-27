@@ -157,9 +157,29 @@ class Social_PublicController extends BaseController
 
                 $usernameOrEmail = $account['email'];
             } else {
-                // if no email, we create a fake one
 
-                $usernameOrEmail = $account['uid'].'@'.strtolower($providerClass).'.social.dukt.net';
+                // get social plugin settings
+
+                $socialPlugin = craft()->plugins->getPlugin('social');
+                $settings = $socialPlugin->getSettings();
+
+
+                // no email allowed ?
+
+                if($settings['allowFakeEmail']) {
+
+                    // no email, we create a fake one
+
+                    $usernameOrEmail = $account['uid'].'@'.strtolower($providerClass).'.social.dukt.net';
+                } else {
+                    // no email here ? we abort, craft requires at least a valid email
+
+                    // add error before redirecting
+
+                    craft()->userSession->setError(Craft::t("This OAuth provider doesn't provide email sharing. Please try another one."));
+
+                    $this->redirect($socialReferer);
+                }
             }
 
             $newUser = new UserModel();
