@@ -6,6 +6,13 @@ class SocialVariable
 {
     // --------------------------------------------------------------------
 
+    public function getError()
+    {
+        return craft()->userSession->getFlash('error');
+    }
+
+    // --------------------------------------------------------------------
+
     public function login($providerClass, $redirect = null, $scope = null)
     {
         return craft()->social->login($providerClass, $redirect, $scope);
