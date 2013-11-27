@@ -45,6 +45,36 @@ class SocialService extends BaseApplicationComponent
 
     // --------------------------------------------------------------------
 
+    public function getTemporaryPassword($userId)
+    {
+        Craft::log(__METHOD__, LogLevel::Info, true);
+
+        $user = craft()->users->getUserById($userId);
+        $fake = '.social.dukt.net';
+        $pos = strpos($user->email, $fake);
+        $len = strlen($user->email);
+
+        if($pos) {
+
+            // temporary
+
+            $handle = substr($user->email, 0, $pos);
+            $handle = substr($handle, (strpos($handle, "@") + 1));
+
+            $token = craft()->oauth->getUserToken($handle);
+
+            $pass = md5(serialize($token->getRealToken()));
+            $pass = "azeaze";
+
+            return $pass;
+        }
+
+        return false;
+    }
+
+
+    // --------------------------------------------------------------------
+
     public function userHasTemporaryEmail($userId)
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
