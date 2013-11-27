@@ -55,7 +55,8 @@ class Social_PublicController extends BaseController
 
         craft()->httpSession->add('oauth.social', true);
         craft()->oauth->sessionAdd('oauth.socialCallback', $callbackUrl);
-        craft()->oauth->sessionAdd('oauth.socialReferer', $redirect);
+        craft()->oauth->sessionAdd('oauth.socialRedirect', $redirect);
+        craft()->oauth->sessionAdd('oauth.socialReferer', $_SERVER['HTTP_REFERER']);
 
         $this->redirect(UrlHelper::getSiteUrl(
                 craft()->config->get('actionTrigger').'/oauth/connect',
@@ -72,10 +73,11 @@ class Social_PublicController extends BaseController
 		// get httpSession variables
 
 		$providerClass = craft()->httpSession->get('oauth.providerClass');
+        $socialRedirect = craft()->httpSession->get('oauth.socialRedirect');
 		$socialReferer = craft()->httpSession->get('oauth.socialReferer');
 
-        // echo craft()->httpSession->get('oauth.socialReferer');
-        // die('socialReferer');
+        // echo craft()->httpSession->get('oauth.socialRedirect');
+        // die('socialRedirect');
 
         // ----------------------
         // instantiate provider
@@ -96,7 +98,21 @@ class Social_PublicController extends BaseController
 
         // get account
 
-        $account = $provider->getAccount();
+        try {
+            $account = $provider->getAccount();
+        } catch(\Exception $e) {
+            craft()->userSession->setError(Craft::t($e->getMessage()));
+
+            $this->redirect($socialReferer);
+        }
+
+
+        if(!$account) {
+
+            craft()->userSession->setError(Craft::t("Couldn't connect to your account."));
+
+            $this->redirect($socialReferer);
+        }
 
 
         // ----------------------
@@ -201,6 +217,8 @@ class Social_PublicController extends BaseController
         // save token record
         // ----------------------
 
+
+
         // try to find an existing token
 
         $tokenRecord = null;
@@ -226,7 +244,6 @@ class Social_PublicController extends BaseController
 	        	}
 	        }
         }
-
 
 
         // or create a new one
@@ -273,7 +290,7 @@ class Social_PublicController extends BaseController
 
 		// redirect
 
-		$this->redirect($socialReferer);
+		$this->redirect($socialRedirect);
 	}
 
     // --------------------------------------------------------------------
