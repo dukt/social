@@ -28,6 +28,14 @@ class SocialVariable
 
     // --------------------------------------------------------------------
 
+    public function getTemporaryPassword($userId)
+    {
+        return craft()->social->getTemporaryPassword($userId);
+    }
+
+
+    // --------------------------------------------------------------------
+
     public function userHasTemporaryEmail($userId)
     {
         return craft()->social->userHasTemporaryEmail($userId);
