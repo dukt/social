@@ -81,7 +81,11 @@ class SocialService extends BaseApplicationComponent
 
         $user = craft()->users->getUserById($userId);
 
-        if(strpos($user->email, '.social.dukt.net') == false) {
+        $fake = '.social.dukt.net';
+        $pos = strpos($user->email, $fake);
+        $len = strlen($user->email);
+
+        if($pos) {
             return true;
         }
 
