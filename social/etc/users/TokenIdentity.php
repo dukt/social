@@ -1,10 +1,22 @@
 <?php
+
+/**
+ * Social Login for Craft
+ *
+ * @package   Social Login
+ * @author    Benjamin David
+ * @copyright Copyright (c) 2013, Dukt
+ * @link      http://dukt.net/craft/social/
+ * @license   http://dukt.net/craft/social/docs/license
+ */
+
 namespace Craft;
 
 /**
  * TokenIdentity represents the data needed to identify a user with a token and an email
  * It contains the authentication method that checks if the provided data can identity the user.
  */
+
 class TokenIdentity extends UserIdentity
 {
     private $_id;

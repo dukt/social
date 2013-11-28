@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * Social Login for Craft
+ *
+ * @package   Social Login
+ * @author    Benjamin David
+ * @copyright Copyright (c) 2013, Dukt
+ * @link      http://dukt.net/craft/social/
+ * @license   http://dukt.net/craft/social/docs/license
+ */
+
 namespace Craft;
 
 require_once(CRAFT_PLUGINS_PATH.'social/vendor/autoload.php');
