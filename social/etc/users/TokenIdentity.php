@@ -7,19 +7,13 @@ namespace Craft;
  */
 class TokenIdentity extends UserIdentity
 {
-    // --------------------------------------------------------------------
-
     private $_id;
     public $token;
-
-    // --------------------------------------------------------------------
 
     public function __construct($token)
     {
         $this->token = $token;
     }
-
-    // --------------------------------------------------------------------
 
     public function authenticate()
     {
@@ -38,12 +32,8 @@ class TokenIdentity extends UserIdentity
         }
     }
 
-    // --------------------------------------------------------------------
-
     public function getId()
     {
         return $this->_id;
     }
-
-    // --------------------------------------------------------------------
 }

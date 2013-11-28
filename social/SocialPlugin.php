@@ -13,8 +13,6 @@ class SocialPlugin extends BasePlugin
         return Craft::t('Social Login');
     }
 
-    // --------------------------------------------------------------------
-
     /**
      * Get Version
      */
@@ -22,8 +20,6 @@ class SocialPlugin extends BasePlugin
     {
         return '0.9.15';
     }
-
-    // --------------------------------------------------------------------
 
     /**
      * Get Developer
@@ -33,8 +29,6 @@ class SocialPlugin extends BasePlugin
         return 'Dukt';
     }
 
-    // --------------------------------------------------------------------
-
     /**
      * Get Developer URL
      */
@@ -43,20 +37,15 @@ class SocialPlugin extends BasePlugin
         return 'http://dukt.net/';
     }
 
-    // --------------------------------------------------------------------
-
     /**
      * Define Settings
      */
     protected function defineSettings()
     {
         return array(
-            // 'publishTemplatePath' => AttributeType::String,
             'allowFakeEmail' => AttributeType::Bool,
         );
     }
-
-    // --------------------------------------------------------------------
 
     /**
      * Get Settings HTML
@@ -78,8 +67,6 @@ class SocialPlugin extends BasePlugin
         return craft()->templates->render('social/settings', $variables);
     }
 
-    // --------------------------------------------------------------------
-
     /**
      * Has CP Section
      */
@@ -87,8 +74,6 @@ class SocialPlugin extends BasePlugin
     {
         return false;
     }
-
-    // --------------------------------------------------------------------
 
     /**
      * Hook Register CP Routes

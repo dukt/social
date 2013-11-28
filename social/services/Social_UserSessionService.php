@@ -9,8 +9,6 @@ class Social_UserSessionService extends UserSessionService {
     private $_identity;
     public $allowAutoLogin = true;
 
-    // --------------------------------------------------------------------
-
     public function login($token)
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
@@ -80,6 +78,4 @@ class Social_UserSessionService extends UserSessionService {
             return !$this->getIsGuest();
         }
     }
-
-    // --------------------------------------------------------------------
 }

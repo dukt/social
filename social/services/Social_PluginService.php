@@ -20,8 +20,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class Social_PluginService extends BaseApplicationComponent
 {
-    // --------------------------------------------------------------------
-
     public function download($pluginHandle)
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
@@ -126,8 +124,6 @@ class Social_PluginService extends BaseApplicationComponent
         return $return;
     }
 
-    // --------------------------------------------------------------------
-
     public function enable($pluginHandle)
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
@@ -153,8 +149,6 @@ class Social_PluginService extends BaseApplicationComponent
             return false;
         }
     }
-
-    // --------------------------------------------------------------------
 
     public function install($pluginHandle)
     {
@@ -191,8 +185,6 @@ class Social_PluginService extends BaseApplicationComponent
             return false;
         }
     }
-
-    // --------------------------------------------------------------------
 
     private function _getRemotePlugin($pluginHandle)
     {
@@ -236,7 +228,5 @@ class Social_PluginService extends BaseApplicationComponent
             Craft::log(__METHOD__.' : Could not get channel items', LogLevel::Info, true);
         }
     }
-
-    // --------------------------------------------------------------------
 }
 

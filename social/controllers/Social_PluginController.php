@@ -4,19 +4,13 @@ namespace Craft;
 
 class Social_PluginController extends BaseController
 {
-    // --------------------------------------------------------------------
-
     private $pluginHandle = 'social';
     private $pluginService;
-
-    // --------------------------------------------------------------------
 
     public function __construct()
     {
         $this->pluginService = craft()->{$this->pluginHandle.'_plugin'};
     }
-
-    // --------------------------------------------------------------------
 
     public function actionDownload()
     {
@@ -59,8 +53,6 @@ class Social_PluginController extends BaseController
         $this->redirect($_SERVER['HTTP_REFERER']);
     }
 
-    // --------------------------------------------------------------------
-
     public function actionEnable()
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
@@ -71,8 +63,6 @@ class Social_PluginController extends BaseController
 
         $this->redirect($_SERVER['HTTP_REFERER']);
     }
-
-    // --------------------------------------------------------------------
 
     public function actionInstall()
     {
@@ -111,6 +101,4 @@ class Social_PluginController extends BaseController
 
         $this->redirect($_SERVER['HTTP_REFERER']);
     }
-
-    // --------------------------------------------------------------------
 }

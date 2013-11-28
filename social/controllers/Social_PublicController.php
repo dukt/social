@@ -8,11 +8,7 @@ use Guzzle\Http\Client;
 
 class Social_PublicController extends BaseController
 {
-	// --------------------------------------------------------------------
-
 	public $allowAnonymous = true;
-
-	// --------------------------------------------------------------------
 
 	public function actionLogout()
 	{
@@ -32,8 +28,6 @@ class Social_PublicController extends BaseController
 
 		$this->redirect($redirect);
 	}
-
-	// --------------------------------------------------------------------
 
     public function actionLogin()
     {
@@ -63,8 +57,6 @@ class Social_PublicController extends BaseController
                 array('provider' => $providerClass, $scope)
             ));
     }
-
-	// --------------------------------------------------------------------
 
 	public function actionLoginCallback()
 	{
@@ -291,6 +283,4 @@ class Social_PublicController extends BaseController
 
 		$this->redirect($socialRedirect);
 	}
-
-    // --------------------------------------------------------------------
 }
