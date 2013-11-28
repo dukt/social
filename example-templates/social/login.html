@@ -1,0 +1,64 @@
+{% extends "social/_layout" %}
+
+{% set title = "Login" %}
+
+{% block main %}
+
+    {% set error = craft.social.error %}
+
+    {% if error %}
+
+        <div class="alert alert-danger">
+            <p>{{error}}</p>
+        </div>
+
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <h2>With OAuth provider</h2>
+
+
+            {% for provider in craft.oauth.getProviders() %}
+                <p><a href="{{ craft.social.login(provider.handle, 'social/apps') }}" class="btn btn-default">Login with {{provider.name}}</a></p>
+            {% endfor %}
+
+
+
+            {% if craft.facebook is defined %}
+                <p><a href="{{ craft.facebook.login('account/apps') }}" class="btn btn-default">Facebook Login</a></p>
+            {% endif %}
+
+        </div>
+        <div class="col-md-6">
+            <h2>With a Craft account</h2>
+
+            <form method="post" action="" accept-charset="UTF-8">
+                <input type="hidden" name="action" value="users/login">
+                <input type="hidden" name="redirect" value="{{ craft.session.returnUrl }}">
+
+
+                <div class="form-group">
+                    <label for="loginName">Email address</label>
+                    <input name="loginName" type="email" class="form-control" id="loginName" placeholder="Enter username or email">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input name="password" type="password" class="form-control" id="password">
+                </div>
+
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="rememberMe" value="1">
+                        Remember me
+                    </label>
+                </div>
+
+                <p><input type="submit" class="btn btn-primary" value="Login"> &nbsp; <a href="{{ url('login/forgotpassword') }}" class="btn btn-default btn-sm">Forget your password?</a></p>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
