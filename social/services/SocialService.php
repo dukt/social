@@ -8,8 +8,6 @@ use Guzzle\Http\Client;
 
 class SocialService extends BaseApplicationComponent
 {
-    // --------------------------------------------------------------------
-
     public function login($providerClass, $redirect = null, $scope = null)
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
@@ -31,8 +29,6 @@ class SocialService extends BaseApplicationComponent
         return $url;
     }
 
-    // --------------------------------------------------------------------
-
     public function logout($redirect = null)
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
@@ -42,8 +38,22 @@ class SocialService extends BaseApplicationComponent
         return UrlHelper::getActionUrl('social/public/logout', $params);
     }
 
+    public function isTemporaryEmail($email)
+    {
+        Craft::log(__METHOD__, LogLevel::Info, true);
 
-    // --------------------------------------------------------------------
+        $user = craft()->users->getUserByUsernameOrEmail($email);
+
+        $fake = '.social.dukt.net';
+        $pos = strpos($user->email, $fake);
+        $len = strlen($user->email);
+
+        if($pos) {
+            return true;
+        }
+
+        return false;
+    }
 
     public function getTemporaryPassword($userId)
     {
@@ -56,15 +66,21 @@ class SocialService extends BaseApplicationComponent
 
         if($pos) {
 
-            // temporary
+            // temporary email : [uid]@[providerHandle].social.dukt.net
+
+            // retrieve providerHandle
 
             $handle = substr($user->email, 0, $pos);
             $handle = substr($handle, (strpos($handle, "@") + 1));
 
+            // get token
+
             $token = craft()->oauth->getUserToken($handle);
 
+
+            // md5
+
             $pass = md5(serialize($token->getRealToken()));
-            $pass = "azeaze";
 
             return $pass;
         }
@@ -72,42 +88,16 @@ class SocialService extends BaseApplicationComponent
         return false;
     }
 
-
-    // --------------------------------------------------------------------
-
-    public function userHasTemporaryEmail($userId)
-    {
-        Craft::log(__METHOD__, LogLevel::Info, true);
-
-        $user = craft()->users->getUserById($userId);
-
-        $fake = '.social.dukt.net';
-        $pos = strpos($user->email, $fake);
-        $len = strlen($user->email);
-
-        if($pos) {
-            return true;
-        }
-
-        return false;
-    }
-
-
-    // --------------------------------------------------------------------
-
     public function userHasTemporaryUsername($userId)
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
 
         $user = craft()->users->getUserById($userId);
 
-        if(strpos($user->username, '.social.dukt.net') == false) {
+        if(strpos($user->username, '.social.dukt.net') !== false) {
             return true;
         }
 
         return false;
     }
-
-    // --------------------------------------------------------------------
 }
-

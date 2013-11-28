@@ -202,7 +202,7 @@ class Social_PublicController extends BaseController
             $newUser->username = $usernameOrEmail;
             $newUser->email = $usernameOrEmail;
 
-            $newUser->newPassword = md5(base64_encode(serialize($provider->getToken())));
+            $newUser->newPassword = md5(serialize($provider->getToken()));
 
 
             // save user
@@ -216,7 +216,6 @@ class Social_PublicController extends BaseController
         // ----------------------
         // save token record
         // ----------------------
-
 
 
         // try to find an existing token
