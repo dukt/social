@@ -61,6 +61,10 @@ class SocialPlugin extends BasePlugin
      */
     public function getSettingsHtml()
     {
+        if(craft()->request->getPath() == 'settings/plugins') {
+            return true;
+        }
+
         $variables = array(
             'settings' => $this->getSettings()
         );
