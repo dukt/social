@@ -1,15 +1,24 @@
 {% extends "social/_layout" %}
 
-
 {% block main %}
 
-<div class="col-md-12">
+    <div class="col-md-12">
+        {% if currentUser %}
+            <h1>Hello {{currentUser}} !</h1>
+        {% else %}
+            <h1>Hello, Guest !</h1>
+        {% endif %}
 
-	{% if currentUser %}
-		<h1>Welcome {{currentUser}} !</h1>
-	{% else %}
-		<h1>Welcome, Guest !</h1>
-	{% endif %}
-</div>
+        <p>Welcome in the Social example application. These template will show you how to use Social features on your Craft website.</p>
+
+        <hr>
+
+        <h4>This demo assumes that you have...</h4>
+
+        <ul>
+            <li>Installed OAuth plugin</li>
+            <li>Installed Social Login plugin</li>
+        </ul>
+    </div>
 
 {% endblock main %}
