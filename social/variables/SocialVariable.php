@@ -14,9 +14,16 @@ namespace Craft;
 
 class SocialVariable
 {
+    private $_error = false;
+
     public function getError()
     {
-        return craft()->userSession->getFlash('error');
+        if(!$this->_error) {
+            $this->_error = craft()->httpSession->get('error');
+            craft()->httpSession->remove('error');
+        }
+
+        return $this->_error;
     }
 
     public function login($providerClass, $redirect = null, $scope = null)

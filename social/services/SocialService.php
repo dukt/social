@@ -144,7 +144,10 @@ class SocialService extends BaseApplicationComponent
         try {
             $account = $provider->getAccount();
         } catch(\Exception $e) {
-            craft()->userSession->setError(Craft::t($e->getMessage()));
+
+            // craft()->userSession->setError(Craft::t($e->getMessage()));
+
+            craft()->httpSession->add('error', Craft::t($e->getMessage()));
 
             return $socialReferer;
         }
@@ -152,7 +155,9 @@ class SocialService extends BaseApplicationComponent
 
         if(!$account) {
 
-            craft()->userSession->setError(Craft::t("Couldn't connect to your account."));
+            // craft()->userSession->setError(Craft::t("Couldn't connect to your account."));
+
+            craft()->httpSession->add('error', Craft::t($e->getMessage()));
 
             return $socialReferer;
         }
@@ -235,7 +240,9 @@ class SocialService extends BaseApplicationComponent
 
                     // add error before redirecting
 
-                    craft()->userSession->setError(Craft::t("This OAuth provider doesn't provide email sharing. Please try another one."));
+                    // craft()->userSession->setError(Craft::t("This OAuth provider doesn't provide email sharing. Please try another one."));
+
+                    craft()->httpSession->add('error', Craft::t("This OAuth provider doesn't provide the email address. Please try another one."));
 
                     return $socialReferer;
                 }
@@ -297,6 +304,7 @@ class SocialService extends BaseApplicationComponent
 
             $tokenRecord->userMapping = $account['uid'];
         }
+
 
         //scope
 
