@@ -37,11 +37,10 @@
 
 			<ul class="nav navbar-nav">
 				{% if currentUser is null %}
-				<li><a href="{{ url('social/login') }}">Login</a></li>
+					<li><a href="{{ url('social/login') }}">Login</a></li>
 				{% else %}
-				<li><a href="{{ url('social/account') }}">Account</a></li>
-				<li><a href="{{ url('social/apps') }}">Apps</a></li>
-				<li><a href="{{craft.social.logout('social/login')}}">Logout</a></li>
+					<li><a href="{{ url('social/apps') }}">Apps</a></li>
+					<li><a href="{{craft.social.logout('social/login')}}">Logout</a></li>
 				{% endif %}
 			</ul>
 
