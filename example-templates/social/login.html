@@ -22,6 +22,13 @@
                 <p><a href="{{ craft.social.login(provider.handle, 'social/apps') }}" class="btn btn-default">Login with {{provider.name}}</a></p>
             {% endfor %}
 
+            <h2>Login with a specific scope</h2>
+
+
+            {% set scope = ['https://www.googleapis.com/auth/youtube'] %}
+
+            <p><a href="{{ craft.social.login('google', 'social/apps', scope) }}" class="btn btn-default">Google Login with YouTube privileges</a></p>
+
         </div>
         <div class="col-md-6">
             <h2>With a Craft account...</h2>
