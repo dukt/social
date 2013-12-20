@@ -64,7 +64,10 @@ class Social_PublicController extends BaseController
 
         $this->redirect(UrlHelper::getSiteUrl(
                 craft()->config->get('actionTrigger').'/oauth/connect',
-                array('provider' => $providerClass, $scope)
+                array(
+                    'provider' => $providerClass,
+                    'scope' => $scope
+                )
             ));
     }
 }
