@@ -31,11 +31,11 @@
 
 	<hr>
 
-	<h2>Fake Email Registration</h2>
+	<h2>Fake Email Registration (beta)</h2>
 
     {{ forms.checkboxField({
         label: 'Register user with a fake email if OAuth account email is not defined ?'|t,
-        instructions: "Some OAuth providers never provide account email address. This option allows you to register/login the user right away even if the OAuth provider doesn't provide an email. Drawback is that you can't send email to the user until he updates with a valid email."|t,
+        instructions: "Some OAuth providers never provide account email address. This option allows you to register/login the user right away even if the OAuth provider doesn't provide an email. Drawback is that you can't send emails to the user until he updates with a valid email."|t,
         first:true,
         required: true,
         name: 'allowFakeEmail',
