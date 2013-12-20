@@ -1,7 +1,7 @@
 {% import "_includes/forms" as forms %}
 
 
-{#% includeCssResource 'social/css/disableSave.css' %#}
+{% includeCssResource 'social/css/disableSave.css' %}
 
 {% set oauth = craft.plugins.getPlugin('oauth') %}
 
@@ -10,24 +10,29 @@
 	{% include 'oauth/updates/_check' with {plugins:['oauth', 'social']} %}
 
 
-	<h2 class="first">Enabled Providers</h2>
+	<h2 class="first">OAuth Providers</h2>
 
-	<ul>
-		{% set oneFound = false %}
+    <p>Set up the OAuth providers that you want to use for social login.</p>
 
-        {% for provider in craft.oauth.getProviders() %}
+	{% set oneFound = false %}
 
-            	{% set oneFound = true %}
-				<li><span class="status on"></span> {{provider.name}}</li>
+    {% set providers = craft.social.getProviders(false) %}
 
-        {% endfor %}
+    {% if providers|length > 0 %}
+        <ul>
+            {% for provider in providers %}
+				<li><span class="status {{(provider.isConfigured ? 'on' : '')}}"></span> {{provider.name}}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+		<p>No provider configured</p>
+    {% endif %}
 
-        {% if not oneFound %}
-			<li><em>No provider configured</em></li>
-        {% endif %}
-	</ul>
+	<p><a href="{{url('oauth')}}" class="btn icon settings">OAuth Settings</a></p>
 
-	<p><a href="{{url('oauth')}}" class="btn icon settings">OAuth providers</a></p>
+    {#
+
+    Planned for Social 2.0
 
 	<hr>
 
@@ -43,6 +48,8 @@
         checked: settings ? settings.allowFakeEmail : true,
         errors: settings ? settings.errors('allowFakeEmail') : null
     }) }}
+
+    #}
 
 {% else %}
 

@@ -26,6 +26,16 @@ class SocialVariable
         return $this->_error;
     }
 
+    public function getProvider($handle, $configuredOnly = true)
+    {
+        return craft()->social->getProvider($handle, $configuredOnly);
+    }
+
+    public function getProviders($configuredOnly = true)
+    {
+        return craft()->social->getProviders($configuredOnly);
+    }
+
     public function login($providerClass, $redirect = null, $scope = null)
     {
         return craft()->social->login($providerClass, $redirect, $scope);

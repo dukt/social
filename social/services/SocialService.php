@@ -18,6 +18,34 @@ use Guzzle\Http\Client;
 
 class SocialService extends BaseApplicationComponent
 {
+    private $supportedProviders = array(
+            'facebook' => true,
+            'github' => true,
+            'google' => true
+        );
+
+    public function getProviders($configuredOnly = true)
+    {
+        $allProviders = craft()->oauth->getProviders($configuredOnly);
+
+        $providers = array();
+
+        foreach($allProviders as $provider) {
+            if(isset($this->supportedProviders[$provider->getHandle()])) {
+                array_push($providers, $provider);
+            }
+        }
+
+        return $providers;
+    }
+
+    public function getProvider($handle,  $configuredOnly = true)
+    {
+        if(isset($this->supportedProviders[$handle])) {
+            return craft()->oauth->getProvider($handle,  $configuredOnly);
+        }
+    }
+
     public function login($providerClass, $redirect = null, $scope = null)
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
