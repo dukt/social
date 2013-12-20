@@ -52,6 +52,8 @@ class SocialPlugin extends BasePlugin
     protected function defineSettings()
     {
         return array(
+            'allowSocialRegistration' => AttributeType::Bool,
+            'defaultGroup' => AttributeType::Number,
             'allowFakeEmail' => AttributeType::Bool,
         );
     }

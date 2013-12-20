@@ -240,7 +240,20 @@ class SocialService extends BaseApplicationComponent
 
         // no matching user, create one
 
+
+        // get social plugin settings
+
+        $socialPlugin = craft()->plugins->getPlugin('social');
+        $settings = $socialPlugin->getSettings();
+
         if(!$user) {
+
+            if(!$settings['allowSocialRegistration']) {
+
+                craft()->httpSession->add('error', Craft::t("Social registration is disabled."));
+
+                return $socialReferer;
+            }
 
             // new user
 
@@ -249,12 +262,6 @@ class SocialService extends BaseApplicationComponent
 
                 $usernameOrEmail = $account['email'];
             } else {
-
-                // get social plugin settings
-
-                $socialPlugin = craft()->plugins->getPlugin('social');
-                $settings = $socialPlugin->getSettings();
-
 
                 // no email allowed ?
 
@@ -288,6 +295,13 @@ class SocialService extends BaseApplicationComponent
             craft()->users->saveUser($newUser);
 
             $user = craft()->users->getUserByUsernameOrEmail($usernameOrEmail);
+
+
+            // save groups
+
+            if(!empty($settings['defaultGroup'])) {
+                craft()->userGroups->assignUserToGroups($user->id, array($settings['defaultGroup']));
+            }
         }
 
 
