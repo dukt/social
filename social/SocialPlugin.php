@@ -93,7 +93,7 @@ class SocialPlugin extends BasePlugin
     /**
      * Hook Register CP Routes
      */
-    public function hookRegisterCpRoutes()
+    public function registerCpRoutes()
     {
         return array(
             'social\/settings\/(?P<serviceProviderClass>.*)' => 'social/settings/_provider',
