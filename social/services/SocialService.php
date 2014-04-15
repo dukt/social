@@ -46,7 +46,7 @@ class SocialService extends BaseApplicationComponent
         }
     }
 
-    public function login($providerClass, $redirect = null, $scope = null)
+    public function login($providerClass, $redirect = null, $scope = null, $errorRedirect = null)
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
 
@@ -54,6 +54,10 @@ class SocialService extends BaseApplicationComponent
 
         if($redirect) {
             $params['redirect'] = $redirect;
+        }
+
+        if($errorRedirect) {
+            $params['errorRedirect'] = $errorRedirect;
         }
 
         if($scope) {
@@ -153,7 +157,7 @@ class SocialService extends BaseApplicationComponent
 
         $providerClass = $opts['oauth.providerClass'];
         $socialRedirect = $opts['oauth.socialRedirect'] = craft()->httpSession->get('oauth.socialRedirect');
-        $socialReferer = $opts['oauth.socialReferer'] = craft()->httpSession->get('oauth.socialReferer');;
+        $errorRedirect = $opts['oauth.socialReferer'] = craft()->httpSession->get('oauth.socialReferer');;
         $token = $opts['oauth.token'];
 
         // token
@@ -177,7 +181,7 @@ class SocialService extends BaseApplicationComponent
 
             craft()->httpSession->add('error', Craft::t($e->getMessage()));
 
-            return $socialReferer;
+            return $errorRedirect;
         }
 
 
@@ -187,7 +191,7 @@ class SocialService extends BaseApplicationComponent
 
             craft()->httpSession->add('error', Craft::t($e->getMessage()));
 
-            return $socialReferer;
+            return $errorRedirect;
         }
 
 
@@ -252,7 +256,7 @@ class SocialService extends BaseApplicationComponent
 
                 craft()->httpSession->add('error', Craft::t("Social registration is disabled."));
 
-                return $socialReferer;
+                return $errorRedirect;
             }
 
             // new user
@@ -279,7 +283,7 @@ class SocialService extends BaseApplicationComponent
 
                     craft()->httpSession->add('error', Craft::t("This OAuth provider doesn't provide the email address. Please try another one."));
 
-                    return $socialReferer;
+                    return $errorRedirect;
                 }
             }
 
@@ -293,6 +297,8 @@ class SocialService extends BaseApplicationComponent
             // save user
 
             craft()->users->saveUser($newUser);
+
+            craft()->db->getSchema()->refresh();
 
             $user = craft()->users->getUserByUsernameOrEmail($usernameOrEmail);
 

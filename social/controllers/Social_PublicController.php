@@ -45,6 +45,7 @@ class Social_PublicController extends BaseController
 
         $providerClass = craft()->request->getParam('provider');
         $redirect = craft()->request->getParam('redirect');
+        $errorRedirect = craft()->request->getParam('errorRedirect');
         $scope = craft()->request->getParam('scope');
 
 
@@ -60,7 +61,15 @@ class Social_PublicController extends BaseController
         craft()->httpSession->add('oauth.social', true);
         craft()->oauth->sessionAdd('oauth.socialCallback', $callbackUrl);
         craft()->oauth->sessionAdd('oauth.socialRedirect', $redirect);
-        craft()->oauth->sessionAdd('oauth.socialReferer', $_SERVER['HTTP_REFERER']);
+
+        if($errorRedirect)
+        {
+            craft()->oauth->sessionAdd('oauth.socialReferer', $errorRedirect);
+        }
+        elseif(isset($_SERVER['HTTP_REFERER']))
+        {
+            craft()->oauth->sessionAdd('oauth.socialReferer', $_SERVER['HTTP_REFERER']);
+        }
 
         $this->redirect(UrlHelper::getSiteUrl(
                 craft()->config->get('actionTrigger').'/oauth/connect',

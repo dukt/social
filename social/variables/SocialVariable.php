@@ -36,9 +36,9 @@ class SocialVariable
         return craft()->social->getProviders($configuredOnly);
     }
 
-    public function login($providerClass, $redirect = null, $scope = null)
+    public function login($providerClass, $redirect = null, $scope = null, $errorRedirect = null)
     {
-        return craft()->social->login($providerClass, $redirect, $scope);
+        return craft()->social->login($providerClass, $redirect, $scope, $errorRedirect);
     }
 
     public function logout($redirect = null)
