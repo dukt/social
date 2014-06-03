@@ -20,7 +20,6 @@ class SocialController extends BaseController
 {
     public $allowAnonymous = true;
 
-
     public function actionConnect()
     {
         $this->actionLogin();
@@ -41,17 +40,14 @@ class SocialController extends BaseController
         $errorRedirect = craft()->request->getParam('errorRedirect');
 
         // provider scopes & params
-        $scopes = $this->getScopes($handle);
-        $params = $this->getParams($handle);
+        $scopes = $this->_getScopes($handle);
+        $params = $this->_getParams($handle);
 
         // session vars
-
         craft()->oauth->sessionClean();
-
         craft()->httpSession->add('oauth.referer', (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null));
         craft()->httpSession->add('oauth.scopes', $scopes);
         craft()->httpSession->add('oauth.params', $params);
-
 
         // redirect
         $redirect = UrlHelper::getActionUrl('oauth/public/connect/', array('provider' => $handle));
@@ -66,8 +62,10 @@ class SocialController extends BaseController
 
         $redirect = craft()->request->getParam('redirect');
 
-        if(!$redirect) {
-            if(isset($_SERVER['HTTP_REFERER'])) {
+        if(!$redirect)
+        {
+            if(isset($_SERVER['HTTP_REFERER']))
+            {
                 $redirect = $_SERVER['HTTP_REFERER'];
             }
 
@@ -77,14 +75,7 @@ class SocialController extends BaseController
         $this->redirect($redirect);
     }
 
-
-
-
-
-
-
-
-    private function getScopes($handle)
+    private function _getScopes($handle)
     {
         switch($handle)
         {
@@ -101,7 +92,7 @@ class SocialController extends BaseController
         return array();
     }
 
-    private function getParams($handle)
+    private function _getParams($handle)
     {
         switch($handle)
         {
