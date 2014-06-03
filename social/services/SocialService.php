@@ -148,6 +148,88 @@ class SocialService extends BaseApplicationComponent
         return false;
     }
 
+    public function findOrCreateUser($account)
+    {
+        if(!empty($account['email']))
+        {
+            // find with email
+            $user = craft()->users->getUserByUsernameOrEmail($account['email']);
+
+            if($user)
+            {
+                return $user;
+            }
+            else
+            {
+                return $this->createUser($account);
+            }
+        }
+        else
+        {
+            return $this->createUser($account);
+        }
+    }
+
+    private function createUser($account)
+    {
+        // get social plugin settings
+
+        $socialPlugin = craft()->plugins->getPlugin('social');
+        $settings = $socialPlugin->getSettings();
+
+        if(!$settings['allowSocialRegistration'])
+        {
+            throw new Exception("Social registration is disabled.");
+        }
+
+        // new user
+
+        if(isset($account['email'])) {
+            // define email
+
+            $usernameOrEmail = $account['email'];
+        } else {
+
+            // no email allowed ?
+
+            if($settings['allowFakeEmail']) {
+
+                // no email, we create a fake one
+
+                $usernameOrEmail = md5($account['uid']).'@'.strtolower($providerClass).'.social.dukt.net';
+            } else {
+                var_dump($account);
+                die();
+                // no email here ? we abort, craft requires at least a valid email
+                throw new Exception("This OAuth provider doesn't provide the email address. Please try another one.");
+
+            }
+        }
+
+        $newUser = new UserModel();
+        $newUser->username = $usernameOrEmail;
+        $newUser->email = $usernameOrEmail;
+
+        $newUser->newPassword = md5(serialize(time()));
+
+
+        // save user
+
+        craft()->users->saveUser($newUser);
+
+        craft()->db->getSchema()->refresh();
+
+        $user = craft()->users->getUserByUsernameOrEmail($usernameOrEmail);
+
+
+        // save groups
+
+        if(!empty($settings['defaultGroup'])) {
+            craft()->userGroups->assignUserToGroups($user->id, array($settings['defaultGroup']));
+        }
+
+        return $user;
+    }
 
     public function loginCallback($opts)
     {

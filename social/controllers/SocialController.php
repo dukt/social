@@ -16,15 +16,32 @@ require_once(CRAFT_PLUGINS_PATH.'social/vendor/autoload.php');
 
 use Guzzle\Http\Client;
 
-class Social_PublicController extends BaseController
+class SocialController extends BaseController
 {
-	public $allowAnonymous = true;
+    public $allowAnonymous = true;
 
-	public function actionLogout()
-	{
+    public function actionLogin()
+    {
+        // session vars
+
+        craft()->oauth->sessionClean();
+
+        craft()->httpSession->add('oauth.referer', (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null));
+        craft()->httpSession->add('oauth.scopes', $scopes);
+        craft()->httpSession->add('oauth.namespace', $namespace);
+        craft()->httpSession->add('oauth.params', $params);
+
+
+        // redirect
+        $redirect = UrlHelper::getActionUrl('oauth/public/connect/', array('provider' => $handle));
+        $this->redirect($redirect);
+    }
+
+    public function actionLogout()
+    {
         Craft::log(__METHOD__, LogLevel::Info, true);
 
-		craft()->userSession->logout(false);
+        craft()->userSession->logout(false);
 
         $redirect = craft()->request->getParam('redirect');
 
@@ -36,31 +53,6 @@ class Social_PublicController extends BaseController
             $redirect = '';
         }
 
-		$this->redirect($redirect);
-	}
-
-    public function actionLogin()
-    {
-        // request params
-        $providerHandle = craft()->request->getParam('provider');
-        $redirect = craft()->request->getParam('redirect');
-        $errorRedirect = craft()->request->getParam('errorRedirect');
-
-        // provider scopes & params
-        $scopes = $this->getScopes($providerHandle);
-        $params = $this->getParams($providerHandle);
-
-        // redirect url
-        $redirect = UrlHelper::getSiteUrl(
-            craft()->config->get('actionTrigger').'/oauth/connect',
-            array(
-                'provider' => $providerHandle,
-                'scopes' => base64_encode(serialize($scopes)),
-                'params' => base64_encode(serialize($params))
-            )
-        );
-
-        // redirect
         $this->redirect($redirect);
     }
 

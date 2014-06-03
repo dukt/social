@@ -24,7 +24,7 @@ class Social_UserSessionService extends UserSessionService {
         Craft::log(__METHOD__, LogLevel::Info, true);
 
         $this->_identity = new TokenIdentity($token);
-        $this->_identity->authenticate();
+        $r = $this->_identity->authenticate();
 
         // Was the login successful?
         if ($this->_identity->errorCode == UserIdentity::ERROR_NONE)
@@ -80,7 +80,6 @@ class Social_UserSessionService extends UserSessionService {
 
                 // $this->_sessionRestoredFromCookie = false;
                 // $this->_userRow = null;
-
                 // Run any after login logic.
                 $this->afterLogin(false);
             }

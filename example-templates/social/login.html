@@ -1,5 +1,9 @@
 {% extends "social/_layout" %}
 
+{% if currentUser %}
+    {% redirect 'social/account' %}
+{% endif %}
+
 {% set title = "Login" %}
 
 {% block main %}

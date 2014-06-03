@@ -18,7 +18,12 @@
 
     {% endif %}
 
-    <h1>Login Apps</h1>
+    <h1>Account</h1>
+    <ul>
+        <li><strong>Email:</strong> {{ user.email }}</li>
+        <li><strong>Username: </strong> {{ user.email }}</li>
+    </ul>
+    <h2>Authentication Methods</h2>
     <table class="table table-bordered">
 
 
@@ -29,33 +34,20 @@
 
                     {% set token = craft.oauth.getUserToken(providerSource.handle) %}
 
-                    {% if token %}
-                        <p><a href="{{craft.oauth.disconnect(providerSource.handle)}}" class="btn btn-default btn-sm">Disconnect</a></p>
-                    {% else %}
-                        <p><a href="{{ craft.oauth.connect(providerSource.handle) }}" class="btn btn-primary btn-sm">Connect</a></p>
-                    {% endif %}
 
-                </td>
-            </tr>
+                    {% set scopes = [
+                        'userinfo_profile',
+                        'userinfo_email',
+                        ] %}
 
-        {% endfor %}
-    </table>
-
-	<h1>OAuth Apps</h1>
-    <table class="table table-bordered">
-
-
-        {% for providerSource in craft.oauth.getProviders() %}
-            <tr>
-                <th>{{providerSource.name}}</th>
-                <td class="col-md-2 text-center">
-
-                    {% set token = craft.oauth.getUserToken(providerSource.handle) %}
+                    {% set params = {
+                        access_type: 'offline',
+                    } %}
 
                     {% if token %}
                         <p><a href="{{craft.oauth.disconnect(providerSource.handle)}}" class="btn btn-default btn-sm">Disconnect</a></p>
                     {% else %}
-                        <p><a href="{{ craft.oauth.connect(providerSource.handle) }}" class="btn btn-primary btn-sm">Connect</a></p>
+                        <p><a href="{{ craft.oauth.connect(providerSource.handle, scopes, null, params) }}" class="btn btn-primary btn-sm">Connect</a></p>
                     {% endif %}
 
                 </td>
