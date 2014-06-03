@@ -23,7 +23,7 @@
             <h2>With an OAuth provider...</h2>
 
             {% for provider in craft.social.getProviders() %}
-                <p><a href="{{ craft.social.login(provider.handle, 'social/apps') }}" class="btn btn-default">Login with {{provider.name}}</a></p>
+                <p><a href="{{ craft.social.loginUrl(provider.handle, 'social/apps') }}" class="btn btn-default">Login with {{provider.name}}</a></p>
             {% endfor %}
 
         </div>

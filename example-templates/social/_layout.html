@@ -40,7 +40,7 @@
 					<li><a href="{{ url('social/login') }}">Login</a></li>
 				{% else %}
 					<li><a href="{{ url('social/account') }}">Account</a></li>
-					<li><a href="{{craft.social.logout('social/login')}}">Logout</a></li>
+					<li><a href="{{craft.social.logoutUrl('social/login')}}">Logout</a></li>
 				{% endif %}
 			</ul>
 

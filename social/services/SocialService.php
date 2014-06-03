@@ -24,6 +24,153 @@ class SocialService extends BaseApplicationComponent
             'google' => true
         );
 
+    public function getUserByProvider($handle)
+    {
+        $conditions = 'provider=:provider';
+        $params = array(':provider' => $handle);
+
+        $record = Social_UserRecord::model()->find($conditions, $params);
+
+        if ($record)
+        {
+            return Social_UserModel::populateModel($record);
+        }
+    }
+
+    public function deleteUserByProvider($handle)
+    {
+        $conditions = 'provider=:provider';
+        $params = array(':provider' => $handle);
+
+        $record = Social_UserRecord::model()->find($conditions, $params);
+
+        if ($record)
+        {
+            return $record->delete();
+        }
+
+        return false;
+    }
+
+    public function getUserByUid($handle, $suid)
+    {
+        $conditions = 'provider=:provider';
+        $params = array(':provider' => $handle);
+
+        $conditions .= ' AND suid=:suid';
+        $params[':suid'] = $suid;
+
+        $record = Social_UserRecord::model()->find($conditions, $params);
+
+        if ($record)
+        {
+            return Social_UserModel::populateModel($record);
+        }
+    }
+
+    public function saveUser(Social_UserModel $socialUser)
+    {
+        if($socialUser->id)
+        {
+            $socialUserRecord = Social_UserRecord::model()->findById($socialUser->id);
+
+            if (!$socialUserRecord)
+            {
+                throw new Exception(Craft::t('No social user exists with the ID “{id}”', array('id' => $socialUser->id)));
+            }
+
+            $oldSocialUser = Social_UserModel::populateModel($socialUserRecord);
+            $isNewUser = false;
+        }
+        else
+        {
+            $socialUserRecord = new Social_UserRecord;
+            $isNewUser = true;
+        }
+
+        // populate
+        $socialUserRecord->userId = $socialUser->userId;
+        $socialUserRecord->provider = $socialUser->provider;
+        $socialUserRecord->suid = $socialUser->suid;
+        $socialUserRecord->token = $socialUser->token;
+
+        // validate
+        $socialUserRecord->validate();
+
+        $socialUser->addErrors($socialUserRecord->getErrors());
+
+        if (!$socialUser->hasErrors())
+        {
+            $socialUserRecord->save(false);
+
+            if (!$socialUser->id)
+            {
+                $socialUser->id = $socialUserRecord->id;
+            }
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function connect($provider, $token)
+    {
+        // current user
+        $user = craft()->userSession->getUser();
+
+        // logged in ?
+
+        $isLoggedIn = false;
+
+        if($user)
+        {
+            $isLoggedIn = true;
+        }
+
+        // retrieve social user from uid
+
+        $provider->source->setRealToken($token);
+        $account = $provider->getAccount();
+        $socialUser = craft()->social->getUserByUid($provider->handle, $account['uid']);
+
+        // error if uid is associated with a different user
+        if($user && $socialUser && $user->id != $socialUser->userId)
+        {
+            throw new Exception("UID is already associated with another user. Disconnect from your current session and retry.");
+        }
+
+        // create user if it doesn't exists
+        if(!$user)
+        {
+            $user = craft()->social->findOrCreateUser($account);
+        }
+
+
+        // save social user
+
+        if(!$socialUser)
+        {
+            $socialUser = new Social_UserModel();
+        }
+
+        $socialUser->userId = $user->id;
+        $socialUser->provider = $provider->handle;
+        $socialUser->suid = $account['uid'];
+        $socialUser->token = base64_encode(serialize($token));
+
+        craft()->social->saveUser($socialUser);
+
+
+        // login if not logged in
+        if(!$isLoggedIn)
+        {
+            craft()->social_userSession->login(base64_encode(serialize($token)));
+        }
+    }
+
     public function getProviders($configuredOnly = true)
     {
         $allProviders = craft()->oauth->getProviders($configuredOnly);
@@ -45,8 +192,21 @@ class SocialService extends BaseApplicationComponent
             return craft()->oauth->getProvider($handle,  $configuredOnly);
         }
     }
+    public function getConnectUrl($handle)
+    {
+        return UrlHelper::getActionUrl('social/connect', array(
+            'provider' => $handle
+        ));
+    }
 
-    public function login($providerClass, $redirect = null, $scope = null, $errorRedirect = null)
+    public function getDisconnectUrl($handle)
+    {
+        return UrlHelper::getActionUrl('social/disconnect', array(
+            'provider' => $handle
+        ));
+    }
+
+    public function getLoginUrl($providerClass, $redirect = null, $scope = null, $errorRedirect = null)
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
 
@@ -64,20 +224,20 @@ class SocialService extends BaseApplicationComponent
             $params['scope'] = base64_encode(serialize($scope));
         }
 
-        $url = UrlHelper::getSiteUrl(craft()->config->get('actionTrigger').'/social/public/login', $params);
+        $url = UrlHelper::getSiteUrl(craft()->config->get('actionTrigger').'/social/login', $params);
 
         Craft::log(__METHOD__." : Authenticate : ".$url, LogLevel::Info, true);
 
         return $url;
     }
 
-    public function logout($redirect = null)
+    public function getLogoutUrl($redirect = null)
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
 
         $params = array('redirect' => $redirect);
 
-        return UrlHelper::getActionUrl('social/public/logout', $params);
+        return UrlHelper::getActionUrl('social/logout', $params);
     }
 
     public function isTemporaryEmail($email)

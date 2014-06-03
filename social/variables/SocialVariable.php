@@ -25,6 +25,10 @@ class SocialVariable
 
         return $this->_error;
     }
+    public function getUserByProvider($handle)
+    {
+        return craft()->social->getUserByProvider($handle);
+    }
 
     public function getProvider($handle, $configuredOnly = true)
     {
@@ -36,14 +40,24 @@ class SocialVariable
         return craft()->social->getProviders($configuredOnly);
     }
 
-    public function login($providerClass, $redirect = null, $scope = null, $errorRedirect = null)
+    public function getConnectUrl($handle)
     {
-        return craft()->social->login($providerClass, $redirect, $scope, $errorRedirect);
+        return craft()->social->getConnectUrl($handle);
     }
 
-    public function logout($redirect = null)
+    public function getDisconnectUrl($handle)
     {
-        return craft()->social->logout($redirect);
+        return craft()->social->getDisconnectUrl($handle);
+    }
+
+    public function getLoginUrl($providerClass, $redirect = null, $scope = null, $errorRedirect = null)
+    {
+        return craft()->social->getLoginUrl($providerClass, $redirect, $scope, $errorRedirect);
+    }
+
+    public function getLogoutUrl($redirect = null)
+    {
+        return craft()->social->getLogoutUrl($redirect);
     }
 
     public function isTemporaryEmail($email)

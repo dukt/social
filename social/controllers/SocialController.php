@@ -20,15 +20,36 @@ class SocialController extends BaseController
 {
     public $allowAnonymous = true;
 
+
+    public function actionConnect()
+    {
+        $this->actionLogin();
+    }
+
+    public function actionDisconnect()
+    {
+        $handle = craft()->request->getParam('provider');
+        craft()->social->deleteUserByProvider($handle);
+        $this->redirect($_SERVER['HTTP_REFERER']);
+    }
+
     public function actionLogin()
     {
+        // request params
+        $handle = craft()->request->getParam('provider');
+        $redirect = craft()->request->getParam('redirect');
+        $errorRedirect = craft()->request->getParam('errorRedirect');
+
+        // provider scopes & params
+        $scopes = $this->getScopes($handle);
+        $params = $this->getParams($handle);
+
         // session vars
 
         craft()->oauth->sessionClean();
 
         craft()->httpSession->add('oauth.referer', (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null));
         craft()->httpSession->add('oauth.scopes', $scopes);
-        craft()->httpSession->add('oauth.namespace', $namespace);
         craft()->httpSession->add('oauth.params', $params);
 
 
@@ -55,6 +76,13 @@ class SocialController extends BaseController
 
         $this->redirect($redirect);
     }
+
+
+
+
+
+
+
 
     private function getScopes($handle)
     {

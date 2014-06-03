@@ -32,22 +32,12 @@
                 <th>{{providerSource.name}}</th>
                 <td class="col-md-2 text-center">
 
-                    {% set token = craft.oauth.getUserToken(providerSource.handle) %}
+                    {% set user = craft.social.userByProvider(providerSource.handle) %}
 
-
-                    {% set scopes = [
-                        'userinfo_profile',
-                        'userinfo_email',
-                        ] %}
-
-                    {% set params = {
-                        access_type: 'offline',
-                    } %}
-
-                    {% if token %}
-                        <p><a href="{{craft.oauth.disconnect(providerSource.handle)}}" class="btn btn-default btn-sm">Disconnect</a></p>
+                    {% if user %}
+                        <p><a href="{{craft.social.disconnectUrl(providerSource.handle)}}" class="btn btn-default btn-sm">Disconnect</a></p>
                     {% else %}
-                        <p><a href="{{ craft.oauth.connect(providerSource.handle, scopes, null, params) }}" class="btn btn-primary btn-sm">Connect</a></p>
+                        <p><a href="{{ craft.social.connectUrl(providerSource.handle) }}" class="btn btn-primary btn-sm">Connect</a></p>
                     {% endif %}
 
                 </td>

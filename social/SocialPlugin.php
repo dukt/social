@@ -16,40 +16,8 @@ class SocialPlugin extends BasePlugin
 {
     public function init()
     {
-        craft()->on('oauth.beforeSaveUserToken', function(Event $event) {
-
-            if(!$event->params['user'])
-            {
-                $event->params['user'] = craft()->social->findOrCreateUser($event->params['account']);
-                $event->params['token']->userId = $event->params['user']->id;
-            }
-        });
-
-        craft()->on('oauth.connectUser', function(Event $event) {
-
-            // login if not logged in
-
-            $user = craft()->userSession->getUser();
-
-            if(!$user)
-            {
-                craft()->social_userSession->login(base64_encode(serialize($event->params['realToken'])));
-            }
-        });
-    }
-
-    public function behaveToConnect()
-    {
         craft()->on('oauth.connect', function(Event $event) {
-
-            // login if not logged in
-
-            $user = craft()->userSession->getUser();
-
-            if(!$user)
-            {
-                craft()->social_userSession->login(base64_encode(serialize($event->params['realToken'])));
-            }
+            craft()->social->connect($event->params['provider'], $event->params['token']);
         });
 
     }
