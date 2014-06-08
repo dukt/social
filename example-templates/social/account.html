@@ -8,46 +8,45 @@
 
 {% block main %}
 
-    {% set error = craft.social.error %}
+    <div class="col-md-12">
 
-    {% if error %}
+        {% set error = craft.social.error %}
 
-        <div class="alert alert-danger">
-            <p>{{error}}</p>
-        </div>
+        {% if error %}
 
-    {% endif %}
+            <div class="alert alert-danger">
+                <p>{{error}}</p>
+            </div>
 
-    <h1>Account</h1>
-    <ul>
-        <li><strong>Email:</strong> {{ user.email }}</li>
-        <li><strong>Username: </strong> {{ user.email }}</li>
-    </ul>
-    <h2>Authentication Methods</h2>
-    <table class="table table-bordered">
+        {% endif %}
 
+        <h1>Account</h1>
+        <ul class="list-unstyled">
+            <li><strong>Email:</strong> {{ user.email }}</li>
+            <li><strong>Username: </strong> {{ user.email }}</li>
+        </ul>
+        <h2>Authentication Methods</h2>
+        <table class="table table-bordered">
 
-        {% for providerSource in craft.social.getProviders() %}
-            <tr>
-                <th>{{providerSource.name}}</th>
-                <td class="col-md-2 text-center">
+            {% for providerSource in craft.social.getProviders() %}
+                <tr>
+                    <th>{{providerSource.name}}</th>
+                    <td class="col-md-2 text-center">
 
-                    {% set user = craft.social.userByProvider(providerSource.handle) %}
+                        {% set user = craft.social.userByProvider(providerSource.handle) %}
 
-                    {% if user %}
-                        <p><a href="{{craft.social.disconnectUrl(providerSource.handle)}}" class="btn btn-default btn-sm">Disconnect</a></p>
-                    {% else %}
-                        <p><a href="{{ craft.social.connectUrl(providerSource.handle) }}" class="btn btn-primary btn-sm">Connect</a></p>
-                    {% endif %}
+                        {% if user %}
+                            <p><a href="{{craft.social.disconnectUrl(providerSource.handle)}}" class="btn btn-default btn-sm">Disconnect</a></p>
+                        {% else %}
+                            <p><a href="{{ craft.social.connectUrl(providerSource.handle) }}" class="btn btn-primary btn-sm">Connect</a></p>
+                        {% endif %}
 
-                </td>
-            </tr>
+                    </td>
+                </tr>
 
-        {% endfor %}
-    </table>
+            {% endfor %}
+        </table>
 
-    {% if craft.facebook is defined %}
-        <p><a class="btn btn-default" href="{{craft.facebook.logout('login')}}">Facebook Logout</a></p>
-    {% endif %}
+    </div>
 
 {% endblock %}

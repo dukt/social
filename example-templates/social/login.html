@@ -8,27 +8,26 @@
 
 {% block main %}
 
-    {% set error = craft.social.error %}
-
-    {% if error %}
-
-        <div class="alert alert-danger">
-            <p>{{error}}</p>
-        </div>
-
-    {% endif %}
 
     <div class="row">
-        <div class="col-md-6">
-            <h2>With an OAuth provider...</h2>
 
-            {% for provider in craft.social.getProviders() %}
-                <p><a href="{{ craft.social.loginUrl(provider.handle, 'social/apps') }}" class="btn btn-default">Login with {{provider.name}}</a></p>
-            {% endfor %}
+        <div class="col-md-6 col-md-offset-3">
 
-        </div>
-        <div class="col-md-6">
-            <h2>With a Craft account...</h2>
+            <h2>Login</h2>
+
+            {% if errorMessage is defined %}
+                <div class="alert alert-danger">
+                    <p>{{ errorMessage }}</p>
+                </div>
+            {% endif %}
+
+            {% set error = craft.social.error %}
+
+            {% if error %}
+                <div class="alert alert-danger">
+                    <p>{{error}}</p>
+                </div>
+            {% endif %}
 
             <form method="post" action="" accept-charset="UTF-8">
                 <input type="hidden" name="action" value="users/login">
@@ -52,9 +51,20 @@
                     </label>
                 </div>
 
-                <p><input type="submit" class="btn btn-primary" value="Login"> &nbsp; <a href="{{ url('login/forgotpassword') }}" class="btn btn-default btn-sm">Forget your password?</a></p>
+                <p><input type="submit" class="btn btn-primary" value="Login with Craft"></p>
             </form>
+
+            <h3>... or connect with</h3>
+
+            <p>
+                {% for provider in craft.social.getProviders() %}
+                    <a href="{{ craft.social.loginUrl(provider.handle, 'social/account') }}" class="btn btn-default">{{provider.name}}</a>
+                {% endfor %}
+            </p>
+
+
         </div>
+
     </div>
 
 {% endblock %}

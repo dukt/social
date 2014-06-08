@@ -24,6 +24,48 @@ class SocialService extends BaseApplicationComponent
             'google' => true
         );
 
+    private $loginProviders = array(
+            'facebook' => true,
+            'github' => array(
+                'scopes' => array(
+                    'user',
+                ),
+            ),
+            'google' => array(
+                'scopes' => array(
+                    'userinfo_profile',
+                    'userinfo_email'
+                ),
+                'params' => array(
+                    'access_type' => 'offline'
+                )
+            )
+    );
+
+    public function getScopes($handle)
+    {
+        if(!empty($this->loginProviders[$handle]['scopes']))
+        {
+            return $this->loginProviders[$handle]['scopes'];
+        }
+        else
+        {
+            return array();
+        }
+    }
+
+    public function getParams($handle)
+    {
+        if(!empty($this->loginProviders[$handle]['params']))
+        {
+            return $this->loginProviders[$handle]['params'];
+        }
+        else
+        {
+            return array();
+        }
+    }
+
     public function getUserByProvider($handle)
     {
         $conditions = 'provider=:provider';
@@ -113,61 +155,6 @@ class SocialService extends BaseApplicationComponent
         else
         {
             return false;
-        }
-    }
-
-    public function connect($provider, $token)
-    {
-        // current user
-        $user = craft()->userSession->getUser();
-
-        // logged in ?
-
-        $isLoggedIn = false;
-
-        if($user)
-        {
-            $isLoggedIn = true;
-        }
-
-        // retrieve social user from uid
-
-        $provider->source->setRealToken($token);
-        $account = $provider->getAccount();
-        $socialUser = craft()->social->getUserByUid($provider->handle, $account['uid']);
-
-        // error if uid is associated with a different user
-        if($user && $socialUser && $user->id != $socialUser->userId)
-        {
-            throw new Exception("UID is already associated with another user. Disconnect from your current session and retry.");
-        }
-
-        // create user if it doesn't exists
-        if(!$user)
-        {
-            $user = craft()->social->findOrCreateUser($account);
-        }
-
-
-        // save social user
-
-        if(!$socialUser)
-        {
-            $socialUser = new Social_UserModel();
-        }
-
-        $socialUser->userId = $user->id;
-        $socialUser->provider = $provider->handle;
-        $socialUser->suid = $account['uid'];
-        $socialUser->token = base64_encode(serialize($token));
-
-        craft()->social->saveUser($socialUser);
-
-
-        // login if not logged in
-        if(!$isLoggedIn)
-        {
-            craft()->social_userSession->login(base64_encode(serialize($token)));
         }
     }
 
@@ -308,29 +295,7 @@ class SocialService extends BaseApplicationComponent
         return false;
     }
 
-    public function findOrCreateUser($account)
-    {
-        if(!empty($account['email']))
-        {
-            // find with email
-            $user = craft()->users->getUserByUsernameOrEmail($account['email']);
-
-            if($user)
-            {
-                return $user;
-            }
-            else
-            {
-                return $this->createUser($account);
-            }
-        }
-        else
-        {
-            return $this->createUser($account);
-        }
-    }
-
-    private function createUser($account)
+    public function registerUser($account)
     {
         // get social plugin settings
 
@@ -352,18 +317,20 @@ class SocialService extends BaseApplicationComponent
         }
         else
         {
-            // no email allowed ?
+            // todo
 
-            if($settings['allowFakeEmail'])
-            {
-                // no email, we create a fake one
-                $usernameOrEmail = md5($account['uid']).'@'.strtolower($providerClass).'.social.dukt.net';
-            }
-            else
-            {
+            // // no email allowed ?
+
+            // if($settings['allowFakeEmail'])
+            // {
+            //     // no email, we create a fake one
+            //     $usernameOrEmail = md5($account['uid']).'@'.strtolower($providerClass).'.social.dukt.net';
+            // }
+            // else
+            // {
                 // no email here ? we abort, craft requires at least a valid email
                 throw new Exception("This OAuth provider doesn't provide the email address. Please try another one.");
-            }
+            // }
         }
 
         $newUser = new UserModel();

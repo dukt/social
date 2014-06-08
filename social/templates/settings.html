@@ -26,35 +26,60 @@
 		<p>No provider configured</p>
     {% endif %}
 
-	<p><a href="{{url('oauth')}}" class="btn icon settings">OAuth Settings</a></p>
+	<p><a href="{{url('settings/plugins/oauth')}}" class="btn icon settings">OAuth Settings</a></p>
 
     <hr>
 
+    <h2>{{ "Login & Registration"|t }}</h2>
+
     {{ forms.checkboxField({
-        label: 'Allow social registration?'|t,
-        first:true,
-        required: true,
-        name: 'allowSocialRegistration',
-        value: 1,
-        checked: settings ? settings.allowSocialRegistration : true,
-        errors: settings ? settings.errors('allowSocialRegistration') : null,
-        toggle: 'defaultGroup'
+        label: 'Enable social login ?'|t,
+        instructions: "Allow people to social login to an existing account."|t,
+        name: 'allowSocialLogin',
+        checked:   settings.allowSocialLogin,
+        toggle: 'enableSocialLogin'
     }) }}
 
-    <div id="defaultGroup"{% if settings.allowSocialRegistration is not defined or not settings.allowSocialRegistration %} class="hidden"{% endif %}>
-        {% set groups = [{ label: "None"|t, value: '' }] %}
-        {% for group in craft.userGroups.getAllGroups() %}
-            {% set groups = groups|merge([{ label: group.name, value: group.id }]) %}
-        {% endfor %}
 
-        {{ forms.selectField({
-            label: "Default User Group"|t,
-            instructions: "Choose a user group that socially-registered members will be added to by default."|t,
-            name: 'defaultGroup',
-            options: groups,
-            value: (settings.defaultGroup is defined ? settings.defaultGroup : null)
+
+    <div id="enableSocialLogin"{% if not settings.allowSocialLogin %} class="hidden"{% endif %}>
+
+        {{ forms.checkboxField({
+            label: 'Enable social registration ?'|t,
+            instructions: "Register new user on Social Login if no existing account is found."|t,
+            name: 'allowSocialRegistration',
+            checked:   settings.allowSocialRegistration,
+            toggle: 'enableSocialRegistration'
         }) }}
+
+        <div id="enableSocialRegistration"{% if not settings.allowSocialRegistration %} class="hidden"{% endif %}>
+            <div id="defaultGroup">
+                {% set groups = [{ label: "None"|t, value: '' }] %}
+                {% for group in craft.userGroups.getAllGroups() %}
+                    {% set groups = groups|merge([{ label: group.name, value: group.id }]) %}
+                {% endfor %}
+
+                {{ forms.selectField({
+                    label: "Default User Group"|t,
+                    instructions: "Choose a user group that socially-registered members will be added to by default."|t,
+                    name: 'defaultGroup',
+                    options: groups,
+                    value: (settings.defaultGroup is defined ? settings.defaultGroup : null)
+                }) }}
+            </div>
+
+
+{#             {{ forms.checkboxField({
+                label: 'Require Email Address ?'|t,
+                instructions: "Registration will only work if the authentication provider provides user's email."|t,
+                name: 'requireEmailAddress',
+                checked:   settings.requireEmailAddress,
+            }) }} #}
+        </div>
+
     </div>
+
+
     {#
 
     Planned for Social 2.0

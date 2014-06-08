@@ -12,10 +12,6 @@
 
 namespace Craft;
 
-require_once(CRAFT_PLUGINS_PATH.'social/vendor/autoload.php');
-
-use Guzzle\Http\Client;
-
 class SocialController extends BaseController
 {
     public $allowAnonymous = true;
@@ -29,7 +25,8 @@ class SocialController extends BaseController
     {
         $handle = craft()->request->getParam('provider');
         craft()->social->deleteUserByProvider($handle);
-        $this->redirect($_SERVER['HTTP_REFERER']);
+        $redirect = craft()->request->getUrlReferrer();
+        $this->redirect($redirect);
     }
 
     public function actionLogin()
@@ -39,13 +36,30 @@ class SocialController extends BaseController
         $redirect = craft()->request->getParam('redirect');
         $errorRedirect = craft()->request->getParam('errorRedirect');
 
+        // redirect url
+        if(!$redirect)
+        {
+            $redirect = craft()->request->getUrlReferrer();
+        }
+
+        // don't go further if social login disabled
+        $plugin = craft()->plugins->getPlugin('social');
+        $settings = $plugin->getSettings();
+
+        if(!$settings['allowSocialLogin'])
+        {
+            craft()->httpSession->add('error', "Social login disabled");
+            $this->redirect($redirect);
+        }
+
         // provider scopes & params
-        $scopes = $this->_getScopes($handle);
-        $params = $this->_getParams($handle);
+        $scopes = craft()->social->getScopes($handle);
+        $params = craft()->social->getParams($handle);
 
         // session vars
         craft()->oauth->sessionClean();
-        craft()->httpSession->add('oauth.referer', (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null));
+        craft()->httpSession->add('oauth.plugin', 'social');
+        craft()->httpSession->add('oauth.redirect', $redirect);
         craft()->httpSession->add('oauth.scopes', $scopes);
         craft()->httpSession->add('oauth.params', $params);
 
@@ -56,55 +70,15 @@ class SocialController extends BaseController
 
     public function actionLogout()
     {
-        Craft::log(__METHOD__, LogLevel::Info, true);
-
         craft()->userSession->logout(false);
 
         $redirect = craft()->request->getParam('redirect');
 
         if(!$redirect)
         {
-            if(isset($_SERVER['HTTP_REFERER']))
-            {
-                $redirect = $_SERVER['HTTP_REFERER'];
-            }
-
-            $redirect = '';
+            $redirect = craft()->request->getUrlReferrer();
         }
 
         $this->redirect($redirect);
-    }
-
-    private function _getScopes($handle)
-    {
-        switch($handle)
-        {
-            case 'google':
-
-                return array(
-                    'userinfo_profile',
-                    'userinfo_email'
-                );
-
-                break;
-        }
-
-        return array();
-    }
-
-    private function _getParams($handle)
-    {
-        switch($handle)
-        {
-            case 'google':
-
-                return array(
-                    'access_type' => 'offline'
-                );
-
-                break;
-        }
-
-        return array();
     }
 }
