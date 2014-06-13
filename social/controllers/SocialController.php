@@ -56,16 +56,13 @@ class SocialController extends BaseController
         $scopes = craft()->social->getScopes($handle);
         $params = craft()->social->getParams($handle);
 
-        // session vars
-        craft()->oauth->sessionClean();
-        craft()->httpSession->add('oauth.plugin', 'social');
-        craft()->httpSession->add('oauth.redirect', $redirect);
-        craft()->httpSession->add('oauth.scopes', $scopes);
-        craft()->httpSession->add('oauth.params', $params);
-
-        // redirect
-        $redirect = UrlHelper::getActionUrl('oauth/public/connect/', array('provider' => $handle));
-        $this->redirect($redirect);
+        craft()->oauth->connect(array(
+            'plugin' => 'social',
+            'provider' => $handle,
+            'redirect' => $redirect,
+            'scopes' => $scopes,
+            'params' => $params
+        ));
     }
 
     public function actionLogout()

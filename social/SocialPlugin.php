@@ -14,98 +14,92 @@ namespace Craft;
 
 class SocialPlugin extends BasePlugin
 {
-    public function init()
+    public function registerOauthConnect($variables)
     {
-        craft()->on('oauth.connect', function(Event $event) {
+        try {
+            $plugin = craft()->plugins->getPlugin('social');
+            $settings = $plugin->getSettings();
 
-            if(craft()->httpSession->get('oauth.plugin') == 'social')
+            if(!$settings['allowSocialLogin'])
             {
-                try {
-                    $plugin = craft()->plugins->getPlugin('social');
-                    $settings = $plugin->getSettings();
+                throw new Exception("Social login disabled");
+            }
 
-                    if(!$settings['allowSocialLogin'])
-                    {
-                        throw new Exception("Social login disabled");
-                    }
+            $provider = $variables['provider'];
+            $token = $variables['token'];
 
-                    $provider = $event->params['provider'];
-                    $token = $event->params['token'];
+            // current user
+            $user = craft()->userSession->getUser();
 
-                    // current user
-                    $user = craft()->userSession->getUser();
+            // logged in ?
+            $isLoggedIn = false;
 
-                    // logged in ?
-                    $isLoggedIn = false;
+            if($user)
+            {
+                $isLoggedIn = true;
+            }
 
-                    if($user)
-                    {
-                        $isLoggedIn = true;
-                    }
+            // retrieve social user from uid
 
-                    // retrieve social user from uid
+            $provider->source->setRealToken($token);
 
-                    $provider->source->setRealToken($token);
+            $account = $provider->getAccount();
 
-                    $account = $provider->getAccount();
+            $socialUser = craft()->social->getUserByUid($provider->handle, $account['uid']);
 
-                    $socialUser = craft()->social->getUserByUid($provider->handle, $account['uid']);
+            // error if uid is associated with a different user
+            if($user && $socialUser && $user->id != $socialUser->userId)
+            {
+                throw new Exception("UID is already associated with another user. Disconnect from your current session and retry.");
+            }
 
-                    // error if uid is associated with a different user
-                    if($user && $socialUser && $user->id != $socialUser->userId)
-                    {
-                        throw new Exception("UID is already associated with another user. Disconnect from your current session and retry.");
-                    }
+            // create user if it doesn't exists
+            if(!$user)
+            {
+                if(!empty($account['email']))
+                {
+                    // find with email
+                    $user = craft()->users->getUserByUsernameOrEmail($account['email']);
 
-                    // create user if it doesn't exists
                     if(!$user)
                     {
-                        if(!empty($account['email']))
-                        {
-                            // find with email
-                            $user = craft()->users->getUserByUsernameOrEmail($account['email']);
-
-                            if(!$user)
-                            {
-                                $user = craft()->social->registerUser($account);
-                            }
-                        }
-                        else
-                        {
-                            $user = craft()->social->registerUser($account);
-                        }
-                    }
-
-
-                    // save social user
-
-                    if(!$socialUser)
-                    {
-                        $socialUser = new Social_UserModel();
-                    }
-
-                    $socialUser->userId = $user->id;
-                    $socialUser->provider = $provider->handle;
-                    $socialUser->suid = $account['uid'];
-                    $socialUser->token = base64_encode(serialize($token));
-
-                    craft()->social->saveUser($socialUser);
-
-
-                    // login if not logged in
-                    if(!$isLoggedIn)
-                    {
-                        craft()->social_userSession->login(base64_encode(serialize($token)));
+                        $user = craft()->social->registerUser($account);
                     }
                 }
-                catch(\Exception $e)
+                else
                 {
-                    craft()->httpSession->add('error', $e->getMessage());
+                    $user = craft()->social->registerUser($account);
                 }
             }
-        });
 
+
+            // save social user
+
+            if(!$socialUser)
+            {
+                $socialUser = new Social_UserModel();
+            }
+
+            $socialUser->userId = $user->id;
+            $socialUser->provider = $provider->handle;
+            $socialUser->suid = $account['uid'];
+            $socialUser->token = base64_encode(serialize($token));
+
+            craft()->social->saveUser($socialUser);
+
+
+            // login if not logged in
+            if(!$isLoggedIn)
+            {
+                craft()->social_userSession->login(base64_encode(serialize($token)));
+            }
+        }
+        catch(\Exception $e)
+        {
+            craft()->httpSession->add('error', $e->getMessage());
+        }
     }
+
     /**
      * Get Name
      */
@@ -135,7 +129,7 @@ class SocialPlugin extends BasePlugin
      */
     function getDeveloperUrl()
     {
-        return 'http://dukt.net/';
+        return 'https://dukt.net/';
     }
 
     /**
