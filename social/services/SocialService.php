@@ -5,14 +5,12 @@
  *
  * @package   Social Login
  * @author    Benjamin David
- * @copyright Copyright (c) 2013, Dukt
- * @link      http://dukt.net/craft/social/
- * @license   http://dukt.net/craft/social/docs/license
+ * @copyright Copyright (c) 2014, Dukt
+ * @link      https://dukt.net/craft/social/
+ * @license   https://dukt.net/craft/social/docs/license
  */
 
 namespace Craft;
-
-require_once(CRAFT_PLUGINS_PATH.'social/vendor/autoload.php');
 
 use Guzzle\Http\Client;
 
@@ -164,8 +162,10 @@ class SocialService extends BaseApplicationComponent
 
         $providers = array();
 
-        foreach($allProviders as $provider) {
-            if(isset($this->supportedProviders[$provider->getHandle()])) {
+        foreach($allProviders as $provider)
+        {
+            if(isset($this->supportedProviders[$provider->getHandle()]))
+            {
                 array_push($providers, $provider);
             }
         }
@@ -175,7 +175,8 @@ class SocialService extends BaseApplicationComponent
 
     public function getProvider($handle,  $configuredOnly = true)
     {
-        if(isset($this->supportedProviders[$handle])) {
+        if(isset($this->supportedProviders[$handle]))
+        {
             return craft()->oauth->getProvider($handle,  $configuredOnly);
         }
     }
@@ -199,15 +200,18 @@ class SocialService extends BaseApplicationComponent
 
         $params = array('provider' => $providerClass);
 
-        if($redirect) {
+        if($redirect)
+        {
             $params['redirect'] = $redirect;
         }
 
-        if($errorRedirect) {
+        if($errorRedirect)
+        {
             $params['errorRedirect'] = $errorRedirect;
         }
 
-        if($scope) {
+        if($scope)
+        {
             $params['scope'] = base64_encode(serialize($scope));
         }
 
@@ -233,7 +237,8 @@ class SocialService extends BaseApplicationComponent
 
         $user = craft()->users->getUserByUsernameOrEmail($email);
 
-        if(!$user) {
+        if(!$user)
+        {
             return false;
         }
 
@@ -242,7 +247,8 @@ class SocialService extends BaseApplicationComponent
         $pos = strpos($user->email, $fake);
         $len = strlen($user->email);
 
-        if($pos) {
+        if($pos)
+        {
             return true;
         }
 
@@ -258,7 +264,8 @@ class SocialService extends BaseApplicationComponent
         $pos = strpos($user->email, $fake);
         $len = strlen($user->email);
 
-        if($pos) {
+        if($pos)
+        {
 
             // temporary email : [uid]@[providerHandle].social.dukt.net
 
@@ -288,7 +295,8 @@ class SocialService extends BaseApplicationComponent
 
         $user = craft()->users->getUserById($userId);
 
-        if(strpos($user->username, '.social.dukt.net') !== false) {
+        if(strpos($user->username, '.social.dukt.net') !== false)
+        {
             return true;
         }
 
@@ -317,6 +325,8 @@ class SocialService extends BaseApplicationComponent
         }
         else
         {
+            throw new Exception("This OAuth provider doesn't provide the email address. Please try another one.");
+
             // todo
 
             // // no email allowed ?
@@ -329,7 +339,7 @@ class SocialService extends BaseApplicationComponent
             // else
             // {
                 // no email here ? we abort, craft requires at least a valid email
-                throw new Exception("This OAuth provider doesn't provide the email address. Please try another one.");
+            //  throw new Exception("This OAuth provider doesn't provide the email address. Please try another one.");
             // }
         }
 
@@ -349,7 +359,8 @@ class SocialService extends BaseApplicationComponent
 
         // save groups
 
-        if(!empty($settings['defaultGroup'])) {
+        if(!empty($settings['defaultGroup']))
+        {
             craft()->userGroups->assignUserToGroups($user->id, array($settings['defaultGroup']));
         }
 
