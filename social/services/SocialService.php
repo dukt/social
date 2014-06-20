@@ -12,17 +12,8 @@
 
 namespace Craft;
 
-use Guzzle\Http\Client;
-
 class SocialService extends BaseApplicationComponent
 {
-    private $supportedProviders = array(
-            'facebook' => true,
-            'github' => true,
-            'google' => true,
-            'twitter' => true
-        );
-
     private $loginProviders = array(
             'facebook' => true,
             'github' => array(
@@ -171,7 +162,7 @@ class SocialService extends BaseApplicationComponent
 
         foreach($allProviders as $provider)
         {
-            if(isset($this->supportedProviders[$provider->getHandle()]))
+            if(isset($this->loginProviders[$provider->getHandle()]))
             {
                 array_push($providers, $provider);
             }
@@ -182,7 +173,7 @@ class SocialService extends BaseApplicationComponent
 
     public function getProvider($handle,  $configuredOnly = true)
     {
-        if(isset($this->supportedProviders[$handle]))
+        if(isset($this->loginProviders[$handle]))
         {
             return craft()->oauth->getProvider($handle,  $configuredOnly);
         }
