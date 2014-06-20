@@ -1,107 +1,115 @@
 {% import "_includes/forms" as forms %}
 
+{% if CraftEdition == CraftPro %}
 
-{#% includeCssResource 'social/css/disableSave.css' %#}
+    {% set oauth = craft.plugins.getPlugin('oauth') %}
 
-{% set oauth = craft.plugins.getPlugin('oauth') %}
-
-{% if oauth %}
-
-
-	<h2 class="first">OAuth Providers</h2>
-
-    <p>Set up the OAuth providers that you want to use for social login.</p>
-
-	{% set oneFound = false %}
-
-    {% set providers = craft.social.getProviders(false) %}
-
-    {% if providers|length > 0 %}
-        <ul>
-            {% for provider in providers %}
-				<li><span class="status {{(provider.isConfigured ? 'on' : '')}}"></span> {{provider.name}}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-		<p>No provider configured</p>
-    {% endif %}
-
-	<p><a href="{{url('settings/plugins/oauth')}}" class="btn icon settings">OAuth Settings</a></p>
-
-    <hr>
-
-    <h2>{{ "Login & Registration"|t }}</h2>
-
-    {{ forms.checkboxField({
-        label: 'Enable social login ?'|t,
-        instructions: "Allow people to social login to an existing account."|t,
-        name: 'allowSocialLogin',
-        checked:   settings.allowSocialLogin,
-        toggle: 'enableSocialLogin'
-    }) }}
+    {% if oauth %}
 
 
+        <h2 class="first">OAuth Providers</h2>
 
-    <div id="enableSocialLogin"{% if not settings.allowSocialLogin %} class="hidden"{% endif %}>
+        <p>Set up the OAuth providers that you want to use for social login.</p>
+
+        {% set oneFound = false %}
+
+        {% set providers = craft.social.getProviders(false) %}
+
+        {% if providers|length > 0 %}
+            <ul>
+                {% for provider in providers %}
+                    <li><span class="status {{(provider.isConfigured ? 'on' : '')}}"></span> {{provider.name}}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No provider configured</p>
+        {% endif %}
+
+        <p><a href="{{url('settings/plugins/oauth')}}" class="btn icon settings">OAuth Settings</a></p>
+
+        <hr>
+
+        <h2>{{ "Login & Registration"|t }}</h2>
 
         {{ forms.checkboxField({
-            label: 'Enable social registration ?'|t,
-            instructions: "Register new user on Social Login if no existing account is found."|t,
-            name: 'allowSocialRegistration',
-            checked:   settings.allowSocialRegistration,
-            toggle: 'enableSocialRegistration'
+            label: 'Enable social login ?'|t,
+            instructions: "Allow people to social login to an existing account."|t,
+            name: 'allowSocialLogin',
+            checked:   settings.allowSocialLogin,
+            toggle: 'enableSocialLogin'
         }) }}
 
-        <div id="enableSocialRegistration"{% if not settings.allowSocialRegistration %} class="hidden"{% endif %}>
-            <div id="defaultGroup">
-                {% set groups = [{ label: "None"|t, value: '' }] %}
-                {% for group in craft.userGroups.getAllGroups() %}
-                    {% set groups = groups|merge([{ label: group.name, value: group.id }]) %}
-                {% endfor %}
 
-                {{ forms.selectField({
-                    label: "Default User Group"|t,
-                    instructions: "Choose a user group that socially-registered members will be added to by default."|t,
-                    name: 'defaultGroup',
-                    options: groups,
-                    value: (settings.defaultGroup is defined ? settings.defaultGroup : null)
-                }) }}
+
+        <div id="enableSocialLogin"{% if not settings.allowSocialLogin %} class="hidden"{% endif %}>
+
+            {{ forms.checkboxField({
+                label: 'Enable social registration ?'|t,
+                instructions: "Register new user on Social Login if no existing account is found."|t,
+                name: 'allowSocialRegistration',
+                checked:   settings.allowSocialRegistration,
+                toggle: 'enableSocialRegistration'
+            }) }}
+
+            <div id="enableSocialRegistration"{% if not settings.allowSocialRegistration %} class="hidden"{% endif %}>
+                <div id="defaultGroup">
+                    {% set groups = [{ label: "None"|t, value: '' }] %}
+                    {% for group in craft.userGroups.getAllGroups() %}
+                        {% set groups = groups|merge([{ label: group.name, value: group.id }]) %}
+                    {% endfor %}
+
+                    {{ forms.selectField({
+                        label: "Default User Group"|t,
+                        instructions: "Choose a user group that socially-registered members will be added to by default."|t,
+                        name: 'defaultGroup',
+                        options: groups,
+                        value: (settings.defaultGroup is defined ? settings.defaultGroup : null)
+                    }) }}
+                </div>
+
+
+    {#             {{ forms.checkboxField({
+                    label: 'Require Email Address ?'|t,
+                    instructions: "Registration will only work if the authentication provider provides user's email."|t,
+                    name: 'requireEmailAddress',
+                    checked:   settings.requireEmailAddress,
+                }) }} #}
             </div>
 
-
-{#             {{ forms.checkboxField({
-                label: 'Require Email Address ?'|t,
-                instructions: "Registration will only work if the authentication provider provides user's email."|t,
-                name: 'requireEmailAddress',
-                checked:   settings.requireEmailAddress,
-            }) }} #}
         </div>
 
-    </div>
 
+        {#
 
-    {#
+        Planned for Social 2.0
 
-    Planned for Social 2.0
+        <h2>Fake Email Registration (beta)</h2>
 
-	<h2>Fake Email Registration (beta)</h2>
+        {{ forms.checkboxField({
+            label: 'Register user with a fake email if OAuth account email is not defined ?'|t,
+            instructions: "Some OAuth providers never provide account email address. This option allows you to register/login the user right away even if the OAuth provider doesn't provide an email. Drawback is that you can't send emails to the user until he updates with a valid email."|t,
+            first:true,
+            required: true,
+            name: 'allowFakeEmail',
+            value: 1,
+            checked: settings ? settings.allowFakeEmail : true,
+            errors: settings ? settings.errors('allowFakeEmail') : null
+        }) }}
 
-    {{ forms.checkboxField({
-        label: 'Register user with a fake email if OAuth account email is not defined ?'|t,
-        instructions: "Some OAuth providers never provide account email address. This option allows you to register/login the user right away even if the OAuth provider doesn't provide an email. Drawback is that you can't send emails to the user until he updates with a valid email."|t,
-        first:true,
-        required: true,
-        name: 'allowFakeEmail',
-        value: 1,
-        checked: settings ? settings.allowFakeEmail : true,
-        errors: settings ? settings.errors('allowFakeEmail') : null
-    }) }}
+        #}
 
-    #}
+    {% else %}
+
+        {% include 'social/_oauth/index' %}
+
+    {% endif %}
 
 {% else %}
 
-	{% include 'social/_oauth/index' %}
+    {% includeCssResource 'social/css/disableSave.css' %}
+
+    <h2>{{ "Craft Pro required"|t }}</h2>
+    <p>{{ "Social Login plugin requires Craft Pro."|t }}</p>
 
 {% endif %}
 

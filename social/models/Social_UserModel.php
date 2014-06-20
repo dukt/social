@@ -24,8 +24,14 @@ class Social_UserModel extends BaseModel
             'userId' => AttributeType::Number,
 
             'provider' => array(AttributeType::String, 'required' => true),
-            'suid' => array(AttributeType::String, 'required' => true),
-            'token' => array(AttributeType::String, 'column' => ColumnType::Text),
+            'socialUid' => array(AttributeType::String, 'required' => true),
+            'encodedToken' => array(AttributeType::String, 'column' => ColumnType::Text),
         );
+    }
+
+    public function getToken()
+    {
+        return craft()->oauth->decodeToken($this->encodedToken);
+
     }
 }

@@ -58,7 +58,9 @@
 
             <p>
                 {% for provider in craft.social.getProviders() %}
-                    <a href="{{ craft.social.loginUrl(provider.handle, 'social/account') }}" class="btn btn-default">{{provider.name}}</a>
+                    <a href="{{ craft.social.loginUrl(provider.handle, {
+                        redirect: 'social/account'
+                    }) }}" class="btn btn-default">{{provider.name}}</a>
                 {% endfor %}
             </p>
 

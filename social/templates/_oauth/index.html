@@ -1,3 +1,5 @@
+{% includeCssResource 'social/css/disableSave.css' %}
+
 {% set oauthPlugin = craft.plugins.getPlugin('oauth', false) %}
 
 {% set plugin = craft.plugins.getPlugin('social') %}
@@ -5,11 +7,11 @@
 
 
 {% if oauthPlugin is null %}
-	{% include pluginHandle~'/_oauth/download' %}
+    {% include pluginHandle~'/_oauth/download' %}
 {% else %}
-	{% if not oauthPlugin.isInstalled %}
-		{% include pluginHandle~'/_oauth/install' %}
-	{% elseif not oauthPlugin.isEnabled %}
-		{% include pluginHandle~'/_oauth/enable' %}
-	{% endif %}
+    {% if not oauthPlugin.isInstalled %}
+        {% include pluginHandle~'/_oauth/install' %}
+    {% elseif not oauthPlugin.isEnabled %}
+        {% include pluginHandle~'/_oauth/enable' %}
+    {% endif %}
 {% endif %}

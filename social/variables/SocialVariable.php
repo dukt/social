@@ -50,9 +50,9 @@ class SocialVariable
         return craft()->social->getDisconnectUrl($handle);
     }
 
-    public function getLoginUrl($providerClass, $redirect = null, $scope = null, $errorRedirect = null)
+    public function getLoginUrl($providerClass, $params)
     {
-        return craft()->social->getLoginUrl($providerClass, $redirect, $scope, $errorRedirect);
+        return craft()->social->getLoginUrl($providerClass, $params);
     }
 
     public function getLogoutUrl($redirect = null)

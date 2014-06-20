@@ -19,7 +19,8 @@ class SocialService extends BaseApplicationComponent
     private $supportedProviders = array(
             'facebook' => true,
             'github' => true,
-            'google' => true
+            'google' => true,
+            'twitter' => true
         );
 
     private $loginProviders = array(
@@ -66,8 +67,11 @@ class SocialService extends BaseApplicationComponent
 
     public function getUserByProvider($handle)
     {
-        $conditions = 'provider=:provider';
-        $params = array(':provider' => $handle);
+        $currentUser = craft()->userSession->getUser();
+        $userId = $currentUser->id;
+
+        $conditions = 'provider=:provider and userId=:userId';
+        $params = array(':provider' => $handle, ':userId' => $userId);
 
         $record = Social_UserRecord::model()->find($conditions, $params);
 
@@ -79,8 +83,11 @@ class SocialService extends BaseApplicationComponent
 
     public function deleteUserByProvider($handle)
     {
-        $conditions = 'provider=:provider';
-        $params = array(':provider' => $handle);
+        $currentUser = craft()->userSession->getUser();
+        $userId = $currentUser->id;
+
+        $conditions = 'provider=:provider and userId=:userId';
+        $params = array(':provider' => $handle, ':userId' => $userId);
 
         $record = Social_UserRecord::model()->find($conditions, $params);
 
@@ -92,13 +99,13 @@ class SocialService extends BaseApplicationComponent
         return false;
     }
 
-    public function getUserByUid($handle, $suid)
+    public function getUserByUid($handle, $socialUid)
     {
         $conditions = 'provider=:provider';
         $params = array(':provider' => $handle);
 
-        $conditions .= ' AND suid=:suid';
-        $params[':suid'] = $suid;
+        $conditions .= ' AND socialUid=:socialUid';
+        $params[':socialUid'] = $socialUid;
 
         $record = Social_UserRecord::model()->find($conditions, $params);
 
@@ -131,8 +138,8 @@ class SocialService extends BaseApplicationComponent
         // populate
         $socialUserRecord->userId = $socialUser->userId;
         $socialUserRecord->provider = $socialUser->provider;
-        $socialUserRecord->suid = $socialUser->suid;
-        $socialUserRecord->token = $socialUser->token;
+        $socialUserRecord->socialUid = $socialUser->socialUid;
+        $socialUserRecord->encodedToken = $socialUser->encodedToken;
 
         // validate
         $socialUserRecord->validate();
@@ -194,26 +201,10 @@ class SocialService extends BaseApplicationComponent
         ));
     }
 
-    public function getLoginUrl($providerClass, $redirect = null, $scope = null, $errorRedirect = null)
+    public function getLoginUrl($providerClass, $params = array())
     {
-        Craft::log(__METHOD__, LogLevel::Info, true);
 
-        $params = array('provider' => $providerClass);
-
-        if($redirect)
-        {
-            $params['redirect'] = $redirect;
-        }
-
-        if($errorRedirect)
-        {
-            $params['errorRedirect'] = $errorRedirect;
-        }
-
-        if($scope)
-        {
-            $params['scope'] = base64_encode(serialize($scope));
-        }
+        $params['provider'] = $providerClass;
 
         $url = UrlHelper::getSiteUrl(craft()->config->get('actionTrigger').'/social/login', $params);
 
@@ -224,8 +215,6 @@ class SocialService extends BaseApplicationComponent
 
     public function getLogoutUrl($redirect = null)
     {
-        Craft::log(__METHOD__, LogLevel::Info, true);
-
         $params = array('redirect' => $redirect);
 
         return UrlHelper::getActionUrl('social/logout', $params);
@@ -233,8 +222,6 @@ class SocialService extends BaseApplicationComponent
 
     public function isTemporaryEmail($email)
     {
-        Craft::log(__METHOD__, LogLevel::Info, true);
-
         $user = craft()->users->getUserByUsernameOrEmail($email);
 
         if(!$user)
@@ -257,7 +244,6 @@ class SocialService extends BaseApplicationComponent
 
     public function getTemporaryPassword($userId)
     {
-        Craft::log(__METHOD__, LogLevel::Info, true);
 
         $user = craft()->users->getUserById($userId);
         $fake = '.social.dukt.net';
@@ -291,7 +277,6 @@ class SocialService extends BaseApplicationComponent
 
     public function userHasTemporaryUsername($userId)
     {
-        Craft::log(__METHOD__, LogLevel::Info, true);
 
         $user = craft()->users->getUserById($userId);
 

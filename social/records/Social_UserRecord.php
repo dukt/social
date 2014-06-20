@@ -29,8 +29,8 @@ class Social_UserRecord extends BaseRecord
     {
         return array(
             'provider' => array(AttributeType::String, 'required' => true),
-            'suid' => array(AttributeType::String, 'required' => true),
-            'token' => array(AttributeType::String, 'column' => ColumnType::Text),
+            'socialUid' => array(AttributeType::String, 'required' => true),
+            'encodedToken' => array(AttributeType::String, 'column' => ColumnType::Text),
         );
     }
 

@@ -31,7 +31,7 @@ class TokenIdentity extends UserIdentity
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
 
-        $socialUserRecord = Social_UserRecord::model()->find('userId is not null and token=:token', array(':token' => $this->token));
+        $socialUserRecord = Social_UserRecord::model()->find('userId is not null and encodedToken=:token', array(':token' => $this->token));
 
         if($socialUserRecord) {
             $this->_id = $socialUserRecord->user->id;

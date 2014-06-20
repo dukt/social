@@ -36,33 +36,132 @@ class SocialController extends BaseController
         $redirect = craft()->request->getParam('redirect');
         $errorRedirect = craft()->request->getParam('errorRedirect');
 
-        // redirect url
-        if(!$redirect)
-        {
-            $redirect = craft()->request->getUrlReferrer();
-        }
-
         // don't go further if social login disabled
         $plugin = craft()->plugins->getPlugin('social');
         $settings = $plugin->getSettings();
 
-        if(!$settings['allowSocialLogin'])
+        try
         {
-            craft()->httpSession->add('error', "Social login disabled");
-            $this->redirect($redirect);
+            if(!$settings['allowSocialLogin'])
+            {
+                throw new Exception("Social login disabled");
+            }
+
+            if (craft()->getEdition() != Craft::Pro)
+            {
+                throw new Exception("Craft Pro is required");
+            }
+
+            // provider scopes & params
+            $scopes = craft()->social->getScopes($handle);
+            $params = craft()->social->getParams($handle);
+
+            if ($response = craft()->oauth->connect(array(
+                'plugin' => 'social',
+                'provider' => $handle,
+                'redirect' => $redirect,
+                'errorRedirect' => $errorRedirect,
+                'scopes' => $scopes,
+                'params' => $params
+            )))
+            {
+                $errorRedirect = $response['errorRedirect'];
+
+                if($response['success'])
+                {
+                    $plugin = craft()->plugins->getPlugin('social');
+                    $settings = $plugin->getSettings();
+
+                    if(!$settings['allowSocialLogin'])
+                    {
+                        throw new Exception("Social login disabled");
+                    }
+
+                    $provider = craft()->oauth->getProvider($handle);
+                    $token = $response['token'];
+
+                    // current user
+                    $user = craft()->userSession->getUser();
+
+                    // logged in ?
+                    $isLoggedIn = false;
+
+                    if($user)
+                    {
+                        $isLoggedIn = true;
+                    }
+
+                    // retrieve social user from uid
+                    $provider->source->setToken($token);
+                    $account = $provider->source->getAccount();
+                    $socialUser = craft()->social->getUserByUid($provider->handle, $account['uid']);
+
+                    // error if uid is associated with a different user
+                    if($user && $socialUser && $user->id != $socialUser->userId)
+                    {
+                        throw new Exception("UID is already associated with another user. Disconnect from your current session and retry.");
+                    }
+
+                    if(!$user && $socialUser)
+                    {
+                        $user = craft()->users->getUserById($socialUser->userId);
+                    }
+
+
+                    // create user if it doesn't exists
+                    if(!$user)
+                    {
+                        if(!empty($account['email']))
+                        {
+                            // find with email
+                            $user = craft()->users->getUserByUsernameOrEmail($account['email']);
+
+                            if(!$user)
+                            {
+                                $user = craft()->social->registerUser($account);
+                            }
+                        }
+                        else
+                        {
+                            $user = craft()->social->registerUser($account);
+                        }
+                    }
+
+
+                    // save social user
+
+                    if(!$socialUser)
+                    {
+                        $socialUser = new Social_UserModel();
+                    }
+
+                    $socialUser->userId = $user->id;
+                    $socialUser->provider = $provider->handle;
+                    $socialUser->socialUid = $account['uid'];
+                    $socialUser->encodedToken = craft()->oauth->encodeToken($token);
+
+                    craft()->social->saveUser($socialUser);
+
+
+                    // login if not logged in
+                    if(!$isLoggedIn)
+                    {
+                        craft()->social_userSession->login($socialUser->encodedToken);
+                    }
+
+                    $this->redirect($response['redirect']);
+                }
+                else
+                {
+                    throw new \Exception($response['errorMsg'], 1);
+                }
+            }
         }
-
-        // provider scopes & params
-        $scopes = craft()->social->getScopes($handle);
-        $params = craft()->social->getParams($handle);
-
-        craft()->oauth->connect(array(
-            'plugin' => 'social',
-            'provider' => $handle,
-            'redirect' => $redirect,
-            'scopes' => $scopes,
-            'params' => $params
-        ));
+        catch(\Exception $e)
+        {
+            craft()->httpSession->add('error', $e->getMessage());
+            $this->redirect($errorRedirect);
+        }
     }
 
     public function actionLogout()

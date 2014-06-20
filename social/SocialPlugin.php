@@ -69,19 +69,82 @@ class SocialPlugin extends BasePlugin
             return true;
         }
 
+
+        echo '<h3>System</h3><hr />';
+
+        $record = Oauth_TokenRecord::model()->find(
+
+            // conditions
+            'namespace=:namespace',
+
+            // params
+            array(
+                ':namespace' => 'analytics.system'
+            )
+        );
+
+
+        $token = $record->token;
+        $token = base64_decode($token);
+        $token = unserialize($token);
+        var_dump($token);
+
+        echo '<hr />';
+
+
+        echo '<h3>System</h3><hr />';
+
+        $records = Oauth_TokenRecord::model()->findAll(
+
+            // conditions
+            'namespace is not null',
+
+            // params
+            array(
+                //':provider' => $handle
+            )
+        );
+
+        foreach($records as $record)
+        {
+            echo $record->namespace.'<br />';
+            $token = $record->token;
+            $token = base64_decode($token);
+            $token = unserialize($token);
+            var_dump($token);
+            echo '<hr />';
+        }
+
+
+
+
+        echo '<h3>User Tokens</h3><hr />';
+
+        $records = Oauth_TokenRecord::model()->findAll(
+
+            // conditions
+            'userId is not null',
+
+            // params
+            array(
+                //':provider' => $handle
+            )
+        );
+
+        foreach($records as $record)
+        {
+            $token = $record->token;
+            $token = base64_decode($token);
+            $token = unserialize($token);
+            var_dump($token);
+            echo '<hr />';
+        }
+
+
+
         $variables = array(
             'settings' => $this->getSettings()
         );
-
-        // $oauthPlugin = craft()->plugins->getPlugin('OAuth');
-
-        // if($oauthPlugin)
-        // {
-        //     if($oauthPlugin->isInstalled && $oauthPlugin->isEnabled)
-        //     {
-
-        //     }
-        // }
 
         return craft()->templates->render('social/settings', $variables);
     }
@@ -102,94 +165,5 @@ class SocialPlugin extends BasePlugin
         return array(
             'social\/settings\/(?P<serviceProviderClass>.*)' => 'social/settings/_provider',
         );
-    }
-
-    /**
-     * Hook Register OAuth Connect
-     */
-    public function registerOauthConnect($variables)
-    {
-        try {
-            $plugin = craft()->plugins->getPlugin('social');
-            $settings = $plugin->getSettings();
-
-            if(!$settings['allowSocialLogin'])
-            {
-                throw new Exception("Social login disabled");
-            }
-
-            $provider = $variables['provider'];
-            $token = $variables['token'];
-
-            // current user
-            $user = craft()->userSession->getUser();
-
-            // logged in ?
-            $isLoggedIn = false;
-
-            if($user)
-            {
-                $isLoggedIn = true;
-            }
-
-            // retrieve social user from uid
-
-            $provider->source->setToken($token);
-
-            $account = $provider->source->getAccount();
-
-            $socialUser = craft()->social->getUserByUid($provider->handle, $account['uid']);
-
-            // error if uid is associated with a different user
-            if($user && $socialUser && $user->id != $socialUser->userId)
-            {
-                throw new Exception("UID is already associated with another user. Disconnect from your current session and retry.");
-            }
-
-            // create user if it doesn't exists
-            if(!$user)
-            {
-                if(!empty($account['email']))
-                {
-                    // find with email
-                    $user = craft()->users->getUserByUsernameOrEmail($account['email']);
-
-                    if(!$user)
-                    {
-                        $user = craft()->social->registerUser($account);
-                    }
-                }
-                else
-                {
-                    $user = craft()->social->registerUser($account);
-                }
-            }
-
-
-            // save social user
-
-            if(!$socialUser)
-            {
-                $socialUser = new Social_UserModel();
-            }
-
-            $socialUser->userId = $user->id;
-            $socialUser->provider = $provider->handle;
-            $socialUser->suid = $account['uid'];
-            $socialUser->token = craft()->oauth->encodeToken($token);
-
-            craft()->social->saveUser($socialUser);
-
-
-            // login if not logged in
-            if(!$isLoggedIn)
-            {
-                craft()->social_userSession->login($socialUser->token);
-            }
-        }
-        catch(\Exception $e)
-        {
-            craft()->httpSession->add('error', $e->getMessage());
-        }
     }
 }
