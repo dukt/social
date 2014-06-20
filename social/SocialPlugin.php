@@ -27,7 +27,7 @@ class SocialPlugin extends BasePlugin
      */
     function getVersion()
     {
-        return '0.9.19';
+        return '0.9.20';
     }
 
     /**
@@ -68,79 +68,6 @@ class SocialPlugin extends BasePlugin
         {
             return true;
         }
-
-
-        echo '<h3>System</h3><hr />';
-
-        $record = Oauth_TokenRecord::model()->find(
-
-            // conditions
-            'namespace=:namespace',
-
-            // params
-            array(
-                ':namespace' => 'analytics.system'
-            )
-        );
-
-
-        $token = $record->token;
-        $token = base64_decode($token);
-        $token = unserialize($token);
-        var_dump($token);
-
-        echo '<hr />';
-
-
-        echo '<h3>System</h3><hr />';
-
-        $records = Oauth_TokenRecord::model()->findAll(
-
-            // conditions
-            'namespace is not null',
-
-            // params
-            array(
-                //':provider' => $handle
-            )
-        );
-
-        foreach($records as $record)
-        {
-            echo $record->namespace.'<br />';
-            $token = $record->token;
-            $token = base64_decode($token);
-            $token = unserialize($token);
-            var_dump($token);
-            echo '<hr />';
-        }
-
-
-
-
-        echo '<h3>User Tokens</h3><hr />';
-
-        $records = Oauth_TokenRecord::model()->findAll(
-
-            // conditions
-            'userId is not null',
-
-            // params
-            array(
-                //':provider' => $handle
-            )
-        );
-
-        foreach($records as $record)
-        {
-            $token = $record->token;
-            $token = base64_decode($token);
-            $token = unserialize($token);
-            var_dump($token);
-            echo '<hr />';
-        }
-
-
 
         $variables = array(
             'settings' => $this->getSettings()
