@@ -4,7 +4,7 @@ namespace Craft;
 /**
  * The class name is the UTC timestamp in the format of mYYMMDD_HHMMSS_pluginHandle_migrationName
  */
-class m140620_122650_social_transfer_token extends BaseMigration
+class m140620_122653_social_transfer_token extends BaseMigration
 {
 	/**
 	 * Any migration code in here is wrapped inside of a transaction.
@@ -19,17 +19,18 @@ class m140620_122650_social_transfer_token extends BaseMigration
 
             // Create the craft_social_users table
             craft()->db->createCommand()->createTable('social_users', array(
-                'userId'       => array('column' => 'integer', 'required' => true),
-                'provider'     => array('required' => true),
-                'socialUid'    => array('required' => true),
-                'encodedToken' => array('column' => 'text'),
+                'userId'    => array('column' => 'integer', 'required' => true),
+                'tokenId'   => array('column' => 'integer', 'required' => false),
+                'provider'  => array('required' => true),
+                'socialUid' => array('required' => true),
             ), null, true);
 
             // Add indexes to craft_social_users
-            craft()->db->createCommand()->createIndex('social_users', 'provider,uid', true);
+            craft()->db->createCommand()->createIndex('social_users', 'provider,socialUid', true);
 
             // Add foreign keys to craft_social_users
             craft()->db->createCommand()->addForeignKey('social_users', 'userId', 'users', 'id', 'CASCADE', null);
+            craft()->db->createCommand()->addForeignKey('social_users', 'tokenId', 'oauth_tokens', 'id', 'CASCADE', null);
         }
 
         $this->transferUserTokens();
@@ -37,11 +38,6 @@ class m140620_122650_social_transfer_token extends BaseMigration
 
 		return true;
 	}
-
-    private function saveUser(Social_UserModel $socialUser)
-    {
-        craft()->social->saveUser($socialUser);
-    }
 
     private function transferUserTokens()
     {
@@ -52,24 +48,23 @@ class m140620_122650_social_transfer_token extends BaseMigration
                 require_once(CRAFT_PLUGINS_PATH.'oauth/vendor/autoload.php');
             }
 
-            if(class_exists('Craft\Oauth_TokenRecord') && class_exists('OAuth\OAuth2\Token\StdOAuth2Token'))
+            if(class_exists('OAuth\OAuth2\Token\StdOAuth2Token'))
             {
                 // get token record
 
-                $records = Oauth_TokenRecord::model()->findAll(
-                    'userId is not null',
-                    array(
-                        //':namespace' => $namespace
-                    )
-                );
+                $rows = craft()->db->createCommand()
+                    ->select('*')
+                    ->from('oauth_old_tokens')
+                    ->where('userId IS NOT NULL')
+                    ->queryAll();
 
-                if($records)
+                if($rows)
                 {
-                    foreach($records as $record)
+                    foreach($rows as $row)
                     {
                         // transform token
 
-                        $token = @unserialize(base64_decode($record->token));
+                        $token = @unserialize(base64_decode($row['token']));
 
                         if($token)
                         {
@@ -97,19 +92,33 @@ class m140620_122650_social_transfer_token extends BaseMigration
 
                             if (isset($newToken) && is_object($newToken))
                             {
-                                $user = craft()->users->getUserById($record->userId);
+                                $user = craft()->users->getUserById($row['userId']);
 
                                 if($user)
                                 {
+                                    // save token
+                                    $model = new Oauth_TokenModel;
+                                    $model->providerHandle = $row['provider'];
+                                    $model->pluginHandle = 'social';
+                                    $model->encodedToken = craft()->oauth->encodeToken($newToken);
+                                    craft()->oauth->saveToken($model);
+
+                                    // save social user
                                     $socialUser = new Social_UserModel;
-                                    $socialUser->userId = $record->userId;
-                                    $socialUser->provider = $record->provider;
-                                    $socialUser->socialUid = $record->userMapping;
+                                    $socialUser->userId = $row['userId'];
+                                    $socialUser->provider = $row['provider'];
+                                    $socialUser->socialUid = $row['userMapping'];
+                                    $socialUser->tokenId = $model->id;
 
-                                    $socialUser->encodedToken = base64_encode(serialize($newToken));
+                                    if(!craft()->social->saveUser($socialUser))
+                                    {
+                                        Craft::log('Couldn’t save user.', LogLevel::Info, true);
+                                    }
+                                    else
+                                    {
+                                        Craft::log('User saved.', LogLevel::Info, true);
+                                    }
                                 }
-
-                                $this->saveUser($socialUser);
                             }
                         }
                         else
