@@ -31,11 +31,11 @@ class TokenIdentity extends UserIdentity
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
 
-        $socialUserRecord = Social_UserRecord::model()->find('userId is not null and encodedToken=:token', array(':token' => $this->token));
+        $socialUser = craft()->social->getUserByToken($this->token);
 
-        if($socialUserRecord) {
-            $this->_id = $socialUserRecord->user->id;
-            $this->username = $socialUserRecord->user->username;
+        if($socialUser) {
+            $this->_id = $socialUser->user->id;
+            $this->username = $socialUser->user->username;
             $this->errorCode = static::ERROR_NONE;
 
             return true;

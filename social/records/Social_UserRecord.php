@@ -30,7 +30,6 @@ class Social_UserRecord extends BaseRecord
         return array(
             'provider' => array(AttributeType::String, 'required' => true),
             'socialUid' => array(AttributeType::String, 'required' => true),
-            'encodedToken' => array(AttributeType::String, 'column' => ColumnType::Text),
         );
     }
 
@@ -38,6 +37,7 @@ class Social_UserRecord extends BaseRecord
     {
         return array(
             'user' => array(static::BELONGS_TO, 'UserRecord', 'onDelete' => static::CASCADE, 'required' => true),
+            'token' => array(static::BELONGS_TO, 'Oauth_TokenRecord', 'onDelete' => static::CASCADE, 'required' => false),
         );
     }
 
@@ -47,7 +47,7 @@ class Social_UserRecord extends BaseRecord
     public function defineIndexes()
     {
         return array(
-            array('columns' => array('provider', 'uid'), 'unique' => true)
+            array('columns' => array('provider', 'socialUid'), 'unique' => true)
         );
     }
 }

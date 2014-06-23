@@ -22,16 +22,23 @@ class Social_UserModel extends BaseModel
         return array(
             'id' => AttributeType::Number,
             'userId' => AttributeType::Number,
+            'tokenId' => AttributeType::Number,
 
             'provider' => array(AttributeType::String, 'required' => true),
             'socialUid' => array(AttributeType::String, 'required' => true),
-            'encodedToken' => array(AttributeType::String, 'column' => ColumnType::Text),
         );
     }
 
-    public function getToken()
+    public function getUser()
     {
-        return craft()->oauth->decodeToken($this->encodedToken);
-
+        if ($this->userId) {
+            return craft()->users->getUserById($this->userId);
+        }
     }
+
+    // public function getToken()
+    // {
+    //     return craft()->oauth->decodeToken($this->encodedToken);
+
+    // }
 }

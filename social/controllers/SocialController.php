@@ -139,15 +139,40 @@ class SocialController extends BaseController
 
                     // save social user
 
+                    $tokenId = null;
+
                     if(!$socialUser)
                     {
                         $socialUser = new Social_UserModel();
+                    }
+                    else
+                    {
+                        // token
+
+                        $tokenId = $socialUser->tokenId;
+
+                        $tokenModel = craft()->oauth->getTokenById($tokenId);
+
+                        if(!$tokenModel)
+                        {
+                            $tokenModel = new Oauth_TokenModel;
+                        }
+
+                        $tokenModel->providerHandle = $handle;
+                        $tokenModel->pluginHandle = 'social';
+                        $tokenModel->encodedToken = craft()->oauth->encodeToken($token);
+
+                        // save token
+                        craft()->oauth->saveToken($tokenModel);
+
+                        // set token ID
+                        $tokenId = $tokenModel->id;
                     }
 
                     $socialUser->userId = $user->id;
                     $socialUser->provider = $provider->handle;
                     $socialUser->socialUid = $account['uid'];
-                    $socialUser->encodedToken = craft()->oauth->encodeToken($token);
+                    $socialUser->tokenId = $tokenId;
 
                     craft()->social->saveUser($socialUser);
 
@@ -155,7 +180,7 @@ class SocialController extends BaseController
                     // login if not logged in
                     if(!$isLoggedIn)
                     {
-                        craft()->social_userSession->login($socialUser->encodedToken);
+                        craft()->social_userSession->login(craft()->oauth->encodeToken($token));
                     }
 
                     $this->redirect($response['redirect']);

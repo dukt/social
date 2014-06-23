@@ -106,6 +106,34 @@ class SocialService extends BaseApplicationComponent
         }
     }
 
+    public function getUserByTokenId($tokenId)
+    {
+        $conditions = 'tokenId=:tokenId';
+        $params = array(':tokenId' => $tokenId);
+
+        $record = Social_UserRecord::model()->find($conditions, $params);
+
+        if ($record)
+        {
+            return Social_UserModel::populateModel($record);
+        }
+    }
+
+    public function getUserByToken($encodedToken)
+    {
+        $token = craft()->oauth->getToken($encodedToken);
+
+        if($token)
+        {
+            $user = $this->getUserByTokenId($token->id);
+
+            if($user)
+            {
+                return $user;
+            }
+        }
+    }
+
     public function saveUser(Social_UserModel $socialUser)
     {
         if($socialUser->id)
@@ -128,9 +156,9 @@ class SocialService extends BaseApplicationComponent
 
         // populate
         $socialUserRecord->userId = $socialUser->userId;
+        $socialUserRecord->tokenId = $socialUser->tokenId;
         $socialUserRecord->provider = $socialUser->provider;
         $socialUserRecord->socialUid = $socialUser->socialUid;
-        $socialUserRecord->encodedToken = $socialUser->encodedToken;
 
         // validate
         $socialUserRecord->validate();
