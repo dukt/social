@@ -111,20 +111,29 @@ class SocialController extends BaseController
                     // create user if it doesn't exists
                     if(!$user)
                     {
-                        if(!empty($account['email']))
-                        {
-                            // find with email
-                            $user = craft()->users->getUserByUsernameOrEmail($account['email']);
+                        $user = craft()->social->registerUser($account);
 
-                            if(!$user)
-                            {
-                                $user = craft()->social->registerUser($account);
-                            }
-                        }
-                        else
-                        {
-                            $user = craft()->social->registerUser($account);
-                        }
+                        // todo
+                        // security risks matching existing user email for registration:
+                        // craft and oauth providers must enable user email
+                        // confirmation to secure the system
+
+                        // if(!empty($account['email']))
+                        // {
+                        //     // find with email
+
+                        //     $user = craft()->users->getUserByUsernameOrEmail($account['email']);
+
+                        //     if(!$user)
+                        //     {
+                        //         $user = craft()->social->registerUser($account);
+                        //     }
+                        // }
+                        // else
+                        // {
+                        //     $user = craft()->social->registerUser($account);
+                        // }
+
                     }
 
 
