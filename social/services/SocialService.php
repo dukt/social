@@ -121,15 +121,22 @@ class SocialService extends BaseApplicationComponent
 
     public function getUserByToken($encodedToken)
     {
-        $token = craft()->oauth->getToken($encodedToken);
+        // get all social users
+        $records = Social_UserRecord::model()->findAll();
 
-        if($token)
+        // find a matching token
+        foreach($records as $record)
         {
-            $user = $this->getUserByTokenId($token->id);
+            $token = craft()->oauth->getTokenById($record->tokenId);
 
-            if($user)
+            if($token && $token->encodedToken == $encodedToken)
             {
-                return $user;
+                $user = $this->getUserByTokenId($token->id);
+
+                if($user)
+                {
+                    return $user;
+                }
             }
         }
     }

@@ -102,6 +102,7 @@ class SocialController extends BaseController
                         throw new Exception("UID is already associated with another user. Disconnect from your current session and retry.");
                     }
 
+
                     if(!$user && $socialUser)
                     {
                         $user = craft()->users->getUserById($socialUser->userId);
@@ -111,7 +112,26 @@ class SocialController extends BaseController
                     // create user if it doesn't exists
                     if(!$user)
                     {
-                        $user = craft()->social->registerUser($account);
+                        // $user = craft()->social->registerUser($account);
+
+                        if(!empty($account['email']))
+                        {
+                            // find with email
+                            $user = craft()->users->getUserByUsernameOrEmail($account['email']);
+
+                            if(!$user)
+                            {
+                                $user = craft()->social->registerUser($account);
+                            }
+                            else
+                            {
+                                throw new \Exception("An account already exists with this email");
+                            }
+                        }
+                        else
+                        {
+                            throw new \Exception("Email address not provided");
+                        }
 
                         // todo
                         // security risks matching existing user email for registration:
@@ -140,6 +160,7 @@ class SocialController extends BaseController
                     // save social user
 
                     $tokenId = null;
+                    $tokenModel = null;
 
                     if(!$socialUser)
                     {
@@ -148,26 +169,30 @@ class SocialController extends BaseController
                     else
                     {
                         // token
-
                         $tokenId = $socialUser->tokenId;
-
-                        $tokenModel = craft()->oauth->getTokenById($tokenId);
-
-                        if(!$tokenModel)
-                        {
-                            $tokenModel = new Oauth_TokenModel;
-                        }
-
-                        $tokenModel->providerHandle = $handle;
-                        $tokenModel->pluginHandle = 'social';
-                        $tokenModel->encodedToken = craft()->oauth->encodeToken($token);
-
-                        // save token
-                        craft()->oauth->saveToken($tokenModel);
-
-                        // set token ID
-                        $tokenId = $tokenModel->id;
                     }
+
+
+                    if($tokenId)
+                    {
+                        $tokenModel = craft()->oauth->getTokenById($tokenId);
+                    }
+
+                    if(!$tokenModel)
+                    {
+                        $tokenModel = new Oauth_TokenModel;
+                    }
+
+                    $tokenModel->providerHandle = $handle;
+                    $tokenModel->pluginHandle = 'social';
+                    $tokenModel->encodedToken = craft()->oauth->encodeToken($token);
+
+                    // save token
+                    craft()->oauth->saveToken($tokenModel);
+
+                    // set token ID
+                    $tokenId = $tokenModel->id;
+
 
                     $socialUser->userId = $user->id;
                     $socialUser->provider = $provider->handle;
@@ -180,7 +205,7 @@ class SocialController extends BaseController
                     // login if not logged in
                     if(!$isLoggedIn)
                     {
-                        craft()->social_userSession->login(craft()->oauth->encodeToken($token));
+                        craft()->social_userSession->login($tokenModel->encodedToken);
                     }
 
                     $this->redirect($response['redirect']);

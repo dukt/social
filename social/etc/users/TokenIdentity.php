@@ -31,6 +31,8 @@ class TokenIdentity extends UserIdentity
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
 
+
+
         $socialUser = craft()->social->getUserByToken($this->token);
 
         if($socialUser) {

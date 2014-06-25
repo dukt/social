@@ -30,6 +30,7 @@ class Social_UserRecord extends BaseRecord
         return array(
             'provider' => array(AttributeType::String, 'required' => true),
             'socialUid' => array(AttributeType::String, 'required' => true),
+            'tokenId' => array(AttributeType::Number, 'required' => false),
         );
     }
 
@@ -37,7 +38,6 @@ class Social_UserRecord extends BaseRecord
     {
         return array(
             'user' => array(static::BELONGS_TO, 'UserRecord', 'onDelete' => static::CASCADE, 'required' => true),
-            'token' => array(static::BELONGS_TO, 'Oauth_TokenRecord', 'onDelete' => static::CASCADE, 'required' => false),
         );
     }
 
