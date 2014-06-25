@@ -205,7 +205,7 @@ class SocialController extends BaseController
                     // login if not logged in
                     if(!$isLoggedIn)
                     {
-                        craft()->social_userSession->login($tokenModel->encodedToken);
+                        craft()->social_userSession->login($tokenModel);
                     }
 
                     $this->redirect($response['redirect']);

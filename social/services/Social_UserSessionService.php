@@ -19,11 +19,11 @@ class Social_UserSessionService extends UserSessionService {
     private $_identity;
     public $allowAutoLogin = true;
 
-    public function login($token)
+    public function login(Oauth_TokenModel $token)
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
 
-        $this->_identity = new TokenIdentity($token);
+        $this->_identity = new TokenIdentity($token->encodedToken);
         $r = $this->_identity->authenticate();
 
         // Was the login successful?

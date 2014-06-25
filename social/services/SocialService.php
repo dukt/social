@@ -119,7 +119,7 @@ class SocialService extends BaseApplicationComponent
         }
     }
 
-    public function getUserByToken($encodedToken)
+    public function getUserByEncodedToken($encodedToken)
     {
         // get all social users
         $records = Social_UserRecord::model()->findAll();

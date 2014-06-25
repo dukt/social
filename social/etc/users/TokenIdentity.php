@@ -33,7 +33,7 @@ class TokenIdentity extends UserIdentity
 
 
 
-        $socialUser = craft()->social->getUserByToken($this->token);
+        $socialUser = craft()->social->getUserByEncodedToken($this->token);
 
         if($socialUser) {
             $this->_id = $socialUser->user->id;
