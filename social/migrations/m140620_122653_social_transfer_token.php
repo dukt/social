@@ -20,9 +20,9 @@ class m140620_122653_social_transfer_token extends BaseMigration
             // Create the craft_social_users table
             craft()->db->createCommand()->createTable('social_users', array(
                 'userId'    => array('column' => 'integer', 'required' => true),
-                'tokenId'   => array('column' => 'integer', 'required' => false),
                 'provider'  => array('required' => true),
                 'socialUid' => array('required' => true),
+                'tokenId'   => array('maxLength' => 11, 'decimals' => 0, 'required' => false, 'unsigned' => false, 'length' => 10, 'column' => 'integer'),
             ), null, true);
 
             // Add indexes to craft_social_users
@@ -30,7 +30,6 @@ class m140620_122653_social_transfer_token extends BaseMigration
 
             // Add foreign keys to craft_social_users
             craft()->db->createCommand()->addForeignKey('social_users', 'userId', 'users', 'id', 'CASCADE', null);
-            craft()->db->createCommand()->addForeignKey('social_users', 'tokenId', 'oauth_tokens', 'id', 'CASCADE', null);
         }
 
         $this->transferUserTokens();
