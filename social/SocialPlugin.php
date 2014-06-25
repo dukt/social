@@ -27,7 +27,7 @@ class SocialPlugin extends BasePlugin
      */
     function getVersion()
     {
-        return '0.9.21';
+        return '0.9.22';
     }
 
     /**
