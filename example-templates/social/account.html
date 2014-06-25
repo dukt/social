@@ -1,0 +1,52 @@
+{% if not currentUser %}
+    {% redirect 'social/login' %}
+{% endif %}
+
+{% extends "social/_layout" %}
+
+{% set selectedTab = 'apps' %}
+
+{% block main %}
+
+    <div class="col-md-12">
+
+        {% set error = craft.social.error %}
+
+        {% if error %}
+
+            <div class="alert alert-danger">
+                <p>{{error}}</p>
+            </div>
+
+        {% endif %}
+
+        <h1>Account</h1>
+        <ul class="list-unstyled">
+            <li><strong>Email:</strong> {{ user.email }}</li>
+            <li><strong>Username: </strong> {{ user.email }}</li>
+        </ul>
+        <h2>Authentication Methods</h2>
+        <table class="table table-bordered">
+
+            {% for providerSource in craft.social.getProviders() %}
+                <tr>
+                    <th>{{providerSource.name}}</th>
+                    <td class="col-md-2 text-center">
+
+                        {% set user = craft.social.userByProvider(providerSource.handle) %}
+
+                        {% if user %}
+                            <p><a href="{{craft.social.disconnectUrl(providerSource.handle)}}" class="btn btn-default btn-sm">Disconnect</a></p>
+                        {% else %}
+                            <p><a href="{{ craft.social.connectUrl(providerSource.handle) }}" class="btn btn-primary btn-sm">Connect</a></p>
+                        {% endif %}
+
+                    </td>
+                </tr>
+
+            {% endfor %}
+        </table>
+
+    </div>
+
+{% endblock %}

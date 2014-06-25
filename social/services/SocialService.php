@@ -5,24 +5,182 @@
  *
  * @package   Social Login
  * @author    Benjamin David
- * @copyright Copyright (c) 2013, Dukt
- * @link      http://dukt.net/craft/social/
- * @license   http://dukt.net/craft/social/docs/license
+ * @copyright Copyright (c) 2014, Dukt
+ * @link      https://dukt.net/craft/social/
+ * @license   https://dukt.net/craft/social/docs/license
  */
 
 namespace Craft;
 
-require_once(CRAFT_PLUGINS_PATH.'social/vendor/autoload.php');
-
-use Guzzle\Http\Client;
-
 class SocialService extends BaseApplicationComponent
 {
-    private $supportedProviders = array(
+    private $loginProviders = array(
             'facebook' => true,
-            'github' => true,
-            'google' => true
-        );
+            'github' => array(
+                'scopes' => array(
+                    'user',
+                ),
+            ),
+            'google' => array(
+                'scopes' => array(
+                    'userinfo_profile',
+                    'userinfo_email'
+                ),
+                'params' => array(
+                    'access_type' => 'offline'
+                )
+            )
+    );
+
+    public function getScopes($handle)
+    {
+        if(!empty($this->loginProviders[$handle]['scopes']))
+        {
+            return $this->loginProviders[$handle]['scopes'];
+        }
+        else
+        {
+            return array();
+        }
+    }
+
+    public function getParams($handle)
+    {
+        if(!empty($this->loginProviders[$handle]['params']))
+        {
+            return $this->loginProviders[$handle]['params'];
+        }
+        else
+        {
+            return array();
+        }
+    }
+
+    public function getUserByProvider($handle)
+    {
+        $currentUser = craft()->userSession->getUser();
+        $userId = $currentUser->id;
+
+        $conditions = 'provider=:provider and userId=:userId';
+        $params = array(':provider' => $handle, ':userId' => $userId);
+
+        $record = Social_UserRecord::model()->find($conditions, $params);
+
+        if ($record)
+        {
+            return Social_UserModel::populateModel($record);
+        }
+    }
+
+    public function deleteUserByProvider($handle)
+    {
+        $currentUser = craft()->userSession->getUser();
+        $userId = $currentUser->id;
+
+        $conditions = 'provider=:provider and userId=:userId';
+        $params = array(':provider' => $handle, ':userId' => $userId);
+
+        $record = Social_UserRecord::model()->find($conditions, $params);
+
+        if ($record)
+        {
+            return $record->delete();
+        }
+
+        return false;
+    }
+
+    public function getUserByUid($handle, $socialUid)
+    {
+        $conditions = 'provider=:provider';
+        $params = array(':provider' => $handle);
+
+        $conditions .= ' AND socialUid=:socialUid';
+        $params[':socialUid'] = $socialUid;
+
+        $record = Social_UserRecord::model()->find($conditions, $params);
+
+        if ($record)
+        {
+            return Social_UserModel::populateModel($record);
+        }
+    }
+
+    public function getUserByTokenId($tokenId)
+    {
+        $conditions = 'tokenId=:tokenId';
+        $params = array(':tokenId' => $tokenId);
+
+        $record = Social_UserRecord::model()->find($conditions, $params);
+
+        if ($record)
+        {
+            return Social_UserModel::populateModel($record);
+        }
+    }
+
+    public function getUserByToken($encodedToken)
+    {
+        $token = craft()->oauth->getToken($encodedToken);
+
+        if($token)
+        {
+            $user = $this->getUserByTokenId($token->id);
+
+            if($user)
+            {
+                return $user;
+            }
+        }
+    }
+
+    public function saveUser(Social_UserModel $socialUser)
+    {
+        if($socialUser->id)
+        {
+            $socialUserRecord = Social_UserRecord::model()->findById($socialUser->id);
+
+            if (!$socialUserRecord)
+            {
+                throw new Exception(Craft::t('No social user exists with the ID “{id}”', array('id' => $socialUser->id)));
+            }
+
+            $oldSocialUser = Social_UserModel::populateModel($socialUserRecord);
+            $isNewUser = false;
+        }
+        else
+        {
+            $socialUserRecord = new Social_UserRecord;
+            $isNewUser = true;
+        }
+
+        // populate
+        $socialUserRecord->userId = $socialUser->userId;
+        $socialUserRecord->tokenId = $socialUser->tokenId;
+        $socialUserRecord->provider = $socialUser->provider;
+        $socialUserRecord->socialUid = $socialUser->socialUid;
+
+        // validate
+        $socialUserRecord->validate();
+
+        $socialUser->addErrors($socialUserRecord->getErrors());
+
+        if (!$socialUser->hasErrors())
+        {
+            $socialUserRecord->save(false);
+
+            if (!$socialUser->id)
+            {
+                $socialUser->id = $socialUserRecord->id;
+            }
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
     public function getProviders($configuredOnly = true)
     {
@@ -30,8 +188,10 @@ class SocialService extends BaseApplicationComponent
 
         $providers = array();
 
-        foreach($allProviders as $provider) {
-            if(isset($this->supportedProviders[$provider->getHandle()])) {
+        foreach($allProviders as $provider)
+        {
+            if(isset($this->loginProviders[$provider->getHandle()]))
+            {
                 array_push($providers, $provider);
             }
         }
@@ -41,52 +201,50 @@ class SocialService extends BaseApplicationComponent
 
     public function getProvider($handle,  $configuredOnly = true)
     {
-        if(isset($this->supportedProviders[$handle])) {
+        if(isset($this->loginProviders[$handle]))
+        {
             return craft()->oauth->getProvider($handle,  $configuredOnly);
         }
     }
-
-    public function login($providerClass, $redirect = null, $scope = null, $errorRedirect = null)
+    public function getConnectUrl($handle)
     {
-        Craft::log(__METHOD__, LogLevel::Info, true);
+        return UrlHelper::getActionUrl('social/connect', array(
+            'provider' => $handle
+        ));
+    }
 
-        $params = array('provider' => $providerClass);
+    public function getDisconnectUrl($handle)
+    {
+        return UrlHelper::getActionUrl('social/disconnect', array(
+            'provider' => $handle
+        ));
+    }
 
-        if($redirect) {
-            $params['redirect'] = $redirect;
-        }
+    public function getLoginUrl($providerClass, $params = array())
+    {
 
-        if($errorRedirect) {
-            $params['errorRedirect'] = $errorRedirect;
-        }
+        $params['provider'] = $providerClass;
 
-        if($scope) {
-            $params['scope'] = base64_encode(serialize($scope));
-        }
-
-        $url = UrlHelper::getSiteUrl(craft()->config->get('actionTrigger').'/social/public/login', $params);
+        $url = UrlHelper::getSiteUrl(craft()->config->get('actionTrigger').'/social/login', $params);
 
         Craft::log(__METHOD__." : Authenticate : ".$url, LogLevel::Info, true);
 
         return $url;
     }
 
-    public function logout($redirect = null)
+    public function getLogoutUrl($redirect = null)
     {
-        Craft::log(__METHOD__, LogLevel::Info, true);
-
         $params = array('redirect' => $redirect);
 
-        return UrlHelper::getActionUrl('social/public/logout', $params);
+        return UrlHelper::getActionUrl('social/logout', $params);
     }
 
     public function isTemporaryEmail($email)
     {
-        Craft::log(__METHOD__, LogLevel::Info, true);
-
         $user = craft()->users->getUserByUsernameOrEmail($email);
 
-        if(!$user) {
+        if(!$user)
+        {
             return false;
         }
 
@@ -95,7 +253,8 @@ class SocialService extends BaseApplicationComponent
         $pos = strpos($user->email, $fake);
         $len = strlen($user->email);
 
-        if($pos) {
+        if($pos)
+        {
             return true;
         }
 
@@ -104,14 +263,14 @@ class SocialService extends BaseApplicationComponent
 
     public function getTemporaryPassword($userId)
     {
-        Craft::log(__METHOD__, LogLevel::Info, true);
 
         $user = craft()->users->getUserById($userId);
         $fake = '.social.dukt.net';
         $pos = strpos($user->email, $fake);
         $len = strlen($user->email);
 
-        if($pos) {
+        if($pos)
+        {
 
             // temporary email : [uid]@[providerHandle].social.dukt.net
 
@@ -137,257 +296,78 @@ class SocialService extends BaseApplicationComponent
 
     public function userHasTemporaryUsername($userId)
     {
-        Craft::log(__METHOD__, LogLevel::Info, true);
 
         $user = craft()->users->getUserById($userId);
 
-        if(strpos($user->username, '.social.dukt.net') !== false) {
+        if(strpos($user->username, '.social.dukt.net') !== false)
+        {
             return true;
         }
 
         return false;
     }
 
-
-    public function loginCallback($opts)
+    public function registerUser($account)
     {
-        Craft::log(__METHOD__, LogLevel::Info, true);
-
-        // get options
-
-        $providerClass = $opts['oauth.providerClass'];
-        $socialRedirect = $opts['oauth.socialRedirect'] = craft()->httpSession->get('oauth.socialRedirect');
-        $errorRedirect = $opts['oauth.socialReferer'] = craft()->httpSession->get('oauth.socialReferer');;
-        $token = $opts['oauth.token'];
-
-        // token
-
-        $token = @unserialize(base64_decode($token));
-
-
-        // instantiate provider
-
-        $provider = craft()->oauth->getProvider($providerClass);
-
-        $provider->setToken($token);
-
-        // get account
-
-        try {
-            $account = $provider->getAccount();
-        } catch(\Exception $e) {
-
-            // craft()->userSession->setError(Craft::t($e->getMessage()));
-
-            craft()->httpSession->add('error', Craft::t($e->getMessage()));
-
-            return $errorRedirect;
-        }
-
-
-        if(!$account) {
-
-            // craft()->userSession->setError(Craft::t("Couldn't connect to your account."));
-
-            craft()->httpSession->add('error', Craft::t($e->getMessage()));
-
-            return $errorRedirect;
-        }
-
-
-        // ----------------------
-        // find a matching user
-        // ----------------------
-
-        $user = null;
-        $userId =  craft()->userSession->id;
-
-
-        // define user with current user
-
-        if($userId) {
-            $user = craft()->users->getUserById($userId);
-        }
-
-
-        // no current user ? check with account email
-
-        if(!$user) {
-            if(isset($account->email)) {
-                $user = craft()->users->getUserByUsernameOrEmail($account['email']);
-            }
-        }
-
-
-        // still no user ? check with account mapping
-
-        if(!$user) {
-
-            $criteriaConditions = '
-                provider=:provider AND
-                userMapping=:userMapping
-                ';
-
-            $criteriaParams = array(
-                ':provider' => $providerClass,
-                ':userMapping' => $account['uid']
-                );
-
-            $tokenRecord = Oauth_TokenRecord::model()->find($criteriaConditions, $criteriaParams);
-
-            if($tokenRecord) {
-                $userId = $tokenRecord->userId;
-                $user = craft()->users->getUserById($userId);
-            }
-        }
-
-
-        // no matching user, create one
-
-
         // get social plugin settings
 
         $socialPlugin = craft()->plugins->getPlugin('social');
         $settings = $socialPlugin->getSettings();
 
-        if(!$user) {
-
-            if(!$settings['allowSocialRegistration']) {
-
-                craft()->httpSession->add('error', Craft::t("Social registration is disabled."));
-
-                return $errorRedirect;
-            }
-
-            // new user
-
-            if(isset($account['email'])) {
-                // define email
-
-                $usernameOrEmail = $account['email'];
-            } else {
-
-                // no email allowed ?
-
-                if($settings['allowFakeEmail']) {
-
-                    // no email, we create a fake one
-
-                    $usernameOrEmail = md5($account['uid']).'@'.strtolower($providerClass).'.social.dukt.net';
-                } else {
-                    // no email here ? we abort, craft requires at least a valid email
-
-                    // add error before redirecting
-
-                    // craft()->userSession->setError(Craft::t("This OAuth provider doesn't provide email sharing. Please try another one."));
-
-                    craft()->httpSession->add('error', Craft::t("This OAuth provider doesn't provide the email address. Please try another one."));
-
-                    return $errorRedirect;
-                }
-            }
-
-            $newUser = new UserModel();
-            $newUser->username = $usernameOrEmail;
-            $newUser->email = $usernameOrEmail;
-
-            $newUser->newPassword = md5(serialize($provider->getToken()));
-
-
-            // save user
-
-            craft()->users->saveUser($newUser);
-
-            craft()->db->getSchema()->refresh();
-
-            $user = craft()->users->getUserByUsernameOrEmail($usernameOrEmail);
-
-
-            // save groups
-
-            if(!empty($settings['defaultGroup'])) {
-                craft()->userGroups->assignUserToGroups($user->id, array($settings['defaultGroup']));
-            }
+        if(!$settings['allowSocialRegistration'])
+        {
+            throw new Exception("Social registration is disabled.");
         }
 
 
-        // ----------------------
-        // save token record
-        // ----------------------
+        // new user
 
+        if(isset($account['email']))
+        {
+            // define email
+            $usernameOrEmail = $account['email'];
+        }
+        else
+        {
+            throw new Exception("This OAuth provider doesn't provide the email address. Please try another one.");
 
-        // try to find an existing token
+            // todo
 
-        $tokenRecord = null;
+            // // no email allowed ?
 
-        if($user) {
-            $criteriaConditions = '
-                provider=:provider AND
-                userMapping=:userMapping AND
-                userId is not null
-                ';
-
-            $criteriaParams = array(
-                ':provider' => $providerClass,
-                ':userMapping' => $account['uid']
-                );
-
-            $tokenRecord = Oauth_TokenRecord::model()->find($criteriaConditions, $criteriaParams);
-
-            if($tokenRecord) {
-                if($tokenRecord->user->id != $user->id) {
-                    // provider account already in use by another user
-                    die('provider account already in use by another craft user');
-                }
-            }
+            // if($settings['allowFakeEmail'])
+            // {
+            //     // no email, we create a fake one
+            //     $usernameOrEmail = md5($account['uid']).'@'.strtolower($providerClass).'.social.dukt.net';
+            // }
+            // else
+            // {
+                // no email here ? we abort, craft requires at least a valid email
+            //  throw new Exception("This OAuth provider doesn't provide the email address. Please try another one.");
+            // }
         }
 
+        $newUser = new UserModel();
+        $newUser->username = $usernameOrEmail;
+        $newUser->email = $usernameOrEmail;
 
-        // or create a new one
+        $newUser->newPassword = md5(serialize(time()));
 
-        if(!$tokenRecord) {
-            $tokenRecord = new Oauth_TokenRecord();
-            $tokenRecord->userId = $user->id;
-            $tokenRecord->provider = $providerClass;
 
-            $tokenRecord->userMapping = $account['uid'];
+        // save user
+
+        craft()->users->saveUser($newUser);
+        craft()->db->getSchema()->refresh();
+        $user = craft()->users->getUserByUsernameOrEmail($usernameOrEmail);
+
+
+        // save groups
+
+        if(!empty($settings['defaultGroup']))
+        {
+            craft()->userGroups->assignUserToGroups($user->id, array($settings['defaultGroup']));
         }
 
-
-        //scope
-
-        $scope = $opts['oauth.scope'];
-
-        if(!$scope) {
-            $scope = $provider->getScope();
-        }
-
-
-        // update token variables
-
-        $tokenRecord->token = base64_encode(serialize($provider->getToken()));
-
-        $tokenRecord->scope = $scope;
-
-
-        // save token
-
-        $tokenRecord->save();
-
-
-        // login user to craft
-
-        if($provider->getToken()) {
-            craft()->social_userSession->login(base64_encode(serialize($provider->getToken())));
-        }
-
-        // clean session variables
-
-        craft()->oauth->sessionClean();
-
-
-        // redirect
-
-        return $socialRedirect;
+        return $user;
     }
 }

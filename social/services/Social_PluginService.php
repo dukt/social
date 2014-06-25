@@ -1,21 +1,18 @@
 <?php
 
 /**
- * Social Login for Craft
+ * Social for Craft
  *
- * @package   Social Login
+ * @package   Social
  * @author    Benjamin David
- * @copyright Copyright (c) 2013, Dukt
- * @link      http://dukt.net/craft/social/
- * @license   http://dukt.net/craft/social/docs/license
+ * @copyright Copyright (c) 2014, Dukt
+ * @link      https://dukt.net/craft/social/
+ * @license   https://dukt.net/craft/social/docs/license
  */
 
 namespace Craft;
 
-require_once(CRAFT_PLUGINS_PATH.'social/vendor/autoload.php');
-
-use VIPSoft\Unzip\Unzip;
-use Symfony\Component\Filesystem\Filesystem;
+use Guzzle\Http\Client;
 
 class Social_PluginService extends BaseApplicationComponent
 {
@@ -28,9 +25,6 @@ class Social_PluginService extends BaseApplicationComponent
         // -------------------------------
 
         $return = array('success' => false);
-
-        $filesystem = new Filesystem();
-        $unzipper  = new Unzip();
 
         $pluginComponent = craft()->plugins->getPlugin($pluginHandle, false);
 
@@ -63,34 +57,58 @@ class Social_PluginService extends BaseApplicationComponent
 
             // download remotePluginZipUrl to pluginZipPath
 
-            $zipContents = file_get_contents($remotePluginZipUrl);
+            $client = new \Guzzle\Http\Client();
+            $request = $client->get($remotePluginZipUrl);
+            $response = $request->send();
+            $body = $response->getBody();
 
-            file_put_contents($pluginZipPath, $zipContents);
+            // Make sure we're at the beginning of the stream.
+            $body->rewind();
 
+            // Write it out to the file
+            IOHelper::writeToFile($pluginZipPath, $body->getStream(), true);
+
+            // Close the stream.
+            $body->close();
 
             // unzip pluginZipPath into pluginZipDir
 
-            $contents = $unzipper->extract($pluginZipPath, $pluginZipDir);
+            Zip::unzip($pluginZipPath, $pluginZipDir);
+            $contents = IOHelper::getFiles($pluginZipDir);
 
+            $pluginUnzipDir = false;
+
+            foreach($contents as $content)
+            {
+                if(strrpos($content, "__MACOSX") !== 0)
+                {
+                    $pluginUnzipDir = $content;
+                }
+            }
 
             // move files we want to keep from their current location to unzipped location
             // keep : .git
 
-            if(file_exists(CRAFT_PLUGINS_PATH.$pluginHandle.'/.git') && !$pluginZipDir.$contents[0].'/.git') {
-                $filesystem->rename(CRAFT_PLUGINS_PATH.$pluginHandle.'/.git',
-                    $pluginZipDir.$contents[0].'/.git');
+            if(file_exists(CRAFT_PLUGINS_PATH.$pluginHandle.'/.git') && !$pluginUnzipDir.'/.git') {
+                IOHelper::rename(CRAFT_PLUGINS_PATH.$pluginHandle.'/.git',
+                    $pluginUnzipDir.'/.git');
             }
+
+            //rename($path, $newName, $suppressErrors = false)
 
 
             // remove current files
             // make a backup of existing plugin (to storage ?) ?
-
-            $filesystem->remove(CRAFT_PLUGINS_PATH.$pluginHandle);
+            //deleteFolder($path, $suppressErrors = false)
+            IOHelper::deleteFolder(CRAFT_PLUGINS_PATH.$pluginHandle);
 
 
             // move new files to final destination
 
-            $filesystem->rename($pluginZipDir.$contents[0].'/'.$pluginHandle.'/', CRAFT_PLUGINS_PATH.$pluginHandle);
+            IOHelper::rename($pluginUnzipDir.'/'.$pluginHandle.'/', CRAFT_PLUGINS_PATH.$pluginHandle);
+
+            // delete zip
+            IOHelper::deleteFile($pluginZipPath);
 
         } catch (\Exception $e) {
 
@@ -105,8 +123,8 @@ class Social_PluginService extends BaseApplicationComponent
         // remove download files
 
         try {
-            $filesystem->remove($pluginZipDir);
-            $filesystem->remove($pluginZipPath);
+            IOHelper::deleteFolder($pluginZipDir);
+            IOHelper::deleteFolder($pluginZipPath);
         } catch(\Exception $e) {
 
             $return['msg'] = $e->getMessage();
@@ -189,13 +207,16 @@ class Social_PluginService extends BaseApplicationComponent
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
 
-        $url = 'http://dukt.net/craft/'.$pluginHandle.'/releases.xml';
+        $url = 'https://dukt.net/craft/'.$pluginHandle.'/releases.xml';
 
 
         // or refresh cache and get new updates if cache expired or forced update
 
-        $xml = simplexml_load_file($url);
 
+        $client = new Client();
+        $response = $client->get($url)->send();
+
+        $xml = $response->xml();
 
         // XML from here on
 

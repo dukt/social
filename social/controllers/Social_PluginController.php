@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Social Login for Craft
+ * Craft Social Login by Dukt
  *
- * @package   Social Login
+ * @package   Craft Social Login
  * @author    Benjamin David
- * @copyright Copyright (c) 2013, Dukt
- * @link      http://dukt.net/craft/social/
- * @license   http://dukt.net/craft/social/docs/license
+ * @copyright Copyright (c) 2014, Dukt
+ * @license   https://dukt.net/craft/social/docs/license
+ * @link      https://dukt.net/craft/social/
  */
 
 namespace Craft;
@@ -33,22 +33,23 @@ class Social_PluginController extends BaseController
 
         $download = $this->pluginService->download($pluginHandle);
 
-        if($download['success'] == true) {
-
+        if($download['success'] == true)
+        {
             $this->redirect(
                 UrlHelper::getActionUrl(
                     $this->pluginHandle.'/plugin/install',
-                    array('plugin' => $pluginHandle, 'redirect' => $_SERVER['HTTP_REFERER'])
+                    array('plugin' => $pluginHandle, 'redirect' => craft()->request->getUrlReferrer())
                 )
             );
-
-        } else {
-
+        }
+        else
+        {
             // download failure
 
             $msg = 'Couldn’t install plugin.';
 
-            if(isset($download['msg'])) {
+            if(isset($download['msg']))
+            {
                 $msg = $download['msg'];
             }
 
@@ -57,10 +58,8 @@ class Social_PluginController extends BaseController
             craft()->userSession->setError(Craft::t($msg));
         }
 
-
         // redirect
-
-        $this->redirect($_SERVER['HTTP_REFERER']);
+        $this->redirect(craft()->request->getUrlReferrer());
     }
 
     public function actionEnable()
@@ -71,7 +70,7 @@ class Social_PluginController extends BaseController
 
         $this->pluginService->enable($pluginHandle);
 
-        $this->redirect($_SERVER['HTTP_REFERER']);
+        $this->redirect(craft()->request->getUrlReferrer());
     }
 
     public function actionInstall()
@@ -83,32 +82,28 @@ class Social_PluginController extends BaseController
         $pluginHandle = craft()->request->getParam('plugin');
         $redirect = craft()->request->getParam('redirect');
 
-        if (!$redirect) {
-            $redirect = $_SERVER['HTTP_REFERER'];
+        if (!$redirect)
+        {
+            $redirect = craft()->request->getUrlReferrer();
         }
 
 
         // install plugin
 
-        if($this->pluginService->install($pluginHandle)) {
-
+        if($this->pluginService->install($pluginHandle))
+        {
             // install success
-
             Craft::log(__METHOD__." : ".$pluginHandle.' plugin installed.', LogLevel::Info, true);
-
             craft()->userSession->setNotice(Craft::t('Plugin installed.'));
-        } else {
-
+        }
+        else
+        {
             // install failure
-
             Craft::log(__METHOD__." : Couldn't install ".$pluginHandle." plugin.", LogLevel::Info, true);
-
             craft()->userSession->setError(Craft::t("Couldn't install plugin."));
         }
 
-
         // redirect
-
-        $this->redirect($_SERVER['HTTP_REFERER']);
+        $this->redirect(craft()->request->getUrlReferrer());
     }
 }

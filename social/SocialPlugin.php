@@ -5,9 +5,9 @@
  *
  * @package   Social Login
  * @author    Benjamin David
- * @copyright Copyright (c) 2013, Dukt
- * @link      http://dukt.net/craft/social/
- * @license   http://dukt.net/craft/social/docs/license
+ * @copyright Copyright (c) 2014, Dukt
+ * @link      https://dukt.net/craft/social/
+ * @license   https://dukt.net/craft/social/docs/license
  */
 
 namespace Craft;
@@ -27,7 +27,7 @@ class SocialPlugin extends BasePlugin
      */
     function getVersion()
     {
-        return '0.9.19';
+        return '0.9.21';
     }
 
     /**
@@ -43,7 +43,7 @@ class SocialPlugin extends BasePlugin
      */
     function getDeveloperUrl()
     {
-        return 'http://dukt.net/';
+        return 'https://dukt.net/';
     }
 
     /**
@@ -52,9 +52,10 @@ class SocialPlugin extends BasePlugin
     protected function defineSettings()
     {
         return array(
-            'allowSocialRegistration' => AttributeType::Bool,
-            'defaultGroup' => AttributeType::Number,
-            'allowFakeEmail' => AttributeType::Bool,
+            'allowSocialRegistration' => array(AttributeType::Bool, 'default' => true),
+            'allowSocialLogin' => array(AttributeType::Bool, 'default' => true),
+            'defaultGroup' => array(AttributeType::Number, 'default' => null),
+            'requireEmailAddress' => array(AttributeType::Bool, 'default' => true),
         );
     }
 
@@ -63,21 +64,14 @@ class SocialPlugin extends BasePlugin
      */
     public function getSettingsHtml()
     {
-        if(craft()->request->getPath() == 'settings/plugins') {
+        if(craft()->request->getPath() == 'settings/plugins')
+        {
             return true;
         }
 
         $variables = array(
             'settings' => $this->getSettings()
         );
-
-        $oauthPlugin = craft()->plugins->getPlugin('OAuth');
-
-        if($oauthPlugin) {
-            if($oauthPlugin->isInstalled && $oauthPlugin->isEnabled) {
-
-            }
-        }
 
         return craft()->templates->render('social/settings', $variables);
     }

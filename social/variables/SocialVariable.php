@@ -5,9 +5,9 @@
  *
  * @package   Social Login
  * @author    Benjamin David
- * @copyright Copyright (c) 2013, Dukt
- * @link      http://dukt.net/craft/social/
- * @license   http://dukt.net/craft/social/docs/license
+ * @copyright Copyright (c) 2014, Dukt
+ * @link      https://dukt.net/craft/social/
+ * @license   https://dukt.net/craft/social/docs/license
  */
 
 namespace Craft;
@@ -25,6 +25,10 @@ class SocialVariable
 
         return $this->_error;
     }
+    public function getUserByProvider($handle)
+    {
+        return craft()->social->getUserByProvider($handle);
+    }
 
     public function getProvider($handle, $configuredOnly = true)
     {
@@ -36,14 +40,24 @@ class SocialVariable
         return craft()->social->getProviders($configuredOnly);
     }
 
-    public function login($providerClass, $redirect = null, $scope = null, $errorRedirect = null)
+    public function getConnectUrl($handle)
     {
-        return craft()->social->login($providerClass, $redirect, $scope, $errorRedirect);
+        return craft()->social->getConnectUrl($handle);
     }
 
-    public function logout($redirect = null)
+    public function getDisconnectUrl($handle)
     {
-        return craft()->social->logout($redirect);
+        return craft()->social->getDisconnectUrl($handle);
+    }
+
+    public function getLoginUrl($providerClass, $params)
+    {
+        return craft()->social->getLoginUrl($providerClass, $params);
+    }
+
+    public function getLogoutUrl($redirect = null)
+    {
+        return craft()->social->getLogoutUrl($redirect);
     }
 
     public function isTemporaryEmail($email)
