@@ -27,7 +27,7 @@ class SocialPlugin extends BasePlugin
      */
     function getVersion()
     {
-        return '0.9.22';
+        return '0.9.23';
     }
 
     /**
@@ -92,5 +92,13 @@ class SocialPlugin extends BasePlugin
         return array(
             'social\/settings\/(?P<serviceProviderClass>.*)' => 'social/settings/_provider',
         );
+    }
+
+    /**
+     * On Before Uninstall
+     */
+    public function onBeforeUninstall()
+    {
+        craft()->oauth->deleteTokensByPlugin('social');
     }
 }
