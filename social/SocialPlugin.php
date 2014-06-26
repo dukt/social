@@ -99,6 +99,9 @@ class SocialPlugin extends BasePlugin
      */
     public function onBeforeUninstall()
     {
-        craft()->oauth->deleteTokensByPlugin('social');
+        if(isset(craft()->oauth))
+        {
+            craft()->oauth->deleteTokensByPlugin('social');
+        }
     }
 }
