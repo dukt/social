@@ -30,7 +30,7 @@ class Social_UserSessionService extends UserSessionService {
         if ($this->_identity->errorCode == UserIdentity::ERROR_NONE)
         {
             // Get how long this session is supposed to last.
-            $seconds = 1000;
+            $seconds = 60*60*2;
             $this->authTimeout = $seconds;
 
             $id = $this->_identity->getId();
