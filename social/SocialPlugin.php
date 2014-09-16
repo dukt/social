@@ -14,6 +14,15 @@ namespace Craft;
 
 class SocialPlugin extends BasePlugin
 {
+    public function init()
+    {
+        craft()->on('users.onBeforeDeleteUser', function(Event $event) {
+            $user = $event->params['user'];
+
+            craft()->social->deleteSocialUserByUserId($user->id);
+        });
+        parent::init();
+    }
     /**
      * Get Name
      */
