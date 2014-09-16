@@ -26,6 +26,8 @@ class Social_UserModel extends BaseModel
 
             'provider' => array(AttributeType::String, 'required' => true),
             'socialUid' => array(AttributeType::String, 'required' => true),
+
+            'photo' => AttributeType::String,
         );
     }
 
@@ -36,9 +38,10 @@ class Social_UserModel extends BaseModel
         }
     }
 
-    // public function getToken()
-    // {
-    //     return craft()->oauth->decodeToken($this->encodedToken);
+    public function getToken()
+    {
+        $token = craft()->oauth->getTokenById($this->tokenId);
 
-    // }
+        return $token;
+    }
 }
