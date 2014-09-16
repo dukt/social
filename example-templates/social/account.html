@@ -8,7 +8,7 @@
 
 {% block main %}
 
-    <div class="col-md-12">
+    <div class="col-md-6 col-md-offset-3">
 
         {% set error = craft.social.error %}
 
@@ -21,24 +21,69 @@
         {% endif %}
 
         <h1>Account</h1>
-        <ul class="list-unstyled">
-            <li><strong>Email:</strong> {{ user.email }}</li>
-            <li><strong>Username: </strong> {{ user.email }}</li>
-        </ul>
-        <h2>Authentication Methods</h2>
+
+        <table class="table">
+            <tr>
+                <th>Photo</th>
+                <td>
+                    {% if user.photoUrl %}
+                        <img src="{{ user.photoUrl }}" />
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th>Username</th>
+                <td>{{ user.username }}</td>
+            </tr>
+            <tr>
+                <th>First Name</th>
+                <td>{{ user.firstName }}</td>
+            </tr>
+            <tr>
+                <th>Last Name</th>
+                <td>{{ user.lastName }}</td>
+            </tr>
+        </table>
+
+
+        <h2>Connected Apps</h2>
         <table class="table table-bordered">
 
             {% for providerSource in craft.social.getProviders() %}
-                <tr>
-                    <th>{{providerSource.name}}</th>
-                    <td class="col-md-2 text-center">
 
-                        {% set user = craft.social.userByProvider(providerSource.handle) %}
+                {% set user = craft.social.userByProvider(providerSource.handle) %}
+
+                <tr>
+                    <td>
+                        <strong>{{providerSource.name}}</strong>
 
                         {% if user %}
-                            <p><a href="{{craft.social.disconnectUrl(providerSource.handle)}}" class="btn btn-default btn-sm">Disconnect</a></p>
+                            <span class="label label-success">Enabled</span>
                         {% else %}
-                            <p><a href="{{ craft.social.connectUrl(providerSource.handle) }}" class="btn btn-primary btn-sm">Connect</a></p>
+                            <span class="label label-danger">Disabled</span>
+                        {% endif %}
+
+                        <br />
+
+                        {% if user %}
+                            You can login using {{providerSource.name}}
+                        {% else %}
+                            Configure {{providerSource.name}} for social login
+                        {% endif %}
+
+                    </td>
+                    <td class="col-md-2 text-center">
+
+                        {% if user %}
+                            <p><a href="{{craft.social.disconnectUrl(providerSource.handle)}}" class="btn btn-default btn-sm">Disable</a></p>
+                        {% else %}
+                            <p><a href="{{ craft.social.connectUrl(providerSource.handle) }}" class="btn btn-primary btn-sm">Enable</a></p>
                         {% endif %}
 
                     </td>

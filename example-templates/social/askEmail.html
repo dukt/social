@@ -1,0 +1,64 @@
+{% extends "social/_layout" %}
+
+{% if currentUser %}
+    {% redirect 'social/account' %}
+{% endif %}
+
+{% set title = "Login" %}
+
+{% block main %}
+
+    {% macro errorList(errors) %}
+        {% if errors %}
+            <ul class="errors">
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endmacro %}
+
+    {% from _self import errorList %}
+
+
+    <div class="row">
+
+        <div class="col-md-6 col-md-offset-3">
+
+            <h2>Complete registration</h2>
+
+            {% if errorMessage is defined %}
+                <div class="alert alert-danger">
+                    <p>{{ errorMessage }}</p>
+                </div>
+            {% endif %}
+
+            {% set error = craft.social.error %}
+
+            {% if error %}
+                <div class="alert alert-danger">
+                    <p>{{error}}</p>
+                </div>
+            {% endif %}
+
+            <form method="post" action="" accept-charset="UTF-8">
+                <input type="hidden" name="action" value="social/askEmail">
+                <input type="hidden" name="redirect" value="social/account">
+
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input name="email" type="text" value="{% if askEmail is defined %}{{ askEmail.email }}{% endif %}" class="form-control" id="email" placeholder="email@example.com">
+
+                    {% if askEmail is defined %}{{ errorList(askEmail.getErrors('email')) }}{% endif %}
+                </div>
+
+                <p><input type="submit" class="btn btn-primary" value="Complete Registration"></p>
+            </form>
+
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
