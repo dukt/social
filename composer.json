@@ -1,0 +1,8 @@
+{
+    "config": {
+        "vendor-dir": "social/vendor/"
+    },
+    "require": {
+        "google/apiclient": "dev-master"
+    }
+}
