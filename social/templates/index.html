@@ -1,0 +1,55 @@
+{% extends "_layouts/cp" %}
+
+{% set title = "Social Login"|t %}
+
+{% includeCssResource "social/css/social.css" %}
+
+{% set extraPageHeaderHtml %}
+    <a class="btn settings icon" href="{{url('settings/plugins/social')}}" title="Social Settings"></a>
+{% endset %}
+
+{% set content %}
+
+
+    {% set socialUsers = craft.social.users %}
+
+    {# <pre>{{ dump(socialUsers) }}</pre> #}
+
+    <table class="data fullwidth">
+        <thead>
+            <tr>
+                <th>Provider</th>
+                <th>Social User</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+        </thead>
+
+
+        {% for socialUser in socialUsers %}
+
+            {% set user = socialUser.user %}
+
+            <tr>
+                <td>
+                    <img src="{{ resourceUrl('social/images/icons/'~socialUser.provider~'.png') }}" class="social-icon" />
+                    {{ socialUser.provider }}
+                </td>
+                <td>
+                    <a href="{{ url('social/users/'~socialUser.id) }}">{{ socialUser.socialUid }}</a>
+                </td>
+                <td>{{ user.fullName }}</td>
+                <td>
+                    <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+                </td>
+                <td class="thin nowrap">
+
+                    <a href="{{ user.cpEditUrl }}" class="btn small">Edit User</a>
+
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endset %}

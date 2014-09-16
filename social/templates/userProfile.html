@@ -1,0 +1,108 @@
+{% extends "_layouts/cp" %}
+
+{% set title = socialUser.socialUid~"@"~socialUser.provider %}
+
+{% includeCssResource "social/css/social.css" %}
+
+
+{% set crumbs = [
+    { label: "Social Login"|t, url: url('social') }
+] %}
+
+{% set content %}
+
+    <h2>User</h2>
+    {% set user = craft.users.id(socialUser.userId).first %}
+
+    <table class="data">
+        <tr>
+            <th>Photo</th>
+            <td>
+                <img src="{{ user.photoUrl }}" alt="">
+            </td>
+        </tr>
+        <tr>
+            <th>Username</th>
+            <td>{{ user.username }}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>
+                <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+            </td>
+        </tr>
+        <tr>
+            <th>Name</th>
+            <td>{{ user.fullName }}</td>
+        </tr>
+    </table>
+
+    <p>
+        <a href="{{user.cpEditUrl}}" class="btn small">Edit User</a>
+    </p>
+
+    <hr>
+
+    <h2>Social Profile</h2>
+
+    {% set socialProvider = craft.social.getSocialProvider(socialUser.provider) %}
+
+    {{ socialProvider.setToken(socialUser.token.token) }}
+
+    {% set profile = socialProvider.getProfile() %}
+
+    {% if profile %}
+        <table class="data">
+            <tr>
+                <th>provider</th>
+                <td>{{ socialUser.provider }}</td>
+            </tr>
+
+            {% for key, value in profile %}
+                <tr>
+                    <th>{{ key }}</th>
+                    <td>
+                        {% switch key %}
+
+                            {% case "photo" %}
+
+                                <img src="{{ value }}" height="100" />
+
+                                <br />
+
+                                <a href="{{ actionUrl('social/changePhoto', { userId: socialUser.userId, photoUrl: value }) }}" class="btn small">Use as photo</a>
+
+                            {% case "profileUrl" %}
+
+                                <a href="{{ value }}">{{ value }}</a>
+
+                            {% default %}
+
+                            {{ value }}
+                        {% endswitch %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p class="error">Couldn't get profile</p>
+    {% endif %}
+
+    <hr>
+
+    <h2>Token</h2>
+
+    {% set token = socialUser.token %}
+
+    {% if token.token.endOfLife > 0 %}
+        {% set remaingSeconds = token.token.endOfLife - now|date('U') %}
+        <p>Token expires in {{ remaingSeconds }} seconds.</p>
+    {% else %}
+        <p>Token doesn't expire.</p>
+    {% endif %}
+
+
+
+    <pre>{{ dump(token.token) }}</pre>
+
+{% endset %}
