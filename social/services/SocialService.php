@@ -12,9 +12,16 @@
 
 namespace Craft;
 
+require_once(CRAFT_PLUGINS_PATH.'social/socialproviders/BaseSocialProvider.php');
+require_once(CRAFT_PLUGINS_PATH.'social/socialproviders/FacebookSocialProvider.php');
+require_once(CRAFT_PLUGINS_PATH.'social/socialproviders/GithubSocialProvider.php');
+require_once(CRAFT_PLUGINS_PATH.'social/socialproviders/GoogleSocialProvider.php');
+require_once(CRAFT_PLUGINS_PATH.'social/socialproviders/TwitterSocialProvider.php');
+
 class SocialService extends BaseApplicationComponent
 {
     private $loginProviders = array(
+            'twitter' => true,
             'facebook' => true,
             'github' => array(
                 'scopes' => array(
@@ -27,10 +34,51 @@ class SocialService extends BaseApplicationComponent
                     'userinfo_email'
                 ),
                 'params' => array(
-                    'access_type' => 'offline'
+                    'access_type' => 'offline',
+                    // 'approval_prompt' => 'force'
                 )
             )
     );
+
+    public function saveToken(Oauth_TokenModel $tokenModel)
+    {
+        craft()->oauth->saveToken($tokenModel);
+    }
+
+    public function getSocialUserByUserId($userId, $provider)
+    {
+        $conditions = 'provider=:provider and userId=:userId';
+        $params = array(':provider' => $provider, ':userId' => $userId);
+
+        $record = Social_UserRecord::model()->find($conditions, $params);
+
+        if ($record)
+        {
+            return Social_UserModel::populateModel($record);
+        }
+    }
+
+    public function getTokenBySocialUserId($id)
+    {
+        $socialUser = $this->getSocialUserById($id);
+        $tokenId = $socialUser->tokenId;
+        $token = craft()->oauth->getTokenById($tokenId);
+
+        return $token;
+    }
+
+    public function getUsers()
+    {
+        $conditions = '';
+        $params = array();
+
+        $records = Social_UserRecord::model()->findAll($conditions, $params);
+
+        if ($records)
+        {
+            return Social_UserModel::populateModels($records);
+        }
+    }
 
     public function getScopes($handle)
     {
@@ -82,12 +130,60 @@ class SocialService extends BaseApplicationComponent
 
         $record = Social_UserRecord::model()->find($conditions, $params);
 
+        $tokenId = $record->tokenId;
+
+        if($tokenId)
+        {
+            $tokenRecord = Oauth_TokenRecord::model()->findByPk($tokenId);
+
+            if($tokenRecord)
+            {
+                $tokenRecord->delete();
+            }
+        }
+
+
         if ($record)
         {
             return $record->delete();
         }
 
         return false;
+    }
+
+    public function deleteSocialUserByUserId($userId)
+    {
+        $conditions = 'userId=:userId';
+        $params = array(':userId' => $userId);
+
+        $socialUserRecords = Social_UserRecord::model()->findAll($conditions, $params);
+
+        foreach($socialUserRecords as $socialUserRecord)
+        {
+            if($socialUserRecord->tokenId)
+            {
+                $tokenRecord = Oauth_TokenRecord::model()->findByPk($socialUserRecord->tokenId);
+
+                if($tokenRecord)
+                {
+                    $tokenRecord->delete();
+                }
+            }
+
+            $socialUserRecord->delete();
+        }
+
+        return true;
+    }
+
+    public function getSocialUserById($id)
+    {
+        $record = Social_UserRecord::model()->findByPk($id);
+
+        if ($record)
+        {
+            return Social_UserModel::populateModel($record);
+        }
     }
 
     public function getUserByUid($handle, $socialUid)
@@ -121,24 +217,28 @@ class SocialService extends BaseApplicationComponent
 
     public function getUserByEncodedToken($encodedToken)
     {
-        // get all social users
-        $records = Social_UserRecord::model()->findAll();
+        // // get all social users
+        // $records = Social_UserRecord::model()->findAll();
 
-        // find a matching token
-        foreach($records as $record)
-        {
-            $token = craft()->oauth->getTokenById($record->tokenId);
+        // // find a matching token
+        // foreach($records as $record)
+        // {
+        //     $token = craft()->oauth->getTokenById($record->tokenId);
 
-            if($token && $token->encodedToken == $encodedToken)
-            {
-                $user = $this->getUserByTokenId($token->id);
+        //     if($token && $token->encodedToken == $encodedToken)
+        //     {
+        //         $user = $this->getUserByTokenId($token->id);
 
-                if($user)
-                {
-                    return $user;
-                }
-            }
-        }
+        //         if($user)
+        //         {
+        //             return $user;
+        //         }
+        //     }
+        // }
+
+        $token = craft()->oauth->getTokenByEncodedToken($encodedToken);
+        $socialUser = $this->getUserByTokenId($token->id);
+        return $socialUser;
     }
 
     public function saveUser(Social_UserModel $socialUser)
@@ -187,6 +287,13 @@ class SocialService extends BaseApplicationComponent
         {
             return false;
         }
+    }
+
+    public function getSocialProvider($handle)
+    {
+        $className = '\\Craft\\'.ucfirst($handle).'SocialProvider';
+        $socialProvider = new $className;
+        return $socialProvider;
     }
 
     public function getProviders($configuredOnly = true)
@@ -336,7 +443,7 @@ class SocialService extends BaseApplicationComponent
         }
         else
         {
-            throw new Exception("This OAuth provider doesn't provide the email address. Please try another one.");
+            throw new Exception("Email address not provided.");
 
             // todo
 
@@ -358,6 +465,17 @@ class SocialService extends BaseApplicationComponent
         $newUser->username = $usernameOrEmail;
         $newUser->email = $usernameOrEmail;
 
+        if(!empty($account['firstName']))
+        {
+            $newUser->firstName = $account['firstName'];
+        }
+
+        if(!empty($account['lastName']))
+        {
+            $newUser->lastName = $account['lastName'];
+        }
+
+
         $newUser->newPassword = md5(serialize(time()));
 
 
@@ -367,6 +485,12 @@ class SocialService extends BaseApplicationComponent
         craft()->db->getSchema()->refresh();
         $user = craft()->users->getUserByUsernameOrEmail($usernameOrEmail);
 
+        // save photo
+
+        if(!empty($account['photo']))
+        {
+            $this->saveRemotePhoto($account['photo'], $user);
+        }
 
         // save groups
 
@@ -376,5 +500,40 @@ class SocialService extends BaseApplicationComponent
         }
 
         return $user;
+    }
+
+    public function saveRemotePhoto($photoUrl, $user)
+    {
+        $filename = 'photo';
+
+        $tempPath = craft()->path->getTempPath().'social/userphotos/'.$user->email.'/';
+        IOHelper::createFolder($tempPath);
+        $tempFilepath = $tempPath.$filename;
+        $client = new \Guzzle\Http\Client();
+        $response = $client->get($photoUrl)
+            ->setResponseBody($tempPath.$filename)
+            ->send();
+
+
+        $extension = substr($response->getContentType(), strpos($response->getContentType(), "/") + 1);
+
+        IOHelper::rename($tempPath.$filename, $tempPath.$filename.'.'.$extension);
+
+        craft()->users->deleteUserPhoto($user);
+
+        $image = craft()->images->loadImage($tempPath.$filename.'.'.$extension);
+        $imageWidth = $image->getWidth();
+        $imageHeight = $image->getHeight();
+
+        $dimension = min($imageWidth, $imageHeight);
+        $horizontalMargin = ($imageWidth - $dimension) / 2;
+        $verticalMargin = ($imageHeight - $dimension) / 2;
+        $image->crop($horizontalMargin, $imageWidth - $horizontalMargin, $verticalMargin, $imageHeight - $verticalMargin);
+
+        craft()->users->saveUserPhoto($filename.'.'.$extension, $image, $user);
+
+        IOHelper::deleteFile($tempPath.$filename.'.'.$extension);
+
+        return true;
     }
 }
