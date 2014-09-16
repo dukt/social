@@ -65,6 +65,7 @@ class SocialPlugin extends BasePlugin
             'allowSocialLogin' => array(AttributeType::Bool, 'default' => true),
             'defaultGroup' => array(AttributeType::Number, 'default' => null),
             'requireEmailAddress' => array(AttributeType::Bool, 'default' => true),
+            'askEmailTemplate' => array(AttributeType::String),
         );
     }
 
@@ -90,7 +91,7 @@ class SocialPlugin extends BasePlugin
      */
     public function hasCpSection()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -99,6 +100,8 @@ class SocialPlugin extends BasePlugin
     public function registerCpRoutes()
     {
         return array(
+
+            "social\/users\/(?P<id>\d+)" => array('action' => "social/userProfile"),
             'social\/settings\/(?P<serviceProviderClass>.*)' => 'social/settings/_provider',
         );
     }
