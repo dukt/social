@@ -26,13 +26,14 @@ class Social_UserSessionService extends UserSessionService {
         parent::init();
     }
 
-    public function login(Oauth_TokenModel $token)
+    public function login($socialUserId)
     {
+
         $rememberMe = true;
 
         Craft::log(__METHOD__, LogLevel::Info, true);
 
-        $this->_identity = new TokenIdentity($token->encodedToken);
+        $this->_identity = new TokenIdentity($socialUserId);
         $this->_identity->authenticate();
 
         // Was the login successful?
@@ -106,7 +107,6 @@ class Social_UserSessionService extends UserSessionService {
 
             return !$this->getIsGuest();
         }
-
 
         Craft::log('Tried to log in unsuccessfully.', LogLevel::Warning);
         return false;

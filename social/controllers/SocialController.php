@@ -12,11 +12,6 @@
 
 namespace Craft;
 
-
-require_once(CRAFT_PLUGINS_PATH.'oauth/vendor/autoload.php');
-require_once(CRAFT_PLUGINS_PATH.'oauth/providers/BaseOAuthProviderSource.php');
-
-
 use Guzzle\Http\Client;
 
 class SocialController extends BaseController
@@ -166,7 +161,8 @@ class SocialController extends BaseController
         $errorRedirect = $response['errorRedirect'];
 
         try {
-            $token = $response['token'];
+            $tokenArray = $response['token'];
+            $token = craft()->oauth->arrayToToken($tokenArray);
 
             if($response['success'])
             {
@@ -195,13 +191,14 @@ class SocialController extends BaseController
 
                 if ($craftUser)
                 {
-                    $this->_handleLoggedInUser($token, $craftUser);
+                    $this->_handleLoggedInUser($tokenArray, $craftUser);
                 }
                 else
                 {
-                    $this->_handleGuestUser($token);
+                    $this->_handleGuestUser($tokenArray);
                 }
 
+                // redirect
                 $this->redirect($this->redirect);
             }
             else
@@ -216,8 +213,10 @@ class SocialController extends BaseController
         }
     }
 
-    private function _handleLoggedInUser($token, $craftUser)
+    private function _handleLoggedInUser($tokenArray, $craftUser)
     {
+        $token = craft()->oauth->arrayToToken($tokenArray);
+
         // social user
         $socialUser = craft()->social->getUserByUid($this->provider->handle, $this->socialUid);
 
@@ -225,14 +224,25 @@ class SocialController extends BaseController
         {
             if($craftUser->id == $socialUser->userId)
             {
-                // token model
-                $tokenModel = $this->_getTokenById($socialUser->tokenId, $token);
-
                 // save token
-                $this->_saveToken($tokenModel, $token);
 
-                // save socialUser
-                $this->_saveSocialUser($socialUser, $craftUser, $tokenModel);
+                $tokenId = $socialUser->tokenId;
+
+                $tokenModel = craft()->oauth->getTokenById($tokenId);
+
+                if(!$tokenModel)
+                {
+                    $tokenModel = new Oauth_TokenModel;
+                }
+
+                $tokenModel->providerHandle = $this->provider->handle;
+                $tokenModel->pluginHandle = 'social';
+                $tokenModel->encodedToken = craft()->oauth->encodeToken($token);
+                craft()->oauth->saveToken($tokenModel);
+
+                // save user
+                $socialUser->tokenId = $tokenModel->id;
+                craft()->social->saveUser($socialUser);
             }
             else
             {
@@ -241,18 +251,26 @@ class SocialController extends BaseController
         }
         else
         {
-            // social user doesn't exist
-            $socialUser = new Social_UserModel();
+            // save token
             $tokenModel = new Oauth_TokenModel;
+            $tokenModel->providerHandle = $this->provider->handle;
+            $tokenModel->pluginHandle = 'social';
+            $tokenModel->encodedToken = craft()->oauth->encodeToken($token);
+            craft()->oauth->saveToken($tokenModel);
 
-            $this->_saveToken($tokenModel, $token);
-            $this->_saveSocialUser($socialUser, $craftUser, $tokenModel);
+            // save social user
+            $socialUser = new Social_UserModel;
+            $socialUser->userId = $craftUser->id;
+            $socialUser->provider = $this->provider->handle;
+            $socialUser->socialUid = $this->socialUid;
+            $socialUser->tokenId = $tokenModel->id;
+            craft()->social->saveUser($socialUser);
         }
     }
 
-    private function _handleGuestUser($token)
+    private function _handleGuestUser($tokenArray)
     {
-        // social user
+        $token = craft()->oauth->arrayToToken($tokenArray);
         $socialUser = craft()->social->getUserByUid($this->provider->handle, $this->socialUid);
 
         if($socialUser)
@@ -261,36 +279,109 @@ class SocialController extends BaseController
 
             if($craftUser)
             {
-                // token model
-                $tokenModel = $this->_getTokenById($socialUser->tokenId, $token);
-
                 // save token
-                $this->_saveToken($tokenModel, $token);
 
-                // save socialUser
-                $this->_saveSocialUser($socialUser, $craftUser, $tokenModel);
+                $tokenId = $socialUser->tokenId;
+                $tokenModel = craft()->oauth->getTokenById($tokenId);
+
+                if(!$tokenModel)
+                {
+                    $tokenModel = new Oauth_TokenModel;
+                }
+
+                $tokenModel->providerHandle = $this->provider->handle;
+                $tokenModel->pluginHandle = 'social';
+                $tokenModel->encodedToken = craft()->oauth->encodeToken($token);
+                craft()->oauth->saveToken($tokenModel);
+
+                // save user
+                $socialUser->tokenId = $tokenModel->id;
+                craft()->social->saveUser($socialUser);
 
                 // login
-                craft()->social_userSession->login($tokenModel);
+                craft()->social_userSession->login($socialUser->id);
             }
             else
             {
-                $this->_createUser($token, $socialUser);
+                throw new Exception("Social User exists but craft user doesn't", 1);
             }
         }
         else
         {
-            // social user doesn't exist
-            $socialUser = new Social_UserModel();
+            $attributes = $this->provider->source->getAccount();
 
-            $this->_createUser($token, $socialUser);
+            if(empty($attributes['email']) && $this->pluginSettings['requireEmailAddress'])
+            {
+                craft()->httpSession->add('socialToken', $tokenArray);
+                craft()->httpSession->add('socialUser', $socialUser);
+                craft()->httpSession->add('socialUid', $this->socialUid);
+                craft()->httpSession->add('socialProviderHandle', $this->provider->handle);
+                craft()->httpSession->add('socialRedirect', $this->redirect);
+
+                $this->renderTemplate($this->pluginSettings['askEmailTemplate']);
+
+                return;
+            }
+            else
+            {
+                // fill attributes from profile
+
+                $socialProvider = craft()->social->getSocialProvider($this->provider->class);
+                $socialProvider->setToken($token);
+                $profile = $socialProvider->getProfile();
+
+                if(!empty($profile['firstName']))
+                {
+                    $attributes['firstName'] = $profile['firstName'];
+                }
+
+                if(!empty($profile['lastName']))
+                {
+                    $attributes['lastName'] = $profile['lastName'];
+                }
+
+                if(!empty($profile['photo']))
+                {
+                    $attributes['photo'] = $profile['photo'];
+                }
+
+                // register user
+                $craftUser = $this->_registerUser($attributes);
+
+                if($craftUser)
+                {
+                    // save token
+                    $tokenModel = new Oauth_TokenModel;
+                    $tokenModel->providerHandle = $this->provider->handle;
+                    $tokenModel->pluginHandle = 'social';
+                    $tokenModel->encodedToken = craft()->oauth->encodeToken($token);
+                    craft()->oauth->saveToken($tokenModel);
+
+                    // save social user
+                    $socialUser = new Social_UserModel;
+                    $socialUser->userId = $craftUser->id;
+                    $socialUser->provider = $this->provider->handle;
+                    $socialUser->socialUid = $this->socialUid;
+                    $socialUser->tokenId = $tokenModel->id;
+                    craft()->social->saveUser($socialUser);
+
+                    // login
+                    craft()->social_userSession->login($socialUser->id);
+                }
+                else
+                {
+                    throw new Exception("Craft user couldn’t be created.");
+                }
+            }
         }
     }
 
     public function actionAskEmail()
     {
-        $token = craft()->httpSession->get('socialToken');
-        $socialUser = craft()->httpSession->get('socialUser');
+        $tokenArray = craft()->httpSession->get('socialToken');
+        $token = craft()->oauth->arrayToToken($tokenArray);
+
+        $socialUserId = craft()->httpSession->get('socialUserId');
         $providerHandle = craft()->httpSession->get('socialProviderHandle');
         $redirect = craft()->httpSession->get('socialRedirect');
         $this->socialUid = craft()->httpSession->get('socialUid');
@@ -314,7 +405,6 @@ class SocialController extends BaseController
         $askEmail = new Social_AskEmailModel;
         $askEmail->email = $email;
 
-        // var_dump($redirect);
 
         if($askEmail->validate())
         {
@@ -327,17 +417,23 @@ class SocialController extends BaseController
 
                 if($craftUser)
                 {
-                    // token model
-                    $tokenModel = new Oauth_TokenModel;
-
                     // save token
-                    $this->_saveToken($tokenModel, $token);
+                    $tokenModel = new Oauth_TokenModel;
+                    $tokenModel->providerHandle = $this->provider->handle;
+                    $tokenModel->pluginHandle = 'social';
+                    $tokenModel->encodedToken = craft()->oauth->encodeToken($token);
+                    craft()->oauth->saveToken($tokenModel);
 
-                    // save socialUser
-                    $this->_saveSocialUser($socialUser, $craftUser, $tokenModel);
+                    // save social user
+                    $socialUser = new Social_UserModel;
+                    $socialUser->userId = $craftUser->id;
+                    $socialUser->provider = $this->provider->handle;
+                    $socialUser->socialUid = $this->socialUid;
+                    $socialUser->tokenId = $tokenModel->id;
+                    craft()->social->saveUser($socialUser);
 
                     // login
-                    craft()->social_userSession->login($tokenModel);
+                    craft()->social_userSession->login($socialUser->id);
 
                     // redirect
                     $this->redirect($redirect);
@@ -361,125 +457,6 @@ class SocialController extends BaseController
         craft()->urlManager->setRouteVariables(array(
             'askEmail' => $askEmail
         ));
-    }
-
-    private function _createUser($token, $socialUser)
-    {
-        $attributes = $this->provider->source->getAccount();
-
-        if(empty($attributes['email']) && $this->pluginSettings['requireEmailAddress'])
-        {
-            craft()->httpSession->add('socialToken', $token);
-            craft()->httpSession->add('socialUser', $socialUser);
-            craft()->httpSession->add('socialUid', $this->socialUid);
-            craft()->httpSession->add('socialProviderHandle', $this->provider->handle);
-            craft()->httpSession->add('socialRedirect', $this->redirect);
-
-            $this->renderTemplate($this->pluginSettings['askEmailTemplate']);
-            // $this->actionAskEmail();
-            return;
-        }
-
-        // fill account from profile
-
-        $socialProvider = craft()->social->getSocialProvider($this->provider->class);
-        $socialProvider->setToken($token);
-        $profile = $socialProvider->getProfile();
-
-        if(!empty($profile['firstName']))
-        {
-            $attributes['firstName'] = $profile['firstName'];
-        }
-
-        if(!empty($profile['lastName']))
-        {
-            $attributes['lastName'] = $profile['lastName'];
-        }
-
-        if(!empty($profile['photo']))
-        {
-            $attributes['photo'] = $profile['photo'];
-        }
-
-
-        // create user
-        $craftUser = $this->_registerUser($attributes);
-
-        if($craftUser)
-        {
-            // token model
-            $tokenModel = $this->_getTokenById($socialUser->tokenId, $token);
-
-            // save token
-            $this->_saveToken($tokenModel, $token);
-
-            // save socialUser
-            $this->_saveSocialUser($socialUser, $craftUser, $tokenModel);
-
-            // login
-            craft()->social_userSession->login($tokenModel);
-        }
-        else
-        {
-            throw new Exception("Craft user couldn’t be created.");
-        }
-    }
-
-    private function _saveToken(&$tokenModel, $token)
-    {
-        // save token
-
-        $tokenModel->providerHandle = $this->provider->handle;
-        $tokenModel->pluginHandle = 'social';
-        $tokenModel->encodedToken = craft()->oauth->encodeToken($token);
-
-        craft()->oauth->saveToken($tokenModel);
-    }
-
-    private function _saveSocialUser($socialUser, $craftUser, $tokenModel)
-    {
-        // save social user
-
-        $socialUser->userId = $craftUser->id;
-        $socialUser->provider = $this->provider->handle;
-        $socialUser->socialUid = $this->socialUid;
-        $socialUser->tokenId = $tokenModel->id;
-
-        if(!craft()->social->saveUser($socialUser))
-        {
-            var_dump($socialUser);
-            throw new \Exception("Could not save social user", 1);
-
-        }
-    }
-
-    private function _getTokenById($tokenId, $token)
-    {
-        if($tokenId)
-        {
-            $tokenModel = craft()->oauth->getTokenById($tokenId);
-
-            if($tokenModel)
-            {
-                $oldToken = $tokenModel->getToken();
-
-                if(!$token->getRefreshToken() && method_exists($this->provider->source->service, 'refreshAccessToken'))
-                {
-                    $refreshToken = $oldToken->getRefreshToken();
-                    $token->setRefreshToken($refreshToken);
-                }
-            }
-            else
-            {
-                $tokenModel = new Oauth_TokenModel;
-            }
-        }
-        else
-        {
-            $tokenModel = new Oauth_TokenModel;
-        }
-
-        return $tokenModel;
     }
 
     private function _registerUser($attributes)

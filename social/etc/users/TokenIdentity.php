@@ -20,28 +20,29 @@ namespace Craft;
 class TokenIdentity extends UserIdentity
 {
     private $_id;
-    public $token;
+    public $socialUserId;
 
-    public function __construct($token)
+    public function __construct($socialUserId)
     {
-        $this->token = $token;
+        $this->socialUserId = $socialUserId;
     }
 
     public function authenticate()
     {
         Craft::log(__METHOD__, LogLevel::Info, true);
 
+        $socialUser = craft()->social->getSocialUserById($this->socialUserId);
 
-
-        $socialUser = craft()->social->getUserByEncodedToken($this->token);
-
-        if($socialUser) {
+        if($socialUser)
+        {
             $this->_id = $socialUser->user->id;
             $this->username = $socialUser->user->username;
             $this->errorCode = static::ERROR_NONE;
 
             return true;
-        } else {
+        }
+        else
+        {
             return false;
         }
     }

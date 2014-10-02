@@ -237,7 +237,9 @@ class SocialService extends BaseApplicationComponent
         // }
 
         $token = craft()->oauth->getTokenByEncodedToken($encodedToken);
+
         $socialUser = $this->getUserByTokenId($token->id);
+
         return $socialUser;
     }
 
