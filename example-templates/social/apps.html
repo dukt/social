@@ -1,0 +1,72 @@
+{% if not currentUser %}
+    {% redirect 'social/login' %}
+{% endif %}
+
+{% extends "social/_layout" %}
+
+{% set selectedTab = 'apps' %}
+
+{% block main %}
+
+    <div class="col-md-6 col-md-offset-3">
+
+        {% set error = craft.social.error %}
+
+        {% if error %}
+
+            <div class="alert alert-danger">
+                <p>{{error}}</p>
+            </div>
+
+        {% endif %}
+
+
+        <h2>Apps</h2>
+
+
+
+            {% for providerSource in craft.social.getProviders() %}
+
+                {% set user = craft.social.userByProvider(providerSource.handle) %}
+                <hr>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <img src="{{ resourceUrl('social/images/icons/'~providerSource.handle~'.png') }}" width="100%" class="social-icon img-rounded" />
+                    </div>
+
+                    <div class="col-md-7">
+
+                        <strong>{{providerSource.name}}</strong>
+
+                        <br />
+
+                        {% if user %}
+                            You can login using {{providerSource.name}}.
+                        {% else %}
+                            {{providerSource.name}} login is disabled.
+                        {% endif %}
+
+                    </div>
+
+                    <div class="col-md-3 text-right">
+
+                        {% if user %}
+                            <p>
+                                <a href="{{craft.social.disconnectUrl(providerSource.handle)}}" class="btn btn-default btn-sm">Disconnect</a>
+                            </p>
+                        {% else %}
+                            <p>
+                                <a href="{{ craft.social.connectUrl(providerSource.handle) }}" class="btn btn-primary btn-sm">Enable</a>
+                            </p>
+                        {% endif %}
+
+                    </div>
+                </div>
+
+            {% endfor %}
+
+            <hr>
+    </div>
+
+{% endblock %}

@@ -1,26 +1,28 @@
 {% extends "social/_layout" %}
 
-{% redirect 'social/login' %}
+{% if not currentUser %}
+    {% redirect 'social/login' %}
+{% endif %}
 
 {% block main %}
 
-    <div class="col-md-12">
-        {% if currentUser %}
-            <h1>Hello {{currentUser}} !</h1>
-        {% else %}
-            <h1>Hello, Guest !</h1>
-        {% endif %}
+    <div class="col-md-6 col-md-offset-3 text-center">
 
-        <p>Welcome in the Social example application. These template will show you how to use Social features on your Craft website.</p>
+        <div class="masthead">
 
-        <hr>
 
-        <h4>This demo assumes that you have...</h4>
+            {% if currentUser.photoUrl %}
+                {% set photoUrl = user.photoUrl %}
+            {% else %}
+                {% set photoUrl = resourceUrl('images/user.gif') %}
+            {% endif %}
 
-        <ul>
-            <li>Installed OAuth plugin</li>
-            <li>Installed Social plugin</li>
-        </ul>
+            <img src="{{ photoUrl }}" class="img-rounded" />
+
+            <h1>Hello, {{currentUser.friendlyName}} !</h1>
+            <p class="lead">You are connected to the Social Login demo.</p>
+        </div>
+
     </div>
 
 {% endblock main %}
