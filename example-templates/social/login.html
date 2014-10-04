@@ -1,7 +1,7 @@
 {% extends "social/_layout" %}
 
 {% if currentUser %}
-    {% redirect 'social/account' %}
+    {% redirect 'social' %}
 {% endif %}
 
 {% set title = "Login" %}
@@ -59,7 +59,7 @@
             <p>
                 {% for provider in craft.social.getProviders() %}
                     <a href="{{ craft.social.loginUrl(provider.handle, {
-                        redirect: 'social/account'
+                        redirect: 'social'
                     }) }}" class="btn btn-default">{{provider.name}}</a>
                 {% endfor %}
             </p>
