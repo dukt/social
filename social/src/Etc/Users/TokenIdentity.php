@@ -1,23 +1,13 @@
 <?php
 
-/**
- * Social Login for Craft
- *
- * @package   Social Login
- * @author    Benjamin David
- * @copyright Copyright (c) 2014, Dukt
- * @link      https://dukt.net/craft/social/
- * @license   https://dukt.net/craft/social/docs/license
- */
-
-namespace Craft;
+namespace Dukt\Social\Etc\Users;
 
 /**
  * TokenIdentity represents the data needed to identify a user with a token and an email
  * It contains the authentication method that checks if the provided data can identity the user.
  */
 
-class TokenIdentity extends UserIdentity
+class TokenIdentity extends \Craft\UserIdentity
 {
     private $_id;
     public $socialUserId;
@@ -29,9 +19,9 @@ class TokenIdentity extends UserIdentity
 
     public function authenticate()
     {
-        Craft::log(__METHOD__, LogLevel::Info, true);
+        \Craft\Craft::log(__METHOD__, \Craft\LogLevel::Info, true);
 
-        $socialUser = craft()->social->getSocialUserById($this->socialUserId);
+        $socialUser = \Craft\craft()->social->getSocialUserById($this->socialUserId);
 
         if($socialUser)
         {

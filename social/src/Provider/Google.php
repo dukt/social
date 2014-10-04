@@ -1,11 +1,12 @@
 <?php
 
-namespace Craft;
+namespace Dukt\Social\Provider;
 
+// use \Craft\SocialProvider\BaseSocialProvider;
 use \Google_Client;
 use \Google_Service_Oauth2;
 
-class GoogleSocialProvider extends BaseSocialProvider{
+class Google extends AbstractProvider {
 
     public function getProfile()
     {

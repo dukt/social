@@ -1,10 +1,10 @@
 <?php
 
-namespace Craft;
+namespace Dukt\Social\Provider;
 
 use Guzzle\Http\Client;
 
-class TwitterSocialProvider extends BaseSocialProvider {
+class Twitter extends AbstractProvider {
 
     public function getProfile()
     {
@@ -31,7 +31,7 @@ class TwitterSocialProvider extends BaseSocialProvider {
 
         $client = new Client('https://api.twitter.com/1.1');
 
-        $provider = craft()->oauth->getProvider('twitter');
+        $provider = \Craft\craft()->oauth->getProvider('twitter');
 
         $token = $this->token;
 

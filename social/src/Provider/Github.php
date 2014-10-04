@@ -1,10 +1,10 @@
 <?php
 
-namespace Craft;
+namespace Dukt\Social\Provider;
 
 use Guzzle\Http\Client;
 
-class GithubSocialProvider extends BaseSocialProvider {
+class Github extends AbstractProvider {
 
     public function getProfile()
     {

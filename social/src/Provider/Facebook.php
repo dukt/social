@@ -1,10 +1,10 @@
 <?php
 
-namespace Craft;
+namespace Dukt\Social\Provider;
 
 use Guzzle\Http\Client;
 
-class FacebookSocialProvider extends BaseSocialProvider {
+class Facebook extends AbstractProvider {
 
     public function getProfile()
     {

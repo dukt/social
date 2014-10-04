@@ -1,8 +1,8 @@
 <?php
 
-namespace Craft;
+namespace Dukt\Social\Provider;
 
-abstract class BaseSocialProvider {
+abstract class AbstractProvider {
 
     protected $token;
 

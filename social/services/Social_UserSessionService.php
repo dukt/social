@@ -12,6 +12,8 @@
 
 namespace Craft;
 
+use Dukt\Social\Etc\Users\TokenIdentity;
+
 class Social_UserSessionService extends UserSessionService {
 
     private $_identity;

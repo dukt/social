@@ -1,8 +1,7 @@
 {
     "autoload": {
         "psr-4": {
-            "Craft\\": "social/socialproviders/",
-            "Craft\\": "social/etc/users/"
+            "Dukt\\Social\\": "social/src/"
         }
     },
     "config": {

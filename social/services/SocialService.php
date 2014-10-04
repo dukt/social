@@ -287,7 +287,7 @@ class SocialService extends BaseApplicationComponent
 
     public function getSocialProvider($handle)
     {
-        $className = '\\Craft\\'.ucfirst($handle).'SocialProvider';
+        $className = '\\Dukt\\Social\\Provider\\'.ucfirst($handle);
         $socialProvider = new $className;
         return $socialProvider;
     }
