@@ -12,8 +12,6 @@
 
 namespace Craft;
 
-require(CRAFT_PLUGINS_PATH.'social/etc/users/TokenIdentity.php');
-
 class Social_UserSessionService extends UserSessionService {
 
     private $_identity;

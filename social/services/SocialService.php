@@ -12,12 +12,6 @@
 
 namespace Craft;
 
-require_once(CRAFT_PLUGINS_PATH.'social/socialproviders/BaseSocialProvider.php');
-require_once(CRAFT_PLUGINS_PATH.'social/socialproviders/FacebookSocialProvider.php');
-require_once(CRAFT_PLUGINS_PATH.'social/socialproviders/GithubSocialProvider.php');
-require_once(CRAFT_PLUGINS_PATH.'social/socialproviders/GoogleSocialProvider.php');
-require_once(CRAFT_PLUGINS_PATH.'social/socialproviders/TwitterSocialProvider.php');
-
 class SocialService extends BaseApplicationComponent
 {
     private $loginProviders = array(

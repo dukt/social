@@ -12,8 +12,7 @@
 
 namespace Craft;
 
-require_once(CRAFT_PLUGINS_PATH.'oauth/vendor/autoload.php');
-require_once(CRAFT_PLUGINS_PATH.'oauth/providers/BaseOAuthProviderSource.php');
+require_once(CRAFT_PLUGINS_PATH.'social/vendor/autoload.php');
 
 class SocialPlugin extends BasePlugin
 {

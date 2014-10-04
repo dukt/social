@@ -1,4 +1,10 @@
 {
+    "autoload": {
+        "psr-4": {
+            "Craft\\": "social/socialproviders/",
+            "Craft\\": "social/etc/users/"
+        }
+    },
     "config": {
         "vendor-dir": "social/vendor/"
     },
