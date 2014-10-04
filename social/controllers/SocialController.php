@@ -322,26 +322,13 @@ class SocialController extends BaseController
             }
             else
             {
-                // fill attributes from profile
-
+                // get profile
                 $socialProvider = craft()->social->getSocialProvider($this->provider->class);
                 $socialProvider->setToken($this->token);
                 $profile = $socialProvider->getProfile();
 
-                if(!empty($profile['firstName']))
-                {
-                    $attributes['firstName'] = $profile['firstName'];
-                }
-
-                if(!empty($profile['lastName']))
-                {
-                    $attributes['lastName'] = $profile['lastName'];
-                }
-
-                if(!empty($profile['photo']))
-                {
-                    $attributes['photo'] = $profile['photo'];
-                }
+                // fill attributes from profile
+                $this->_fillAttributesFromProfile($attributes, $profile);
 
                 // register user
                 $craftUser = $this->_registerUser($attributes);
@@ -377,7 +364,7 @@ class SocialController extends BaseController
     public function actionAskEmail()
     {
         $tokenArray = craft()->httpSession->get('socialToken');
-        $token = craft()->oauth->arrayToToken($tokenArray);
+        $this->token = craft()->oauth->arrayToToken($tokenArray);
 
         $socialUserId = craft()->httpSession->get('socialUserId');
         $providerHandle = craft()->httpSession->get('socialProviderHandle');
@@ -391,7 +378,7 @@ class SocialController extends BaseController
 
         // provider
         $this->provider = craft()->oauth->getProvider($providerHandle);
-        $this->provider->source->setToken($token);
+        $this->provider->source->setToken($this->token);
 
         // account
         $account = $this->provider->source->getAccount();
@@ -409,6 +396,14 @@ class SocialController extends BaseController
 
             if(!$emailExists)
             {
+                // get profile
+                $socialProvider = craft()->social->getSocialProvider($this->provider->class);
+                $socialProvider->setToken($this->token);
+                $profile = $socialProvider->getProfile();
+
+                // fill attributes from profile
+                $this->_fillAttributesFromProfile($attributes, $profile);
+
                 // register user
                 $craftUser = $this->_registerUser($attributes);
 
@@ -418,7 +413,7 @@ class SocialController extends BaseController
                     $tokenModel = new Oauth_TokenModel;
                     $tokenModel->providerHandle = $this->provider->handle;
                     $tokenModel->pluginHandle = 'social';
-                    $tokenModel->encodedToken = craft()->oauth->encodeToken($token);
+                    $tokenModel->encodedToken = craft()->oauth->encodeToken($this->token);
                     craft()->oauth->saveToken($tokenModel);
 
                     // save social user
@@ -454,6 +449,24 @@ class SocialController extends BaseController
         craft()->urlManager->setRouteVariables(array(
             'askEmail' => $askEmail
         ));
+    }
+
+    private function _fillAttributesFromProfile(&$attributes, $profile)
+    {
+        if(!empty($profile['firstName']))
+        {
+            $attributes['firstName'] = $profile['firstName'];
+        }
+
+        if(!empty($profile['lastName']))
+        {
+            $attributes['lastName'] = $profile['lastName'];
+        }
+
+        if(!empty($profile['photo']))
+        {
+            $attributes['photo'] = $profile['photo'];
+        }
     }
 
     private function _registerUser($attributes)
