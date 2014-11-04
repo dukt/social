@@ -6,6 +6,12 @@ use Guzzle\Http\Client;
 
 class Github extends AbstractProvider {
 
+    public function getScopes()
+    {
+        return array(
+            'user',
+        );
+    }
     public function getProfile()
     {
         $response = $this->api('get', 'user');

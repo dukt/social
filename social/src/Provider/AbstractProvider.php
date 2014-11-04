@@ -11,4 +11,13 @@ abstract class AbstractProvider {
         $this->token = $token;
     }
 
+    public function getScopes()
+    {
+        return array();
+    }
+
+    public function getParams()
+    {
+        return array();
+    }
 }

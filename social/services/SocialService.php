@@ -14,26 +14,6 @@ namespace Craft;
 
 class SocialService extends BaseApplicationComponent
 {
-    private $loginProviders = array(
-            'twitter' => true,
-            'facebook' => true,
-            'github' => array(
-                'scopes' => array(
-                    'user',
-                ),
-            ),
-            'google' => array(
-                'scopes' => array(
-                    'userinfo_profile',
-                    'userinfo_email'
-                ),
-                'params' => array(
-                    'access_type' => 'offline',
-                    // 'approval_prompt' => 'force'
-                )
-            )
-    );
-
     public function saveToken(Oauth_TokenModel $tokenModel)
     {
         craft()->oauth->saveToken($tokenModel);
@@ -76,9 +56,11 @@ class SocialService extends BaseApplicationComponent
 
     public function getScopes($handle)
     {
-        if(!empty($this->loginProviders[$handle]['scopes']))
+        $socialProvider = $this->getSocialProvider($handle);
+
+        if($socialProvider)
         {
-            return $this->loginProviders[$handle]['scopes'];
+            return $socialProvider->getScopes();
         }
         else
         {
@@ -88,9 +70,11 @@ class SocialService extends BaseApplicationComponent
 
     public function getParams($handle)
     {
-        if(!empty($this->loginProviders[$handle]['params']))
+        $socialProvider = $this->getSocialProvider($handle);
+
+        if($socialProvider)
         {
-            return $this->loginProviders[$handle]['params'];
+            return $socialProvider->getParams();
         }
         else
         {
@@ -288,8 +272,12 @@ class SocialService extends BaseApplicationComponent
     public function getSocialProvider($handle)
     {
         $className = '\\Dukt\\Social\\Provider\\'.ucfirst($handle);
-        $socialProvider = new $className;
-        return $socialProvider;
+
+        if(class_exists($className))
+        {
+            $socialProvider = new $className;
+            return $socialProvider;
+        }
     }
 
     public function getProviders($configuredOnly = true)
@@ -300,7 +288,9 @@ class SocialService extends BaseApplicationComponent
 
         foreach($allProviders as $provider)
         {
-            if(isset($this->loginProviders[$provider->getHandle()]))
+            $socialProvider = $this->getSocialProvider($provider->getHandle());
+
+            if($socialProvider)
             {
                 array_push($providers, $provider);
             }
@@ -311,11 +301,14 @@ class SocialService extends BaseApplicationComponent
 
     public function getProvider($handle,  $configuredOnly = true)
     {
-        if(isset($this->loginProviders[$handle]))
+        $socialProvider = $this->getSocialProvider($provider->getHandle());
+
+        if($socialProvider)
         {
             return craft()->oauth->getProvider($handle,  $configuredOnly);
         }
     }
+
     public function getConnectUrl($handle)
     {
         return UrlHelper::getActionUrl('social/connect', array(

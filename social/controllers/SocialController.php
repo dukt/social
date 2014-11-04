@@ -333,7 +333,8 @@ class SocialController extends BaseController
                     $newRefreshToken = $this->token->getRefreshToken();
                     $oldRefreshToken = $tokenModel->token->getRefreshToken();
 
-                    try {
+                    try
+                    {
                         $refreshToken = $this->provider->source->service->refreshAccessToken($this->token);
                         $canRefresh = true;
                     }
