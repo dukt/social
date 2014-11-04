@@ -193,34 +193,6 @@ class SocialService extends BaseApplicationComponent
         }
     }
 
-    public function getUserByEncodedToken($encodedToken)
-    {
-        // // get all social users
-        // $records = Social_UserRecord::model()->findAll();
-
-        // // find a matching token
-        // foreach($records as $record)
-        // {
-        //     $token = craft()->oauth->getTokenById($record->tokenId);
-
-        //     if($token && $token->encodedToken == $encodedToken)
-        //     {
-        //         $user = $this->getUserByTokenId($token->id);
-
-        //         if($user)
-        //         {
-        //             return $user;
-        //         }
-        //     }
-        // }
-
-        $token = craft()->oauth->getTokenByEncodedToken($encodedToken);
-
-        $socialUser = $this->getUserByTokenId($token->id);
-
-        return $socialUser;
-    }
-
     public function saveUser(Social_UserModel $socialUser)
     {
         if($socialUser->id)
