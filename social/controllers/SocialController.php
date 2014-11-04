@@ -25,6 +25,16 @@ class SocialController extends BaseController
     private $token;
     private $tokenArray;
 
+    public function actionSettings()
+    {
+        $plugin = craft()->plugins->getPlugin('social');
+        $settings = $plugin->getSettings();
+
+        $this->renderTemplate('social/settings/settings', array(
+                'settings' => $settings
+            ));
+    }
+
     public function actionChangePhoto()
     {
         $userId = craft()->request->getParam('userId');
@@ -117,6 +127,14 @@ class SocialController extends BaseController
             $providerHandle = craft()->request->getParam('provider');
             $redirect = craft()->request->getParam('redirect');
             $errorRedirect = craft()->request->getParam('errorRedirect');
+            $forcePrompt = craft()->request->getParam('forcePrompt');
+            $requestUri = craft()->request->requestUri;
+            $extraScopes = craft()->request->getParam('scopes');
+
+            if(!$forcePrompt)
+            {
+                craft()->httpSession->add('social.requestUri', $requestUri);
+            }
 
             // settings
             $plugin = craft()->plugins->getPlugin('social');
@@ -135,8 +153,28 @@ class SocialController extends BaseController
                 }
 
                 // provider scopes & params
+
                 $scopes = craft()->social->getScopes($providerHandle);
+
+                if($extraScopes)
+                {
+                    $extraScopes = unserialize(base64_decode(urldecode($extraScopes)));
+
+                    // foreach($extraScopes as $k => $extraScope)
+                    // {
+                    //     $extraScopes[$k] = urldecode($extraScope);
+                    // }
+                    $scopes = array_merge($scopes, $extraScopes);
+                }
+
+                // var_dump($scopes);
+
                 $params = craft()->social->getParams($providerHandle);
+
+                if($forcePrompt)
+                {
+                    $params['approval_prompt'] = 'force';
+                }
 
                 if ($response = craft()->oauth->connect(array(
                     'plugin' => 'social',
@@ -163,11 +201,12 @@ class SocialController extends BaseController
         $errorRedirect = $response['errorRedirect'];
 
         try {
-            $this->tokenArray = $response['token'];
-            $this->token = craft()->oauth->arrayToToken($this->tokenArray);
 
             if($response['success'])
             {
+                $this->token = $response['token'];
+                $this->tokenArray = craft()->oauth->tokenToArray($this->token);
+
                 $plugin = craft()->plugins->getPlugin('social');
 
                 if(!$this->pluginSettings['allowSocialLogin'])
@@ -211,6 +250,7 @@ class SocialController extends BaseController
         catch(\Exception $e)
         {
             craft()->httpSession->add('error', $e->getMessage());
+
             $this->redirect($errorRedirect);
         }
     }
@@ -226,7 +266,6 @@ class SocialController extends BaseController
                 // save token
 
                 $tokenId = $socialUser->tokenId;
-
                 $tokenModel = craft()->oauth->getTokenById($tokenId);
 
                 if(!$tokenModel)
@@ -267,6 +306,61 @@ class SocialController extends BaseController
         }
     }
 
+    private function saveToken($tokenModel)
+    {
+        if($tokenModel->id)
+        {
+            // refresh
+
+            if($tokenModel)
+            {
+                if($oldRefreshToken = $tokenModel->token->getRefreshToken())
+                {
+                    if(!empty($oldRefreshToken) && !$this->token->getRefreshToken())
+                    {
+                        // keep old refresh token
+                        $this->token->setRefreshToken($oldRefreshToken);
+                    }
+                }
+            }
+
+            // // no refresh token ? reprompt
+
+            if($this->provider->handle == 'google')
+            {
+                if($tokenModel)
+                {
+                    $newRefreshToken = $this->token->getRefreshToken();
+                    $oldRefreshToken = $tokenModel->token->getRefreshToken();
+
+                    try {
+                        $refreshToken = $this->provider->source->service->refreshAccessToken($this->token);
+                        $canRefresh = true;
+                    }
+                    catch(\Exception $e)
+                    {
+                        $canRefresh = false;
+                    }
+
+                    if(!$canRefresh)
+                    {
+                        // new token doesn't have refresh token, prompt
+
+                        $requestUri = craft()->httpSession->get('social.requestUri');
+
+                        $this->redirect($requestUri.'&forcePrompt=true');
+                    }
+                }
+            }
+        }
+
+        // save token
+        $tokenModel->providerHandle = $this->provider->handle;
+        $tokenModel->pluginHandle = 'social';
+        $tokenModel->encodedToken = craft()->oauth->encodeToken($this->token);
+        craft()->oauth->saveToken($tokenModel);
+    }
+
     private function _handleGuestUser()
     {
         $socialUser = craft()->social->getUserByUid($this->provider->handle, $this->socialUid);
@@ -277,8 +371,6 @@ class SocialController extends BaseController
 
             if($craftUser)
             {
-                // save token
-
                 $tokenId = $socialUser->tokenId;
                 $tokenModel = craft()->oauth->getTokenById($tokenId);
 
@@ -287,10 +379,7 @@ class SocialController extends BaseController
                     $tokenModel = new Oauth_TokenModel;
                 }
 
-                $tokenModel->providerHandle = $this->provider->handle;
-                $tokenModel->pluginHandle = 'social';
-                $tokenModel->encodedToken = craft()->oauth->encodeToken($this->token);
-                craft()->oauth->saveToken($tokenModel);
+                $this->saveToken($tokenModel);
 
                 // save user
                 $socialUser->tokenId = $tokenModel->id;

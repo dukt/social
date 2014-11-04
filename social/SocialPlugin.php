@@ -85,7 +85,7 @@ class SocialPlugin extends BasePlugin
             'settings' => $this->getSettings()
         );
 
-        return craft()->templates->render('social/settings', $variables);
+        return craft()->templates->render('social/_settings', $variables);
     }
 
     /**
@@ -93,7 +93,7 @@ class SocialPlugin extends BasePlugin
      */
     public function hasCpSection()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -104,7 +104,8 @@ class SocialPlugin extends BasePlugin
         return array(
 
             "social\/users\/(?P<id>\d+)" => array('action' => "social/userProfile"),
-            'social\/settings\/(?P<serviceProviderClass>.*)' => 'social/settings/_provider',
+            'social\/settings\/settings' => array('action' => "social/settings"),
+            // 'social\/settings\/(?P<serviceProviderClass>.*)' => 'social/settings/_provider',
         );
     }
 

@@ -335,6 +335,17 @@ class SocialService extends BaseApplicationComponent
 
         $params['provider'] = $providerClass;
 
+        if(isset($params['scopes']) && is_array($params['scopes']))
+        {
+            // foreach($params['scopes'] as $k => $scope)
+            // {
+            //     $params['scopes'][$k] = urlencode($scope);
+            // }
+
+            $params['scopes'] = urlencode(base64_encode(serialize($params['scopes'])));
+        }
+
+
         $url = UrlHelper::getSiteUrl(craft()->config->get('actionTrigger').'/social/login', $params);
 
         Craft::log(__METHOD__." : Authenticate : ".$url, LogLevel::Info, true);
