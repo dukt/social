@@ -6,21 +6,27 @@
 
 
 {% set crumbs = [
-    { label: "Social Login"|t, url: url('social') }
+    { label: "Settings"|t, url: url('settings') },
+    { label: "Plugins"|t, url: url('settings/plugins') },
+    { label: "Social Login"|t, url: url('social/settings') },
+    { label: "Users"|t, url: url('social/settings/users') },
 ] %}
 
 {% set content %}
 
     <h2>User</h2>
+
     {% set user = craft.users.id(socialUser.userId).first %}
 
     <table class="data">
-        <tr>
-            <th>Photo</th>
-            <td>
-                <img src="{{ user.photoUrl }}" alt="">
-            </td>
-        </tr>
+        {% if user.photoUrl %}
+            <tr>
+                <th>Photo</th>
+                <td>
+                    <img src="{{ user.photoUrl }}" alt="">
+                </td>
+            </tr>
+        {% endif %}
         <tr>
             <th>Username</th>
             <td>{{ user.username }}</td>
@@ -31,10 +37,13 @@
                 <a href="mailto:{{ user.email }}">{{ user.email }}</a>
             </td>
         </tr>
-        <tr>
-            <th>Name</th>
-            <td>{{ user.fullName }}</td>
-        </tr>
+
+        {% if user.fullName %}
+            <tr>
+                <th>Name</th>
+                <td>{{ user.fullName }}</td>
+            </tr>
+        {% endif %}
     </table>
 
     <p>

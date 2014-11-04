@@ -1,0 +1,34 @@
+{% extends "social/settings/_layout" %}
+{% import "_includes/forms" as forms %}
+
+{% set selectedTab = 'providers' %}
+
+{% set content %}
+
+    {% set oauth = craft.plugins.getPlugin('oauth') %}
+
+    {% if oauth %}
+
+        <p>Set up the OAuth providers that you want to use for social login.</p>
+
+        {% set oneFound = false %}
+
+        {% set providers = craft.social.getProviders(false) %}
+
+        {% if providers|length > 0 %}
+            <ul>
+                {% for provider in providers %}
+                    <li><span class="status {{(provider.isConfigured ? 'on' : '')}}"></span> {{provider.name}}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No provider configured</p>
+        {% endif %}
+
+        <p><a href="{{url('settings/plugins/oauth')}}" class="btn icon settings">OAuth Settings</a></p>
+
+    {% else %}
+        {% include 'social/_oauth/index' %}
+    {% endif %}
+
+{% endset %}
