@@ -31,7 +31,7 @@
 
             <form method="post" action="" accept-charset="UTF-8">
                 <input type="hidden" name="action" value="users/login">
-                <input type="hidden" name="redirect" value="{{ craft.session.returnUrl }}">
+                <input type="hidden" name="redirect" value="social">
 
 
                 <div class="form-group">
@@ -58,9 +58,16 @@
 
             <p>
                 {% for provider in craft.social.getProviders() %}
+
                     <a href="{{ craft.social.loginUrl(provider.handle, {
                         redirect: 'social'
                     }) }}" class="btn btn-default">{{provider.name}}</a>
+{#
+                    <a href="{{ craft.social.loginUrl(provider.handle, {
+                        redirect: 'social',
+                        scopes: ["https://www.googleapis.com/auth/calendar"]
+                    }) }}" class="btn btn-default">{{provider.name}} with calendar</a> #}
+
                 {% endfor %}
             </p>
 
