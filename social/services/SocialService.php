@@ -55,17 +55,6 @@ class SocialService extends BaseApplicationComponent
         }
     }
 
-    public function getTokenBySocialUserId($id)
-    {
-        $this->requireOAuth();
-
-        $socialUser = $this->getSocialUserById($id);
-        $tokenId = $socialUser->tokenId;
-        $token = craft()->oauth->getTokenById($tokenId);
-
-        return $token;
-    }
-
     public function getUsers()
     {
         $conditions = '';
@@ -196,19 +185,6 @@ class SocialService extends BaseApplicationComponent
 
         $conditions .= ' AND socialUid=:socialUid';
         $params[':socialUid'] = $socialUid;
-
-        $record = Social_UserRecord::model()->find($conditions, $params);
-
-        if ($record)
-        {
-            return Social_UserModel::populateModel($record);
-        }
-    }
-
-    public function getUserByTokenId($tokenId)
-    {
-        $conditions = 'tokenId=:tokenId';
-        $params = array(':tokenId' => $tokenId);
 
         $record = Social_UserRecord::model()->find($conditions, $params);
 
@@ -393,75 +369,6 @@ class SocialService extends BaseApplicationComponent
         $params = array('redirect' => $redirect);
 
         return UrlHelper::getActionUrl('social/logout', $params);
-    }
-
-    public function isTemporaryEmail($email)
-    {
-        $user = craft()->users->getUserByUsernameOrEmail($email);
-
-        if(!$user)
-        {
-            return false;
-        }
-
-        $fake = '.social.dukt.net';
-
-        $pos = strpos($user->email, $fake);
-        $len = strlen($user->email);
-
-        if($pos)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function getTemporaryPassword($userId)
-    {
-        $this->requireOAuth();
-
-        $user = craft()->users->getUserById($userId);
-        $fake = '.social.dukt.net';
-        $pos = strpos($user->email, $fake);
-        $len = strlen($user->email);
-
-        if($pos)
-        {
-
-            // temporary email : [uid]@[providerHandle].social.dukt.net
-
-            // retrieve providerHandle
-
-            $handle = substr($user->email, 0, $pos);
-            $handle = substr($handle, (strpos($handle, "@") + 1));
-
-            // get token
-
-            $token = craft()->oauth->getUserToken($handle);
-
-
-            // md5
-
-            $pass = md5(serialize($token->getRealToken()));
-
-            return $pass;
-        }
-
-        return false;
-    }
-
-    public function userHasTemporaryUsername($userId)
-    {
-
-        $user = craft()->users->getUserById($userId);
-
-        if(strpos($user->username, '.social.dukt.net') !== false)
-        {
-            return true;
-        }
-
-        return false;
     }
 
     public function registerUser($account)

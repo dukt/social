@@ -11,9 +11,9 @@
 {% if CraftEdition == CraftPro %}
 
     {% set tabs = {
-        users: { label: "Users"|t, url: url('social/settings/users') },
-        settings: { label: "Settings"|t, url: url('social/settings/settings') },
-        providers: { label: "Providers"|t, url: url('social/settings/providers') },
+        users: { label: "Users"|t, url: url('social/users') },
+        settings: { label: "Settings"|t, url: url('social/settings') },
+        providers: { label: "Providers"|t, url: url('social/providers') },
     } %}
 
 {% else %}

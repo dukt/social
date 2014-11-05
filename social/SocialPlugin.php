@@ -137,7 +137,7 @@ class SocialPlugin extends BasePlugin
             return true;
         }
 
-        return craft()->templates->render('social/settings/_redirect');
+        return craft()->templates->render('social/_settingsRedirect');
     }
 
     /**
@@ -154,8 +154,10 @@ class SocialPlugin extends BasePlugin
     public function registerCpRoutes()
     {
         return array(
+            "social" => array('action' => "social/users"),
+            "social\/users" => array('action' => "social/users"),
             "social\/users\/(?P<id>\d+)" => array('action' => "social/userProfile"),
-            'social\/settings\/settings' => array('action' => "social/settings"),
+            'social\/settings' => array('action' => "social/settings"),
         );
     }
 

@@ -25,12 +25,21 @@ class SocialController extends BaseController
     private $token;
     private $tokenArray;
 
+    public function actionUsers()
+    {
+        $socialUsers = craft()->social->getUsers();
+
+        $this->renderTemplate('social/users', array(
+                'socialUsers' => $socialUsers
+            ));
+    }
+
     public function actionSettings()
     {
         $plugin = craft()->plugins->getPlugin('social');
         $settings = $plugin->getSettings();
 
-        $this->renderTemplate('social/settings/settings', array(
+        $this->renderTemplate('social/settings', array(
                 'settings' => $settings
             ));
     }
@@ -282,6 +291,18 @@ class SocialController extends BaseController
             }
         }
 
+        if(!empty($this->pluginSettings['completeRegistrationTemplate']))
+        {
+            if(!craft()->templates->doesTemplateExist($this->pluginSettings['completeRegistrationTemplate']))
+            {
+                throw new Exception("Complete registration template not set");
+            }
+        }
+        else
+        {
+            throw new Exception("Complete registration template not set");
+        }
+
         $this->renderTemplate($this->pluginSettings['completeRegistrationTemplate'], array(
             'completeRegistration' => $completeRegistration
         ));
@@ -501,6 +522,18 @@ class SocialController extends BaseController
                 craft()->httpSession->add('socialUid', $this->socialUid);
                 craft()->httpSession->add('socialProviderHandle', $this->provider->handle);
                 craft()->httpSession->add('socialRedirect', $this->redirect);
+
+                if(!empty($this->pluginSettings['completeRegistrationTemplate']))
+                {
+                    if(!craft()->templates->doesTemplateExist($this->pluginSettings['completeRegistrationTemplate']))
+                    {
+                        throw new Exception("Complete registration template not set");
+                    }
+                }
+                else
+                {
+                    throw new Exception("Complete registration template not set");
+                }
 
                 $this->renderTemplate($this->pluginSettings['completeRegistrationTemplate']);
 

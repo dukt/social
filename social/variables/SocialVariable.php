@@ -36,11 +36,6 @@ class SocialVariable
         return craft()->social->getAccountByUserId($id);
     }
 
-    public function getUsers()
-    {
-        return craft()->social->getUsers();
-    }
-
     public function getUserByProvider($handle)
     {
         return craft()->social->getUserByProvider($handle);
@@ -74,20 +69,5 @@ class SocialVariable
     public function getLogoutUrl($redirect = null)
     {
         return craft()->social->getLogoutUrl($redirect);
-    }
-
-    public function isTemporaryEmail($email)
-    {
-        return craft()->social->isTemporaryEmail($email);
-    }
-
-    public function getTemporaryPassword($userId)
-    {
-        return craft()->social->getTemporaryPassword($userId);
-    }
-
-    public function userHasTemporaryUsername($userId)
-    {
-        return craft()->social->userHasTemporaryUsername($userId);
     }
 }

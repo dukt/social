@@ -27,7 +27,7 @@
 
             {% for providerSource in craft.social.getProviders() %}
 
-                {% set user = craft.social.userByProvider(providerSource.handle) %}
+                {% set user = craft.social.getUserByProvider(providerSource.handle) %}
                 <hr>
 
                 <div class="row">

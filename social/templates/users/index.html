@@ -1,4 +1,4 @@
-{% extends "social/settings/_layout" %}
+{% extends "social/_layout" %}
 
 {% set selectedTab = 'users' %}
 
@@ -6,8 +6,6 @@
 
 
 {% set content %}
-
-    {% set socialUsers = craft.social.users %}
 
     {% if socialUsers|length > 0 %}
 

@@ -1,4 +1,4 @@
-{% extends "social/settings/_layout" %}
+{% extends "social/_layout" %}
 
 {% import "_includes/forms" as forms %}
 
@@ -9,7 +9,7 @@
     <form method="post" accept-charset="UTF-8" data-saveshortcut="">
         <input type="hidden" name="action" value="plugins/savePluginSettings">
         <input type="hidden" name="pluginClass" value="Social">
-        <input type="hidden" name="redirect" value="social/settings/settings">
+        <input type="hidden" name="redirect" value="social/settings">
 
         {{ forms.checkboxField({
             label: 'Allow authentication'|t,
