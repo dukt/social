@@ -49,6 +49,8 @@ class SocialController extends BaseController
 
     public function actionDisconnect()
     {
+        craft()->social->requireOAuth();
+
         $handle = craft()->request->getParam('provider');
 
         if($handle == 'google')
@@ -95,6 +97,8 @@ class SocialController extends BaseController
 
     public function actionUserProfile()
     {
+        craft()->social->requireOAuth();
+
         // order
 
         $routeParams = craft()->urlManager->getRouteParams();
@@ -117,6 +121,8 @@ class SocialController extends BaseController
 
     public function actionLogin()
     {
+        craft()->social->requireOAuth();
+
         if(craft()->request->getPost('action') == 'social/completeRegistration')
         {
             $this->actionCompleteRegistration();
@@ -160,14 +166,8 @@ class SocialController extends BaseController
                 {
                     $extraScopes = unserialize(base64_decode(urldecode($extraScopes)));
 
-                    // foreach($extraScopes as $k => $extraScope)
-                    // {
-                    //     $extraScopes[$k] = urldecode($extraScope);
-                    // }
                     $scopes = array_merge($scopes, $extraScopes);
                 }
-
-                // var_dump($scopes);
 
                 $params = craft()->social->getParams($providerHandle);
 
@@ -200,8 +200,8 @@ class SocialController extends BaseController
     {
         $errorRedirect = $response['errorRedirect'];
 
-        try {
-
+        try
+        {
             if($response['success'])
             {
                 $this->token = $response['token'];
@@ -453,6 +453,8 @@ class SocialController extends BaseController
 
     public function actionCompleteRegistration()
     {
+        craft()->social->requireOAuth();
+
         $tokenArray = craft()->httpSession->get('socialToken');
         $this->token = craft()->oauth->arrayToToken($tokenArray);
 

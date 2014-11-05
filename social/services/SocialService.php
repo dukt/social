@@ -14,6 +14,14 @@ namespace Craft;
 
 class SocialService extends BaseApplicationComponent
 {
+    public function requireOAuth()
+    {
+        if(!isset(craft()->oauth))
+        {
+            throw new Exception(Craft::t('OAuth plugin is required to perform this action.'));
+        }
+    }
+
     public function getAccountByUserId($userId)
     {
         $conditions = 'userId=:userId';

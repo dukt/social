@@ -152,7 +152,6 @@ class SocialPlugin extends BasePlugin
 
             "social\/users\/(?P<id>\d+)" => array('action' => "social/userProfile"),
             'social\/settings\/settings' => array('action' => "social/settings"),
-            // 'social\/settings\/(?P<serviceProviderClass>.*)' => 'social/settings/_provider',
         );
     }
 
