@@ -29,6 +29,9 @@ class Social_AccountModel extends BaseModel
         );
     }
 
+    /**
+     * Get User
+     */
     public function getUser()
     {
         if ($this->userId)

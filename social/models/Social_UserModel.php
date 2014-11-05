@@ -31,6 +31,9 @@ class Social_UserModel extends BaseModel
         );
     }
 
+    /**
+     * Get User
+     */
     public function getUser()
     {
         if ($this->userId)
@@ -39,6 +42,9 @@ class Social_UserModel extends BaseModel
         }
     }
 
+    /**
+     * Get Token
+     */
     public function getToken()
     {
         $token = craft()->oauth->getTokenById($this->tokenId);

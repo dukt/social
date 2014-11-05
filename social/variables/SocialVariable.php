@@ -19,14 +19,6 @@ class SocialVariable
     public function getNotice()
     {
         return craft()->userSession->getFlash('notice');
-        // craft()->userSession->setNotice(Craft::t('User saved.'));
-
-        // if(!$this->_error) {
-        //     $this->_error = craft()->httpSession->get('notice');
-        //     craft()->httpSession->remove('notice');
-        // }
-
-        // return $this->_error;
     }
 
     public function getError()

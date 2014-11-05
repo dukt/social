@@ -28,7 +28,6 @@ class Social_UserSessionService extends UserSessionService {
 
     public function login($socialUserId)
     {
-
         $rememberMe = true;
 
         Craft::log(__METHOD__, LogLevel::Info, true);
@@ -99,8 +98,6 @@ class Social_UserSessionService extends UserSessionService {
                     }
                 }
 
-                // $this->_sessionRestoredFromCookie = false;
-                // $this->_userRow = null;
                 // Run any after login logic.
                 $this->afterLogin(false);
             }
@@ -109,6 +106,7 @@ class Social_UserSessionService extends UserSessionService {
         }
 
         Craft::log('Tried to log in unsuccessfully.', LogLevel::Warning);
+
         return false;
     }
 }

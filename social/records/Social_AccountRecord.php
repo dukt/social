@@ -35,6 +35,9 @@ class Social_AccountRecord extends BaseRecord
         );
     }
 
+    /**
+     * Define Relations
+     */
     public function defineRelations()
     {
         return array(
@@ -43,6 +46,8 @@ class Social_AccountRecord extends BaseRecord
     }
 
     /**
+     * Define Indexes
+     *
      * @return array
      */
     public function defineIndexes()

@@ -18,11 +18,16 @@ class SocialPlugin extends BasePlugin
 {
     public function init()
     {
+        // delete social user when craft user is deleted
+
         craft()->on('users.onBeforeDeleteUser', function(Event $event) {
             $user = $event->params['user'];
 
             craft()->social->deleteSocialUserByUserId($user->id);
         });
+
+
+        // update hasEmail and hasPassword when user is saved
 
         craft()->on('users.onSaveUser', function(Event $event) {
             $user = $event->params['user'];
@@ -51,6 +56,9 @@ class SocialPlugin extends BasePlugin
             }
         });
 
+
+        // update hasEmail when user is activated
+
         craft()->on('users.onActivateUser', function(Event $event) {
             $user = $event->params['user'];
 
@@ -69,6 +77,7 @@ class SocialPlugin extends BasePlugin
                 }
             }
         });
+
         parent::init();
     }
     /**
@@ -128,11 +137,7 @@ class SocialPlugin extends BasePlugin
             return true;
         }
 
-        $variables = array(
-            'settings' => $this->getSettings()
-        );
-
-        return craft()->templates->render('social/_settings', $variables);
+        return craft()->templates->render('social/settings/_redirect');
     }
 
     /**
@@ -149,7 +154,6 @@ class SocialPlugin extends BasePlugin
     public function registerCpRoutes()
     {
         return array(
-
             "social\/users\/(?P<id>\d+)" => array('action' => "social/userProfile"),
             'social\/settings\/settings' => array('action' => "social/settings"),
         );

@@ -34,6 +34,9 @@ class Social_UserRecord extends BaseRecord
         );
     }
 
+    /**
+     * Define Relations
+     */
     public function defineRelations()
     {
         return array(
@@ -42,6 +45,8 @@ class Social_UserRecord extends BaseRecord
     }
 
     /**
+     * Define Indexes
+     *
      * @return array
      */
     public function defineIndexes()

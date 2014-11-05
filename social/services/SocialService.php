@@ -37,6 +37,8 @@ class SocialService extends BaseApplicationComponent
 
     public function saveToken(Oauth_TokenModel $tokenModel)
     {
+        $this->requireOAuth();
+
         craft()->oauth->saveToken($tokenModel);
     }
 
@@ -55,6 +57,8 @@ class SocialService extends BaseApplicationComponent
 
     public function getTokenBySocialUserId($id)
     {
+        $this->requireOAuth();
+
         $socialUser = $this->getSocialUserById($id);
         $tokenId = $socialUser->tokenId;
         $token = craft()->oauth->getTokenById($tokenId);
@@ -314,6 +318,8 @@ class SocialService extends BaseApplicationComponent
 
     public function getProviders($configuredOnly = true)
     {
+        $this->requireOAuth();
+
         $allProviders = craft()->oauth->getProviders($configuredOnly);
 
         $providers = array();
@@ -333,6 +339,8 @@ class SocialService extends BaseApplicationComponent
 
     public function getProvider($handle,  $configuredOnly = true)
     {
+        $this->requireOAuth();
+
         $className = '\\Dukt\\Social\\Provider\\'.ucfirst($handle);
 
         if(class_exists($className))
@@ -411,6 +419,7 @@ class SocialService extends BaseApplicationComponent
 
     public function getTemporaryPassword($userId)
     {
+        $this->requireOAuth();
 
         $user = craft()->users->getUserById($userId);
         $fake = '.social.dukt.net';
@@ -478,21 +487,6 @@ class SocialService extends BaseApplicationComponent
         else
         {
             throw new Exception("Email address not provided.");
-
-            // todo
-
-            // // no email allowed ?
-
-            // if($settings['allowFakeEmail'])
-            // {
-            //     // no email, we create a fake one
-            //     $usernameOrEmail = md5($account['uid']).'@'.strtolower($providerClass).'.social.dukt.net';
-            // }
-            // else
-            // {
-                // no email here ? we abort, craft requires at least a valid email
-            //  throw new Exception("This OAuth provider doesn't provide the email address. Please try another one.");
-            // }
         }
 
         $newUser = new UserModel();
