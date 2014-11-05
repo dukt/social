@@ -21,7 +21,7 @@
                 </div>
             {% endif %}
 
-            {% set error = craft.social.error %}
+            {% set error = craft.social.getError() %}
 
             {% if error %}
                 <div class="alert alert-danger">
