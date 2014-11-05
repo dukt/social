@@ -6,6 +6,11 @@ use Guzzle\Http\Client;
 
 class Facebook extends AbstractProvider {
 
+    public function getName()
+    {
+        return "Facebook";
+    }
+
     public function getProfile()
     {
         $response = $this->api('get', 'me');

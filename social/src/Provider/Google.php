@@ -2,11 +2,15 @@
 
 namespace Dukt\Social\Provider;
 
-// use \Craft\SocialProvider\BaseSocialProvider;
 use \Google_Client;
 use \Google_Service_Oauth2;
 
 class Google extends AbstractProvider {
+
+    public function getName()
+    {
+        return "Google";
+    }
 
     public function getScopes()
     {
@@ -52,8 +56,6 @@ class Google extends AbstractProvider {
 
                 $response = $service->userinfo->get();
 
-                // return $response;
-
                 return array(
                     'id' => $response->id,
                     'email' => $response->email,
@@ -75,7 +77,6 @@ class Google extends AbstractProvider {
         {
             // todo: catch errors
             //throw $e;
-
         }
     }
 }

@@ -413,7 +413,7 @@ class SocialController extends BaseController
             else
             {
                 // get profile
-                $socialProvider = craft()->social->getSocialProvider($this->provider->class);
+                $socialProvider = craft()->social->getProvider($this->provider->class);
                 $socialProvider->setToken($this->token);
                 $profile = $socialProvider->getProfile();
 
@@ -487,7 +487,7 @@ class SocialController extends BaseController
             if(!$emailExists)
             {
                 // get profile
-                $socialProvider = craft()->social->getSocialProvider($this->provider->class);
+                $socialProvider = craft()->social->getProvider($this->provider->class);
                 $socialProvider->setToken($this->token);
                 $profile = $socialProvider->getProfile();
 

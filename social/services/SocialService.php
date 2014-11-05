@@ -56,7 +56,7 @@ class SocialService extends BaseApplicationComponent
 
     public function getScopes($handle)
     {
-        $socialProvider = $this->getSocialProvider($handle);
+        $socialProvider = $this->getProvider($handle, false);
 
         if($socialProvider)
         {
@@ -70,7 +70,7 @@ class SocialService extends BaseApplicationComponent
 
     public function getParams($handle)
     {
-        $socialProvider = $this->getSocialProvider($handle);
+        $socialProvider = $this->getProvider($handle, false);
 
         if($socialProvider)
         {
@@ -241,17 +241,6 @@ class SocialService extends BaseApplicationComponent
         }
     }
 
-    public function getSocialProvider($handle)
-    {
-        $className = '\\Dukt\\Social\\Provider\\'.ucfirst($handle);
-
-        if(class_exists($className))
-        {
-            $socialProvider = new $className;
-            return $socialProvider;
-        }
-    }
-
     public function getProviders($configuredOnly = true)
     {
         $allProviders = craft()->oauth->getProviders($configuredOnly);
@@ -260,11 +249,11 @@ class SocialService extends BaseApplicationComponent
 
         foreach($allProviders as $provider)
         {
-            $socialProvider = $this->getSocialProvider($provider->getHandle());
+            $socialProvider = $this->getProvider($provider->getHandle(), $configuredOnly);
 
             if($socialProvider)
             {
-                array_push($providers, $provider);
+                array_push($providers, $socialProvider);
             }
         }
 
@@ -273,11 +262,18 @@ class SocialService extends BaseApplicationComponent
 
     public function getProvider($handle,  $configuredOnly = true)
     {
-        $socialProvider = $this->getSocialProvider($provider->getHandle());
+        $className = '\\Dukt\\Social\\Provider\\'.ucfirst($handle);
 
-        if($socialProvider)
+        if(class_exists($className))
         {
-            return craft()->oauth->getProvider($handle,  $configuredOnly);
+            $socialProvider = new $className;
+
+            $oauthProvider = craft()->oauth->getProvider($handle,  $configuredOnly);
+
+            if($oauthProvider)
+            {
+                return $socialProvider;
+            }
         }
     }
 
@@ -302,11 +298,6 @@ class SocialService extends BaseApplicationComponent
 
         if(isset($params['scopes']) && is_array($params['scopes']))
         {
-            // foreach($params['scopes'] as $k => $scope)
-            // {
-            //     $params['scopes'][$k] = urlencode($scope);
-            // }
-
             $params['scopes'] = urlencode(base64_encode(serialize($params['scopes'])));
         }
 

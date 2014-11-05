@@ -26,11 +26,6 @@ class SocialVariable
         return $this->_error;
     }
 
-    public function getSocialProvider($handle)
-    {
-        return craft()->social->getSocialProvider($handle);
-    }
-
     public function getUsers()
     {
         return craft()->social->getUsers();

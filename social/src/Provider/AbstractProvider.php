@@ -6,6 +6,22 @@ abstract class AbstractProvider {
 
     protected $token;
 
+    public function getHandle()
+    {
+        // from : \Dukt\Share\Service\Twitter
+        // to : twitter
+
+        $handle = get_class($this);
+
+        $start = strlen("\\Dukt\\Social\\Provider\\") - 1;
+
+        $handle = substr($handle, $start);
+
+        $handle = strtolower($handle);
+
+        return $handle;
+    }
+
     public function setToken($token)
     {
         $this->token = $token;
@@ -19,5 +35,12 @@ abstract class AbstractProvider {
     public function getParams()
     {
         return array();
+    }
+
+    public function isConfigured()
+    {
+        $oauthProvider = \Craft\craft()->oauth->getProvider($this->getHandle());
+
+        return $oauthProvider->isConfigured();
     }
 }

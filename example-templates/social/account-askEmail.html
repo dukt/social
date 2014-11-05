@@ -38,7 +38,7 @@ Planned for Social 2.0
                     <input type="text" name="email" value="" size="40" />
                 </p>
 
-                {% set tempPass = craft.social.temporaryPassword(user.id) %}
+                {% set tempPass = craft.social.getTemporaryPassword(user.id) %}
 
                 <input type="hidden" name="password" value="{{tempPass}}" size="40" />
             {% else %}

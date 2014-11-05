@@ -6,6 +6,11 @@ use Guzzle\Http\Client;
 
 class Twitter extends AbstractProvider {
 
+    public function getName()
+    {
+        return "Twitter";
+    }
+
     public function getProfile()
     {
         $token = $this->token;
