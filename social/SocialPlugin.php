@@ -114,7 +114,6 @@ class SocialPlugin extends BasePlugin
             'defaultGroup' => array(AttributeType::Number, 'default' => null),
             'autoFillProfile' => array(AttributeType::Bool, 'default' => true),
             'requireEmailAddress' => array(AttributeType::Bool, 'default' => true),
-            'requirePassword' => array(AttributeType::Bool, 'default' => true),
             'completeRegistrationTemplate' => array(AttributeType::String),
         );
     }

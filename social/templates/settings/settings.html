@@ -60,16 +60,9 @@
                     checked:   settings.requireEmailAddress
                 }) }}
 
-                {{ forms.checkboxField({
-                    label: 'Require Password'|t,
-                    instructions: "The user will be asked to provide a password in the complete registration page."|t,
-                    name: 'settings[requirePassword]',
-                    checked:   settings.requirePassword
-                }) }}
-
                 {{ forms.textField({
                     label: 'Complete Registration Template'|t,
-                    instructions: "Template of the complete registration page which is displayed when the user is asked to provide an email or password to complete his registration."|t,
+                    instructions: "Template of the complete registration page which is displayed when the user is asked to provide an email to complete his registration."|t,
                     name: 'settings[completeRegistrationTemplate]',
                     value:   settings.completeRegistrationTemplate
                 }) }}
