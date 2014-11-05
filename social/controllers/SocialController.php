@@ -203,7 +203,7 @@ class SocialController extends BaseController
             }
             catch(\Exception $e)
             {
-                craft()->httpSession->add('error', $e->getMessage());
+                craft()->userSession->setFlash('error', $e->getMessage());
                 $this->redirect($redirect);
             }
         }
@@ -366,8 +366,7 @@ class SocialController extends BaseController
         }
         catch(\Exception $e)
         {
-            craft()->httpSession->add('error', $e->getMessage());
-
+            craft()->userSession->setFlash('error', $e->getMessage());
             $this->redirect($errorRedirect);
         }
     }

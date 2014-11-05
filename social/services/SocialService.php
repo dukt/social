@@ -348,14 +348,12 @@ class SocialService extends BaseApplicationComponent
 
     public function getLoginUrl($providerClass, $params = array())
     {
-
         $params['provider'] = $providerClass;
 
         if(isset($params['scopes']) && is_array($params['scopes']))
         {
             $params['scopes'] = urlencode(base64_encode(serialize($params['scopes'])));
         }
-
 
         $url = UrlHelper::getSiteUrl(craft()->config->get('actionTrigger').'/social/login', $params);
 

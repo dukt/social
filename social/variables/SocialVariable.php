@@ -15,17 +15,23 @@ namespace Craft;
 class SocialVariable
 {
     private $_error = false;
+    private $_notice = false;
 
     public function getNotice()
     {
-        return craft()->userSession->getFlash('notice');
+        if(!$this->_notice)
+        {
+            $this->_notice = craft()->userSession->getFlash('notice');
+        }
+
+        return $this->_notice;
     }
 
     public function getError()
     {
-        if(!$this->_error) {
-            $this->_error = craft()->httpSession->get('error');
-            craft()->httpSession->remove('error');
+        if(!$this->_error)
+        {
+            $this->_error = craft()->userSession->getFlash('error');
         }
 
         return $this->_error;
@@ -61,7 +67,7 @@ class SocialVariable
         return craft()->social->getDisconnectUrl($handle);
     }
 
-    public function getLoginUrl($providerClass, $params)
+    public function getLoginUrl($providerClass, $params = array())
     {
         return craft()->social->getLoginUrl($providerClass, $params);
     }

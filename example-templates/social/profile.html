@@ -10,6 +10,8 @@
 
     <div class="col-md-6 col-md-offset-3">
 
+        {# Notice #}
+
         {% set notice = craft.social.getNotice() %}
 
         {% if notice %}
@@ -20,9 +22,11 @@
 
         {% endif %}
 
+
+        {# Error #}
+
         {% set error = craft.social.getError() %}
 
-        {# {{ dump(error) }} #}
         {% if error %}
 
             <div class="alert alert-danger">
@@ -31,8 +35,10 @@
 
         {% endif %}
 
+
+        {# Account Errors #}
+
         {% if account is defined %}
-            {# {{ dump(account) }} #}
             {% set accountErrors = account.errors %}
 
             {% if accountErrors %}
@@ -43,7 +49,11 @@
                 </div>
             {% endif %}
         {% endif %}
+
         <h2>Profile</h2>
+
+
+        {# Photo #}
 
         <form method="post" enctype="multipart/form-data">
 
@@ -83,35 +93,16 @@
 
         </form>
 
-{#
-        <script type="text/javascript">
-
-            $(document).ready(function() {
-                $('#delete-user-photo').submit(function(e) {
-
-                    var postData = $(this).serializeArray();
-
-                    console.log(postData);
-
-                    $.post('{{ actionUrl() }}/users/deleteUserPhoto', postData, function(data) {
-                        console.log('success', data);
-                    });
-
-                    e.preventDefault(); //STOP default action
-                    return;
-                });
-            });
-        </script>#}
-
         <hr>
+
+
+        {# Profile #}
 
         <form method="post" enctype="multipart/form-data">
 
             <input type="hidden" name="action" value="users/saveUser">
             <input type="hidden" name="redirect" value="social/profile">
             <input type="hidden" name="userId" value="{{ user.id }}">
-
-
 
             {% set socialAccount = craft.social.getAccountByUserId(user.id) %}
 

@@ -59,14 +59,7 @@
             <p>
                 {% for provider in craft.social.getProviders() %}
 
-                    <a href="{{ craft.social.loginUrl(provider.handle, {
-                        redirect: 'social'
-                    }) }}" class="btn btn-default">{{provider.name}}</a>
-{#
-                    <a href="{{ craft.social.loginUrl(provider.handle, {
-                        redirect: 'social',
-                        scopes: ["https://www.googleapis.com/auth/calendar"]
-                    }) }}" class="btn btn-default">{{provider.name}} with calendar</a> #}
+                    <a href="{{ craft.social.loginUrl(provider.handle) }}" class="btn btn-default">{{provider.name}}</a>
 
                 {% endfor %}
             </p>
