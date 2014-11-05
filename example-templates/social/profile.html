@@ -10,8 +10,20 @@
 
     <div class="col-md-6 col-md-offset-3">
 
+        {% set notice = craft.social.notice %}
+
+        {# {{ dump(notice) }} #}
+        {% if notice %}
+
+            <div class="alert alert-success">
+                <p>{{notice}}</p>
+            </div>
+
+        {% endif %}
+
         {% set error = craft.social.error %}
 
+        {# {{ dump(error) }} #}
         {% if error %}
 
             <div class="alert alert-danger">
@@ -20,20 +32,32 @@
 
         {% endif %}
 
+        {% if account is defined %}
+            {# {{ dump(account) }} #}
+            {% set accountErrors = account.errors %}
+
+            {% if accountErrors %}
+                <div class="alert alert-danger">
+                    {% for accountError in accountErrors %}
+                        <p>{{(accountError|first)}}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endif %}
         <h2>Profile</h2>
 
         <form method="post" enctype="multipart/form-data">
 
             <input type="hidden" name="action" value="users/saveUser">
             <input type="hidden" name="redirect" value="social/profile">
-            <input type="hidden" name="userId" value="{{ currentUser.id }}">
+            <input type="hidden" name="userId" value="{{ user.id }}">
 
             <div class="form-group">
 
                 <div class="row">
                     <div class="col-md-3">
 
-                        {% if currentUser.photoUrl %}
+                        {% if user.photoUrl %}
                             {% set photoUrl = user.photoUrl %}
                         {% else %}
                             {% set photoUrl = resourceUrl('images/user.gif') %}
@@ -43,14 +67,14 @@
                     </div>
                     <div class="col-md-9">
 
-                        <label for="userPhoto">{{ (currentUser.photoUrl ? 'Change Photo' : 'Upload Photo') }}</label><br />
+                        <label for="userPhoto">{{ (user.photoUrl ? 'Change Photo' : 'Upload Photo') }}</label><br />
                         <p>
-                            <input type="file" name="userPhoto" value="{{ (currentUser.photoUrl ? 'Change Photo' : 'Upload') }}">
+                            <input type="file" name="userPhoto" value="{{ (user.photoUrl ? 'Change Photo' : 'Upload') }}">
                         </p>
 
                         <input type="submit" class="btn btn-sm btn-primary" value="Upload Photo">
 
-                        {% if currentUser.photoUrl %}
+                        {% if user.photoUrl %}
                             <input type="submit" class="btn btn-sm btn-danger" name="deleteUserPhoto" value="Delete Photo">
                         {% endif %}
 
@@ -79,38 +103,93 @@
                 });
             });
         </script>#}
+
         <hr>
 
         <form method="post" enctype="multipart/form-data">
 
             <input type="hidden" name="action" value="users/saveUser">
             <input type="hidden" name="redirect" value="social/profile">
-            <input type="hidden" name="userId" value="{{ currentUser.id }}">
+            <input type="hidden" name="userId" value="{{ user.id }}">
 
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text"  class="form-control" id="username" name="username" value="{{ currentUser.username }}">
-            </div>
+
+
+            {% set socialAccount = craft.social.getAccountByUserId(user.id) %}
+
+            {% if socialAccount %}
+                <ul>
+                    <li>
+                        <strong>Has Email:</strong>
+                        {{ socialAccount.hasEmail ? 'Yes' : 'No' }}
+                    </li>
+
+                    <li>
+                        <strong>Has Password:</strong>
+                        {{ socialAccount.hasPassword ? 'Yes' : 'No' }}
+                    </li>
+
+                    <li>
+                        <strong>Temporary Email:</strong>
+                        {{ socialAccount.temporaryEmail }}
+                    </li>
+
+                    <li>
+                        <strong>Temporary Password:</strong>
+                        {{ socialAccount.temporaryPassword }}
+                    </li>
+                </ul>
+
+                <hr>
+
+            {% endif %}
 
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="firstName">First Name</label>
-                        <input type="text"  class="form-control" id="firstName" name="firstName" value="{{ currentUser.firstName }}">
+                        <input type="text"  class="form-control" id="firstName" name="firstName" value="{{ user.firstName }}">
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="lastName">Last Name</label>
-                        <input type="text"  class="form-control" id="lastName" name="lastName" value="{{ currentUser.lastName }}">
+                        <input type="text"  class="form-control" id="lastName" name="lastName" value="{{ user.lastName }}">
                     </div>
                 </div>
             </div>
 
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text"  class="form-control" id="username" name="username" value="{{ user.username }}">
+            </div>
 
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="text"  class="form-control" id="email" name="email" value="{{ currentUser.email }}">
+
+                {% if user.unverifiedEmail %}
+                    <p class="text-success">Check your inbox, an email has been sent to confirm: <strong>{{ user.unverifiedEmail }}</strong></p>
+                {% endif %}
+                <input type="text"  class="form-control" id="email" name="email" value="{{ user.email }}">
+
+            </div>
+
+            {% if socialAccount and not socialAccount.hasPassword %}
+
+                <input type="hidden" name="password" value="{{ socialAccount.hasPassword is defined and not socialAccount.hasPassword ? socialAccount.temporaryPassword : '' }}" />
+
+            {% else %}
+
+                <div class="form-group">
+                    <label for="email">Current Password</label>
+                    <input type="text"  class="form-control" id="password" name="password" value="{{ socialAccount.hasPassword is defined and not socialAccount.hasPassword ? socialAccount.temporaryPassword : '' }}">
+                </div>
+
+            {% endif %}
+
+
+            <div class="form-group">
+                <label for="email">New Password</label>
+                <input type="text"  class="form-control" id="newPassword" name="newPassword" value="">
             </div>
 
             <input type="submit" class="btn btn-primary" value="Save Profile">
