@@ -3,66 +3,77 @@
 {% import "_includes/forms" as forms %}
 
 {% set selectedTab = 'settings' %}
+
 {% set content %}
 
-    {{ forms.checkboxField({
-        label: 'Allow authentication'|t,
-        instructions: "Allow people to social login to existing accounts."|t,
-        name: 'allowSocialLogin',
-        checked:   settings.allowSocialLogin,
-        toggle: 'enableSocialLogin'
-    }) }}
-
-    <div id="enableSocialLogin"{% if not settings.allowSocialLogin %} class="hidden"{% endif %}>
+    <form method="post" accept-charset="UTF-8" data-saveshortcut="">
+        <input type="hidden" name="action" value="plugins/savePluginSettings">
+        <input type="hidden" name="pluginClass" value="Social">
+        <input type="hidden" name="redirect" value="social/settings/settings">
 
         {{ forms.checkboxField({
-            label: 'Accept new registrations'|t,
-            instructions: "Accept user registration with social login."|t,
-            name: 'allowSocialRegistration',
-            checked:   settings.allowSocialRegistration,
-            toggle: 'enableSocialRegistration'
+            label: 'Allow authentication'|t,
+            instructions: "Allow people to social login to existing accounts."|t,
+            name: 'settings[allowSocialLogin]',
+            checked:   settings.allowSocialLogin,
+            toggle: 'enableSocialLogin'
         }) }}
 
-        <div id="enableSocialRegistration"{% if not settings.allowSocialRegistration %} class="hidden"{% endif %}>
-            <div id="defaultGroup">
-                {% set groups = [{ label: "None"|t, value: '' }] %}
-                {% for group in craft.userGroups.getAllGroups() %}
-                    {% set groups = groups|merge([{ label: group.name, value: group.id }]) %}
-                {% endfor %}
+        <div id="enableSocialLogin"{% if not settings.allowSocialLogin %} class="hidden"{% endif %}>
 
-                {{ forms.selectField({
-                    label: "Default User Group"|t,
-                    instructions: "Choose a user group that socially-registered members will be added to by default."|t,
-                    name: 'defaultGroup',
-                    options: groups,
-                    value: (settings.defaultGroup is defined ? settings.defaultGroup : null)
+            {{ forms.checkboxField({
+                label: 'Accept new registrations'|t,
+                instructions: "Accept user registration with social login."|t,
+                name: 'settings[allowSocialRegistration]',
+                checked:   settings.allowSocialRegistration,
+                toggle: 'enableSocialRegistration'
+            }) }}
+
+            <div id="enableSocialRegistration"{% if not settings.allowSocialRegistration %} class="hidden"{% endif %}>
+                <div id="defaultGroup">
+                    {% set groups = [{ label: "None"|t, value: '' }] %}
+                    {% for group in craft.userGroups.getAllGroups() %}
+                        {% set groups = groups|merge([{ label: group.name, value: group.id }]) %}
+                    {% endfor %}
+
+                    {{ forms.selectField({
+                        label: "Default User Group"|t,
+                        instructions: "Choose a user group that socially-registered members will be added to by default."|t,
+                        name: 'settings[defaultGroup]',
+                        options: groups,
+                        value: (settings.defaultGroup is defined ? settings.defaultGroup : null)
+                    }) }}
+                </div>
+
+    {#
+                {{ forms.checkboxField({
+                    label: 'Allow fake emails'|t,
+                    instructions: "Will automatically create a fake email if the social user doesn't have one."|t,
+                    name: 'settings[allowFakeEmail]',
+                    checked:   settings.allowFakeEmail
+                }) }} #}
+
+                {{ forms.checkboxField({
+                    label: 'Require Email Address'|t,
+                    instructions: "If the email is not provided by the OAuth provider, the user is prompted to enter his email otherwise it will create a fake one (1234.twitter@example.com)."|t,
+                    name: 'settings[requireEmailAddress]',
+                    checked:   settings.requireEmailAddress
                 }) }}
+
+                {{ forms.textField({
+                    label: 'Ask Email Template'|t,
+                    instructions: "Template of the ask email page"|t,
+                    name: 'settings[askEmailTemplate]',
+                    value:   settings.askEmailTemplate
+                }) }}
+
             </div>
-
-{#
-            {{ forms.checkboxField({
-                label: 'Allow fake emails'|t,
-                instructions: "Will automatically create a fake email if the social user doesn't have one."|t,
-                name: 'allowFakeEmail',
-                checked:   settings.allowFakeEmail
-            }) }} #}
-
-            {{ forms.checkboxField({
-                label: 'Require Email Address'|t,
-                instructions: "If the email is not provided by the OAuth provider, the user is prompted to enter his email otherwise it will create a fake one (1234.twitter@example.com)."|t,
-                name: 'requireEmailAddress',
-                checked:   settings.requireEmailAddress
-            }) }}
-
-            {{ forms.textField({
-                label: 'Ask Email Template'|t,
-                instructions: "Template of the ask email page"|t,
-                name: 'askEmailTemplate',
-                value:   settings.askEmailTemplate
-            }) }}
-
         </div>
-    </div>
+
+        <p>
+            <input type="submit" class="btn submit force" value="Save">
+        </p>
+    </form>
 
 
 {% endset %}
