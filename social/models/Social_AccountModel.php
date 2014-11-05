@@ -12,7 +12,7 @@
 
 namespace Craft;
 
-class Social_UserModel extends BaseModel
+class Social_AccountModel extends BaseModel
 {
     /**
      * Define Attributes
@@ -22,12 +22,10 @@ class Social_UserModel extends BaseModel
         return array(
             'id' => AttributeType::Number,
             'userId' => AttributeType::Number,
-            'tokenId' => AttributeType::Number,
-
-            'provider' => array(AttributeType::String, 'required' => true),
-            'socialUid' => array(AttributeType::String, 'required' => true),
-
-            'photo' => AttributeType::String,
+            'hasEmail' => AttributeType::Bool,
+            'hasPassword' => AttributeType::Bool,
+            'temporaryEmail' => AttributeType::String,
+            'temporaryPassword' => AttributeType::String,
         );
     }
 
@@ -37,12 +35,5 @@ class Social_UserModel extends BaseModel
         {
             return craft()->users->getUserById($this->userId);
         }
-    }
-
-    public function getToken()
-    {
-        $token = craft()->oauth->getTokenById($this->tokenId);
-
-        return $token;
     }
 }

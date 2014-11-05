@@ -30,6 +30,7 @@
             }) }}
 
             <div id="enableSocialRegistration"{% if not settings.allowSocialRegistration %} class="hidden"{% endif %}>
+
                 <div id="defaultGroup">
                     {% set groups = [{ label: "None"|t, value: '' }] %}
                     {% for group in craft.userGroups.getAllGroups() %}
@@ -45,34 +46,40 @@
                     }) }}
                 </div>
 
-    {#
                 {{ forms.checkboxField({
-                    label: 'Allow fake emails'|t,
-                    instructions: "Will automatically create a fake email if the social user doesn't have one."|t,
-                    name: 'settings[allowFakeEmail]',
-                    checked:   settings.allowFakeEmail
-                }) }} #}
+                    label: 'Auto Fill Profile'|t,
+                    instructions: "Automatically fills first name, last name and photo fields (if they are available) when the user registers."|t,
+                    name: 'settings[autoFillProfile]',
+                    checked:   settings.autoFillProfile
+                }) }}
 
                 {{ forms.checkboxField({
                     label: 'Require Email Address'|t,
-                    instructions: "If the email is not provided by the OAuth provider, the user is prompted to enter his email otherwise it will create a fake one (1234.twitter@example.com)."|t,
+                    instructions: "If checked, the user will be asked to provide his email if the OAuth provider hasn't provided it. Unchecked, it will create a fake email (1234.twitter@example.com)."|t,
                     name: 'settings[requireEmailAddress]',
                     checked:   settings.requireEmailAddress
                 }) }}
 
+                {{ forms.checkboxField({
+                    label: 'Require Password'|t,
+                    instructions: "The user will be asked to provide a password in the complete registration page."|t,
+                    name: 'settings[requirePassword]',
+                    checked:   settings.requirePassword
+                }) }}
+
                 {{ forms.textField({
-                    label: 'Ask Email Template'|t,
-                    instructions: "Template of the ask email page"|t,
-                    name: 'settings[askEmailTemplate]',
-                    value:   settings.askEmailTemplate
+                    label: 'Complete Registration Template'|t,
+                    instructions: "Template of the complete registration page which is displayed when the user is asked to provide an email or password to complete his registration."|t,
+                    name: 'settings[completeRegistrationTemplate]',
+                    value:   settings.completeRegistrationTemplate
                 }) }}
 
             </div>
         </div>
 
-        <p>
+        <div class="buttons">
             <input type="submit" class="btn submit force" value="Save">
-        </p>
+        </div>
     </form>
 
 

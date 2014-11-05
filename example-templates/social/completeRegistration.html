@@ -42,14 +42,14 @@
             {% endif %}
 
             <form method="post" action="" accept-charset="UTF-8">
-                <input type="hidden" name="action" value="social/askEmail">
+                <input type="hidden" name="action" value="social/completeRegistration">
                 <input type="hidden" name="redirect" value="social">
 
                 <div class="form-group">
                     <label for="email">Email address</label>
-                    <input name="email" type="text" value="{% if askEmail is defined %}{{ askEmail.email }}{% endif %}" class="form-control" id="email" placeholder="email@example.com">
+                    <input name="email" type="text" value="{% if completeRegistration is defined %}{{ completeRegistration.email }}{% endif %}" class="form-control" id="email" placeholder="email@example.com">
 
-                    {% if askEmail is defined %}{{ errorList(askEmail.getErrors('email')) }}{% endif %}
+                    {% if completeRegistration is defined %}{{ errorList(completeRegistration.getErrors('email')) }}{% endif %}
                 </div>
 
                 <p><input type="submit" class="btn btn-primary" value="Complete Registration"></p>

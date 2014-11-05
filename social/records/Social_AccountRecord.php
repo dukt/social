@@ -12,14 +12,14 @@
 
 namespace Craft;
 
-class Social_UserRecord extends BaseRecord
+class Social_AccountRecord extends BaseRecord
 {
     /**
      * Get Table Name
      */
     public function getTableName()
     {
-        return 'social_users';
+        return 'social_accounts';
     }
 
     /**
@@ -28,9 +28,10 @@ class Social_UserRecord extends BaseRecord
     public function defineAttributes()
     {
         return array(
-            'provider' => array(AttributeType::String, 'required' => true),
-            'socialUid' => array(AttributeType::String, 'required' => true),
-            'tokenId' => array(AttributeType::Number, 'required' => false),
+            'hasEmail' => array(AttributeType::Bool, 'required' => true),
+            'hasPassword' => array(AttributeType::Bool, 'required' => true),
+            'temporaryEmail' => array(AttributeType::String, 'required' => false),
+            'temporaryPassword' => array(AttributeType::String, 'required' => true),
         );
     }
 
@@ -47,7 +48,7 @@ class Social_UserRecord extends BaseRecord
     public function defineIndexes()
     {
         return array(
-            array('columns' => array('provider', 'socialUid'), 'unique' => true)
+            array('columns' => array('userId'), 'unique' => true)
         );
     }
 }

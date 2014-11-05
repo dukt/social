@@ -23,6 +23,52 @@ class SocialPlugin extends BasePlugin
 
             craft()->social->deleteSocialUserByUserId($user->id);
         });
+
+        craft()->on('users.onSaveUser', function(Event $event) {
+            $user = $event->params['user'];
+
+            $socialAccount = craft()->social->getAccountByUserId($user->id);
+
+            if($socialAccount)
+            {
+                if(!$socialAccount->hasEmail || !$socialAccount->hasPassword)
+                {
+                    if($socialAccount->temporaryEmail != $user->email)
+                    {
+                        $socialAccount->hasEmail = true;
+                    }
+
+                    $currentHashedPassword = $user->password;
+                    $currentPassword = $socialAccount->temporaryPassword;
+
+                    if(!craft()->users->validatePassword($currentHashedPassword, $currentPassword))
+                    {
+                        $socialAccount->hasPassword = true;
+                    }
+
+                    craft()->social->saveAccount($socialAccount);
+                }
+            }
+        });
+
+        craft()->on('users.onActivateUser', function(Event $event) {
+            $user = $event->params['user'];
+
+            $socialAccount = craft()->social->getAccountByUserId($user->id);
+
+            if($socialAccount)
+            {
+                if(!$socialAccount->hasEmail)
+                {
+                    if($socialAccount->temporaryEmail != $user->email || $socialAccount->temporaryEmail != $user->unverifiedEmail)
+                    {
+                        $socialAccount->hasEmail = true;
+                    }
+
+                    craft()->social->saveAccount($socialAccount);
+                }
+            }
+        });
         parent::init();
     }
     /**
@@ -66,8 +112,10 @@ class SocialPlugin extends BasePlugin
             'allowSocialRegistration' => array(AttributeType::Bool, 'default' => true),
             'allowSocialLogin' => array(AttributeType::Bool, 'default' => true),
             'defaultGroup' => array(AttributeType::Number, 'default' => null),
+            'autoFillProfile' => array(AttributeType::Bool, 'default' => true),
             'requireEmailAddress' => array(AttributeType::Bool, 'default' => true),
-            'askEmailTemplate' => array(AttributeType::String),
+            'requirePassword' => array(AttributeType::Bool, 'default' => true),
+            'completeRegistrationTemplate' => array(AttributeType::String),
         );
     }
 

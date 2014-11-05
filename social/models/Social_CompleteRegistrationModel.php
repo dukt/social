@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Craft OAuth by Dukt
+ * Craft Social Login by Dukt
  *
- * @package   Craft OAuth
+ * @package   Craft Social Login
  * @author    Benjamin David
  * @copyright Copyright (c) 2014, Dukt
- * @license   https://dukt.net/craft/oauth/docs/license
- * @link      https://dukt.net/craft/oauth/
+ * @license   https://dukt.net/craft/social/docs/license
+ * @link      https://dukt.net/craft/social/
  */
 
 namespace Craft;
 
-class Social_AskEmailModel extends BaseModel
+class Social_CompleteRegistrationModel extends BaseModel
 {
     /**
      * Define Attributes
@@ -21,6 +21,7 @@ class Social_AskEmailModel extends BaseModel
     {
         return array(
             'email'    => array(AttributeType::Email, 'required' => true),
+            'password'    => array(AttributeType::String, 'required' => true),
         );
     }
 }

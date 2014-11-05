@@ -117,9 +117,9 @@ class SocialController extends BaseController
 
     public function actionLogin()
     {
-        if(craft()->request->getPost('action') == 'social/askEmail')
+        if(craft()->request->getPost('action') == 'social/completeRegistration')
         {
-            $this->actionAskEmail();
+            $this->actionCompleteRegistration();
         }
         else
         {
@@ -406,7 +406,7 @@ class SocialController extends BaseController
                 craft()->httpSession->add('socialProviderHandle', $this->provider->handle);
                 craft()->httpSession->add('socialRedirect', $this->redirect);
 
-                $this->renderTemplate($this->pluginSettings['askEmailTemplate']);
+                $this->renderTemplate($this->pluginSettings['completeRegistrationTemplate']);
 
                 return;
             }
@@ -451,7 +451,7 @@ class SocialController extends BaseController
         }
     }
 
-    public function actionAskEmail()
+    public function actionCompleteRegistration()
     {
         $tokenArray = craft()->httpSession->get('socialToken');
         $this->token = craft()->oauth->arrayToToken($tokenArray);
@@ -477,10 +477,10 @@ class SocialController extends BaseController
         $attributes = array();
         $attributes['email'] = $email;
 
-        $askEmail = new Social_AskEmailModel;
-        $askEmail->email = $email;
+        $completeRegistration = new Social_CompleteRegistrationModel;
+        $completeRegistration->email = $email;
 
-        if($askEmail->validate())
+        if($completeRegistration->validate())
         {
             $emailExists = craft()->users->getUserByUsernameOrEmail($email);
 
@@ -527,40 +527,50 @@ class SocialController extends BaseController
             }
             else
             {
-                $askEmail->addError('email', 'Email already in use by another user.');
+                $completeRegistration->addError('email', 'Email already in use by another user.');
             }
         }
 
-        $this->renderTemplate($this->pluginSettings['askEmailTemplate'], array(
-            'askEmail' => $askEmail
+        $this->renderTemplate($this->pluginSettings['completeRegistrationTemplate'], array(
+            'completeRegistration' => $completeRegistration
         ));
 
         // Send the account back to the template
         craft()->urlManager->setRouteVariables(array(
-            'askEmail' => $askEmail
+            'completeRegistration' => $completeRegistration
         ));
     }
 
     private function _fillAttributesFromProfile(&$attributes, $profile)
     {
-        if(!empty($profile['firstName']))
-        {
-            $attributes['firstName'] = $profile['firstName'];
-        }
+        $plugin = craft()->plugins->getPlugin('social');
+        $settings = $plugin->getSettings();
 
-        if(!empty($profile['lastName']))
+        if($settings->autoFillProfile)
         {
-            $attributes['lastName'] = $profile['lastName'];
-        }
+            if(!empty($profile['firstName']))
+            {
+                $attributes['firstName'] = $profile['firstName'];
+            }
 
-        if(!empty($profile['photo']))
-        {
-            $attributes['photo'] = $profile['photo'];
+            if(!empty($profile['lastName']))
+            {
+                $attributes['lastName'] = $profile['lastName'];
+            }
+
+            if(!empty($profile['photo']))
+            {
+                $attributes['photo'] = $profile['photo'];
+            }
         }
     }
 
     private function _registerUser($attributes)
     {
+        $temporaryPassword = md5(time());
+
+        $attributes['newPassword'] = $temporaryPassword;
+
         if(!empty($attributes['email']))
         {
             // find with email
@@ -569,6 +579,17 @@ class SocialController extends BaseController
             if(!$user)
             {
                 $user = craft()->social->registerUser($attributes);
+
+                if($user)
+                {
+                    $socialAccount = new Social_AccountModel;
+                    $socialAccount->userId = $user->id;
+                    $socialAccount->hasEmail = true;
+                    $socialAccount->hasPassword = false;
+                    $socialAccount->temporaryPassword = $temporaryPassword;
+
+                    craft()->social->saveAccount($socialAccount);
+                }
             }
             else
             {
@@ -582,6 +603,18 @@ class SocialController extends BaseController
             $attributes['email'] = strtolower($this->provider->handle).'.'.$attributes['uid'].'@example.com';
 
             $user = craft()->social->registerUser($attributes);
+
+            if($user)
+            {
+                $socialAccount = new Social_AccountModel;
+                $socialAccount->userId = $user->id;
+                $socialAccount->hasEmail = false;
+                $socialAccount->hasPassword = false;
+                $socialAccount->temporaryEmail = $user->email;
+                $socialAccount->temporaryPassword = $temporaryPassword;
+
+                craft()->social->saveAccount($socialAccount);
+            }
 
             // if($this->pluginSettings['allowFakeEmail'])
             // {
