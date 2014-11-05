@@ -7,47 +7,48 @@
 
 {% set content %}
 
-
     {% set socialUsers = craft.social.users %}
 
-    {# <pre>{{ dump(socialUsers) }}</pre> #}
+    {% if socialUsers|length > 0 %}
 
-    <table class="data fullwidth">
-        <thead>
-            <tr>
-                <th>Provider</th>
-                <th>Social User ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th></th>
-            </tr>
-        </thead>
+        <table class="data fullwidth">
+            <thead>
+                <tr>
+                    <th>Provider</th>
+                    <th>Social User ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th></th>
+                </tr>
+            </thead>
 
+            {% for socialUser in socialUsers %}
 
-        {% for socialUser in socialUsers %}
+                {% set user = socialUser.user %}
 
-            {% set user = socialUser.user %}
+                <tr>
+                    <td>
+                        <img src="{{ resourceUrl('social/images/icons/'~socialUser.provider~'.png') }}" class="social-icon" />
+                        {{ socialUser.provider }}
+                    </td>
+                    <td>
+                        {{ socialUser.socialUid }}
+                    </td>
+                    <td>{{ user.fullName }}</td>
+                    <td>
+                        <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+                    </td>
+                    <td class="thin nowrap">
 
-            <tr>
-                <td>
-                    <img src="{{ resourceUrl('social/images/icons/'~socialUser.provider~'.png') }}" class="social-icon" />
-                    {{ socialUser.provider }}
-                </td>
-                <td>
-                    {{ socialUser.socialUid }}
-                </td>
-                <td>{{ user.fullName }}</td>
-                <td>
-                    <a href="mailto:{{ user.email }}">{{ user.email }}</a>
-                </td>
-                <td class="thin nowrap">
+                        <a href="{{ url('social/users/'~socialUser.id) }}" class="btn small">Social Profile</a> &nbsp;
+                        <a href="{{ user.cpEditUrl }}" class="btn small">Craft User</a>
 
-                    <a href="{{ url('social/users/'~socialUser.id) }}" class="btn small">Social Profile</a> &nbsp;
-                    <a href="{{ user.cpEditUrl }}" class="btn small">Craft User</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
 
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
-
+    {% else %}
+        <p class="light">No social users.</p>
+    {% endif %}
 {% endset %}
