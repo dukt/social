@@ -41,6 +41,9 @@ abstract class AbstractProvider {
     {
         $oauthProvider = \Craft\craft()->oauth->getProvider($this->getHandle());
 
-        return $oauthProvider->isConfigured();
+        if($oauthProvider)
+        {
+            return $oauthProvider->isConfigured();
+        }
     }
 }
