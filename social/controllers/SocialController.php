@@ -62,30 +62,6 @@ class SocialController extends BaseController
 
         $handle = craft()->request->getParam('provider');
 
-
-        // // revoke token
-
-        // if($handle == 'google')
-        // {
-        //     $currentUser = craft()->userSession->getUser();
-        //     $userId = $currentUser->id;
-
-        //     $socialUser = craft()->social->getSocialUserByUserId($userId, $handle);
-        //     $token = $socialUser->token->token;
-
-        //     $accessToken = $token->getAccessToken();
-        //     $client = new Client();
-
-        //     try {
-        //         $response = $client->get('https://accounts.google.com/o/oauth2/revoke?token='.$accessToken)->send();
-        //     }
-        //     catch(\Exception $e)
-        //     {
-
-        //     }
-        // }
-
-
         // delete token and social user
         craft()->social->deleteUserByProvider($handle);
 
@@ -631,7 +607,10 @@ class SocialController extends BaseController
             }
             else
             {
-                throw new \Exception("An account already exists with this email: ".$attributes['email']);
+                if(craft()->config->get('allowEmailMatch', 'social') !== true)
+                {
+                    throw new \Exception("An account already exists with this email: ".$attributes['email']);
+                }
             }
         }
         else
