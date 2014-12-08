@@ -394,44 +394,63 @@ class SocialService extends BaseApplicationComponent
             throw new Exception("Email address not provided.");
         }
 
-        $newUser = new UserModel();
-        $newUser->username = $usernameOrEmail;
-        $newUser->email = $usernameOrEmail;
 
-        if(!empty($account['firstName']))
+        // Fire an 'onBeforeRegister' event
+
+        $event = new Event($this, array(
+            'account'      => $account,
+        ));
+
+        $this->onBeforeRegister($event);
+
+        if($event->performAction)
         {
-            $newUser->firstName = $account['firstName'];
+            $newUser = new UserModel();
+            $newUser->username = $usernameOrEmail;
+            $newUser->email = $usernameOrEmail;
+
+            if(!empty($account['firstName']))
+            {
+                $newUser->firstName = $account['firstName'];
+            }
+
+            if(!empty($account['lastName']))
+            {
+                $newUser->lastName = $account['lastName'];
+            }
+
+            $newUser->newPassword = $account['newPassword'];
+
+
+            // save user
+
+            craft()->users->saveUser($newUser);
+            craft()->db->getSchema()->refresh();
+            $user = craft()->users->getUserByUsernameOrEmail($usernameOrEmail);
+
+            // save photo
+
+            if(!empty($account['photo']))
+            {
+                $this->saveRemotePhoto($account['photo'], $user);
+            }
+
+            // save groups
+
+            if(!empty($settings['defaultGroup']))
+            {
+                craft()->userGroups->assignUserToGroups($user->id, array($settings['defaultGroup']));
+            }
+
+            return $user;
         }
 
-        if(!empty($account['lastName']))
-        {
-            $newUser->lastName = $account['lastName'];
-        }
+        return false;
+    }
 
-        $newUser->newPassword = $account['newPassword'];
-
-
-        // save user
-
-        craft()->users->saveUser($newUser);
-        craft()->db->getSchema()->refresh();
-        $user = craft()->users->getUserByUsernameOrEmail($usernameOrEmail);
-
-        // save photo
-
-        if(!empty($account['photo']))
-        {
-            $this->saveRemotePhoto($account['photo'], $user);
-        }
-
-        // save groups
-
-        if(!empty($settings['defaultGroup']))
-        {
-            craft()->userGroups->assignUserToGroups($user->id, array($settings['defaultGroup']));
-        }
-
-        return $user;
+    public function onBeforeRegister(Event $event)
+    {
+        $this->raiseEvent('onBeforeRegister', $event);
     }
 
     public function saveRemotePhoto($photoUrl, $user)
