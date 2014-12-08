@@ -49,21 +49,10 @@ class Social_UserSessionService extends UserSessionService {
             $states = $this->_identity->getPersistentStates();
 
 
-
             // Run any before login logic.
             if ($this->beforeLogin($id, $states, false))
             {
-                // Fire an 'onBeforeLogin' event
-                $this->onBeforeLogin(new Event($this, array(
-                    'username'      => $user->username,
-                )));
-
                 $this->changeIdentity($id, $this->_identity->getName(), $states);
-
-                // Fire an 'onLogin' event
-                $this->onLogin(new Event($this, array(
-                    'username'      => $user->username,
-                )));
 
                 if ($this->authTimeout)
                 {
