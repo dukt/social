@@ -21,7 +21,7 @@ class Social_CompleteRegistrationModel extends BaseModel
     {
         return array(
             'email'    => array(AttributeType::Email, 'required' => true),
-            'password'    => array(AttributeType::String, 'required' => true),
+            'password'    => array(AttributeType::String, 'required' => false),
         );
     }
 }
