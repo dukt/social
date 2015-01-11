@@ -100,7 +100,7 @@ class SocialController extends BaseController
             'socialUser' => $socialUser
         );
 
-        $this->renderTemplate('social/userProfile', $variables);
+        $this->renderTemplate('social/users/_profile', $variables);
     }
 
     public function actionConnect()
