@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Social Login for Craft
+ * Social plugin for Craft
  *
- * @package   Social Login
+ * @package   Craft Social
  * @author    Benjamin David
- * @copyright Copyright (c) 2014, Dukt
+ * @copyright Copyright (c) 2015, Dukt
  * @link      https://dukt.net/craft/social/
  * @license   https://dukt.net/craft/social/docs/license
  */

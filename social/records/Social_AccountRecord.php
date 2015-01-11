@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Craft Social Login by Dukt
+ * Social plugin for Craft
  *
- * @package   Craft Social Login
+ * @package   Craft Social
  * @author    Benjamin David
- * @copyright Copyright (c) 2014, Dukt
- * @license   https://dukt.net/craft/social/docs/license
+ * @copyright Copyright (c) 2015, Dukt
  * @link      https://dukt.net/craft/social/
+ * @license   https://dukt.net/craft/social/docs/license
  */
 
 namespace Craft;
