@@ -14,19 +14,19 @@ class Twitter extends AbstractProvider {
     public function getProfile()
     {
         $token = $this->token;
-        $extraParams = $token->getExtraParams();
-        $user_id = $extraParams['user_id'];
-        $response = $this->api('get', 'users/lookup', array('user_id' => $user_id));
+        // $extraParams = $token->getExtraParams();
+        // $user_id = $extraParams['user_id'];
+        $response = $this->api('get', 'account/verify_credentials');
 
         // return $response;
 
         return array(
-            'id' => $response[0]['id_str'],
-            'username' => $response[0]['screen_name'],
-            'photo' => $response[0]['profile_image_url'],
-            'locale' => $response[0]['lang'],
-            'fullName' => $response[0]['name'],
-            'profileUrl' => 'https://twitter.com/'.$response[0]['screen_name'],
+            'id' => $response['id_str'],
+            'username' => $response['screen_name'],
+            'photo' => $response['profile_image_url'],
+            'locale' => $response['lang'],
+            'fullName' => $response['name'],
+            'profileUrl' => 'https://twitter.com/'.$response['screen_name'],
         );
     }
 
@@ -38,13 +38,15 @@ class Twitter extends AbstractProvider {
 
         $provider = \Craft\craft()->oauth->getProvider('twitter');
 
+        $infos = \Craft\craft()->oauth->getProviderInfos('twitter');
+
         $token = $this->token;
 
         $oauth = new \Guzzle\Plugin\Oauth\OauthPlugin(array(
-            'consumer_key'    => $provider->clientId,
-            'consumer_secret' => $provider->clientSecret,
-            'token'           => $token->getAccessToken(),
-            'token_secret'    => $token->getAccessTokenSecret()
+            'consumer_key'    => $infos->clientId,
+            'consumer_secret' => $infos->clientSecret,
+            'token'           => $token->accessToken,
+            'token_secret'    => $token->secret
         ));
 
         $client->addSubscriber($oauth);

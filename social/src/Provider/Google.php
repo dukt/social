@@ -37,8 +37,8 @@ class Google extends AbstractProvider {
                 // make token compatible with Google library
                 $arrayToken = array();
                 $arrayToken['created'] = 0;
-                $arrayToken['access_token'] = $token->getAccessToken();
-                $arrayToken['expires_in'] = $token->getEndOfLife();
+                $arrayToken['access_token'] = $token->accessToken;
+                $arrayToken['expires_in'] = $token->endOfLine;
                 $arrayToken = json_encode($arrayToken);
 
 

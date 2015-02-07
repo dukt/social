@@ -39,7 +39,7 @@ class Facebook extends AbstractProvider {
 
         $token = $this->token;
 
-        $params['access_token'] = $token->getAccessToken();
+        $params['access_token'] = $token->accessToken;
 
 
         // request

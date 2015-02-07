@@ -44,7 +44,7 @@ class Github extends AbstractProvider {
         $token = $this->token;
 
         // params
-        $params['access_token'] = $token->getAccessToken();
+        $params['access_token'] = $token->accessToken;
 
 
         // request
