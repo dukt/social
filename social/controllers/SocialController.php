@@ -464,20 +464,20 @@ class SocialController extends BaseController
             if($craftUser)
             {
                 $tokenId = $socialUser->tokenId;
-                $tokenModel = craft()->oauth->getTokenById($tokenId);
+                $existingToken = craft()->oauth->getTokenById($tokenId);
 
-                if(!$tokenModel)
+                if($existingToken)
                 {
-                    $tokenModel = new Oauth_TokenModel;
+                    $this->token->id = $tokenId;
                 }
 
-                $tokenModel->providerHandle = $this->provider->getHandle();
-                $tokenModel->pluginHandle = 'social';
+                $this->token->providerHandle = $this->provider->getHandle();
+                $this->token->pluginHandle = 'social';
 
-                $this->saveToken($tokenModel);
+                $this->saveToken($this->token);
 
                 // save user
-                $socialUser->tokenId = $tokenModel->id;
+                $socialUser->tokenId = $this->token->id;
                 craft()->social->saveUser($socialUser);
 
                 // login

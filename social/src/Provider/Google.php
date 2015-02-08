@@ -38,7 +38,7 @@ class Google extends AbstractProvider {
                 $arrayToken = array();
                 $arrayToken['created'] = 0;
                 $arrayToken['access_token'] = $token->accessToken;
-                $arrayToken['expires_in'] = $token->endOfLine;
+                $arrayToken['expires_in'] = $token->endOfLife;
                 $arrayToken = json_encode($arrayToken);
 
 
@@ -76,7 +76,7 @@ class Google extends AbstractProvider {
         catch(\Exception $e)
         {
             // todo: catch errors
-            //throw $e;
+            // throw $e;
         }
     }
 }

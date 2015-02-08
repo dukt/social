@@ -56,7 +56,7 @@
 
     {% set socialProvider = craft.social.getProvider(socialUser.provider) %}
 
-    {{ socialProvider.setToken(socialUser.token.token) }}
+    {{ socialProvider.setToken(socialUser.token) }}
 
     {% set profile = socialProvider.getProfile() %}
 
@@ -103,8 +103,8 @@
 
     {% set token = socialUser.token %}
 
-    {% if token.token.endOfLife > 0 %}
-        {% set remaingSeconds = token.token.endOfLife - now|date('U') %}
+    {% if token.endOfLife > 0 %}
+        {% set remaingSeconds = token.endOfLife - now|date('U') %}
         <p>Token expires in {{ remaingSeconds }} seconds.</p>
     {% else %}
         <p>Token doesn't expire.</p>
@@ -112,6 +112,6 @@
 
 
 
-    <pre>{{ dump(token.token) }}</pre>
+    <pre>{{ dump(token) }}</pre>
 
 {% endset %}
