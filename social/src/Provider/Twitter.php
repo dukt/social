@@ -38,16 +38,16 @@ class Twitter extends AbstractProvider {
 
         $provider = \Craft\craft()->oauth->getProvider('twitter');
 
-        $infos = \Craft\craft()->oauth->getProviderInfos('twitter');
-
         $token = $this->token;
 
-        $oauth = new \Guzzle\Plugin\Oauth\OauthPlugin(array(
-            'consumer_key'    => $infos->clientId,
-            'consumer_secret' => $infos->clientSecret,
+        $oauthData = array(
+            'consumer_key'    => $provider->provider->clientId,
+            'consumer_secret' => $provider->provider->clientSecret,
             'token'           => $token->accessToken,
             'token_secret'    => $token->secret
-        ));
+        );
+
+        $oauth = new \Guzzle\Plugin\Oauth\OauthPlugin($oauthData);
 
         $client->addSubscriber($oauth);
 
