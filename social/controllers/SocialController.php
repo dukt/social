@@ -14,8 +14,6 @@ namespace Craft;
 
 use Guzzle\Http\Client;
 
-require_once(CRAFT_PLUGINS_PATH.'oauth/vendor/autoload.php');
-
 class SocialController extends BaseController
 {
     // Properties
