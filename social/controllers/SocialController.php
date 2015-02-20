@@ -125,10 +125,21 @@ class SocialController extends BaseController
                 craft()->userSession->setFlash('error', $e->getMessage());
             }
 
-            craft()->httpSession->remove('social.referer');
+            // craft()->httpSession->remove('social.referer');
+
+            $this->cleanSession();
 
             $this->redirect($this->referer);
         }
+    }
+
+    private function cleanSession()
+    {
+        craft()->httpSession->remove('social.referer');
+        craft()->httpSession->remove('social.requestUri');
+        craft()->httpSession->remove('social.token');
+        craft()->httpSession->remove('social.uid');
+        craft()->httpSession->remove('social.providerHandle');
     }
 
     /**
@@ -370,6 +381,7 @@ class SocialController extends BaseController
         $completeRegistration->email = $email;
 
         $errorMessage = null;
+        $variables = array();
 
         try
         {
@@ -407,6 +419,9 @@ class SocialController extends BaseController
                         craft()->social_userSession->login($socialUser->id);
 
                         // redirect
+
+                        $this->cleanSession();
+
                         $this->redirect($this->referer);
                     }
                     else
@@ -434,19 +449,16 @@ class SocialController extends BaseController
         }
         catch(\Exception $e)
         {
-            $errorMessage = $e->getMessage();
+            $variables['errorMessage'] = $e->getMessage();
         }
 
-        $this->renderTemplate($pluginSettings['completeRegistrationTemplate'], array(
-            'errorMessage' => $errorMessage,
-            'completeRegistration' => $completeRegistration
-        ));
+        $variables['completeRegistration'] = $completeRegistration;
+
+        // Render template
+        $this->renderTemplate($pluginSettings['completeRegistrationTemplate'], $variables);
 
         // Send the account back to the template
-        craft()->urlManager->setRouteVariables(array(
-            'errorMessage' => $errorMessage,
-            'completeRegistration' => $completeRegistration
-        ));
+        craft()->urlManager->setRouteVariables($variables);
     }
 
     /**

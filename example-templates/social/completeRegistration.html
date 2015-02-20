@@ -27,7 +27,7 @@
 
             <h2>Complete registration</h2>
 
-            {% if errorMessage %}
+            {% if errorMessage is defined %}
                 <div class="alert alert-danger">
                     <p>{{errorMessage}}</p>
                 </div>
