@@ -19,7 +19,7 @@ class SocialController extends BaseController
     // Properties
     // =========================================================================
 
-    protected $allowAnonymous = array('actionLogin', 'actionCompleteRegistration');
+    protected $allowAnonymous = array('actionLogin');
 
     private $provider;
     private $pluginSettings;
@@ -54,7 +54,7 @@ class SocialController extends BaseController
         if(craft()->request->getPost('action') == 'social/completeRegistration')
         {
             // complete registration
-            $this->actionCompleteRegistration();
+            $this->completeRegistration();
         }
         else
         {
@@ -341,26 +341,25 @@ class SocialController extends BaseController
      *
      * @return null
      */
-    public function actionCompleteRegistration()
+    private function completeRegistration()
     {
         craft()->social->requireOAuth();
 
-        $model = new Oauth_TokenModel;
-
-        $this->token = craft()->oauth->arrayToToken(craft()->httpSession->get('social.token'));
-
+        // get session variables
+        $token = craft()->oauth->arrayToToken(craft()->httpSession->get('social.token'));
         $providerHandle = craft()->httpSession->get('social.providerHandle');
-        $this->socialUid = craft()->httpSession->get('social.uid');
+        $socialUid = craft()->httpSession->get('social.uid');
+
+        // get post
         $email = craft()->request->getPost('email');
 
         // settings
         $plugin = craft()->plugins->getPlugin('social');
-        $this->pluginSettings = $plugin->getSettings();
+        $pluginSettings = $plugin->getSettings();
 
         // provider
         $this->provider = craft()->oauth->getProvider($providerHandle);
-
-        $this->provider->setToken($this->token);
+        $this->provider->setToken($token);
 
         // account
         $account = $this->provider->getAccount();
@@ -379,8 +378,8 @@ class SocialController extends BaseController
             if(!$emailExists)
             {
                 // get profile
-                $socialProvider = craft()->social->getProvider($this->provider->getClass());
-                $socialProvider->setToken($this->token);
+                $socialProvider = craft()->social->getProvider($providerHandle);
+                $socialProvider->setToken($token);
                 $profile = $socialProvider->getProfile();
 
                 // fill attributes from profile
@@ -392,14 +391,14 @@ class SocialController extends BaseController
                 if($craftUser)
                 {
                     // save token
-                    $this->saveToken($this->token);
+                    $this->saveToken($token);
 
                     // save social user
                     $socialUser = new Social_UserModel;
                     $socialUser->userId = $craftUser->id;
-                    $socialUser->provider = $this->provider->getHandle();
-                    $socialUser->socialUid = $this->socialUid;
-                    $socialUser->tokenId = $this->token->id;
+                    $socialUser->provider = $providerHandle;
+                    $socialUser->socialUid = $socialUid;
+                    $socialUser->tokenId = $token->id;
                     craft()->social->saveUser($socialUser);
 
                     // login
@@ -419,9 +418,9 @@ class SocialController extends BaseController
             }
         }
 
-        if(!empty($this->pluginSettings['completeRegistrationTemplate']))
+        if(!empty($pluginSettings['completeRegistrationTemplate']))
         {
-            if(!craft()->templates->doesTemplateExist($this->pluginSettings['completeRegistrationTemplate']))
+            if(!craft()->templates->doesTemplateExist($pluginSettings['completeRegistrationTemplate']))
             {
                 throw new Exception("Complete registration template not set");
             }
@@ -431,7 +430,7 @@ class SocialController extends BaseController
             throw new Exception("Complete registration template not set");
         }
 
-        $this->renderTemplate($this->pluginSettings['completeRegistrationTemplate'], array(
+        $this->renderTemplate($pluginSettings['completeRegistrationTemplate'], array(
             'completeRegistration' => $completeRegistration
         ));
 
@@ -561,7 +560,9 @@ class SocialController extends BaseController
         {
             // no email at this point ? create a fake one
 
-            $attributes['email'] = strtolower($this->provider->getHandle()).'.'.$attributes['uid'].'@example.com';
+            $providerHandle = $this->provider->getHandle();
+
+            $attributes['email'] = strtolower($providerHandle).'.'.$attributes['uid'].'@example.com';
 
             $user = craft()->social->registerUser($attributes);
 
