@@ -145,8 +145,6 @@ class SocialController extends BaseController
         {
             $token = $response['token'];
 
-            // $this->token = $realToken = craft()->oauth->getRealToken($token);
-
             $this->token = $token;
 
             $plugin = craft()->plugins->getPlugin('social');

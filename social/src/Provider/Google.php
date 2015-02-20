@@ -29,7 +29,8 @@ class Google extends AbstractProvider {
     }
     public function getProfile()
     {
-        try {
+        try
+        {
             $token = $this->token;
 
             if($token)
