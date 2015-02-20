@@ -51,6 +51,8 @@ class SocialController extends BaseController
             craft()->httpSession->add('social.referer', $this->referer);
         }
 
+        $this->redirect = craft()->request->getParam('redirect');
+
         if(craft()->request->getPost('action') == 'social/completeRegistration')
         {
             // complete registration
@@ -62,7 +64,6 @@ class SocialController extends BaseController
 
             // request params
             $providerHandle = craft()->request->getParam('provider');
-            $redirect = craft()->request->getParam('redirect');
             $forcePrompt = craft()->request->getParam('forcePrompt');
             $requestUri = craft()->request->requestUri;
             $extraScopes = craft()->request->getParam('scopes');
@@ -112,27 +113,38 @@ class SocialController extends BaseController
                 if ($response = craft()->oauth->connect(array(
                     'plugin' => 'social',
                     'provider' => $providerHandle,
-                    'redirect' => $redirect,
                     'scopes' => $scopes,
                     'params' => $params
                 )))
                 {
                     $this->_handleConnectResponse($providerHandle, $response);
                 }
+
+                $this->cleanSession();
+
+                if(!$this->redirect)
+                {
+                    $this->redirect = $this->referer;
+                }
+
+                $this->redirect($this->redirect);
             }
             catch(\Exception $e)
             {
                 craft()->userSession->setFlash('error', $e->getMessage());
+
+                $this->cleanSession();
+
+                $this->redirect($this->referer);
             }
-
-            // craft()->httpSession->remove('social.referer');
-
-            $this->cleanSession();
-
-            $this->redirect($this->referer);
         }
     }
 
+    /**
+     * Clean session variables
+     *
+     * @return null
+     */
     private function cleanSession()
     {
         craft()->httpSession->remove('social.referer');
@@ -422,7 +434,12 @@ class SocialController extends BaseController
 
                         $this->cleanSession();
 
-                        $this->redirect($this->referer);
+                        if(!$this->redirect)
+                        {
+                            $this->redirect = $this->referer;
+                        }
+
+                        $this->redirect($this->redirect);
                     }
                     else
                     {
