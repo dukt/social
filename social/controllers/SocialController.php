@@ -369,71 +369,82 @@ class SocialController extends BaseController
         $completeRegistration = new Social_CompleteRegistrationModel;
         $completeRegistration->email = $email;
 
-        if($completeRegistration->validate())
+        $errorMessage = null;
+
+        try
         {
-            $emailExists = craft()->users->getUserByUsernameOrEmail($email);
-
-            if(!$emailExists)
+            if($completeRegistration->validate())
             {
-                // get profile
-                $socialProvider = craft()->social->getProvider($providerHandle);
-                $socialProvider->setToken($token);
-                $profile = $socialProvider->getProfile();
+                $emailExists = craft()->users->getUserByUsernameOrEmail($email);
 
-                // fill attributes from profile
-                $this->_fillAttributesFromProfile($attributes, $profile);
-
-                // register user
-                $craftUser = $this->_registerUser($attributes);
-
-                if($craftUser)
+                if(!$emailExists)
                 {
-                    // save token
-                    $this->saveToken($token);
+                    // get profile
+                    $socialProvider = craft()->social->getProvider($providerHandle);
+                    $socialProvider->setToken($token);
+                    $profile = $socialProvider->getProfile();
 
-                    // save social user
-                    $socialUser = new Social_UserModel;
-                    $socialUser->userId = $craftUser->id;
-                    $socialUser->provider = $providerHandle;
-                    $socialUser->socialUid = $socialUid;
-                    $socialUser->tokenId = $token->id;
-                    craft()->social->saveUser($socialUser);
+                    // fill attributes from profile
+                    $this->_fillAttributesFromProfile($attributes, $profile);
 
-                    // login
-                    craft()->social_userSession->login($socialUser->id);
+                    // register user
+                    $craftUser = $this->_registerUser($attributes);
 
-                    // redirect
-                    $this->redirect($this->referer);
+                    if($craftUser)
+                    {
+                        // save token
+                        $this->saveToken($token);
+
+                        // save social user
+                        $socialUser = new Social_UserModel;
+                        $socialUser->userId = $craftUser->id;
+                        $socialUser->provider = $providerHandle;
+                        $socialUser->socialUid = $socialUid;
+                        $socialUser->tokenId = $token->id;
+                        craft()->social->saveUser($socialUser);
+
+                        // login
+                        craft()->social_userSession->login($socialUser->id);
+
+                        // redirect
+                        $this->redirect($this->referer);
+                    }
+                    else
+                    {
+                        throw new Exception("Craft user couldn’t be created.");
+                    }
                 }
                 else
                 {
-                    throw new Exception("Craft user couldn’t be created.");
+                    $completeRegistration->addError('email', 'Email already in use by another user.');
+                }
+            }
+
+            if(!empty($pluginSettings['completeRegistrationTemplate']))
+            {
+                if(!craft()->templates->doesTemplateExist($pluginSettings['completeRegistrationTemplate']))
+                {
+                    throw new Exception("Complete registration template not set");
                 }
             }
             else
             {
-                $completeRegistration->addError('email', 'Email already in use by another user.');
-            }
-        }
-
-        if(!empty($pluginSettings['completeRegistrationTemplate']))
-        {
-            if(!craft()->templates->doesTemplateExist($pluginSettings['completeRegistrationTemplate']))
-            {
                 throw new Exception("Complete registration template not set");
             }
         }
-        else
+        catch(\Exception $e)
         {
-            throw new Exception("Complete registration template not set");
+            $errorMessage = $e->getMessage();
         }
 
         $this->renderTemplate($pluginSettings['completeRegistrationTemplate'], array(
+            'errorMessage' => $errorMessage,
             'completeRegistration' => $completeRegistration
         ));
 
         // Send the account back to the template
         craft()->urlManager->setRouteVariables(array(
+            'errorMessage' => $errorMessage,
             'completeRegistration' => $completeRegistration
         ));
     }
