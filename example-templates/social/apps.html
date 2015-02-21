@@ -23,26 +23,26 @@
 
         <h2>Apps</h2>
 
-        {% for providerSource in craft.social.getProviders() %}
+        {% for provider in craft.social.getProviders() %}
 
-            {% set user = craft.social.getUserByProvider(providerSource.handle) %}
+            {% set user = craft.social.getUserByProvider(provider.handle) %}
             <hr>
 
             <div class="row">
                 <div class="col-md-2">
-                    <img src="{{ resourceUrl('social/images/icons/'~providerSource.handle~'.png') }}" width="100%" class="social-icon img-rounded" />
+                    <img src="{{ resourceUrl('social/images/icons/'~provider.handle~'.png') }}" width="100%" class="social-icon img-rounded" />
                 </div>
 
                 <div class="col-md-7">
 
-                    <strong>{{providerSource.name}}</strong>
+                    <strong>{{provider.name}}</strong>
 
                     <br />
 
                     {% if user %}
-                        You can login using {{providerSource.name}}.
+                        You can login using {{provider.name}}.
                     {% else %}
-                        {{providerSource.name}} login is disabled.
+                        {{provider.name}} login is disabled.
                     {% endif %}
 
                 </div>
@@ -51,11 +51,11 @@
 
                     {% if user %}
                         <p>
-                            <a href="{{craft.social.disconnectUrl(providerSource.handle)}}" class="btn btn-default btn-sm">Disconnect</a>
+                            <a href="{{craft.social.disconnectUrl(provider.handle)}}" class="btn btn-default btn-sm">Disconnect</a>
                         </p>
                     {% else %}
                         <p>
-                            <a href="{{ craft.social.connectUrl(providerSource.handle) }}" class="btn btn-primary btn-sm">Enable</a>
+                            <a href="{{ craft.social.connectUrl(provider.handle) }}" class="btn btn-primary btn-sm">Enable</a>
                         </p>
                     {% endif %}
 
