@@ -14,11 +14,18 @@ namespace Craft;
 
 class SocialService extends BaseApplicationComponent
 {
-    public function requireOAuth()
+    /**
+     * Check Requirements
+     */
+    public function checkRequirements()
     {
-        if(!isset(craft()->oauth))
+        $plugin = craft()->plugins->getPlugin('social');
+
+        $pluginDependencies = $plugin->getPluginDependencies();
+
+        if(count($pluginDependencies) > 0)
         {
-            throw new Exception(Craft::t('OAuth plugin is required to perform this action.'));
+            throw new \Exception("Social is not configured properly. Check Social settings for more informations.");
         }
     }
 
@@ -37,7 +44,7 @@ class SocialService extends BaseApplicationComponent
 
     public function saveToken(Oauth_TokenModel $tokenModel)
     {
-        $this->requireOAuth();
+        $this->checkRequirements();
 
         craft()->oauth->saveToken($tokenModel);
     }
@@ -294,7 +301,7 @@ class SocialService extends BaseApplicationComponent
 
     public function getProviders($configuredOnly = true)
     {
-        $this->requireOAuth();
+        $this->checkRequirements();
 
         $allProviders = craft()->oauth->getProviders($configuredOnly);
 
@@ -315,7 +322,7 @@ class SocialService extends BaseApplicationComponent
 
     public function getProvider($handle,  $configuredOnly = true)
     {
-        $this->requireOAuth();
+        $this->checkRequirements();
 
         $className = '\\Dukt\\Social\\Provider\\'.ucfirst($handle);
 

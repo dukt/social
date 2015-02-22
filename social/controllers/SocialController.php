@@ -38,7 +38,7 @@ class SocialController extends BaseController
      */
     public function actionLogin()
     {
-        craft()->social->requireOAuth();
+        craft()->social->checkRequirements();
 
         // referer
 
@@ -364,7 +364,7 @@ class SocialController extends BaseController
      */
     private function completeRegistration()
     {
-        craft()->social->requireOAuth();
+        craft()->social->checkRequirements();
 
         // get session variables
         $token = craft()->oauth->arrayToToken(craft()->httpSession->get('social.token'));
@@ -673,7 +673,7 @@ class SocialController extends BaseController
      */
     public function actionDisconnect()
     {
-        craft()->social->requireOAuth();
+        craft()->social->checkRequirements();
 
         $handle = craft()->request->getParam('provider');
 
@@ -711,7 +711,7 @@ class SocialController extends BaseController
      */
     public function actionUserProfile()
     {
-        craft()->social->requireOAuth();
+        craft()->social->checkRequirements();
 
         // order
 

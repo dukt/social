@@ -54,7 +54,14 @@ class SocialVariable
 
     public function getProviders($configuredOnly = true)
     {
-        return craft()->social->getProviders($configuredOnly);
+        try
+        {
+            return craft()->social->getProviders($configuredOnly);
+        }
+        catch(\Exception $e)
+        {
+            return array();
+        }
     }
 
     public function getConnectUrl($handle)
