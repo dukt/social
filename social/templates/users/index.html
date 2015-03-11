@@ -23,11 +23,12 @@
             {% for socialUser in socialUsers %}
 
                 {% set user = socialUser.user %}
+                {% set provider = craft.social.provider(socialUser.provider) %}
 
                 <tr>
                     <td>
                         <img src="{{ resourceUrl('social/images/icons/'~socialUser.provider~'.png') }}" class="social-icon" />
-                        {{ socialUser.provider }}
+                        {{ provider.name }}
                     </td>
                     <td>
                         {{ socialUser.socialUid }}
