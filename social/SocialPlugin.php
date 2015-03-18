@@ -93,7 +93,7 @@ class SocialPlugin extends BasePlugin
      */
     function getVersion()
     {
-        return '0.9.30';
+        return '0.9.31';
     }
 
     /**
@@ -106,7 +106,7 @@ class SocialPlugin extends BasePlugin
                 'name' => "OAuth",
                 'handle' => 'oauth',
                 'url' => 'https://dukt.net/craft/oauth',
-                'version' => '0.9.62'
+                'version' => '0.9.63'
             )
         );
     }
