@@ -182,7 +182,7 @@ class SocialController extends BaseController
             $this->provider->setToken($this->token);
 
             // account
-            $account = $this->provider->getAccount();
+            $account = $this->provider->getAccount()->getArrayCopy();
 
             // socialUid
             $this->socialUid = $account['uid'];
@@ -295,7 +295,7 @@ class SocialController extends BaseController
         }
         else
         {
-            $attributes = $this->provider->getAccount();
+            $attributes = $this->provider->getAccount()->getArrayCopy();
 
             if(empty($attributes['email']) && $this->pluginSettings['requireEmailAddress'])
             {
