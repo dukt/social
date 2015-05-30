@@ -29,6 +29,8 @@
             {% endif %}
 
             <form method="post" action="" accept-charset="UTF-8">
+                {{ getCsrfInput() }}
+
                 <input type="hidden" name="action" value="users/login">
                 <input type="hidden" name="redirect" value="social">
 
