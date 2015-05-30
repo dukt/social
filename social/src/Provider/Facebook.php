@@ -20,7 +20,6 @@ class Facebook extends AbstractProvider {
         return array(
             'id' => $response['id'],
             'email' => $response['email'],
-            'username' => $response['username'],
             'photo' => 'http://graph.facebook.com/'.$response['id'].'/picture',
             'locale' => $response['locale'],
             'firstName' => $response['first_name'],
