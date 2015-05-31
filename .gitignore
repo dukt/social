@@ -1,6 +1,5 @@
 *.log
 .DS_Store
-/social/vendor
-composer.lock
-composer.phar
-phpunit.xml
+Source/social/Info.php
+Source/social/vendor
+Source/composer.lock
