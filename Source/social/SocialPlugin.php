@@ -107,7 +107,7 @@ class SocialPlugin extends BasePlugin
                 'name' => "OAuth",
                 'handle' => 'oauth',
                 'url' => 'https://dukt.net/craft/oauth',
-                'version' => '0.9.63'
+                'version' => '0.9.70'
             )
         );
     }
