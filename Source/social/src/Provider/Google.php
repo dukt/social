@@ -15,8 +15,8 @@ class Google extends AbstractProvider {
     public function getScopes()
     {
         return array(
-            'userinfo_profile',
-            'userinfo_email'
+            'https://www.googleapis.com/auth/userinfo.profile',
+            'https://www.googleapis.com/auth/userinfo.email',
         );
     }
 
