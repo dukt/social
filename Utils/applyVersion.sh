@@ -1,20 +1,17 @@
 #!/bin/bash
 
-export INFO_PATH="Source/social/Info.php"
-export CONSTANT_NAME="SOCIAL"
-
 for VERSION in "$@"
 
 do
 
 # Create Info.php with plugin version constant
 
-cat > $INFO_PATH << EOF
+cat > Source/${PLUGIN_NAME}/Info.php << EOF
 <?php
 
 namespace Craft;
 
-define('${CONSTANT_NAME}_VERSION', '$VERSION');
+define('${PLUGIN_NAME_UP}_VERSION', '$VERSION');
 
 EOF
 
