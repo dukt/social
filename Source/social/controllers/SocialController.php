@@ -518,23 +518,29 @@ class SocialController extends BaseController
      */
     private function saveToken(Oauth_TokenModel $token)
     {
-        // refresh token
+        $existingToken = null;
+
+        if($token->id)
+        {
+            $existingToken = craft()->oauth->getTokenById($token->id);
+
+            if(!$existingToken)
+            {
+                $existingToken = null;
+                $token->id = null;
+            }
+        }
 
         if($token->providerHandle == 'google')
         {
             if(empty($token->refreshToken))
             {
-                if($token->id)
+                if($existingToken)
                 {
-                    $existingToken = craft()->oauth->getTokenById($token->id);
-
-                    if($existingToken)
+                    if(!empty($existingToken->refreshToken))
                     {
-                        if(!empty($existingToken->refreshToken))
-                        {
-                            // existing token has a refresh token so we keep it
-                            $token->refreshToken = $existingToken->refreshToken;
-                        }
+                        // existing token has a refresh token so we keep it
+                        $token->refreshToken = $existingToken->refreshToken;
                     }
                 }
 
