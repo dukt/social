@@ -23,7 +23,7 @@ class SocialService extends BaseApplicationComponent
 
         $pluginDependencies = $plugin->getPluginDependencies();
 
-        if(count($pluginDependencies) > 0)
+        if (count($pluginDependencies) > 0)
         {
             throw new \Exception("Social is not configured properly. Check Social settings for more informations.");
         }
@@ -32,7 +32,7 @@ class SocialService extends BaseApplicationComponent
     public function getAccountByUserId($userId)
     {
         $conditions = 'userId=:userId';
-        $params = array(':userId' => $userId);
+        $params = [':userId' => $userId];
 
         $record = Social_AccountRecord::model()->find($conditions, $params);
 
@@ -45,7 +45,7 @@ class SocialService extends BaseApplicationComponent
     public function getSocialUserByUserId($userId, $provider)
     {
         $conditions = 'provider=:provider and userId=:userId';
-        $params = array(':provider' => $provider, ':userId' => $userId);
+        $params = [':provider' => $provider, ':userId' => $userId];
 
         $record = Social_UserRecord::model()->find($conditions, $params);
 
@@ -58,7 +58,7 @@ class SocialService extends BaseApplicationComponent
     public function getUsers()
     {
         $conditions = '';
-        $params = array();
+        $params = [];
 
         $records = Social_UserRecord::model()->findAll($conditions, $params);
 
@@ -72,13 +72,13 @@ class SocialService extends BaseApplicationComponent
     {
         $scopes = craft()->config->get($handle.'Scopes', 'social');
 
-        if($scopes)
+        if ($scopes)
         {
             return $scopes;
         }
         else
         {
-            return array();
+            return [];
         }
     }
 
@@ -86,13 +86,13 @@ class SocialService extends BaseApplicationComponent
     {
         $socialProvider = $this->getProvider($handle, false);
 
-        if($socialProvider)
+        if ($socialProvider)
         {
             return $socialProvider->getParams();
         }
         else
         {
-            return array();
+            return [];
         }
     }
 
@@ -102,7 +102,7 @@ class SocialService extends BaseApplicationComponent
         $userId = $currentUser->id;
 
         $conditions = 'provider=:provider and userId=:userId';
-        $params = array(':provider' => $handle, ':userId' => $userId);
+        $params = [':provider' => $handle, ':userId' => $userId];
 
         $record = Social_UserRecord::model()->find($conditions, $params);
 
@@ -118,17 +118,17 @@ class SocialService extends BaseApplicationComponent
         $userId = $currentUser->id;
 
         $conditions = 'provider=:provider and userId=:userId';
-        $params = array(':provider' => $handle, ':userId' => $userId);
+        $params = [':provider' => $handle, ':userId' => $userId];
 
         $record = Social_UserRecord::model()->find($conditions, $params);
 
         $tokenId = $record->tokenId;
 
-        if($tokenId)
+        if ($tokenId)
         {
             $tokenRecord = Oauth_TokenRecord::model()->findByPk($tokenId);
 
-            if($tokenRecord)
+            if ($tokenRecord)
             {
                 $tokenRecord->delete();
             }
@@ -146,17 +146,17 @@ class SocialService extends BaseApplicationComponent
     public function deleteSocialUserByUserId($userId)
     {
         $conditions = 'userId=:userId';
-        $params = array(':userId' => $userId);
+        $params = [':userId' => $userId];
 
         $socialUserRecords = Social_UserRecord::model()->findAll($conditions, $params);
 
-        foreach($socialUserRecords as $socialUserRecord)
+        foreach ($socialUserRecords as $socialUserRecord)
         {
-            if($socialUserRecord->tokenId)
+            if ($socialUserRecord->tokenId)
             {
                 $tokenRecord = Oauth_TokenRecord::model()->findByPk($socialUserRecord->tokenId);
 
-                if($tokenRecord)
+                if ($tokenRecord)
                 {
                     $tokenRecord->delete();
                 }
@@ -181,7 +181,7 @@ class SocialService extends BaseApplicationComponent
     public function getUserByUid($handle, $socialUid)
     {
         $conditions = 'provider=:provider';
-        $params = array(':provider' => $handle);
+        $params = [':provider' => $handle];
 
         $conditions .= ' AND socialUid=:socialUid';
         $params[':socialUid'] = $socialUid;
@@ -196,13 +196,13 @@ class SocialService extends BaseApplicationComponent
 
     public function saveUser(Social_UserModel $socialUser)
     {
-        if($socialUser->id)
+        if ($socialUser->id)
         {
             $socialUserRecord = Social_UserRecord::model()->findById($socialUser->id);
 
             if (!$socialUserRecord)
             {
-                throw new Exception(Craft::t('No social user exists with the ID “{id}”', array('id' => $socialUser->id)));
+                throw new Exception(Craft::t('No social user exists with the ID “{id}”', ['id' => $socialUser->id]));
             }
 
             $oldSocialUser = Social_UserModel::populateModel($socialUserRecord);
@@ -245,13 +245,13 @@ class SocialService extends BaseApplicationComponent
 
     public function saveAccount(Social_AccountModel $account)
     {
-        if($account->id)
+        if ($account->id)
         {
             $accountRecord = Social_AccountRecord::model()->findById($account->id);
 
             if (!$accountRecord)
             {
-                throw new Exception(Craft::t('No social account exists with the ID “{id}”', array('id' => $account->id)));
+                throw new Exception(Craft::t('No social account exists with the ID “{id}”', ['id' => $account->id]));
             }
 
             $oldSocialUser = Social_AccountModel::populateModel($accountRecord);
@@ -298,13 +298,13 @@ class SocialService extends BaseApplicationComponent
 
         $allProviders = craft()->oauth->getProviders($configuredOnly);
 
-        $providers = array();
+        $providers = [];
 
-        foreach($allProviders as $provider)
+        foreach ($allProviders as $provider)
         {
             $socialProvider = $this->getProvider($provider->getHandle(), $configuredOnly);
 
-            if($socialProvider)
+            if ($socialProvider)
             {
                 array_push($providers, $socialProvider);
             }
@@ -313,19 +313,19 @@ class SocialService extends BaseApplicationComponent
         return $providers;
     }
 
-    public function getProvider($handle,  $configuredOnly = true)
+    public function getProvider($handle, $configuredOnly = true)
     {
         $this->checkRequirements();
 
         $className = '\\Dukt\\Social\\Provider\\'.ucfirst($handle);
 
-        if(class_exists($className))
+        if (class_exists($className))
         {
             $socialProvider = new $className;
 
-            $oauthProvider = craft()->oauth->getProvider($handle,  $configuredOnly);
+            $oauthProvider = craft()->oauth->getProvider($handle, $configuredOnly);
 
-            if($oauthProvider)
+            if ($oauthProvider)
             {
                 return $socialProvider;
             }
@@ -334,23 +334,23 @@ class SocialService extends BaseApplicationComponent
 
     public function getConnectUrl($handle)
     {
-        return UrlHelper::getActionUrl('social/connect', array(
+        return UrlHelper::getActionUrl('social/connect', [
             'provider' => $handle
-        ));
+        ]);
     }
 
     public function getDisconnectUrl($handle)
     {
-        return UrlHelper::getActionUrl('social/disconnect', array(
+        return UrlHelper::getActionUrl('social/disconnect', [
             'provider' => $handle
-        ));
+        ]);
     }
 
-    public function getLoginUrl($providerClass, $params = array())
+    public function getLoginUrl($providerClass, $params = [])
     {
         $params['provider'] = $providerClass;
 
-        if(isset($params['scopes']) && is_array($params['scopes']))
+        if (isset($params['scopes']) && is_array($params['scopes']))
         {
             $params['scopes'] = urlencode(base64_encode(serialize($params['scopes'])));
         }
@@ -364,7 +364,7 @@ class SocialService extends BaseApplicationComponent
 
     public function getLogoutUrl($redirect = null)
     {
-        $params = array('redirect' => $redirect);
+        $params = ['redirect' => $redirect];
 
         return UrlHelper::getActionUrl('social/logout', $params);
     }
@@ -376,7 +376,7 @@ class SocialService extends BaseApplicationComponent
         $socialPlugin = craft()->plugins->getPlugin('social');
         $settings = $socialPlugin->getSettings();
 
-        if(!$settings['allowSocialRegistration'])
+        if (!$settings['allowSocialRegistration'])
         {
             throw new Exception("Social registration is disabled.");
         }
@@ -384,7 +384,7 @@ class SocialService extends BaseApplicationComponent
 
         // new user
 
-        if(isset($account['email']))
+        if (isset($account['email']))
         {
             // define email
             $usernameOrEmail = $account['email'];
@@ -397,24 +397,24 @@ class SocialService extends BaseApplicationComponent
 
         // Fire an 'onBeforeRegister' event
 
-        $event = new Event($this, array(
-            'account'      => $account,
-        ));
+        $event = new Event($this, [
+            'account' => $account,
+        ]);
 
         $this->onBeforeRegister($event);
 
-        if($event->performAction)
+        if ($event->performAction)
         {
             $newUser = new UserModel();
             $newUser->username = $usernameOrEmail;
             $newUser->email = $usernameOrEmail;
 
-            if(!empty($account['firstName']))
+            if (!empty($account['firstName']))
             {
                 $newUser->firstName = $account['firstName'];
             }
 
-            if(!empty($account['lastName']))
+            if (!empty($account['lastName']))
             {
                 $newUser->lastName = $account['lastName'];
             }
@@ -430,16 +430,16 @@ class SocialService extends BaseApplicationComponent
 
             // save photo
 
-            if(!empty($account['photo']))
+            if (!empty($account['photo']))
             {
                 $this->saveRemotePhoto($account['photo'], $user);
             }
 
             // save groups
 
-            if(!empty($settings['defaultGroup']))
+            if (!empty($settings['defaultGroup']))
             {
-                craft()->userGroups->assignUserToGroups($user->id, array($settings['defaultGroup']));
+                craft()->userGroups->assignUserToGroups($user->id, [$settings['defaultGroup']]);
             }
 
             return $user;

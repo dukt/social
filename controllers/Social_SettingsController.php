@@ -14,6 +14,9 @@ namespace Craft;
 
 class Social_SettingsController extends BaseController
 {
+    // Public Methods
+    // =========================================================================
+
     /**
      * Settings
      *

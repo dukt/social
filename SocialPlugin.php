@@ -20,7 +20,7 @@ class SocialPlugin extends BasePlugin
     /**
      * Get Name
      */
-    function getName()
+    public function getName()
     {
         return Craft::t('Social Login');
     }
@@ -54,12 +54,12 @@ class SocialPlugin extends BasePlugin
      */
     protected function defineSettings()
     {
-        return array(
-            'allowSocialRegistration' => array(AttributeType::Bool, 'default' => true),
-            'allowSocialLogin' => array(AttributeType::Bool, 'default' => true),
-            'defaultGroup' => array(AttributeType::Number, 'default' => null),
-            'autoFillProfile' => array(AttributeType::Bool, 'default' => true),
-        );
+        return [
+            'allowSocialRegistration' => [AttributeType::Bool, 'default' => true],
+            'allowSocialLogin'        => [AttributeType::Bool, 'default' => true],
+            'defaultGroup'            => [AttributeType::Number, 'default' => null],
+            'autoFillProfile'         => [AttributeType::Bool, 'default' => true],
+        ];
     }
 
     /**
@@ -67,7 +67,7 @@ class SocialPlugin extends BasePlugin
      */
     public function getSettingsHtml()
     {
-        if(craft()->request->getPath() == 'settings/plugins')
+        if (craft()->request->getPath() == 'settings/plugins')
         {
             return true;
         }
@@ -88,14 +88,13 @@ class SocialPlugin extends BasePlugin
      */
     public function registerCpRoutes()
     {
-        return array(
-            "social" => array('action' => "social/settings"),
-            'social\/providers' => array('action' => "social/providers/index"),
-            'social\/settings' => array('action' => "social/settings/index"),
-            "social\/users" => array('action' => "social/users/index"),
-            "social\/users\/(?P<id>\d+)" => array('action' => "social/userProfile"),
-
-        );
+        return [
+            "social"                   => ['action' => "social/settings"],
+            'social/providers'         => ['action' => "social/providers/index"],
+            'social/settings'          => ['action' => "social/settings/index"],
+            "social/users"             => ['action' => "social/users/index"],
+            "social/users/(?P<id>\d+]" => ['action' => "social/userProfile"],
+        ];
     }
 
     /**
@@ -103,7 +102,7 @@ class SocialPlugin extends BasePlugin
      */
     public function onBeforeUninstall()
     {
-        if(isset(craft()->oauth))
+        if (isset(craft()->oauth))
         {
             craft()->oauth->deleteTokensByPlugin('social');
         }
@@ -115,21 +114,22 @@ class SocialPlugin extends BasePlugin
      */
     public function getRequiredPlugins()
     {
-        return array(
-            array(
-                'name' => "OAuth",
-                'handle' => 'oauth',
-                'url' => 'https://dukt.net/craft/oauth',
+        return [
+            [
+                'name'    => "OAuth",
+                'handle'  => 'oauth',
+                'url'     => 'https://dukt.net/craft/oauth',
                 'version' => '0.9.70'
-            )
-        );
+            ]
+        ];
     }
 
     public function init()
     {
         // delete social user when craft user is deleted
 
-        craft()->on('users.onBeforeDeleteUser', function(Event $event) {
+        craft()->on('users.onBeforeDeleteUser', function (Event $event)
+        {
             $user = $event->params['user'];
 
             craft()->social->deleteSocialUserByUserId($user->id);
@@ -138,16 +138,17 @@ class SocialPlugin extends BasePlugin
 
         // update hasEmail and hasPassword when user is saved
 
-        craft()->on('users.onSaveUser', function(Event $event) {
+        craft()->on('users.onSaveUser', function (Event $event)
+        {
             $user = $event->params['user'];
 
             $socialAccount = craft()->social->getAccountByUserId($user->id);
 
-            if($socialAccount)
+            if ($socialAccount)
             {
-                if(!$socialAccount->hasEmail || !$socialAccount->hasPassword)
+                if (!$socialAccount->hasEmail || !$socialAccount->hasPassword)
                 {
-                    if($socialAccount->temporaryEmail != $user->email)
+                    if ($socialAccount->temporaryEmail != $user->email)
                     {
                         $socialAccount->hasEmail = true;
                     }
@@ -155,7 +156,7 @@ class SocialPlugin extends BasePlugin
                     $currentHashedPassword = $user->password;
                     $currentPassword = $socialAccount->temporaryPassword;
 
-                    if(!craft()->users->validatePassword($currentHashedPassword, $currentPassword))
+                    if (!craft()->users->validatePassword($currentHashedPassword, $currentPassword))
                     {
                         $socialAccount->hasPassword = true;
                     }
@@ -168,16 +169,17 @@ class SocialPlugin extends BasePlugin
 
         // update hasEmail when user is activated
 
-        craft()->on('users.onActivateUser', function(Event $event) {
+        craft()->on('users.onActivateUser', function (Event $event)
+        {
             $user = $event->params['user'];
 
             $socialAccount = craft()->social->getAccountByUserId($user->id);
 
-            if($socialAccount)
+            if ($socialAccount)
             {
-                if(!$socialAccount->hasEmail)
+                if (!$socialAccount->hasEmail)
                 {
-                    if($socialAccount->temporaryEmail != $user->email || $socialAccount->temporaryEmail != $user->unverifiedEmail)
+                    if ($socialAccount->temporaryEmail != $user->email || $socialAccount->temporaryEmail != $user->unverifiedEmail)
                     {
                         $socialAccount->hasEmail = true;
                     }
@@ -197,17 +199,17 @@ class SocialPlugin extends BasePlugin
      */
     public function getPluginDependencies($missingOnly = true)
     {
-        $dependencies = array();
+        $dependencies = [];
 
         $plugins = $this->getRequiredPlugins();
 
-        foreach($plugins as $key => $plugin)
+        foreach ($plugins as $key => $plugin)
         {
             $dependency = $this->getPluginDependency($plugin);
 
-            if($missingOnly)
+            if ($missingOnly)
             {
-                if($dependency['isMissing'])
+                if ($dependency['isMissing'])
                 {
                     $dependencies[] = $dependency;
                 }
@@ -231,18 +233,18 @@ class SocialPlugin extends BasePlugin
 
         $plugin = craft()->plugins->getPlugin($dependency['handle'], false);
 
-        if($plugin)
+        if ($plugin)
         {
             $currentVersion = $plugin->version;
 
 
             // requires update ?
 
-            if(version_compare($currentVersion, $dependency['version']) >= 0)
+            if (version_compare($currentVersion, $dependency['version']) >= 0)
             {
                 // no (requirements OK)
 
-                if($plugin->isInstalled && $plugin->isEnabled)
+                if ($plugin->isInstalled && $plugin->isEnabled)
                 {
                     $isMissing = false;
                 }

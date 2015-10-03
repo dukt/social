@@ -1,17 +1,5 @@
 <?php
 
-// actionLogin()
-// actionLogout()
-// actionConnect()
-// actionDisconnect()
-//
-// actionUsers()
-// actionChangePhoto()
-// actionUserProfile()
-//
-// actionSettings()
-
-
 /**
  * Social plugin for Craft
  *

@@ -14,6 +14,9 @@ namespace Craft;
 
 class Social_UsersController extends BaseController
 {
+    // Public Methods
+    // =========================================================================
+
     /**
      * List Users
      *
