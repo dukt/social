@@ -2,7 +2,7 @@
 
 namespace Dukt\Social\Provider;
 
-abstract class AbstractProvider {
+abstract class BaseProvider {
 
     protected $token;
 

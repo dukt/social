@@ -59,7 +59,7 @@ class SocialController extends BaseController
 		}
 		else
 		{
-			$this->completeRegistration();
+			$this->_completeRegistration();
 		}
 	}
 
@@ -179,7 +179,7 @@ class SocialController extends BaseController
 				$this->_handleConnectResponse($providerHandle, $response);
 			}
 
-			$this->cleanSession();
+			$this->_cleanSession();
 
 			if (!$this->redirect)
 			{
@@ -192,7 +192,7 @@ class SocialController extends BaseController
 		{
 			craft()->userSession->setFlash('error', $e->getMessage());
 
-			$this->cleanSession();
+			$this->_cleanSession();
 
 			$this->redirect($this->referer);
 		}
@@ -203,7 +203,7 @@ class SocialController extends BaseController
 	 *
 	 * @return null
 	 */
-	private function cleanSession()
+	private function _cleanSession()
 	{
 		craft()->httpSession->remove('social.referer');
 		craft()->httpSession->remove('social.requestUri');
@@ -290,11 +290,11 @@ class SocialController extends BaseController
 					$this->token->id = $existingToken->id;
 				}
 
-				$this->saveToken($this->token);
+				$this->_saveToken($this->token);
 
 				// save user
 				$socialUser->tokenId = $this->token->id;
-				craft()->social->saveUser($socialUser);
+				craft()->social_users->saveUser($socialUser);
 			}
 			else
 			{
@@ -305,7 +305,7 @@ class SocialController extends BaseController
 		{
 			// save token
 
-			$this->saveToken($this->token);
+			$this->_saveToken($this->token);
 
 			// save social user
 			$socialUser = new Social_UserModel;
@@ -313,7 +313,7 @@ class SocialController extends BaseController
 			$socialUser->provider = $this->provider->getHandle();
 			$socialUser->socialUid = $this->socialUid;
 			$socialUser->tokenId = $this->token->id;
-			craft()->social->saveUser($socialUser);
+			craft()->social_users->saveUser($socialUser);
 		}
 	}
 
@@ -339,11 +339,11 @@ class SocialController extends BaseController
 				}
 
 				// save token
-				$this->saveToken($this->token);
+				$this->_saveToken($this->token);
 
 				// save user
 				$socialUser->tokenId = $this->token->id;
-				craft()->social->saveUser($socialUser);
+				craft()->social_users->saveUser($socialUser);
 
 				// login
 				craft()->social_userSession->login($socialUser->id);
@@ -398,7 +398,7 @@ class SocialController extends BaseController
 				if ($craftUser)
 				{
 					// save token
-					$this->saveToken($this->token);
+					$this->_saveToken($this->token);
 
 					// save social user
 					$socialUser = new Social_UserModel;
@@ -406,7 +406,7 @@ class SocialController extends BaseController
 					$socialUser->provider = $this->provider->getHandle();
 					$socialUser->socialUid = $this->socialUid;
 					$socialUser->tokenId = $this->token->id;
-					craft()->social->saveUser($socialUser);
+					craft()->social_users->saveUser($socialUser);
 
 					// login
 					craft()->social_userSession->login($socialUser->id);
@@ -424,7 +424,7 @@ class SocialController extends BaseController
 	 *
 	 * @return null
 	 */
-	private function completeRegistration()
+	private function _completeRegistration()
 	{
 		craft()->social->checkRequirements();
 
@@ -479,7 +479,7 @@ class SocialController extends BaseController
 					if ($craftUser)
 					{
 						// save token
-						$this->saveToken($token);
+						$this->_saveToken($token);
 
 						// save social user
 						$socialUser = new Social_UserModel;
@@ -487,14 +487,14 @@ class SocialController extends BaseController
 						$socialUser->provider = $providerHandle;
 						$socialUser->socialUid = $socialUid;
 						$socialUser->tokenId = $token->id;
-						craft()->social->saveUser($socialUser);
+						craft()->social_users->saveUser($socialUser);
 
 						// login
 						craft()->social_userSession->login($socialUser->id);
 
 						// redirect
 
-						$this->cleanSession();
+						$this->_cleanSession();
 
 						if (!$this->redirect)
 						{
@@ -576,56 +576,6 @@ class SocialController extends BaseController
 	}
 
 	/**
-	 * Save Token
-	 *
-	 * @param object $tokenModel The token object we want to save
-	 *
-	 * @return null
-	 */
-	private function saveToken(Oauth_TokenModel $token)
-	{
-		$existingToken = null;
-
-		if ($token->id)
-		{
-			$existingToken = craft()->oauth->getTokenById($token->id);
-
-			if (!$existingToken)
-			{
-				$existingToken = null;
-				$token->id = null;
-			}
-		}
-
-		if ($token->providerHandle == 'google')
-		{
-			if (empty($token->refreshToken))
-			{
-				if ($existingToken)
-				{
-					if (!empty($existingToken->refreshToken))
-					{
-						// existing token has a refresh token so we keep it
-						$token->refreshToken = $existingToken->refreshToken;
-					}
-				}
-
-
-				// still no refresh token ? re-prompt
-
-				if (empty($token->refreshToken))
-				{
-					$requestUri = craft()->httpSession->get('social.requestUri');
-					$this->redirect($requestUri.'&forcePrompt=true');
-				}
-			}
-		}
-
-		// save token
-		craft()->oauth->saveToken($token);
-	}
-
-	/**
 	 * Register User
 	 *
 	 * @param array $attributes Attributes of the user we want to register
@@ -692,17 +642,55 @@ class SocialController extends BaseController
 
 		return $user;
 	}
+
+	/**
+	 * Save Token
+	 *
+	 * @param object $tokenModel The token object we want to save
+	 *
+	 * @return null
+	 */
+	private function _saveToken(Oauth_TokenModel $token)
+	{
+		$existingToken = null;
+
+		if ($token->id)
+		{
+			$existingToken = craft()->oauth->getTokenById($token->id);
+
+			if (!$existingToken)
+			{
+				$existingToken = null;
+				$token->id = null;
+			}
+		}
+
+		if ($token->providerHandle == 'google')
+		{
+			if (empty($token->refreshToken))
+			{
+				if ($existingToken)
+				{
+					if (!empty($existingToken->refreshToken))
+					{
+						// existing token has a refresh token so we keep it
+						$token->refreshToken = $existingToken->refreshToken;
+					}
+				}
+
+
+				// still no refresh token ? re-prompt
+
+				if (empty($token->refreshToken))
+				{
+					$requestUri = craft()->httpSession->get('social.requestUri');
+					$this->redirect($requestUri.'&forcePrompt=true');
+				}
+			}
+		}
+
+		// save token
+		craft()->oauth->saveToken($token);
+	}
+
 }
-
-
-/*
-
-Session variables
-
-social.referer          Get back to the page which initiated login
-social.requestUri       Needed for reprompt refresh
-social.token            Remember the token in case of complete registration scenario
-social.uid              Remember the uid in case of complete registration scenario
-social.providerHandle   Remember the providerHandle in case of complete registration scenario
-
-*/

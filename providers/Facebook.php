@@ -4,7 +4,7 @@ namespace Dukt\Social\Provider;
 
 use Guzzle\Http\Client;
 
-class Facebook extends AbstractProvider {
+class Facebook extends BaseProvider {
 
     public function getName()
     {

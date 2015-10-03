@@ -4,7 +4,7 @@ namespace Dukt\Social\Provider;
 
 use Guzzle\Http\Client;
 
-class Github extends AbstractProvider {
+class Github extends BaseProvider {
 
     public function getName()
     {

@@ -4,7 +4,7 @@ namespace Dukt\Social\Provider;
 
 use Guzzle\Http\Client;
 
-class Twitter extends AbstractProvider {
+class Twitter extends BaseProvider {
 
     public function getName()
     {

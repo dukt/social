@@ -163,6 +163,70 @@ class Social_UsersService extends BaseApplicationComponent
 		return false;
 	}
 
+	public function getUserByUid($handle, $socialUid)
+	{
+		$conditions = 'provider=:provider';
+		$params = [':provider' => $handle];
+
+		$conditions .= ' AND socialUid=:socialUid';
+		$params[':socialUid'] = $socialUid;
+
+		$record = Social_UserRecord::model()->find($conditions, $params);
+
+		if ($record)
+		{
+			return Social_UserModel::populateModel($record);
+		}
+	}
+
+	public function saveUser(Social_UserModel $socialUser)
+	{
+		if ($socialUser->id)
+		{
+			$socialUserRecord = Social_UserRecord::model()->findById($socialUser->id);
+
+			if (!$socialUserRecord)
+			{
+				throw new Exception(Craft::t('No social user exists with the ID “{id}”', ['id' => $socialUser->id]));
+			}
+
+			$oldSocialUser = Social_UserModel::populateModel($socialUserRecord);
+			$isNewUser = false;
+		}
+		else
+		{
+			$socialUserRecord = new Social_UserRecord;
+			$isNewUser = true;
+		}
+
+		// populate
+		$socialUserRecord->userId = $socialUser->userId;
+		$socialUserRecord->tokenId = $socialUser->tokenId;
+		$socialUserRecord->provider = $socialUser->provider;
+		$socialUserRecord->socialUid = $socialUser->socialUid;
+
+		// validate
+		$socialUserRecord->validate();
+
+		$socialUser->addErrors($socialUserRecord->getErrors());
+
+		if (!$socialUser->hasErrors())
+		{
+			$socialUserRecord->save(false);
+
+			if (!$socialUser->id)
+			{
+				$socialUser->id = $socialUserRecord->id;
+			}
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 	public function saveRemotePhoto($photoUrl, $user)
 	{
 		$filename = 'photo';
