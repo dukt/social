@@ -168,10 +168,11 @@ class SocialPlugin extends BasePlugin
     public function registerCpRoutes()
     {
         return array(
-            "social" => array('action' => "social/users"),
+            "social" => array('action' => "social/settings"),
+            'social\/settings' => array('action' => "social/settings"),
             "social\/users" => array('action' => "social/users"),
             "social\/users\/(?P<id>\d+)" => array('action' => "social/userProfile"),
-            'social\/settings' => array('action' => "social/settings"),
+
         );
     }
 
