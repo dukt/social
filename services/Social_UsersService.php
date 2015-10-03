@@ -14,6 +14,16 @@ namespace Craft;
 
 class Social_UsersService extends BaseApplicationComponent
 {
+	public function getSocialUserById($id)
+	{
+		$record = Social_UserRecord::model()->findByPk($id);
+
+		if ($record)
+		{
+			return Social_UserModel::populateModel($record);
+		}
+	}
+
 	public function getUserByProvider($handle)
 	{
 		$currentUser = craft()->userSession->getUser();
@@ -137,7 +147,7 @@ class Social_UsersService extends BaseApplicationComponent
 
 			if (!empty($account['photo']))
 			{
-				$this->saveRemotePhoto($account['photo'], $user);
+				craft()->social_users->saveRemotePhoto($account['photo'], $user);
 			}
 
 			// save groups

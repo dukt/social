@@ -93,7 +93,7 @@ class SocialPlugin extends BasePlugin
             'social/providers'         => ['action' => "social/providers/index"],
             'social/settings'          => ['action' => "social/settings/index"],
             "social/users"             => ['action' => "social/users/index"],
-            "social/users/(?P<id>\d+)" => ['action' => "social/userProfile"],
+            "social/users/(?P<id>\d+)" => ['action' => "social/users/userProfile"],
         ];
     }
 

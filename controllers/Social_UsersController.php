@@ -43,7 +43,7 @@ class Social_UsersController extends BaseController
 
         $user = craft()->users->getUserById($userId);
 
-        craft()->social->saveRemotePhoto($photoUrl, $user);
+        craft()->social_users->saveRemotePhoto($photoUrl, $user);
 
         $this->redirect($_SERVER['HTTP_REFERER']);
     }
@@ -63,7 +63,7 @@ class Social_UsersController extends BaseController
 
         $socialUserId = $routeParams['variables']['id'];
 
-        $socialUser = craft()->social->getSocialUserById($socialUserId);
+        $socialUser = craft()->social_users->getSocialUserById($socialUserId);
 
         $variables = [
             'socialUser' => $socialUser

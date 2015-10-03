@@ -44,7 +44,7 @@ class Social_ProvidersService extends BaseApplicationComponent
 
 	public function getProviders($configuredOnly = true)
 	{
-		$this->checkRequirements();
+		craft()->social->checkRequirements();
 
 		$allProviders = craft()->oauth->getProviders($configuredOnly);
 
@@ -65,7 +65,7 @@ class Social_ProvidersService extends BaseApplicationComponent
 
 	public function getProvider($handle, $configuredOnly = true)
 	{
-		$this->checkRequirements();
+		craft()->social->checkRequirements();
 
 		$className = '\\Dukt\\Social\\Provider\\'.ucfirst($handle);
 

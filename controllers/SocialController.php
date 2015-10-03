@@ -274,7 +274,7 @@ class SocialController extends BaseController
 	 */
 	private function _handleLoggedInUser($craftUser)
 	{
-		$socialUser = craft()->social->getUserByUid($this->provider->getHandle(), $this->socialUid);
+		$socialUser = craft()->social_users->getUserByUid($this->provider->getHandle(), $this->socialUid);
 
 		if ($socialUser)
 		{
@@ -324,7 +324,7 @@ class SocialController extends BaseController
 	 */
 	private function _handleGuestUser()
 	{
-		$socialUser = craft()->social->getUserByUid($this->provider->getHandle(), $this->socialUid);
+		$socialUser = craft()->social_users->getUserByUid($this->provider->getHandle(), $this->socialUid);
 
 		if ($socialUser)
 		{
