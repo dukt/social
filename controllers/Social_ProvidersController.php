@@ -19,7 +19,7 @@ class Social_ProvidersController extends BaseController
 
 	public function actionIndex()
 	{
-		$variables['providers'] = craft()->social->getProviders(false);
+		$variables['providers'] = craft()->social_providers->getProviders(false);
 
 		$this->renderTemplate('social/providers/_index', $variables);
 	}

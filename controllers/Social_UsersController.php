@@ -24,7 +24,7 @@ class Social_UsersController extends BaseController
      */
     public function actionIndex()
     {
-        $socialUsers = craft()->social->getUsers();
+        $socialUsers = craft()->social_users->getUsers();
 
         $this->renderTemplate('social/users', [
             'socialUsers' => $socialUsers

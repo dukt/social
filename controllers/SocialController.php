@@ -47,97 +47,30 @@ class SocialController extends BaseController
 		if (!$this->referer)
 		{
 			$this->referer = craft()->request->getUrlReferrer();
-
 			craft()->httpSession->add('social.referer', $this->referer);
 		}
 
+		// redirect
 		$this->redirect = craft()->request->getParam('redirect');
 
-		if (craft()->request->getPost('action') == 'social/completeRegistration')
+		if (craft()->request->getPost('action') != 'social/completeRegistration')
 		{
-			// complete registration
-			$this->completeRegistration();
+			$this->_connect();
 		}
 		else
 		{
-			// connect
-
-			// request params
-			$providerHandle = craft()->request->getParam('provider');
-			$forcePrompt = craft()->request->getParam('forcePrompt');
-			$requestUri = craft()->request->requestUri;
-			$extraScopes = craft()->request->getParam('scopes');
-
-			if (!$forcePrompt)
-			{
-				craft()->httpSession->add('social.requestUri', $requestUri);
-			}
-
-			// settings
-			$plugin = craft()->plugins->getPlugin('social');
-			$this->pluginSettings = $plugin->getSettings();
-
-
-			// try to connect
-
-			try
-			{
-				if (!$this->pluginSettings['allowSocialLogin'])
-				{
-					throw new Exception("Social login disabled");
-				}
-
-				if (craft()->getEdition() != Craft::Pro)
-				{
-					throw new Exception("Craft Pro is required");
-				}
-
-				// provider scopes & params
-
-				$scopes = craft()->social->getScopes($providerHandle);
-
-				if ($extraScopes)
-				{
-					$extraScopes = unserialize(base64_decode(urldecode($extraScopes)));
-
-					$scopes = array_merge($scopes, $extraScopes);
-				}
-
-				$params = craft()->social->getParams($providerHandle);
-
-				if ($forcePrompt)
-				{
-					$params['approval_prompt'] = 'force';
-				}
-
-				if ($response = craft()->oauth->connect([
-					'plugin'   => 'social',
-					'provider' => $providerHandle,
-					'scopes'   => $scopes,
-					'params'   => $params
-				]))
-				{
-					$this->_handleConnectResponse($providerHandle, $response);
-				}
-
-				$this->cleanSession();
-
-				if (!$this->redirect)
-				{
-					$this->redirect = $this->referer;
-				}
-
-				$this->redirect($this->redirect);
-			}
-			catch (\Exception $e)
-			{
-				craft()->userSession->setFlash('error', $e->getMessage());
-
-				$this->cleanSession();
-
-				$this->redirect($this->referer);
-			}
+			$this->completeRegistration();
 		}
+	}
+
+	/**
+	 * Connect
+	 *
+	 * @return null
+	 */
+	public function actionLink()
+	{
+		$this->actionLogin();
 	}
 
 	/**
@@ -145,14 +78,14 @@ class SocialController extends BaseController
 	 *
 	 * @return null
 	 */
-	public function actionDisconnect()
+	public function actionUnlink()
 	{
 		craft()->social->checkRequirements();
 
 		$handle = craft()->request->getParam('provider');
 
 		// delete token and social user
-		craft()->social->deleteUserByProvider($handle);
+		craft()->social_users->deleteUserByProvider($handle);
 
 		// redirect
 		$redirect = craft()->request->getUrlReferrer();
@@ -178,18 +111,92 @@ class SocialController extends BaseController
 		$this->redirect($redirect);
 	}
 
+	// Private Methods
+	// =========================================================================
+
 	/**
 	 * Connect
 	 *
 	 * @return null
 	 */
-	public function actionConnect()
+	private function _connect()
 	{
-		$this->actionLogin();
-	}
+		// request params
+		$providerHandle = craft()->request->getParam('provider');
+		$forcePrompt = craft()->request->getParam('forcePrompt');
+		$requestUri = craft()->request->requestUri;
+		$extraScopes = craft()->request->getParam('scopes');
 
-	// Private Methods
-	// =========================================================================
+		if (!$forcePrompt)
+		{
+			craft()->httpSession->add('social.requestUri', $requestUri);
+		}
+
+		// settings
+		$plugin = craft()->plugins->getPlugin('social');
+		$this->pluginSettings = $plugin->getSettings();
+
+
+		// try to connect
+
+		try
+		{
+			if (!$this->pluginSettings['allowSocialLogin'])
+			{
+				throw new Exception("Social login disabled");
+			}
+
+			if (craft()->getEdition() != Craft::Pro)
+			{
+				throw new Exception("Craft Pro is required");
+			}
+
+			// provider scopes & params
+
+			$scopes = craft()->social_providers->getProviderScopes($providerHandle);
+
+			if ($extraScopes)
+			{
+				$extraScopes = unserialize(base64_decode(urldecode($extraScopes)));
+
+				$scopes = array_merge($scopes, $extraScopes);
+			}
+
+			$params = craft()->social_providers->getProviderParams($providerHandle);
+
+			if ($forcePrompt)
+			{
+				$params['approval_prompt'] = 'force';
+			}
+
+			if ($response = craft()->oauth->connect([
+				'plugin'   => 'social',
+				'provider' => $providerHandle,
+				'scopes'   => $scopes,
+				'params'   => $params
+			]))
+			{
+				$this->_handleConnectResponse($providerHandle, $response);
+			}
+
+			$this->cleanSession();
+
+			if (!$this->redirect)
+			{
+				$this->redirect = $this->referer;
+			}
+
+			$this->redirect($this->redirect);
+		}
+		catch (\Exception $e)
+		{
+			craft()->userSession->setFlash('error', $e->getMessage());
+
+			$this->cleanSession();
+
+			$this->redirect($this->referer);
+		}
+	}
 
 	/**
 	 * Clean session variables
@@ -378,7 +385,7 @@ class SocialController extends BaseController
 			{
 				// get profile
 
-				$socialProvider = craft()->social->getProvider($this->provider->getClass());
+				$socialProvider = craft()->social_providers->getProvider($this->provider->getClass());
 				$socialProvider->setToken($this->token);
 				$profile = $socialProvider->getProfile();
 
@@ -459,7 +466,7 @@ class SocialController extends BaseController
 				if (!$emailExists)
 				{
 					// get profile
-					$socialProvider = craft()->social->getProvider($providerHandle);
+					$socialProvider = craft()->social_providers->getProvider($providerHandle);
 					$socialProvider->setToken($token);
 					$profile = $socialProvider->getProfile();
 
@@ -639,7 +646,7 @@ class SocialController extends BaseController
 
 			if (!$user)
 			{
-				$user = craft()->social->registerUser($attributes);
+				$user = craft()->social_users->registerUser($attributes);
 
 				if ($user)
 				{
@@ -649,7 +656,7 @@ class SocialController extends BaseController
 					$socialAccount->hasPassword = false;
 					$socialAccount->temporaryPassword = $temporaryPassword;
 
-					craft()->social->saveAccount($socialAccount);
+					craft()->social_accounts->saveAccount($socialAccount);
 				}
 			}
 			else
@@ -668,7 +675,7 @@ class SocialController extends BaseController
 
 			$attributes['email'] = strtolower($providerHandle).'.'.$attributes['uid'].'@example.com';
 
-			$user = craft()->social->registerUser($attributes);
+			$user = craft()->social_users->registerUser($attributes);
 
 			if ($user)
 			{
@@ -679,7 +686,7 @@ class SocialController extends BaseController
 				$socialAccount->temporaryEmail = $user->email;
 				$socialAccount->temporaryPassword = $temporaryPassword;
 
-				craft()->social->saveAccount($socialAccount);
+				craft()->social_accounts->saveAccount($socialAccount);
 			}
 		}
 

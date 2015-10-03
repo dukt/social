@@ -39,24 +39,24 @@ class SocialVariable
 
     public function getAccountByUserId($id)
     {
-        return craft()->social->getAccountByUserId($id);
+        return craft()->social_accounts->getAccountByUserId($id);
     }
 
     public function getUserByProvider($handle)
     {
-        return craft()->social->getUserByProvider($handle);
+        return craft()->social_users->getUserByProvider($handle);
     }
 
     public function getProvider($handle, $configuredOnly = true)
     {
-        return craft()->social->getProvider($handle, $configuredOnly);
+        return craft()->social_providers->getProvider($handle, $configuredOnly);
     }
 
     public function getProviders($configuredOnly = true)
     {
         try
         {
-            return craft()->social->getProviders($configuredOnly);
+            return craft()->social_providers->getProviders($configuredOnly);
         }
         catch(\Exception $e)
         {

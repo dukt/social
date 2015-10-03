@@ -142,7 +142,7 @@ class SocialPlugin extends BasePlugin
         {
             $user = $event->params['user'];
 
-            $socialAccount = craft()->social->getAccountByUserId($user->id);
+            $socialAccount = craft()->social_accounts->getAccountByUserId($user->id);
 
             if ($socialAccount)
             {
@@ -161,7 +161,7 @@ class SocialPlugin extends BasePlugin
                         $socialAccount->hasPassword = true;
                     }
 
-                    craft()->social->saveAccount($socialAccount);
+                    craft()->social_accounts->saveAccount($socialAccount);
                 }
             }
         });
@@ -173,7 +173,7 @@ class SocialPlugin extends BasePlugin
         {
             $user = $event->params['user'];
 
-            $socialAccount = craft()->social->getAccountByUserId($user->id);
+            $socialAccount = craft()->social_accounts->getAccountByUserId($user->id);
 
             if ($socialAccount)
             {
@@ -184,7 +184,7 @@ class SocialPlugin extends BasePlugin
                         $socialAccount->hasEmail = true;
                     }
 
-                    craft()->social->saveAccount($socialAccount);
+                    craft()->social_accounts->saveAccount($socialAccount);
                 }
             }
         });
