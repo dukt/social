@@ -1,5 +1,17 @@
 <?php
 
+// actionLogin()
+// actionLogout()
+// actionConnect()
+// actionDisconnect()
+//
+// actionUsers()
+// actionChangePhoto()
+// actionUserProfile()
+//
+// actionSettings()
+
+
 /**
  * Social plugin for Craft
  *
@@ -139,6 +151,57 @@ class SocialController extends BaseController
             }
         }
     }
+
+    /**
+     * Disconnect
+     *
+     * @return null
+     */
+    public function actionDisconnect()
+    {
+        craft()->social->checkRequirements();
+
+        $handle = craft()->request->getParam('provider');
+
+        // delete token and social user
+        craft()->social->deleteUserByProvider($handle);
+
+        // redirect
+        $redirect = craft()->request->getUrlReferrer();
+        $this->redirect($redirect);
+    }
+
+    /**
+     * Logout
+     *
+     * @return null
+     */
+    public function actionLogout()
+    {
+        craft()->userSession->logout(false);
+
+        $redirect = craft()->request->getParam('redirect');
+
+        if(!$redirect)
+        {
+            $redirect = craft()->request->getUrlReferrer();
+        }
+
+        $this->redirect($redirect);
+    }
+
+    /**
+     * Connect
+     *
+     * @return null
+     */
+    public function actionConnect()
+    {
+        $this->actionLogin();
+    }
+
+    // Private Methods
+    // =========================================================================
 
     /**
      * Clean session variables
@@ -628,124 +691,6 @@ class SocialController extends BaseController
         }
 
         return $user;
-    }
-
-    /**
-     * List Users
-     *
-     * @return null
-     */
-    public function actionUsers()
-    {
-        $socialUsers = craft()->social->getUsers();
-
-        $this->renderTemplate('social/users', array(
-            'socialUsers' => $socialUsers
-        ));
-    }
-
-    /**
-     * Settings
-     *
-     * @return null
-     */
-    public function actionSettings()
-    {
-        $plugin = craft()->plugins->getPlugin('social');
-        $settings = $plugin->getSettings();
-
-        $this->renderTemplate('social/settings', array(
-            'settings' => $settings
-        ));
-    }
-
-    /**
-     * Change Photo
-     *
-     * @return null
-     */
-    public function actionChangePhoto()
-    {
-        $userId = craft()->request->getParam('userId');
-        $photoUrl = craft()->request->getParam('photoUrl');
-
-        $user = craft()->users->getUserById($userId);
-
-        craft()->social->saveRemotePhoto($photoUrl, $user);
-
-        $this->redirect($_SERVER['HTTP_REFERER']);
-    }
-
-    /**
-     * Disconnect
-     *
-     * @return null
-     */
-    public function actionDisconnect()
-    {
-        craft()->social->checkRequirements();
-
-        $handle = craft()->request->getParam('provider');
-
-        // delete token and social user
-        craft()->social->deleteUserByProvider($handle);
-
-        // redirect
-        $redirect = craft()->request->getUrlReferrer();
-        $this->redirect($redirect);
-    }
-
-    /**
-     * Logout
-     *
-     * @return null
-     */
-    public function actionLogout()
-    {
-        craft()->userSession->logout(false);
-
-        $redirect = craft()->request->getParam('redirect');
-
-        if(!$redirect)
-        {
-            $redirect = craft()->request->getUrlReferrer();
-        }
-
-        $this->redirect($redirect);
-    }
-
-    /**
-     * User Profile
-     *
-     * @return null
-     */
-    public function actionUserProfile()
-    {
-        craft()->social->checkRequirements();
-
-        // order
-
-        $routeParams = craft()->urlManager->getRouteParams();
-
-        $socialUserId = $routeParams['variables']['id'];
-
-        $socialUser = craft()->social->getSocialUserById($socialUserId);
-
-        $variables = array(
-            'socialUser' => $socialUser
-        );
-
-        $this->renderTemplate('social/users/_profile', $variables);
-    }
-
-    /**
-     * Connect
-     *
-     * @return null
-     */
-    public function actionConnect()
-    {
-        $this->actionLogin();
     }
 }
 

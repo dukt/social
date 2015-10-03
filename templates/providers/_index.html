@@ -1,0 +1,26 @@
+{% extends "social/_layout" %}
+
+{% import "_includes/forms" as forms %}
+
+{% set selectedTab = 'providers' %}
+
+{% set content %}
+
+    {% if providers|length > 0 %}
+
+        <table class="data fullwidth">
+            {% for provider in providers %}
+                <tr>
+                    <td>
+                        <span class="status {{(provider.isConfigured ? 'on' : '')}}"></span>{{provider.name}}
+                    </td>
+                    <td>
+                        <a href="{{ url('oauth/'~provider.handle) }}">{{ 'Configure OAuth provider'|t }}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        
+    {% endif %}
+
+{% endset %}

@@ -17,6 +17,114 @@ require_once(CRAFT_PLUGINS_PATH.'social/vendor/autoload.php');
 
 class SocialPlugin extends BasePlugin
 {
+    /**
+     * Get Name
+     */
+    function getName()
+    {
+        return Craft::t('Social Login');
+    }
+
+    /**
+     * Get Version
+     */
+    public function getVersion()
+    {
+        return SOCIAL_VERSION;
+    }
+
+    /**
+     * Get Developer
+     */
+    function getDeveloper()
+    {
+        return 'Dukt';
+    }
+
+    /**
+     * Get Developer URL
+     */
+    function getDeveloperUrl()
+    {
+        return 'https://dukt.net/';
+    }
+
+    /**
+     * Define Settings
+     */
+    protected function defineSettings()
+    {
+        return array(
+            'allowSocialRegistration' => array(AttributeType::Bool, 'default' => true),
+            'allowSocialLogin' => array(AttributeType::Bool, 'default' => true),
+            'defaultGroup' => array(AttributeType::Number, 'default' => null),
+            'autoFillProfile' => array(AttributeType::Bool, 'default' => true),
+        );
+    }
+
+    /**
+     * Get Settings HTML
+     */
+    public function getSettingsHtml()
+    {
+        if(craft()->request->getPath() == 'settings/plugins')
+        {
+            return true;
+        }
+
+        return craft()->templates->render('social/_settingsRedirect');
+    }
+
+    /**
+     * Has CP Section
+     */
+    public function hasCpSection()
+    {
+        return false;
+    }
+
+    /**
+     * Hook Register CP Routes
+     */
+    public function registerCpRoutes()
+    {
+        return array(
+            "social" => array('action' => "social/settings"),
+            'social\/providers' => array('action' => "social/providers/index"),
+            'social\/settings' => array('action' => "social/settings"),
+            "social\/users" => array('action' => "social/users"),
+            "social\/users\/(?P<id>\d+)" => array('action' => "social/userProfile"),
+
+        );
+    }
+
+    /**
+     * On Before Uninstall
+     */
+    public function onBeforeUninstall()
+    {
+        if(isset(craft()->oauth))
+        {
+            craft()->oauth->deleteTokensByPlugin('social');
+        }
+    }
+
+
+    /**
+     * Get Required Dependencies
+     */
+    public function getRequiredPlugins()
+    {
+        return array(
+            array(
+                'name' => "OAuth",
+                'handle' => 'oauth',
+                'url' => 'https://dukt.net/craft/oauth',
+                'version' => '0.9.70'
+            )
+        );
+    }
+
     public function init()
     {
         // delete social user when craft user is deleted
@@ -80,111 +188,6 @@ class SocialPlugin extends BasePlugin
         });
 
         parent::init();
-    }
-    /**
-     * Get Name
-     */
-    function getName()
-    {
-        return Craft::t('Social Login');
-    }
-
-    /**
-     * Get Version
-     */
-    public function getVersion()
-    {
-        return SOCIAL_VERSION;
-    }
-
-    /**
-     * Get Required Dependencies
-     */
-    function getRequiredPlugins()
-    {
-        return array(
-            array(
-                'name' => "OAuth",
-                'handle' => 'oauth',
-                'url' => 'https://dukt.net/craft/oauth',
-                'version' => '0.9.70'
-            )
-        );
-    }
-
-    /**
-     * Get Developer
-     */
-    function getDeveloper()
-    {
-        return 'Dukt';
-    }
-
-    /**
-     * Get Developer URL
-     */
-    function getDeveloperUrl()
-    {
-        return 'https://dukt.net/';
-    }
-
-    /**
-     * Define Settings
-     */
-    protected function defineSettings()
-    {
-        return array(
-            'allowSocialRegistration' => array(AttributeType::Bool, 'default' => true),
-            'allowSocialLogin' => array(AttributeType::Bool, 'default' => true),
-            'defaultGroup' => array(AttributeType::Number, 'default' => null),
-            'autoFillProfile' => array(AttributeType::Bool, 'default' => true),
-        );
-    }
-
-    /**
-     * Get Settings HTML
-     */
-    public function getSettingsHtml()
-    {
-        if(craft()->request->getPath() == 'settings/plugins')
-        {
-            return true;
-        }
-
-        return craft()->templates->render('social/_settingsRedirect');
-    }
-
-    /**
-     * Has CP Section
-     */
-    public function hasCpSection()
-    {
-        return false;
-    }
-
-    /**
-     * Hook Register CP Routes
-     */
-    public function registerCpRoutes()
-    {
-        return array(
-            "social" => array('action' => "social/settings"),
-            'social\/settings' => array('action' => "social/settings"),
-            "social\/users" => array('action' => "social/users"),
-            "social\/users\/(?P<id>\d+)" => array('action' => "social/userProfile"),
-
-        );
-    }
-
-    /**
-     * On Before Uninstall
-     */
-    public function onBeforeUninstall()
-    {
-        if(isset(craft()->oauth))
-        {
-            craft()->oauth->deleteTokensByPlugin('social');
-        }
     }
 
     /* ------------------------------------------------------------------------- */
