@@ -7,4 +7,4 @@ Let people login and register to your Craft website from their social account.
 - [Social Login License](https://dukt.net/craft/social/docs/license)
 
 
-[Dukt.net](https://dukt.net/) © 2014 - All rights reserved
+[Dukt.net](https://dukt.net/) © 2015 - All rights reserved
