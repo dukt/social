@@ -77,11 +77,11 @@ class SocialService extends BaseApplicationComponent
 
     public function getScopes($handle)
     {
-        $socialProvider = $this->getProvider($handle, false);
+        $scopes = craft()->config->get($handle.'Scopes', 'social');
 
-        if($socialProvider)
+        if($scopes)
         {
-            return $socialProvider->getScopes();
+            return $scopes;
         }
         else
         {
