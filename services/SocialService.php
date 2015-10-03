@@ -42,13 +42,6 @@ class SocialService extends BaseApplicationComponent
         }
     }
 
-    public function saveToken(Oauth_TokenModel $tokenModel)
-    {
-        $this->checkRequirements();
-
-        craft()->oauth->saveToken($tokenModel);
-    }
-
     public function getSocialUserByUserId($userId, $provider)
     {
         $conditions = 'provider=:provider and userId=:userId';
