@@ -1,11 +1,8 @@
 {
     "autoload": {
         "psr-4": {
-            "Dukt\\Social\\": "social/src/"
+            "Dukt\\Social\\": "src/"
         }
-    },
-    "config": {
-        "vendor-dir": "social/vendor/"
     },
     "require": {
         "google/apiclient": "dev-master"

@@ -1,5 +1,4 @@
 *.log
 .DS_Store
-Source/social/Info.php
-Source/social/vendor
-Source/composer.lock
+vendor/
+composer.lock
