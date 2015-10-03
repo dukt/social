@@ -91,8 +91,8 @@ class SocialPlugin extends BasePlugin
         return array(
             "social" => array('action' => "social/settings"),
             'social\/providers' => array('action' => "social/providers/index"),
-            'social\/settings' => array('action' => "social/settings"),
-            "social\/users" => array('action' => "social/users"),
+            'social\/settings' => array('action' => "social/settings/index"),
+            "social\/users" => array('action' => "social/users/index"),
             "social\/users\/(?P<id>\d+)" => array('action' => "social/userProfile"),
 
         );

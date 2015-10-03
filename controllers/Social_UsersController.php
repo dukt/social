@@ -19,7 +19,7 @@ class Social_UsersController extends BaseController
      *
      * @return null
      */
-    public function actionUsers()
+    public function actionIndex()
     {
         $socialUsers = craft()->social->getUsers();
 
