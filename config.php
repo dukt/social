@@ -9,6 +9,7 @@
 
 return [
 
+    'requireEmailAddress' => true,
 	/**
 	 * GitHub Scopes
      *

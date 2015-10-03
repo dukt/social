@@ -138,7 +138,6 @@ class SocialPlugin extends BasePlugin
             'allowSocialLogin' => array(AttributeType::Bool, 'default' => true),
             'defaultGroup' => array(AttributeType::Number, 'default' => null),
             'autoFillProfile' => array(AttributeType::Bool, 'default' => true),
-            'requireEmailAddress' => array(AttributeType::Bool, 'default' => true),
             'completeRegistrationTemplate' => array(AttributeType::String),
         );
     }

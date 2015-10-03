@@ -56,13 +56,6 @@
                     checked:   settings.autoFillProfile
                 }) }}
 
-                {{ forms.checkboxField({
-                    label: 'Require Email Address'|t,
-                    instructions: "If checked, the user will be asked to provide his email if the OAuth provider hasn't provided it. Unchecked, it will create a fake email (1234.twitter@example.com)."|t,
-                    name: 'settings[requireEmailAddress]',
-                    checked:   settings.requireEmailAddress
-                }) }}
-
                 {{ forms.textField({
                     label: 'Complete Registration Template'|t,
                     instructions: "Template of the complete registration page which is displayed when the user is asked to provide an email to complete his registration."|t,

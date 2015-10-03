@@ -297,7 +297,7 @@ class SocialController extends BaseController
         {
             $attributes = $this->provider->getAccount()->getArrayCopy();
 
-            if(empty($attributes['email']) && $this->pluginSettings['requireEmailAddress'])
+            if(empty($attributes['email']) && craft()->config->get('requireEmailAddress', 'social'))
             {
                 craft()->httpSession->add('social.token', craft()->oauth->tokenToArray($this->token));
                 craft()->httpSession->add('social.uid', $this->socialUid);
