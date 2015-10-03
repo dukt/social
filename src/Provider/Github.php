@@ -14,7 +14,7 @@ class Github extends AbstractProvider {
     public function getScopes()
     {
         return array(
-            'user',
+            'user, repo',
         );
     }
 
