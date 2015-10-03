@@ -10,6 +10,11 @@
 return [
 
 	/**
+	 * Allow Email Match
+	 */
+    'allowEmailMatch' => false,
+
+	/**
 	 * Require Email Address
 	 */
     'requireEmailAddress' => true,
