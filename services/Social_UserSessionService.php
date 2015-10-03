@@ -14,8 +14,8 @@ namespace Craft;
 
 use Dukt\Social\Etc\Users\TokenIdentity;
 
-class Social_UserSessionService extends UserSessionService {
-
+class Social_UserSessionService extends UserSessionService
+{
     private $_identity;
     public $allowAutoLogin = true;
 
@@ -65,25 +65,25 @@ class Social_UserSessionService extends UserSessionService {
                             $hashedToken = craft()->security->hashData(base64_encode(serialize($sessionToken)));
                             $uid = craft()->users->handleSuccessfulLogin($user, $hashedToken);
 
-                            $data = array(
+                            $data = [
                                 $this->getName(),
                                 $sessionToken,
                                 $uid,
                                 ($rememberMe ? 1 : 0),
                                 craft()->request->getUserAgent(),
                                 $this->saveIdentityStates(),
-                            );
+                            ];
 
                             $this->saveCookie('', $data, $this->authTimeout);
                         }
                         else
                         {
-                            throw new Exception(Craft::t('Could not find a user with Id of {userId}.', array('{userId}' => $this->getId())));
+                            throw new Exception(Craft::t('Could not find a user with Id of {userId}.', ['{userId}' => $this->getId()]));
                         }
                     }
                     else
                     {
-                        throw new Exception(Craft::t('{class}.allowAutoLogin must be set true in order to use cookie-based authentication.', array('{class}' => get_class($this))));
+                        throw new Exception(Craft::t('{class}.allowAutoLogin must be set true in order to use cookie-based authentication.', ['{class}' => get_class($this)]));
                     }
                 }
 

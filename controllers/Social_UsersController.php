@@ -26,9 +26,9 @@ class Social_UsersController extends BaseController
     {
         $socialUsers = craft()->social->getUsers();
 
-        $this->renderTemplate('social/users', array(
+        $this->renderTemplate('social/users', [
             'socialUsers' => $socialUsers
-        ));
+        ]);
     }
 
     /**
@@ -47,6 +47,7 @@ class Social_UsersController extends BaseController
 
         $this->redirect($_SERVER['HTTP_REFERER']);
     }
+
     /**
      * User Profile
      *
@@ -64,9 +65,9 @@ class Social_UsersController extends BaseController
 
         $socialUser = craft()->social->getSocialUserById($socialUserId);
 
-        $variables = array(
+        $variables = [
             'socialUser' => $socialUser
-        );
+        ];
 
         $this->renderTemplate('social/users/_profile', $variables);
     }

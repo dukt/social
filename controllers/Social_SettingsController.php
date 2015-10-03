@@ -14,22 +14,22 @@ namespace Craft;
 
 class Social_SettingsController extends BaseController
 {
-    // Public Methods
-    // =========================================================================
+	// Public Methods
+	// =========================================================================
 
-    /**
-     * Settings
-     *
-     * @return null
-     */
-    public function actionIndex()
-    {
-        $plugin = craft()->plugins->getPlugin('social');
-        $settings = $plugin->getSettings();
+	/**
+	 * Settings
+	 *
+	 * @return null
+	 */
+	public function actionIndex()
+	{
+		$plugin = craft()->plugins->getPlugin('social');
+		$settings = $plugin->getSettings();
 
-        $this->renderTemplate('social/settings', array(
-            'settings' => $settings
-        ));
-    }
+		$this->renderTemplate('social/settings', [
+			'settings' => $settings
+		]);
+	}
 
 }
