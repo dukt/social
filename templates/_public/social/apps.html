@@ -42,7 +42,7 @@
                     {% if user %}
                         You can login using {{provider.name}}.
                     {% else %}
-                        {{provider.name}} login is disabled.
+                        {{provider.name}} login is disabled for your account.
                     {% endif %}
 
                 </div>
@@ -55,7 +55,7 @@
                         </p>
                     {% else %}
                         <p>
-                            <a href="{{ craft.social.connectUrl(provider.handle) }}" class="btn btn-primary btn-sm">Enable</a>
+                            <a href="{{ craft.social.connectUrl(provider.handle) }}" class="btn btn-primary btn-sm">Enable {{ provider.name }} Login</a>
                         </p>
                     {% endif %}
 
