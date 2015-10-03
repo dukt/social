@@ -303,9 +303,11 @@ class SocialController extends BaseController
                 craft()->httpSession->add('social.uid', $this->socialUid);
                 craft()->httpSession->add('social.providerHandle', $this->provider->getHandle());
 
-                if(!empty($this->pluginSettings['completeRegistrationTemplate']))
+                $completeRegistrationTemplate = craft()->config->get('completeRegistrationTemplate', 'social');
+
+                if(!empty($completeRegistrationTemplate))
                 {
-                    if(!craft()->templates->doesTemplateExist($this->pluginSettings['completeRegistrationTemplate']))
+                    if(!craft()->templates->doesTemplateExist($completeRegistrationTemplate))
                     {
                         throw new Exception("Complete registration template not set");
                     }
@@ -315,7 +317,7 @@ class SocialController extends BaseController
                     throw new Exception("Complete registration template not set");
                 }
 
-                $this->renderTemplate($this->pluginSettings['completeRegistrationTemplate']);
+                $this->renderTemplate($completeRegistrationTemplate);
 
                 return;
             }
@@ -452,9 +454,11 @@ class SocialController extends BaseController
                 }
             }
 
-            if(!empty($pluginSettings['completeRegistrationTemplate']))
+            $completeRegistrationTemplate = craft()->config->get('completeRegistrationTemplate', 'social');
+
+            if(!empty($completeRegistrationTemplate))
             {
-                if(!craft()->templates->doesTemplateExist($pluginSettings['completeRegistrationTemplate']))
+                if(!craft()->templates->doesTemplateExist($completeRegistrationTemplate))
                 {
                     throw new Exception("Complete registration template not set");
                 }
@@ -472,7 +476,7 @@ class SocialController extends BaseController
         $variables['completeRegistration'] = $completeRegistration;
 
         // Render template
-        $this->renderTemplate($pluginSettings['completeRegistrationTemplate'], $variables);
+        $this->renderTemplate($completeRegistrationTemplate, $variables);
 
         // Send the account back to the template
         craft()->urlManager->setRouteVariables($variables);

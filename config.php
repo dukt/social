@@ -9,7 +9,16 @@
 
 return [
 
+	/**
+	 * Require Email Address
+	 */
     'requireEmailAddress' => true,
+
+	/**
+	 * Complete Registration Template
+	 */
+    'completeRegistrationTemplate' => null,
+
 	/**
 	 * GitHub Scopes
      *
