@@ -1,4 +1,4 @@
-{% extends "social/_layout" %}
+{% extends "social/_layouts/cp" %}
 
 {% import "_includes/forms" as forms %}
 
@@ -67,7 +67,7 @@
     <hr>
 
     <p class="light">
-        <a href="{{ url('social/users') }}">343</a> users have logged in with a social provider.
+        <a href="{{ url('social/users') }}">{{ usersCount }}</a> users have logged in with a social provider.
     </p>
 
 {% endset %}

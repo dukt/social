@@ -29,7 +29,7 @@ class SocialPlugin extends BasePlugin
      */
     public function getVersion()
     {
-        return '0.9.100';
+        return '0.10.0';
     }
 
     /**
@@ -62,16 +62,11 @@ class SocialPlugin extends BasePlugin
     }
 
     /**
-     * Get Settings HTML
+     * Get Settings URL
      */
-    public function getSettingsHtml()
+    public function getSettingsUrl()
     {
-        if (craft()->request->getPath() == 'settings/plugins')
-        {
-            return true;
-        }
-
-        return craft()->templates->render('social/_settingsRedirect');
+        return 'social/settings';
     }
 
     /**

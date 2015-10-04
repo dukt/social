@@ -26,10 +26,13 @@ class Social_SettingsController extends BaseController
 	{
 		$plugin = craft()->plugins->getPlugin('social');
 		$settings = $plugin->getSettings();
+		$socialUsers = craft()->social_users->getUsers();
+		$usersCount = count($socialUsers);
+
 
 		$this->renderTemplate('social/settings', [
-			'settings' => $settings
+			'settings' => $settings,
+			'usersCount' => $usersCount
 		]);
 	}
-
 }
