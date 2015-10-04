@@ -241,7 +241,19 @@ class SocialController extends BaseController
 			$this->provider->setToken($this->token);
 
 			// account
-			$account = $this->provider->getAccount()->getArrayCopy();
+
+			if(method_exists($this->provider->getAccount(), 'getArrayCopy'))
+			{
+				$account = (array) $this->provider->getAccount()->getArrayCopy();
+			}
+			elseif(method_exists($this->provider->getAccount(), 'getIterator'))
+			{
+				$account = (array) $this->provider->getAccount()->getIterator();
+			}
+			else
+			{
+				throw Exception("Couldn’t get account");
+			}
 
 			// socialUid
 			$this->socialUid = $account['uid'];
@@ -355,7 +367,20 @@ class SocialController extends BaseController
 		}
 		else
 		{
-			$attributes = $this->provider->getAccount()->getArrayCopy();
+            // account
+
+            if(method_exists($this->provider->getAccount(), 'getArrayCopy'))
+            {
+                $attributes = (array) $this->provider->getAccount()->getArrayCopy();
+            }
+            elseif(method_exists($this->provider->getAccount(), 'getIterator'))
+            {
+                $attributes = (array) $this->provider->getAccount()->getIterator();
+            }
+            else
+            {
+                throw Exception("Couldn’t get account");
+            }
 
 			if (empty($attributes['email']) && craft()->config->get('requireEmailAddress', 'social'))
 			{
