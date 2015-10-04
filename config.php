@@ -17,7 +17,7 @@ return [
 	/**
 	 * Require Email Address
 	 */
-    'requireEmailAddress' => true,
+    'requireEmail' => true,
 
 	/**
 	 * Complete Registration Template

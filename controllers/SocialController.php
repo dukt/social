@@ -382,7 +382,7 @@ class SocialController extends BaseController
                 throw Exception("Couldn’t get account");
             }
 
-			if (empty($attributes['email']) && craft()->config->get('requireEmailAddress', 'social'))
+			if (empty($attributes['email']) && craft()->config->get('requireEmail', 'social'))
 			{
 				craft()->httpSession->add('social.token', OauthHelper::tokenToArray($this->token));
 				craft()->httpSession->add('social.uid', $this->socialUid);
