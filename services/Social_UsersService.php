@@ -261,4 +261,9 @@ class Social_UsersService extends BaseApplicationComponent
 
 		return true;
 	}
+
+	public function onBeforeRegister(Event $event)
+	{
+		$this->raiseEvent('onBeforeRegister', $event);
+	}
 }

@@ -359,7 +359,7 @@ class SocialController extends BaseController
 
 			if (empty($attributes['email']) && craft()->config->get('requireEmailAddress', 'social'))
 			{
-				craft()->httpSession->add('social.token', craft()->oauth->tokenToArray($this->token));
+				craft()->httpSession->add('social.token', OauthHelper::tokenToArray($this->token));
 				craft()->httpSession->add('social.uid', $this->socialUid);
 				craft()->httpSession->add('social.providerHandle', $this->provider->getHandle());
 
@@ -429,7 +429,7 @@ class SocialController extends BaseController
 		craft()->social->checkRequirements();
 
 		// get session variables
-		$token = craft()->oauth->arrayToToken(craft()->httpSession->get('social.token'));
+		$token = OauthHelper::arrayToToken(craft()->httpSession->get('social.token'));
 		$providerHandle = craft()->httpSession->get('social.providerHandle');
 		$socialUid = craft()->httpSession->get('social.uid');
 
@@ -450,6 +450,8 @@ class SocialController extends BaseController
 		// attributes
 		$attributes = [];
 		$attributes['email'] = $email;
+
+		$completeRegistrationTemplate = craft()->config->get('completeRegistrationTemplate', 'social');
 
 		$completeRegistration = new Social_CompleteRegistrationModel;
 		$completeRegistration->email = $email;
@@ -513,8 +515,6 @@ class SocialController extends BaseController
 					$completeRegistration->addError('email', 'Email already in use by another user.');
 				}
 			}
-
-			$completeRegistrationTemplate = craft()->config->get('completeRegistrationTemplate', 'social');
 
 			if (!empty($completeRegistrationTemplate))
 			{

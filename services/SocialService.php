@@ -65,9 +65,4 @@ class SocialService extends BaseApplicationComponent
 
 		return UrlHelper::getActionUrl('social/logout', $params);
 	}
-
-	public function onBeforeRegister(Event $event)
-	{
-		$this->raiseEvent('onBeforeRegister', $event);
-	}
 }
