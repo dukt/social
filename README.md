@@ -4,6 +4,11 @@ A simple plugin to connect to YouTube's API.
 
 -------------------------------------------
 
+## Beta Warning
+
+This plugin is still under development, please do not use on production.
+
+
 ## Installation
 
 1. Download the latest release of the plugin
@@ -13,9 +18,11 @@ A simple plugin to connect to YouTube's API.
 
 ## Templating
 
+
 ### Login
 
     <a href="{{ craft.social.loginUrl('google') }}">Login with Google</a>
+
 
 ### Logout
 
