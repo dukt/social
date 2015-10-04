@@ -37,12 +37,12 @@ class Twitter extends BaseProvider {
         $client = new Client('https://api.twitter.com/1.1');
 
         $provider = \Craft\craft()->oauth->getProvider('twitter');
-
+        $infos = $provider->getInfos();
         $token = $this->token;
 
         $oauthData = array(
-            'consumer_key'    => $provider->provider->clientId,
-            'consumer_secret' => $provider->provider->clientSecret,
+            'consumer_key'    => $infos->clientId,
+            'consumer_secret' => $infos->clientSecret,
             'token'           => $token->accessToken,
             'token_secret'    => $token->secret
         );
