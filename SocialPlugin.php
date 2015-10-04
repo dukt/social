@@ -12,7 +12,6 @@
 
 namespace Craft;
 
-require_once(CRAFT_PLUGINS_PATH.'social/Info.php');
 require_once(CRAFT_PLUGINS_PATH.'social/vendor/autoload.php');
 
 class SocialPlugin extends BasePlugin
@@ -30,7 +29,7 @@ class SocialPlugin extends BasePlugin
      */
     public function getVersion()
     {
-        return SOCIAL_VERSION;
+        return '0.9.100';
     }
 
     /**
