@@ -1,4 +1,4 @@
-{% extends "social/_layout" %}
+{% extends "social/_layouts/site" %}
 
 {% if currentUser %}
     {% redirect 'social' %}
@@ -9,7 +9,6 @@
 {% block main %}
 
     <div class="row">
-
         <div class="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
 
             <h2>Login</h2>
@@ -47,12 +46,11 @@
 
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="rememberMe" value="1">
-                        Remember me
+                        <input type="checkbox" name="rememberMe" value="1"> Remember me
                     </label>
                 </div>
 
-                <p><input type="submit" class="btn btn-primary" value="Login with Craft"></p>
+                <p><input type="submit" class="btn btn-primary btn-block" value="Login with Craft"></p>
             </form>
 
 
@@ -61,7 +59,7 @@
             {% for provider in craft.social.getProviders() %}
 
                 <p>
-                    <a href="{{ craft.social.loginUrl(provider.handle) }}" class="btn btn-default">
+                    <a href="{{ craft.social.loginUrl(provider.handle) }}" class="btn btn-default btn-block">
                         <img src="{{ resourceUrl('social/images/icons/'~provider.handle~'.png') }}" width="30" class="social-icon img-rounded" />
 
                         {{provider.name}}
@@ -71,7 +69,6 @@
             {% endfor %}
 
         </div>
-
     </div>
 
 {% endblock %}
