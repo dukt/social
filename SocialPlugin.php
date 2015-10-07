@@ -126,7 +126,7 @@ class SocialPlugin extends BasePlugin
         {
             $user = $event->params['user'];
 
-            craft()->social->deleteSocialUserByUserId($user->id);
+            craft()->social_users->deleteUserByUserId($user->id);
         });
 
 

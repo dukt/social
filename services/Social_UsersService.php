@@ -14,7 +14,7 @@ namespace Craft;
 
 class Social_UsersService extends BaseApplicationComponent
 {
-	public function getSocialUserById($id)
+	public function getUserById($id)
 	{
 		$record = Social_UserRecord::model()->findByPk($id);
 
@@ -70,6 +70,31 @@ class Social_UsersService extends BaseApplicationComponent
 
 		return false;
 	}
+
+	public function deleteUserByUserId($userId)
+    {
+        $conditions = 'userId=:userId';
+        $params = array(':userId' => $userId);
+
+        $socialUserRecords = Social_UserRecord::model()->findAll($conditions, $params);
+
+        foreach($socialUserRecords as $socialUserRecord)
+        {
+            if($socialUserRecord->tokenId)
+            {
+                $tokenRecord = Oauth_TokenRecord::model()->findByPk($socialUserRecord->tokenId);
+
+                if($tokenRecord)
+                {
+                    $tokenRecord->delete();
+                }
+            }
+
+            $socialUserRecord->delete();
+        }
+
+        return true;
+    }
 
 	public function getUsers()
 	{

@@ -63,7 +63,7 @@ class Social_UsersController extends BaseController
 
         $socialUserId = $routeParams['variables']['id'];
 
-        $socialUser = craft()->social_users->getSocialUserById($socialUserId);
+        $socialUser = craft()->social_users->getUserById($socialUserId);
 
         $variables = [
             'socialUser' => $socialUser

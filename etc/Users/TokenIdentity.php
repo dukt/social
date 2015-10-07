@@ -21,7 +21,7 @@ class TokenIdentity extends \Craft\UserIdentity
     {
         \Craft\Craft::log(__METHOD__, \Craft\LogLevel::Info, true);
 
-        $socialUser = \Craft\craft()->social_users->getSocialUserById($this->socialUserId);
+        $socialUser = \Craft\craft()->social_users->getUserById($this->socialUserId);
 
         if($socialUser)
         {
