@@ -44,13 +44,7 @@
                     <input name="password" type="password" placeholder="Enter password" class="form-control" id="password">
                 </div>
 
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" name="rememberMe" value="1"> Remember me
-                    </label>
-                </div>
-
-                <p><input type="submit" class="btn btn-primary btn-block" value="Login with Craft"></p>
+                <p><input type="submit" class="btn btn-success btn-block btn-social" value="Login with Craft"></p>
             </form>
 
 
@@ -59,10 +53,8 @@
             {% for provider in craft.social.getProviders() %}
 
                 <p>
-                    <a href="{{ craft.social.loginUrl(provider.handle) }}" class="btn btn-default btn-block">
-                        <img src="{{ resourceUrl('social/images/icons/'~provider.handle~'.png') }}" width="30" class="social-icon img-rounded" />
-
-                        {{provider.name}}
+                    <a href="{{ craft.social.loginUrl(provider.handle) }}" class="btn btn-default btn-block btn-social" data-provider="{{ provider.handle }}">
+                        {{ provider.name }}
                     </a>
                 </p>
 
