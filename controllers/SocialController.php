@@ -12,8 +12,6 @@
 
 namespace Craft;
 
-use Guzzle\Http\Client;
-
 class SocialController extends BaseController
 {
 	// Properties
