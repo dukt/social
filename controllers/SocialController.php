@@ -261,7 +261,7 @@ class SocialController extends BaseController
 
 			if ($craftUser)
 			{
-				$this->_connect($craftUser);
+				$this->_linkAccount($craftUser);
 			}
 			else
 			{
@@ -282,7 +282,7 @@ class SocialController extends BaseController
 	 * @throws Exception
 	 * @return null
 	 */
-	private function _connect($craftUser)
+	private function _linkAccount($craftUser)
 	{
 		$socialUser = craft()->social_users->getUserByUid($this->provider->getHandle(), $this->socialUid);
 
