@@ -4,6 +4,8 @@
 
 {% extends "social/_layouts/site" %}
 
+{% set socialAccount = craft.social.getAccountByUserId(user.id) %}
+
 {% set selectedNav = 'profile' %}
 
 {% block main %}
@@ -51,6 +53,52 @@
         {% endif %}
 
         <h2>Profile</h2>
+
+        <hr>
+
+        {% set total = 0 %}
+        {% if not user.username is empty %}{% set total = total + 33 %}{% endif %}
+        {% if user.firstName %}{% set total = total + 34 %}{% endif %}
+        {% if user.lastName %}{% set total = total + 33 %}{% endif %}
+
+        {% set progressBarColor = 'success' %}
+        {% if total <= 70 %}{% set progressBarColor = 'warning' %}{% endif %}
+        {% if total <= 40 %}{% set progressBarColor = 'danger' %}{% endif %}
+
+        <p>Profile complete at {{ total }}%</p>
+
+        <div class="progress">
+          <div class="progress-bar  progress-bar-{{ progressBarColor }}" role="progressbar" aria-valuenow="{{ total }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ total }}%;">
+            <span class="sr-only">{{ total }}% Complete</span>
+          </div>
+        </div>
+
+        {% if socialAccount %}
+            <ul>
+                <li>
+                    <strong>Has Email:</strong>
+                    {{ socialAccount.hasEmail ? 'Yes' : 'No' }}
+                </li>
+
+                <li>
+                    <strong>Has Password:</strong>
+                    {{ socialAccount.hasPassword ? 'Yes' : 'No' }}
+                </li>
+
+                <li>
+                    <strong>Temporary Email:</strong>
+                    {{ socialAccount.temporaryEmail }}
+                </li>
+
+                <li>
+                    <strong>Temporary Password:</strong>
+                    {{ socialAccount.temporaryPassword }}
+                </li>
+            </ul>
+
+            <hr>
+
+        {% endif %}
 
 
         {# Photo #}
@@ -104,35 +152,6 @@
             <input type="hidden" name="redirect" value="social/profile">
             <input type="hidden" name="userId" value="{{ user.id }}">
 
-            {% set socialAccount = craft.social.getAccountByUserId(user.id) %}
-
-            {% if socialAccount %}
-                <ul>
-                    <li>
-                        <strong>Has Email:</strong>
-                        {{ socialAccount.hasEmail ? 'Yes' : 'No' }}
-                    </li>
-
-                    <li>
-                        <strong>Has Password:</strong>
-                        {{ socialAccount.hasPassword ? 'Yes' : 'No' }}
-                    </li>
-
-                    <li>
-                        <strong>Temporary Email:</strong>
-                        {{ socialAccount.temporaryEmail }}
-                    </li>
-
-                    <li>
-                        <strong>Temporary Password:</strong>
-                        {{ socialAccount.temporaryPassword }}
-                    </li>
-                </ul>
-
-                <hr>
-
-            {% endif %}
-
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -157,10 +176,18 @@
                 <label for="email">Email</label>
 
                 {% if user.unverifiedEmail %}
-                    <p class="text-success">Check your inbox, an email has been sent to confirm: <strong>{{ user.unverifiedEmail }}</strong></p>
-                {% endif %}
-                <input type="text"  class="form-control" id="email" name="email" value="{{ user.email }}">
+                    <p class="text-success">Check your inbox, an email has been sent to confirm: <strong>{{ user.unverifiedEmail }}</strong> — <a href="#">Resend</a></p>
 
+                    <p>or change for another address:</p>
+
+                    <input type="text"  class="form-control" id="email" name="email" value="{{ user.email }}">
+                {% else %}
+                    <input type="text"  class="form-control" id="email" name="email" value="{{ user.email }}">
+                {% endif %}
+
+                <p>
+                    <input type="checkbox" name="sendVerificationEmail" value="1" checked /> Send verification email
+                </p>
             </div>
 
             {% if socialAccount and not socialAccount.hasPassword %}
