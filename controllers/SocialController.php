@@ -197,20 +197,6 @@ class SocialController extends BaseController
 	}
 
 	/**
-	 * Clean session variables
-	 *
-	 * @return null
-	 */
-	private function _cleanSession()
-	{
-		craft()->httpSession->remove('social.referer');
-		craft()->httpSession->remove('social.requestUri');
-		craft()->httpSession->remove('social.token');
-		craft()->httpSession->remove('social.uid');
-		craft()->httpSession->remove('social.providerHandle');
-	}
-
-	/**
 	 * Handle Connect Response
 	 *
 	 * @param string $providerHandle Handle of the provider
@@ -716,4 +702,17 @@ class SocialController extends BaseController
 		craft()->oauth->saveToken($token);
 	}
 
+	/**
+	 * Clean session variables
+	 *
+	 * @return null
+	 */
+	private function _cleanSession()
+	{
+		craft()->httpSession->remove('social.referer');
+		craft()->httpSession->remove('social.requestUri');
+		craft()->httpSession->remove('social.token');
+		craft()->httpSession->remove('social.uid');
+		craft()->httpSession->remove('social.providerHandle');
+	}
 }
