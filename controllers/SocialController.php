@@ -174,7 +174,7 @@ class SocialController extends BaseController
 				'params'   => $params
 			]))
 			{
-				$this->_handleConnectResponse($providerHandle, $response);
+				$this->_handleOAuthResponse($providerHandle, $response);
 			}
 
 			$this->_cleanSession();
@@ -219,7 +219,7 @@ class SocialController extends BaseController
 	 * @throws Exception
 	 * @return null
 	 */
-	private function _handleConnectResponse($providerHandle, $response)
+	private function _handleOAuthResponse($providerHandle, $response)
 	{
 		if ($response['success'])
 		{
@@ -261,11 +261,11 @@ class SocialController extends BaseController
 
 			if ($craftUser)
 			{
-				$this->_handleLoggedInUser($craftUser);
+				$this->_connect($craftUser);
 			}
 			else
 			{
-				$this->_handleGuestUser();
+				$this->_login();
 			}
 		}
 		else
@@ -282,7 +282,7 @@ class SocialController extends BaseController
 	 * @throws Exception
 	 * @return null
 	 */
-	private function _handleLoggedInUser($craftUser)
+	private function _connect($craftUser)
 	{
 		$socialUser = craft()->social_users->getUserByUid($this->provider->getHandle(), $this->socialUid);
 
@@ -332,7 +332,7 @@ class SocialController extends BaseController
 	 *
 	 * @return null
 	 */
-	private function _handleGuestUser()
+	private function _login()
 	{
 		$socialUser = craft()->social_users->getUserByUid($this->provider->getHandle(), $this->socialUid);
 
