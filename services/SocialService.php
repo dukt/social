@@ -14,6 +14,9 @@ namespace Craft;
 
 class SocialService extends BaseApplicationComponent
 {
+    // Public Methods
+    // =========================================================================
+
 	/**
 	 * Check Requirements
 	 */
@@ -29,16 +32,16 @@ class SocialService extends BaseApplicationComponent
 		}
 	}
 
-	public function getConnectUrl($handle)
+	public function getLinkAccountUrl($handle)
 	{
-		return UrlHelper::getActionUrl('social/connect', [
+		return UrlHelper::getActionUrl('social/link', [
 			'provider' => $handle
 		]);
 	}
 
-	public function getDisconnectUrl($handle)
+	public function getUnlinkAccountUrl($handle)
 	{
-		return UrlHelper::getActionUrl('social/disconnect', [
+		return UrlHelper::getActionUrl('social/unlink', [
 			'provider' => $handle
 		]);
 	}
@@ -64,5 +67,56 @@ class SocialService extends BaseApplicationComponent
 		$params = ['redirect' => $redirect];
 
 		return UrlHelper::getActionUrl('social/logout', $params);
+	}
+
+
+	/**
+	 * Save Token
+	 *
+	 * @param object $tokenModel The token object we want to save
+	 *
+	 * @return null
+	 */
+	public function saveToken(Oauth_TokenModel $token)
+	{
+		$existingToken = null;
+
+		if ($token->id)
+		{
+			$existingToken = craft()->oauth->getTokenById($token->id);
+
+			if (!$existingToken)
+			{
+				$existingToken = null;
+				$token->id = null;
+			}
+		}
+
+		if ($token->providerHandle == 'google')
+		{
+			if (empty($token->refreshToken))
+			{
+				if ($existingToken)
+				{
+					if (!empty($existingToken->refreshToken))
+					{
+						// existing token has a refresh token so we keep it
+						$token->refreshToken = $existingToken->refreshToken;
+					}
+				}
+
+
+				// still no refresh token ? re-prompt
+
+				if (empty($token->refreshToken))
+				{
+					$requestUri = craft()->httpSession->get('social.requestUri');
+					$this->redirect($requestUri.'&forcePrompt=true');
+				}
+			}
+		}
+
+		// save token
+		craft()->oauth->saveToken($token);
 	}
 }

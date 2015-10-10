@@ -14,6 +14,9 @@ namespace Craft;
 
 class Social_UsersService extends BaseApplicationComponent
 {
+    // Public Methods
+    // =========================================================================
+
 	public function getUserById($id)
 	{
 		$record = Social_UserRecord::model()->findByPk($id);
@@ -109,83 +112,74 @@ class Social_UsersService extends BaseApplicationComponent
 		}
 	}
 
-	public function registerUser($account)
+	/**
+	 * Register User
+	 *
+	 * @param array $attributes Attributes of the user we want to register
+	 *
+	 * @throws Exception
+	 * @return null
+	 */
+	public function registerUser($attributes, $providerHandle)
 	{
-		// get social plugin settings
+		$this->_fillAttributes($attributes, $providerHandle);
 
-		$socialPlugin = craft()->plugins->getPlugin('social');
-		$settings = $socialPlugin->getSettings();
+		$temporaryPassword = md5(time());
 
-		if (!$settings['allowSocialRegistration'])
+		$attributes['newPassword'] = $temporaryPassword;
+
+		if (!empty($attributes['email']))
 		{
-			throw new Exception("Social registration is disabled.");
-		}
+			// find with email
+			$user = craft()->users->getUserByUsernameOrEmail($attributes['email']);
 
+			if (!$user)
+			{
+				$user = craft()->social_users->registerUser($attributes, $providerHandle);
 
-		// new user
+				if ($user)
+				{
+					$socialAccount = new Social_AccountModel;
+					$socialAccount->userId = $user->id;
+					$socialAccount->hasEmail = true;
+					$socialAccount->hasPassword = false;
+					$socialAccount->temporaryPassword = $temporaryPassword;
 
-		if (isset($account['email']))
-		{
-			// define email
-			$usernameOrEmail = $account['email'];
+					craft()->social_accounts->saveAccount($socialAccount);
+				}
+			}
+			else
+			{
+				if (craft()->config->get('allowEmailMatch', 'social') !== true)
+				{
+					throw new \Exception("An account already exists with this email: ".$attributes['email']);
+				}
+			}
 		}
 		else
 		{
-			throw new Exception("Email address not provided.");
+			// no email at this point ? create a fake one
+
+			$providerHandle = $this->provider->getHandle();
+
+			$attributes['email'] = strtolower($providerHandle).'.'.$attributes['uid'].'@example.com';
+
+			$user = craft()->social_users->registerUser($attributes, $providerHandle);
+
+			if ($user)
+			{
+				$socialAccount = new Social_AccountModel;
+				$socialAccount->userId = $user->id;
+				$socialAccount->hasEmail = false;
+				$socialAccount->hasPassword = false;
+				$socialAccount->temporaryEmail = $user->email;
+				$socialAccount->temporaryPassword = $temporaryPassword;
+
+				craft()->social_accounts->saveAccount($socialAccount);
+			}
 		}
 
-
-		// Fire an 'onBeforeRegister' event
-
-		$event = new Event($this, [
-			'account' => $account,
-		]);
-
-		$this->onBeforeRegister($event);
-
-		if ($event->performAction)
-		{
-			$newUser = new UserModel();
-			$newUser->username = $usernameOrEmail;
-			$newUser->email = $usernameOrEmail;
-
-			if (!empty($account['firstName']))
-			{
-				$newUser->firstName = $account['firstName'];
-			}
-
-			if (!empty($account['lastName']))
-			{
-				$newUser->lastName = $account['lastName'];
-			}
-
-			$newUser->newPassword = $account['newPassword'];
-
-
-			// save user
-
-			craft()->users->saveUser($newUser);
-			craft()->db->getSchema()->refresh();
-			$user = craft()->users->getUserByUsernameOrEmail($usernameOrEmail);
-
-			// save photo
-
-			if (!empty($account['photo']))
-			{
-				craft()->social_users->saveRemotePhoto($account['photo'], $user);
-			}
-
-			// save groups
-
-			if (!empty($settings['defaultGroup']))
-			{
-				craft()->userGroups->assignUserToGroups($user->id, [$settings['defaultGroup']]);
-			}
-
-			return $user;
-		}
-
-		return false;
+		return $user;
 	}
 
 	public function getUserByUid($handle, $socialUid)
@@ -291,4 +285,142 @@ class Social_UsersService extends BaseApplicationComponent
 	{
 		$this->raiseEvent('onBeforeRegister', $event);
 	}
+
+
+    // Private Methods
+    // =========================================================================
+
+	private function _registerUser($account, $providerHandle)
+	{
+		// get social plugin settings
+
+		$socialPlugin = craft()->plugins->getPlugin('social');
+		$settings = $socialPlugin->getSettings();
+
+		if (!$settings['allowSocialRegistration'])
+		{
+			throw new Exception("Social registration is disabled.");
+		}
+
+
+		// new user
+
+		if (isset($account['email']))
+		{
+			// define email
+			$usernameOrEmail = $account['email'];
+		}
+		else
+		{
+			throw new Exception("Email address not provided.");
+		}
+
+
+		// Fire an 'onBeforeRegister' event
+
+		$event = new Event($this, [
+			'account' => $account,
+		]);
+
+		$this->onBeforeRegister($event);
+
+		if ($event->performAction)
+		{
+			$newUser = new UserModel();
+			$newUser->username = $usernameOrEmail;
+			$newUser->email = $usernameOrEmail;
+
+			if (!empty($account['firstName']))
+			{
+				$newUser->firstName = $account['firstName'];
+			}
+
+			if (!empty($account['lastName']))
+			{
+				$newUser->lastName = $account['lastName'];
+			}
+
+			$newUser->newPassword = $account['newPassword'];
+
+
+			// save user
+
+			craft()->users->saveUser($newUser);
+			craft()->db->getSchema()->refresh();
+			$user = craft()->users->getUserByUsernameOrEmail($usernameOrEmail);
+
+			// save photo
+
+			if (!empty($account['photo']))
+			{
+				craft()->social_users->saveRemotePhoto($account['photo'], $user);
+			}
+
+
+			// save profile attributes
+
+			$profileFieldsMapping = craft()->config->get('profileFieldsMapping', 'social');
+
+			if(isset($profileFieldsMapping[$providerHandle]))
+			{
+				$variables = $account;
+
+				foreach($profileFieldsMapping[$providerHandle] as $field => $template)
+				{
+					$user->getContent()->{$field} = craft()->templates->renderString($template, $variables);
+				}
+			}
+
+			// save groups
+
+			if (!empty($settings['defaultGroup']))
+			{
+				craft()->userGroups->assignUserToGroups($user->id, [$settings['defaultGroup']]);
+			}
+
+			craft()->users->saveUser($user);
+
+			return $user;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Fill Attributes From Profile
+	 *
+	 * @param array $attributes Attributes we want to fill the profile with
+	 * @param array $profile    The profile we want to fill attributes with
+	 *
+	 * @throws Exception
+	 * @return null
+	 */
+	private function _fillAttributes(&$attributes, $providerHandle)
+	{
+		$socialProvider = craft()->social_providers->getProvider($providerHandle);
+		$socialProvider->setToken($this->token);
+		$profile = $socialProvider->getProfile();
+
+		$plugin = craft()->plugins->getPlugin('social');
+		$settings = $plugin->getSettings();
+
+		if ($settings->autoFillProfile)
+		{
+			if (!empty($profile['firstName']))
+			{
+				$attributes['firstName'] = $profile['firstName'];
+			}
+
+			if (!empty($profile['lastName']))
+			{
+				$attributes['lastName'] = $profile['lastName'];
+			}
+
+			if (!empty($profile['photo']))
+			{
+				$attributes['photo'] = $profile['photo'];
+			}
+		}
+	}
+
 }
