@@ -54,6 +54,41 @@ class SocialService extends BaseApplicationComponent
 		]);
 	}
 
+	public function saveRemotePhoto($photoUrl, UserModel $user)
+	{
+		$filename = 'photo';
+
+		$tempPath = craft()->path->getTempPath().'social/userphotos/'.$user->email.'/';
+		IOHelper::createFolder($tempPath);
+		$tempFilepath = $tempPath.$filename;
+		$client = new \Guzzle\Http\Client();
+		$response = $client->get($photoUrl)
+			->setResponseBody($tempPath.$filename)
+			->send();
+
+
+		$extension = substr($response->getContentType(), strpos($response->getContentType(), "/") + 1);
+
+		IOHelper::rename($tempPath.$filename, $tempPath.$filename.'.'.$extension);
+
+		craft()->users->deleteUserPhoto($user);
+
+		$image = craft()->images->loadImage($tempPath.$filename.'.'.$extension);
+		$imageWidth = $image->getWidth();
+		$imageHeight = $image->getHeight();
+
+		$dimension = min($imageWidth, $imageHeight);
+		$horizontalMargin = ($imageWidth - $dimension) / 2;
+		$verticalMargin = ($imageHeight - $dimension) / 2;
+		$image->crop($horizontalMargin, $imageWidth - $horizontalMargin, $verticalMargin, $imageHeight - $verticalMargin);
+
+		craft()->users->saveUserPhoto($filename.'.'.$extension, $image, $user);
+
+		IOHelper::deleteFile($tempPath.$filename.'.'.$extension);
+
+		return true;
+	}
+
 	/**
 	 * Check Requirements
 	 */

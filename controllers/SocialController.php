@@ -127,7 +127,7 @@ class SocialController extends BaseController
 
         $user = craft()->users->getUserById($userId);
 
-        craft()->social_accounts->saveRemotePhoto($photoUrl, $user);
+        craft()->social->saveRemotePhoto($photoUrl, $user);
 
         $this->redirect($_SERVER['HTTP_REFERER']);
     }
