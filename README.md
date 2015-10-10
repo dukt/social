@@ -49,6 +49,15 @@ Most services will provide the customer's email address, but some of them, like 
 
     'completeRegistrationTemplate' => null,
 
+### profileFieldsMapping
+
+Map fields from social accounts with Craft users fields to autofill user data on registration.
+
+    'profileFieldsMapping' => [
+        'facebook' => [
+            'gender' => '{{ gender }}',
+        ],
+    ],
 
 ## Templating
 
@@ -61,3 +70,9 @@ Most services will provide the customer's email address, but some of them, like 
 ### Logout
 
     <a href="{{ craft.social.logoutUrl() }}">Logout</a></li>
+
+### Social Accounts
+
+#### Link
+
+#### Unlink
