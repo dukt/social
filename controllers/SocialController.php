@@ -129,7 +129,9 @@ class SocialController extends BaseController
 
         craft()->social->saveRemotePhoto($photoUrl, $user);
 
-        $this->redirect($_SERVER['HTTP_REFERER']);
+        // redirect
+        $referrer = craft()->request->getUrlReferrer();
+        $this->redirect($referrer);
     }
 
 	// Private Methods
