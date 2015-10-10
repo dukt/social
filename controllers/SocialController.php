@@ -420,7 +420,7 @@ class SocialController extends BaseController
 				$gatewayHandle	= $this->oauthProvider->getHandle();
 
 				// register user
-				$craftUser = craft()->social_accounts->registerUser($attributes, $gatewayHandle);
+				$craftUser = craft()->social_accounts->registerUser($attributes, $gatewayHandle, $this->token);
 
 				if ($craftUser)
 				{
@@ -469,7 +469,7 @@ class SocialController extends BaseController
 
 		// OAuth Provider
 		$this->oauthProvider = craft()->oauth->getProvider($gatewayHandle);
-		$this->oauthProvider->setToken($token)
+		$this->oauthProvider->setToken($token);
 
 		// account
 		$oauthProviderAccount = $this->oauthProvider->getAccount();
@@ -495,7 +495,9 @@ class SocialController extends BaseController
 				if (!$emailExists)
 				{
 					// register user
+
 					$craftUser = craft()->social_accounts->registerUser($attributes, $gatewayHandle);
+
 					if ($craftUser)
 					{
 						// save token

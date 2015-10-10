@@ -28,6 +28,16 @@ abstract class BaseGateway
         return $handle;
     }
 
+    public function isConfigured()
+    {
+        $oauthProvider = \Craft\craft()->oauth->getProvider($this->getHandle());
+
+        if($oauthProvider)
+        {
+            return $oauthProvider->isConfigured();
+        }
+    }
+
     public function setToken($token)
     {
         $this->token = $token;
@@ -43,13 +53,7 @@ abstract class BaseGateway
         return array();
     }
 
-    public function isConfigured()
+    public function onBeforeSaveToken()
     {
-        $oauthProvider = \Craft\craft()->oauth->getProvider($this->getHandle());
-
-        if($oauthProvider)
-        {
-            return $oauthProvider->isConfigured();
-        }
     }
 }

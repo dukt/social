@@ -216,9 +216,9 @@ class Social_AccountsService extends BaseApplicationComponent
 	 * @throws Exception
 	 * @return null
 	 */
-	public function registerUser($attributes, $gatewayHandle)
+	public function registerUser($attributes, $gatewayHandle, $token)
 	{
-		$this->_fillAttributes($attributes, $gatewayHandle);
+		$this->_fillAttributes($attributes, $gatewayHandle, $token);
 
 		$temporaryPassword = md5(time());
 
@@ -231,7 +231,7 @@ class Social_AccountsService extends BaseApplicationComponent
 
 			if (!$user)
 			{
-				$user = $this->_registerUser($attributes, $gatewayHandle);
+				$user = $this->_registerUser($attributes, $gatewayHandle, $token);
 
 				if ($user)
 				{
@@ -258,7 +258,7 @@ class Social_AccountsService extends BaseApplicationComponent
 
 			$attributes['email'] = strtolower($gatewayHandle).'.'.$attributes['uid'].'@example.com';
 
-			$user = $this->_registerUser($attributes, $gatewayHandle);
+			$user = $this->_registerUser($attributes, $gatewayHandle, $token);
 
 			if ($user)
 			{
@@ -285,7 +285,7 @@ class Social_AccountsService extends BaseApplicationComponent
     // Private Methods
     // =========================================================================
 
-	private function _registerUser($account, $gatewayHandle)
+	private function _registerUser($account, $gatewayHandle, $token)
 	{
 		// get social plugin settings
 
@@ -338,20 +338,6 @@ class Social_AccountsService extends BaseApplicationComponent
 			$newUser->newPassword = $account['newPassword'];
 
 
-			// save user
-
-			craft()->users->saveUser($newUser);
-			craft()->db->getSchema()->refresh();
-			$user = craft()->users->getUserByUsernameOrEmail($usernameOrEmail);
-
-			// save photo
-
-			if (!empty($account['photo']))
-			{
-				craft()->social_accounts->saveRemotePhoto($account['photo'], $user);
-			}
-
-
 			// save profile attributes
 
 			$profileFieldsMapping = craft()->config->get('profileFieldsMapping', 'social');
@@ -362,9 +348,25 @@ class Social_AccountsService extends BaseApplicationComponent
 
 				foreach($profileFieldsMapping[$gatewayHandle] as $field => $template)
 				{
-					$user->getContent()->{$field} = craft()->templates->renderString($template, $variables);
+					$newUser->getContent()->{$field} = craft()->templates->renderString($template, $variables);
 				}
 			}
+
+
+			// save user
+
+			craft()->users->saveUser($newUser);
+			craft()->db->getSchema()->refresh();
+			$user = craft()->users->getUserByUsernameOrEmail($usernameOrEmail);
+
+
+			// save photo
+
+			if (!empty($account['photo']))
+			{
+				craft()->social->saveRemotePhoto($account['photo'], $user);
+			}
+
 
 			// save groups
 
@@ -390,10 +392,10 @@ class Social_AccountsService extends BaseApplicationComponent
 	 * @throws Exception
 	 * @return null
 	 */
-	private function _fillAttributes(&$attributes, $gatewayHandle)
+	private function _fillAttributes(&$attributes, $gatewayHandle, $token)
 	{
 		$socialProvider = craft()->social_gateways->getGateway($gatewayHandle);
-		$socialProvider->setToken($this->token);
+		$socialProvider->setToken($token);
 		$profile = $socialProvider->getProfile();
 
 		$plugin = craft()->plugins->getPlugin('social');
