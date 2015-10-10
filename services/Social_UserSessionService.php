@@ -16,8 +16,14 @@ use Dukt\Social\Etc\Users\TokenIdentity;
 
 class Social_UserSessionService extends UserSessionService
 {
-    private $_identity;
+    // Properties
+    // =========================================================================
+
     public $allowAutoLogin = true;
+    private $_identity;
+
+    // Public Methods
+    // =========================================================================
 
     public function init()
     {

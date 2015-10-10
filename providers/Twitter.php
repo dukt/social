@@ -4,7 +4,10 @@ namespace Dukt\Social\Provider;
 
 use Guzzle\Http\Client;
 
-class Twitter extends BaseProvider {
+class Twitter extends BaseProvider
+{
+    // Public Methods
+    // =========================================================================
 
     public function getName()
     {
@@ -32,8 +35,6 @@ class Twitter extends BaseProvider {
 
     public function api($method = 'get', $uri, $params = null, $headers = null, $postFields = null)
     {
-        // client
-
         $client = new Client('https://api.twitter.com/1.1');
 
         $provider = \Craft\craft()->oauth->getProvider('twitter');

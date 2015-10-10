@@ -2,9 +2,15 @@
 
 namespace Dukt\Social\Provider;
 
-abstract class BaseProvider {
+abstract class BaseProvider
+{
+    // Properties
+    // =========================================================================
 
     protected $token;
+
+    // Public Methods
+    // =========================================================================
 
     public function getHandle()
     {

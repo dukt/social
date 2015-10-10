@@ -5,7 +5,10 @@ namespace Dukt\Social\Provider;
 use \Google_Client;
 use \Google_Service_Oauth2;
 
-class Google extends BaseProvider {
+class Google extends BaseProvider
+{
+    // Public Methods
+    // =========================================================================
 
     public function getName()
     {

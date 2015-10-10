@@ -14,6 +14,9 @@ namespace Craft;
 
 class Social_UserRecord extends BaseRecord
 {
+    // Public Methods
+    // =========================================================================
+
     /**
      * Get Table Name
      */

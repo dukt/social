@@ -14,6 +14,9 @@ namespace Craft;
 
 class Social_AccountModel extends BaseModel
 {
+    // Public Methods
+    // =========================================================================
+
     /**
      * Define Attributes
      */

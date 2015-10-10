@@ -14,6 +14,9 @@ namespace Craft;
 
 class Social_ProvidersService extends BaseApplicationComponent
 {
+    // Public Methods
+    // =========================================================================
+
 	public function getProviderScopes($handle)
 	{
 		$scopes = craft()->config->get($handle.'Scopes', 'social');

@@ -64,16 +64,6 @@ class SocialVariable
         }
     }
 
-    public function getConnectUrl($handle)
-    {
-        return craft()->social->getConnectUrl($handle);
-    }
-
-    public function getDisconnectUrl($handle)
-    {
-        return craft()->social->getDisconnectUrl($handle);
-    }
-
     public function getLoginUrl($providerClass, $params = array())
     {
         return craft()->social->getLoginUrl($providerClass, $params);
@@ -82,5 +72,15 @@ class SocialVariable
     public function getLogoutUrl($redirect = null)
     {
         return craft()->social->getLogoutUrl($redirect);
+    }
+
+    public function getLinkAccountUrl($handle)
+    {
+        return craft()->social->getLinkAccountUrl($handle);
+    }
+
+    public function getUnlinkAccountUrl($handle)
+    {
+        return craft()->social->getUnlinkAccountUrl($handle);
     }
 }

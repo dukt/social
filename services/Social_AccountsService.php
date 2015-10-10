@@ -14,6 +14,9 @@ namespace Craft;
 
 class Social_AccountsService extends BaseApplicationComponent
 {
+    // Public Methods
+    // =========================================================================
+
 	/**
 	 * @param $userId
 	 *
