@@ -144,29 +144,9 @@ class Social_AccountsService extends BaseApplicationComponent
 			}
 		}
 
-		if ($token->providerHandle == 'google')
-		{
-			if (empty($token->refreshToken))
-			{
-				if ($existingToken)
-				{
-					if (!empty($existingToken->refreshToken))
-					{
-						// existing token has a refresh token so we keep it
-						$token->refreshToken = $existingToken->refreshToken;
-					}
-				}
-
-
-				// still no refresh token ? re-prompt
-
-				if (empty($token->refreshToken))
-				{
-					$requestUri = craft()->httpSession->get('social.requestUri');
-					$this->redirect($requestUri.'&forcePrompt=true');
-				}
-			}
-		}
+		// onBeforeSaveToken
+		$gateway = craft()->social_gateways->getGateway($token->providerHandle);
+		$gateway->onBeforeSaveToken($token, $existingToken);
 
 		// save token
 		craft()->oauth->saveToken($token);

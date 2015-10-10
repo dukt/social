@@ -30,6 +30,31 @@ class Google extends BaseGateway
             // 'approval_prompt' => 'force'
         );
     }
+
+    public function onBeforeSaveToken($token, $existingToken)
+    {
+        if (empty($token->refreshToken))
+        {
+            if ($existingToken)
+            {
+                if (!empty($existingToken->refreshToken))
+                {
+                    // existing token has a refresh token so we keep it
+                    $token->refreshToken = $existingToken->refreshToken;
+                }
+            }
+
+
+            // still no refresh token ? re-prompt
+
+            if (empty($token->refreshToken))
+            {
+                $requestUri = craft()->httpSession->get('social.requestUri');
+                $this->redirect($requestUri.'&forcePrompt=true');
+            }
+        }
+    }
+
     public function getProfile()
     {
         try
