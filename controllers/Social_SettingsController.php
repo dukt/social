@@ -25,14 +25,11 @@ class Social_SettingsController extends BaseController
 	public function actionIndex()
 	{
 		$plugin = craft()->plugins->getPlugin('social');
-		$settings = $plugin->getSettings();
-		$socialUsers = craft()->social_users->getUsers();
-		$usersCount = count($socialUsers);
+		$variables['settings'] = $plugin->getSettings();
 
+		$accounts = craft()->social_accounts->getAccounts();
+		$variables['totalAccounts'] = count($accounts);
 
-		$this->renderTemplate('social/settings', [
-			'settings' => $settings,
-			'usersCount' => $usersCount
-		]);
+		$this->renderTemplate('social/settings', $variables);
 	}
 }

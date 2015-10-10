@@ -29,7 +29,7 @@ class SocialPlugin extends BasePlugin
      */
     public function getVersion()
     {
-        return '0.10.0';
+        return '0.10.1';
     }
 
     /**
@@ -86,8 +86,8 @@ class SocialPlugin extends BasePlugin
             "social"                   => ['action' => "social/settings"],
             'social/providers'         => ['action' => "social/providers/index"],
             'social/settings'          => ['action' => "social/settings/index"],
-            "social/users"             => ['action' => "social/users/index"],
-            "social/users/(?P<id>\d+)" => ['action' => "social/users/userProfile"],
+            "social/accounts"             => ['action' => "social/accounts/index"],
+            "social/accounts/(?P<id>\d+)" => ['action' => "social/accounts/view"],
         ];
     }
 
@@ -126,7 +126,7 @@ class SocialPlugin extends BasePlugin
         {
             $user = $event->params['user'];
 
-            craft()->social_users->deleteUserByUserId($user->id);
+            craft()->social_accounts->deleteAccountByUserId($user->id);
         });
 
 
@@ -136,7 +136,7 @@ class SocialPlugin extends BasePlugin
         {
             $user = $event->params['user'];
 
-            $socialAccount = craft()->social_accounts->getAccountByUserId($user->id);
+            $socialAccount = craft()->social_users->getSocialUserByUserId($user->id);
 
             if ($socialAccount)
             {
@@ -155,7 +155,7 @@ class SocialPlugin extends BasePlugin
                         $socialAccount->hasPassword = true;
                     }
 
-                    craft()->social_accounts->saveAccount($socialAccount);
+                    craft()->social_users->saveSocialUser($socialAccount);
                 }
             }
         });
@@ -167,7 +167,7 @@ class SocialPlugin extends BasePlugin
         {
             $user = $event->params['user'];
 
-            $socialAccount = craft()->social_accounts->getAccountByUserId($user->id);
+            $socialAccount = craft()->social_users->getSocialUserByUserId($user->id);
 
             if ($socialAccount)
             {
@@ -178,7 +178,7 @@ class SocialPlugin extends BasePlugin
                         $socialAccount->hasEmail = true;
                     }
 
-                    craft()->social_accounts->saveAccount($socialAccount);
+                    craft()->social_users->saveSocialUser($socialAccount);
                 }
             }
         });

@@ -4,7 +4,7 @@
 
 {% extends "social/_layouts/site" %}
 
-{% set socialAccount = craft.social.getAccountByUserId(user.id) %}
+{% set socialAccount = craft.social.getSocialUserByUserId(user.id) %}
 
 {% set selectedNav = 'profile' %}
 

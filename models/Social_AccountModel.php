@@ -25,10 +25,12 @@ class Social_AccountModel extends BaseModel
         return array(
             'id' => AttributeType::Number,
             'userId' => AttributeType::Number,
-            'hasEmail' => AttributeType::Bool,
-            'hasPassword' => AttributeType::Bool,
-            'temporaryEmail' => AttributeType::String,
-            'temporaryPassword' => AttributeType::String,
+            'tokenId' => AttributeType::Number,
+
+            'provider' => array(AttributeType::String, 'required' => true),
+            'socialUid' => array(AttributeType::String, 'required' => true),
+
+            'photo' => AttributeType::String,
         );
     }
 
@@ -41,5 +43,15 @@ class Social_AccountModel extends BaseModel
         {
             return craft()->users->getUserById($this->userId);
         }
+    }
+
+    /**
+     * Get Token
+     */
+    public function getToken()
+    {
+        $token = craft()->oauth->getTokenById($this->tokenId);
+
+        return $token;
     }
 }

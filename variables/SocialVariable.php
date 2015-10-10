@@ -43,14 +43,14 @@ class SocialVariable
         return $this->_error;
     }
 
-    public function getAccountByUserId($id)
+    public function getSocialUserByUserId($id)
     {
-        return craft()->social_accounts->getAccountByUserId($id);
+        return craft()->social_users->getSocialUserByUserId($id);
     }
 
-    public function getUserByProvider($handle)
+    public function getAccountByProvider($handle)
     {
-        return craft()->social_users->getUserByProvider($handle);
+        return craft()->social_accounts->getAccountByProvider($handle);
     }
 
     public function getProvider($handle, $configuredOnly = true)

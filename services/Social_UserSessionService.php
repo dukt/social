@@ -32,13 +32,13 @@ class Social_UserSessionService extends UserSessionService
         parent::init();
     }
 
-    public function login($socialUserId)
+    public function login($accountId)
     {
         $rememberMe = true;
 
         Craft::log(__METHOD__, LogLevel::Info, true);
 
-        $this->_identity = new TokenIdentity($socialUserId);
+        $this->_identity = new TokenIdentity($accountId);
         $this->_identity->authenticate();
 
         // Was the login successful?

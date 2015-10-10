@@ -1,6 +1,6 @@
 {% extends "_layouts/cp" %}
 
-{% set title = 'Users' %}
+{% set title = 'Accounts' %}
 
 {% set crumbs = [
     { label: "Settings"|t, url: url('settings') },
@@ -12,7 +12,7 @@
 
 {% set content %}
 
-    {% if socialUsers|length > 0 %}
+    {% if accounts|length > 0 %}
 
         <table class="data fullwidth">
             <thead>
@@ -25,18 +25,18 @@
                 </tr>
             </thead>
 
-            {% for socialUser in socialUsers %}
+            {% for account in accounts %}
 
-                {% set user = socialUser.user %}
-                {% set provider = craft.social.provider(socialUser.provider) %}
+                {% set user = account.user %}
+                {% set provider = craft.social.provider(account.provider) %}
 
                 <tr>
                     <td>
-                        <img src="{{ resourceUrl('social/images/icons/'~socialUser.provider~'.png') }}" class="social-icon" />
+                        <img src="{{ resourceUrl('social/images/icons/'~account.provider~'.png') }}" class="social-icon" />
                         {{ provider.name }}
                     </td>
                     <td>
-                        {{ socialUser.socialUid }}
+                        {{ account.socialUid }}
                     </td>
                     <td>{{ user.fullName }}</td>
                     <td>
@@ -44,7 +44,7 @@
                     </td>
                     <td class="thin nowrap">
 
-                        <a href="{{ url('social/users/'~socialUser.id) }}" class="btn small">Social Profile</a> &nbsp;
+                        <a href="{{ url('social/accounts/'~account.id) }}" class="btn small">Social Profile</a> &nbsp;
                         <a href="{{ user.cpEditUrl }}" class="btn small">Craft User</a>
 
                     </td>
@@ -53,6 +53,6 @@
         </table>
 
     {% else %}
-        <p class="light">No social users.</p>
+        <p class="light">No accounts.</p>
     {% endif %}
 {% endset %}

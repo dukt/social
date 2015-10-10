@@ -17,35 +17,6 @@ class SocialService extends BaseApplicationComponent
     // Public Methods
     // =========================================================================
 
-	/**
-	 * Check Requirements
-	 */
-	public function checkRequirements()
-	{
-		$plugin = craft()->plugins->getPlugin('social');
-
-		$pluginDependencies = $plugin->getPluginDependencies();
-
-		if (count($pluginDependencies) > 0)
-		{
-			throw new \Exception("Social is not configured properly. Check Social settings for more informations.");
-		}
-	}
-
-	public function getLinkAccountUrl($handle)
-	{
-		return UrlHelper::getActionUrl('social/link', [
-			'provider' => $handle
-		]);
-	}
-
-	public function getUnlinkAccountUrl($handle)
-	{
-		return UrlHelper::getActionUrl('social/unlink', [
-			'provider' => $handle
-		]);
-	}
-
 	public function getLoginUrl($providerClass, $params = [])
 	{
 		$params['provider'] = $providerClass;
@@ -69,54 +40,32 @@ class SocialService extends BaseApplicationComponent
 		return UrlHelper::getActionUrl('social/logout', $params);
 	}
 
+	public function getLinkAccountUrl($handle)
+	{
+		return UrlHelper::getActionUrl('social/link', [
+			'provider' => $handle
+		]);
+	}
+
+	public function getUnlinkAccountUrl($handle)
+	{
+		return UrlHelper::getActionUrl('social/unlink', [
+			'provider' => $handle
+		]);
+	}
 
 	/**
-	 * Save Token
-	 *
-	 * @param object $tokenModel The token object we want to save
-	 *
-	 * @return null
+	 * Check Requirements
 	 */
-	public function saveToken(Oauth_TokenModel $token)
+	public function checkRequirements()
 	{
-		$existingToken = null;
+		$plugin = craft()->plugins->getPlugin('social');
 
-		if ($token->id)
+		$pluginDependencies = $plugin->getPluginDependencies();
+
+		if (count($pluginDependencies) > 0)
 		{
-			$existingToken = craft()->oauth->getTokenById($token->id);
-
-			if (!$existingToken)
-			{
-				$existingToken = null;
-				$token->id = null;
-			}
+			throw new \Exception("Social is not configured properly. Check Social settings for more informations.");
 		}
-
-		if ($token->providerHandle == 'google')
-		{
-			if (empty($token->refreshToken))
-			{
-				if ($existingToken)
-				{
-					if (!empty($existingToken->refreshToken))
-					{
-						// existing token has a refresh token so we keep it
-						$token->refreshToken = $existingToken->refreshToken;
-					}
-				}
-
-
-				// still no refresh token ? re-prompt
-
-				if (empty($token->refreshToken))
-				{
-					$requestUri = craft()->httpSession->get('social.requestUri');
-					$this->redirect($requestUri.'&forcePrompt=true');
-				}
-			}
-		}
-
-		// save token
-		craft()->oauth->saveToken($token);
 	}
 }

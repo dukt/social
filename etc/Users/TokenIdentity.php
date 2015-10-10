@@ -10,23 +10,23 @@ namespace Dukt\Social\Etc\Users;
 class TokenIdentity extends \Craft\UserIdentity
 {
     private $_id;
-    public $socialUserId;
+    public $accountId;
 
-    public function __construct($socialUserId)
+    public function __construct($accountId)
     {
-        $this->socialUserId = $socialUserId;
+        $this->accountId = $accountId;
     }
 
     public function authenticate()
     {
         \Craft\Craft::log(__METHOD__, \Craft\LogLevel::Info, true);
 
-        $socialUser = \Craft\craft()->social_users->getUserById($this->socialUserId);
+        $account = \Craft\craft()->social_accounts->getAccountById($this->accountId);
 
-        if($socialUser)
+        if($account)
         {
-            $this->_id = $socialUser->user->id;
-            $this->username = $socialUser->user->username;
+            $this->_id = $account->user->id;
+            $this->username = $account->user->username;
             $this->errorCode = static::ERROR_NONE;
 
             return true;
