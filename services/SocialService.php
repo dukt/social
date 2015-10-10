@@ -17,9 +17,9 @@ class SocialService extends BaseApplicationComponent
     // Public Methods
     // =========================================================================
 
-	public function getLoginUrl($gatewayClass, $params = [])
+	public function getLoginUrl($gatewayHandle, $params = [])
 	{
-		$params['gateway'] = $gatewayClass;
+		$params['gateway'] = $gatewayHandle;
 
 		if (isset($params['scopes']) && is_array($params['scopes']))
 		{

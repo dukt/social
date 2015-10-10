@@ -48,14 +48,14 @@ class SocialVariable
         return craft()->social_users->getSocialUserByUserId($id);
     }
 
-    public function getAccountByGateway($handle)
+    public function getAccountByGateway($gatewayHandle)
     {
-        return craft()->social_accounts->getAccountByGateway($handle);
+        return craft()->social_accounts->getAccountByGateway($gatewayHandle);
     }
 
-    public function getGateway($handle, $configuredOnly = true)
+    public function getGateway($gatewayHandle, $configuredOnly = true)
     {
-        return craft()->social_gateways->getGateway($handle, $configuredOnly);
+        return craft()->social_gateways->getGateway($gatewayHandle, $configuredOnly);
     }
 
     public function getGateways($configuredOnly = true)
@@ -70,9 +70,9 @@ class SocialVariable
         }
     }
 
-    public function getLoginUrl($gatewayClass, $params = array())
+    public function getLoginUrl($gatewayHandle, $params = array())
     {
-        return craft()->social->getLoginUrl($gatewayClass, $params);
+        return craft()->social->getLoginUrl($gatewayHandle, $params);
     }
 
     public function getLogoutUrl($redirect = null)
@@ -80,13 +80,13 @@ class SocialVariable
         return craft()->social->getLogoutUrl($redirect);
     }
 
-    public function getLinkAccountUrl($handle)
+    public function getLinkAccountUrl($gatewayHandle)
     {
-        return craft()->social->getLinkAccountUrl($handle);
+        return craft()->social->getLinkAccountUrl($gatewayHandle);
     }
 
-    public function getUnlinkAccountUrl($handle)
+    public function getUnlinkAccountUrl($gatewayHandle)
     {
-        return craft()->social->getUnlinkAccountUrl($handle);
+        return craft()->social->getUnlinkAccountUrl($gatewayHandle);
     }
 }
