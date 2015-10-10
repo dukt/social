@@ -1,10 +1,10 @@
 <?php
 
-namespace Dukt\Social\Provider;
+namespace Dukt\Social\Gateway;
 
 use Guzzle\Http\Client;
 
-class Twitter extends BaseProvider
+class Twitter extends BaseGateway
 {
     // Public Methods
     // =========================================================================
@@ -37,8 +37,8 @@ class Twitter extends BaseProvider
     {
         $client = new Client('https://api.twitter.com/1.1');
 
-        $provider = \Craft\craft()->oauth->getProvider('twitter');
-        $infos = $provider->getInfos();
+        $oauthProvider = \Craft\craft()->oauth->getProvider('twitter');
+        $infos = $oauthProvider->getInfos();
         $token = $this->token;
 
         $oauthData = array(

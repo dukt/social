@@ -40,8 +40,8 @@ Double check and double test all of the possible scenarios to make sure your soc
 
     'requireEmail' => true
 
-- `true` — If the social service doesn't provider the customer's email address, the user is redirected to the `completeRegistrationTemplate` and the registration process doesn't complete until he provides a valid address.
-- `false` — If the social service doesn't provider the customer's email address, a fake email address is being used for registration so that you can ask for their real email address later.
+- `true` — If the social service doesn't provide the customer's email address, the user is redirected to the `completeRegistrationTemplate` and the registration process doesn't complete until he provides a valid address.
+- `false` — If the social service doesn't provide the customer's email address, a fake email address is being used for registration so that you can ask for their real email address later.
 
 Most services will provide the customer's email address, but some of them, like Twitter, won't.
 

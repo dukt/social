@@ -42,13 +42,13 @@ class Social_AccountsService extends BaseApplicationComponent
 
 	// =========================================================================
 
-	public function getAccountByProvider($handle)
+	public function getAccountByGateway($gatewayHandle)
 	{
 		$currentUser = craft()->userSession->getUser();
 		$userId = $currentUser->id;
 
-		$conditions = 'provider=:provider and userId=:userId';
-		$params = [':provider' => $handle, ':userId' => $userId];
+		$conditions = 'gateway=:gateway and userId=:userId';
+		$params = [':gateway' => $gatewayHandle, ':userId' => $userId];
 
 		$record = Social_AccountRecord::model()->find($conditions, $params);
 
@@ -58,10 +58,10 @@ class Social_AccountsService extends BaseApplicationComponent
 		}
 	}
 
-	public function getAccountByUid($handle, $socialUid)
+	public function getAccountByUid($gatewayHandle, $socialUid)
 	{
-		$conditions = 'provider=:provider';
-		$params = [':provider' => $handle];
+		$conditions = 'gateway=:gateway';
+		$params = [':gateway' => $gatewayHandle];
 
 		$conditions .= ' AND socialUid=:socialUid';
 		$params[':socialUid'] = $socialUid;
@@ -97,7 +97,7 @@ class Social_AccountsService extends BaseApplicationComponent
 		// populate
 		$accountRecord->userId = $account->userId;
 		$accountRecord->tokenId = $account->tokenId;
-		$accountRecord->provider = $account->provider;
+		$accountRecord->gateway = $account->gateway;
 		$accountRecord->socialUid = $account->socialUid;
 
 		// validate
@@ -172,13 +172,13 @@ class Social_AccountsService extends BaseApplicationComponent
 		craft()->oauth->saveToken($token);
 	}
 
-	public function deleteAccountByProvider($handle)
+	public function deleteAccountByProvider($gatewayHandle)
 	{
 		$currentUser = craft()->userSession->getUser();
 		$userId = $currentUser->id;
 
-		$conditions = 'provider=:provider and userId=:userId';
-		$params = [':provider' => $handle, ':userId' => $userId];
+		$conditions = 'gateway=:gateway and userId=:userId';
+		$params = [':gateway' => $gatewayHandle, ':userId' => $userId];
 
 		$record = Social_AccountRecord::model()->find($conditions, $params);
 
@@ -236,9 +236,9 @@ class Social_AccountsService extends BaseApplicationComponent
 	 * @throws Exception
 	 * @return null
 	 */
-	public function registerUser($attributes, $providerHandle)
+	public function registerUser($attributes, $gatewayHandle)
 	{
-		$this->_fillAttributes($attributes, $providerHandle);
+		$this->_fillAttributes($attributes, $gatewayHandle);
 
 		$temporaryPassword = md5(time());
 
@@ -251,17 +251,17 @@ class Social_AccountsService extends BaseApplicationComponent
 
 			if (!$user)
 			{
-				$user = $this->_registerUser($attributes, $providerHandle);
+				$user = $this->_registerUser($attributes, $gatewayHandle);
 
 				if ($user)
 				{
-					$socialAccount = new Social_UserModel;
-					$socialAccount->userId = $user->id;
-					$socialAccount->hasEmail = true;
-					$socialAccount->hasPassword = false;
-					$socialAccount->temporaryPassword = $temporaryPassword;
+					$socialUser = new Social_UserModel;
+					$socialUser->userId = $user->id;
+					$socialUser->hasEmail = true;
+					$socialUser->hasPassword = false;
+					$socialUser->temporaryPassword = $temporaryPassword;
 
-					craft()->social_users->saveSocialUser($socialAccount);
+					craft()->social_users->saveSocialUser($socialUser);
 				}
 			}
 			else
@@ -276,22 +276,20 @@ class Social_AccountsService extends BaseApplicationComponent
 		{
 			// no email at this point ? create a fake one
 
-			$providerHandle = $this->provider->getHandle();
+			$attributes['email'] = strtolower($gatewayHandle).'.'.$attributes['uid'].'@example.com';
 
-			$attributes['email'] = strtolower($providerHandle).'.'.$attributes['uid'].'@example.com';
-
-			$user = $this->_registerUser($attributes, $providerHandle);
+			$user = $this->_registerUser($attributes, $gatewayHandle);
 
 			if ($user)
 			{
-				$socialAccount = new Social_UserModel;
-				$socialAccount->userId = $user->id;
-				$socialAccount->hasEmail = false;
-				$socialAccount->hasPassword = false;
-				$socialAccount->temporaryEmail = $user->email;
-				$socialAccount->temporaryPassword = $temporaryPassword;
+				$socialUser = new Social_UserModel;
+				$socialUser->userId = $user->id;
+				$socialUser->hasEmail = false;
+				$socialUser->hasPassword = false;
+				$socialUser->temporaryEmail = $user->email;
+				$socialUser->temporaryPassword = $temporaryPassword;
 
-				craft()->social_users->saveSocialUser($socialAccount);
+				craft()->social_users->saveSocialUser($socialUser);
 			}
 		}
 
@@ -342,7 +340,7 @@ class Social_AccountsService extends BaseApplicationComponent
     // Private Methods
     // =========================================================================
 
-	private function _registerUser($account, $providerHandle)
+	private function _registerUser($account, $gatewayHandle)
 	{
 		// get social plugin settings
 
@@ -413,11 +411,11 @@ class Social_AccountsService extends BaseApplicationComponent
 
 			$profileFieldsMapping = craft()->config->get('profileFieldsMapping', 'social');
 
-			if(isset($profileFieldsMapping[$providerHandle]))
+			if(isset($profileFieldsMapping[$gatewayHandle]))
 			{
 				$variables = $account;
 
-				foreach($profileFieldsMapping[$providerHandle] as $field => $template)
+				foreach($profileFieldsMapping[$gatewayHandle] as $field => $template)
 				{
 					$user->getContent()->{$field} = craft()->templates->renderString($template, $variables);
 				}
@@ -447,9 +445,9 @@ class Social_AccountsService extends BaseApplicationComponent
 	 * @throws Exception
 	 * @return null
 	 */
-	private function _fillAttributes(&$attributes, $providerHandle)
+	private function _fillAttributes(&$attributes, $gatewayHandle)
 	{
-		$socialProvider = craft()->social_providers->getProvider($providerHandle);
+		$socialProvider = craft()->social_gateways->getGateway($gatewayHandle);
 		$socialProvider->setToken($this->token);
 		$profile = $socialProvider->getProfile();
 

@@ -27,7 +27,7 @@ class Social_AccountModel extends BaseModel
             'userId' => AttributeType::Number,
             'tokenId' => AttributeType::Number,
 
-            'provider' => array(AttributeType::String, 'required' => true),
+            'gateway' => array(AttributeType::String, 'required' => true),
             'socialUid' => array(AttributeType::String, 'required' => true),
 
             'photo' => AttributeType::String,

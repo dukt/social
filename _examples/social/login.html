@@ -50,11 +50,11 @@
 
             <h3>... or connect with</h3>
 
-            {% for provider in craft.social.getProviders() %}
+            {% for gateway in craft.social.getGateways() %}
 
                 <p>
-                    <a href="{{ craft.social.loginUrl(provider.handle) }}" class="btn btn-default btn-block btn-social" data-provider="{{ provider.handle }}">
-                        {{ provider.name }}
+                    <a href="{{ craft.social.loginUrl(gateway.handle) }}" class="btn btn-default btn-block btn-social" data-gateway="{{ gateway.handle }}">
+                        {{ gateway.name }}
                     </a>
                 </p>
 

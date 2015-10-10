@@ -1,11 +1,11 @@
 <?php
 
-namespace Dukt\Social\Provider;
+namespace Dukt\Social\Gateway;
 
 use \Google_Client;
 use \Google_Service_Oauth2;
 
-class Google extends BaseProvider
+class Google extends BaseGateway
 {
     // Public Methods
     // =========================================================================

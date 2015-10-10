@@ -12,15 +12,15 @@
 
 namespace Craft;
 
-class Social_ProvidersController extends BaseController
+class Social_GatewaysController extends BaseController
 {
 	// Public Methods
 	// =========================================================================
 
 	public function actionIndex()
 	{
-		$variables['providers'] = craft()->social_providers->getProviders(false);
+		$variables['gateways'] = craft()->social_gateways->getGateways(false);
 
-		$this->renderTemplate('social/providers/_index', $variables);
+		$this->renderTemplate('social/gateways/_index', $variables);
 	}
 }

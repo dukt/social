@@ -12,52 +12,52 @@
 
 namespace Craft;
 
-class Social_ProvidersService extends BaseApplicationComponent
+class Social_GatewaysService extends BaseApplicationComponent
 {
     // Public Methods
     // =========================================================================
 
-	public function getProvider($handle, $configuredOnly = true)
+	public function getGateway($handle, $configuredOnly = true)
 	{
 		craft()->social->checkRequirements();
 
-		$className = '\\Dukt\\Social\\Provider\\'.ucfirst($handle);
+		$className = '\\Dukt\\Social\\Gateway\\'.ucfirst($handle);
 
 		if (class_exists($className))
 		{
-			$socialProvider = new $className;
+			$gateway = new $className;
 
 			$oauthProvider = craft()->oauth->getProvider($handle, $configuredOnly);
 
 			if ($oauthProvider)
 			{
-				return $socialProvider;
+				return $gateway;
 			}
 		}
 	}
 
-	public function getProviders($configuredOnly = true)
+	public function getGateways($configuredOnly = true)
 	{
 		craft()->social->checkRequirements();
 
-		$allProviders = craft()->oauth->getProviders($configuredOnly);
+		$oauthProviders = craft()->oauth->getProviders($configuredOnly);
 
-		$providers = [];
+		$gateways = [];
 
-		foreach ($allProviders as $provider)
+		foreach ($oauthProviders as $oauthProvider)
 		{
-			$socialProvider = $this->getProvider($provider->getHandle(), $configuredOnly);
+			$gateway = $this->getGateway($oauthProvider->getHandle(), $configuredOnly);
 
-			if ($socialProvider)
+			if ($gateway)
 			{
-				array_push($providers, $socialProvider);
+				array_push($gateways, $gateway);
 			}
 		}
 
-		return $providers;
+		return $gateways;
 	}
 
-	public function getProviderScopes($handle)
+	public function getGatewayScopes($handle)
 	{
 		$scopes = craft()->config->get($handle.'Scopes', 'social');
 
@@ -71,13 +71,13 @@ class Social_ProvidersService extends BaseApplicationComponent
 		}
 	}
 
-	public function getProviderParams($handle)
+	public function getGatewayParams($handle)
 	{
-		$socialProvider = $this->getProvider($handle, false);
+		$gateway = $this->getGateway($handle, false);
 
-		if ($socialProvider)
+		if ($gateway)
 		{
-			return $socialProvider->getParams();
+			return $gateway->getParams();
 		}
 		else
 		{

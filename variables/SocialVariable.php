@@ -48,21 +48,21 @@ class SocialVariable
         return craft()->social_users->getSocialUserByUserId($id);
     }
 
-    public function getAccountByProvider($handle)
+    public function getAccountByGateway($handle)
     {
-        return craft()->social_accounts->getAccountByProvider($handle);
+        return craft()->social_accounts->getAccountByGateway($handle);
     }
 
     public function getProvider($handle, $configuredOnly = true)
     {
-        return craft()->social_providers->getProvider($handle, $configuredOnly);
+        return craft()->social_gateways->getGateway($handle, $configuredOnly);
     }
 
-    public function getProviders($configuredOnly = true)
+    public function getGateways($configuredOnly = true)
     {
         try
         {
-            return craft()->social_providers->getProviders($configuredOnly);
+            return craft()->social_gateways->getGateways($configuredOnly);
         }
         catch(\Exception $e)
         {
@@ -70,9 +70,9 @@ class SocialVariable
         }
     }
 
-    public function getLoginUrl($providerClass, $params = array())
+    public function getLoginUrl($gatewayClass, $params = array())
     {
-        return craft()->social->getLoginUrl($providerClass, $params);
+        return craft()->social->getLoginUrl($gatewayClass, $params);
     }
 
     public function getLogoutUrl($redirect = null)

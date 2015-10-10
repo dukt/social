@@ -28,12 +28,12 @@
             {% for account in accounts %}
 
                 {% set user = account.user %}
-                {% set provider = craft.social.provider(account.provider) %}
+                {% set gateway = craft.social.getGateway(account.gateway) %}
 
                 <tr>
                     <td>
-                        <img src="{{ resourceUrl('social/images/icons/'~account.provider~'.png') }}" class="social-icon" />
-                        {{ provider.name }}
+                        <img src="{{ resourceUrl('social/images/icons/'~account.gateway~'.png') }}" class="social-icon" />
+                        {{ gateway.name }}
                     </td>
                     <td>
                         {{ account.socialUid }}

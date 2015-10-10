@@ -84,7 +84,7 @@ class SocialPlugin extends BasePlugin
     {
         return [
             "social"                   => ['action' => "social/settings"],
-            'social/providers'         => ['action' => "social/providers/index"],
+            'social/gateways'         => ['action' => "social/gateways/index"],
             'social/settings'          => ['action' => "social/settings/index"],
             "social/accounts"             => ['action' => "social/accounts/index"],
             "social/accounts/(?P<id>\d+)" => ['action' => "social/accounts/view"],

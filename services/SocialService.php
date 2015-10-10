@@ -17,9 +17,9 @@ class SocialService extends BaseApplicationComponent
     // Public Methods
     // =========================================================================
 
-	public function getLoginUrl($providerClass, $params = [])
+	public function getLoginUrl($gatewayClass, $params = [])
 	{
-		$params['provider'] = $providerClass;
+		$params['gateway'] = $gatewayClass;
 
 		if (isset($params['scopes']) && is_array($params['scopes']))
 		{
@@ -43,14 +43,14 @@ class SocialService extends BaseApplicationComponent
 	public function getLinkAccountUrl($handle)
 	{
 		return UrlHelper::getActionUrl('social/link', [
-			'provider' => $handle
+			'gateway' => $handle
 		]);
 	}
 
 	public function getUnlinkAccountUrl($handle)
 	{
 		return UrlHelper::getActionUrl('social/unlink', [
-			'provider' => $handle
+			'gateway' => $handle
 		]);
 	}
 

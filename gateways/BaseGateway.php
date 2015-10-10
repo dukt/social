@@ -1,8 +1,8 @@
 <?php
 
-namespace Dukt\Social\Provider;
+namespace Dukt\Social\Gateway;
 
-abstract class BaseProvider
+abstract class BaseGateway
 {
     // Properties
     // =========================================================================

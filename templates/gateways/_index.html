@@ -2,23 +2,27 @@
 
 {% import "_includes/forms" as forms %}
 
-{% set selectedTab = 'providers' %}
+{% set selectedTab = 'gateways' %}
 
 {% set content %}
 
-    {% if providers|length > 0 %}
+    {% if gateways|length > 0 %}
 
         <table class="data fullwidth">
-            {% for provider in providers %}
+
+            {% for gateway in gateways %}
+
                 <tr>
                     <td>
-                        <span class="status {{(provider.isConfigured ? 'on' : '')}}"></span>{{provider.name}}
+                        <span class="status {{(gateway.isConfigured ? 'on' : '')}}"></span>{{gateway.name}}
                     </td>
                     <td>
-                        <a href="{{ url('oauth/'~provider.handle) }}">{{ 'Configure OAuth provider'|t }}</a>
+                        <a href="{{ url('oauth/'~gateway.handle) }}">{{ 'Configure OAuth gateway'|t }}</a>
                     </td>
                 </tr>
+
             {% endfor %}
+
         </table>
 
     {% endif %}

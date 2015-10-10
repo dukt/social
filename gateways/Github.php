@@ -1,46 +1,52 @@
 <?php
 
-namespace Dukt\Social\Provider;
+namespace Dukt\Social\Gateway;
 
 use Guzzle\Http\Client;
 
-class Facebook extends BaseProvider
+class Github extends BaseGateway
 {
     // Public Methods
     // =========================================================================
 
     public function getName()
     {
-        return "Facebook";
+        return "GitHub";
+    }
+
+    public function getScopes()
+    {
+        return array(
+            'user, repo',
+        );
     }
 
     public function getProfile()
     {
-        $response = $this->api('get', 'me');
-
-        // return $response;
+        $response = $this->api('get', 'user');
 
         return array(
             'id' => $response['id'],
             'email' => $response['email'],
-            'photo' => 'http://graph.facebook.com/'.$response['id'].'/picture',
-            'locale' => $response['locale'],
-            'firstName' => $response['first_name'],
-            'lastName' => $response['last_name'],
+            'username' => $response['login'],
+            'photo' => $response['avatar_url'],
             'fullName' => $response['name'],
-            'profileUrl' => $response['link'],
-            'gender' => $response['gender'],
+            'profileUrl' => $response['html_url'],
+            'location' => $response['location'],
+            'company' => $response['company'],
         );
+
     }
 
     public function api($method = 'get', $uri, $params = null, $headers = null, $postFields = null)
     {
         // client
+        $client = new Client('https://api.github.com/');
 
-        $client = new Client('https://graph.facebook.com/');
-
+        //token
         $token = $this->token;
 
+        // params
         $params['access_token'] = $token->accessToken;
 
 

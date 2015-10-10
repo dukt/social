@@ -31,7 +31,7 @@ class Social_AccountRecord extends BaseRecord
     public function defineAttributes()
     {
         return array(
-            'provider' => array(AttributeType::String, 'required' => true),
+            'gateway' => array(AttributeType::String, 'required' => true),
             'socialUid' => array(AttributeType::String, 'required' => true),
             'tokenId' => array(AttributeType::Number, 'required' => false),
         );
@@ -55,7 +55,7 @@ class Social_AccountRecord extends BaseRecord
     public function defineIndexes()
     {
         return array(
-            array('columns' => array('provider', 'socialUid'), 'unique' => true)
+            array('columns' => array('gateway', 'socialUid'), 'unique' => true)
         );
     }
 }

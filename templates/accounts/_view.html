@@ -1,6 +1,6 @@
 {% extends "_layouts/cp" %}
 
-{% set title = account.socialUid~"@"~account.provider %}
+{% set title = account.socialUid~"@"~account.gateway %}
 
 {% includeCssResource "social/css/social.css" %}
 
@@ -54,7 +54,7 @@
 
     <h2>Social Profile</h2>
 
-    {% set socialProvider = craft.social.getProvider(account.provider) %}
+    {% set socialProvider = craft.social.getProvider(account.gateway) %}
 
     {{ socialProvider.setToken(account.token) }}
 
@@ -63,8 +63,8 @@
     {% if profile %}
         <table class="data">
             <tr>
-                <th>provider</th>
-                <td>{{ account.provider }}</td>
+                <th>gateway</th>
+                <td>{{ account.gateway }}</td>
             </tr>
 
             {% for key, value in profile %}
