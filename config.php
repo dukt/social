@@ -24,6 +24,15 @@ return [
 	 */
     'completeRegistrationTemplate' => null,
 
+    /**
+     * Auto-fill rules / Profile Fields Mapping
+     */
+    'profileFieldsMapping' => [
+        'facebook' => [
+            'gender' => '{{ gender }}',
+        ],
+    ],
+
 	/**
 	 * GitHub Scopes
      *
