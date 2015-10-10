@@ -73,32 +73,7 @@
           </div>
         </div>
 
-        {% if socialAccount %}
-            <ul>
-                <li>
-                    <strong>Has Email:</strong>
-                    {{ socialAccount.hasEmail ? 'Yes' : 'No' }}
-                </li>
-
-                <li>
-                    <strong>Has Password:</strong>
-                    {{ socialAccount.hasPassword ? 'Yes' : 'No' }}
-                </li>
-
-                <li>
-                    <strong>Temporary Email:</strong>
-                    {{ socialAccount.temporaryEmail }}
-                </li>
-
-                <li>
-                    <strong>Temporary Password:</strong>
-                    {{ socialAccount.temporaryPassword }}
-                </li>
-            </ul>
-
-            <hr>
-
-        {% endif %}
+        <hr>
 
 
         {# Photo #}

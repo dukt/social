@@ -47,11 +47,11 @@
 
                     {% if user %}
                         <p>
-                            <a href="{{craft.social.disconnectUrl(provider.handle)}}" class="btn btn-default btn-sm">Unlink {{ provider.name }} Account</a>
+                            <a href="{{craft.social.getUnlinkAccountUrl(provider.handle)}}" class="btn btn-default btn-sm">Unlink {{ provider.name }} Account</a>
                         </p>
                     {% else %}
                         <p>
-                            <a href="{{ craft.social.connectUrl(provider.handle) }}" class="btn btn-primary btn-sm">Link {{ provider.name }} Account</a>
+                            <a href="{{ craft.social.getLinkAccountUrl(provider.handle) }}" class="btn btn-primary btn-sm">Link {{ provider.name }} Account</a>
                         </p>
                     {% endif %}
                 </div>
