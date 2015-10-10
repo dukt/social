@@ -54,11 +54,11 @@
 
     <h2>Social Profile</h2>
 
-    {% set socialProvider = craft.social.getProvider(account.gateway) %}
+    {% set gateway = craft.social.getGateway(account.gateway) %}
 
-    {{ socialProvider.setToken(account.token) }}
+    {{ gateway.setToken(account.token) }}
 
-    {% set profile = socialProvider.getProfile() %}
+    {% set profile = gateway.getProfile() %}
 
     {% if profile %}
         <table class="data">

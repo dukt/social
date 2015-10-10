@@ -53,7 +53,7 @@ class SocialVariable
         return craft()->social_accounts->getAccountByGateway($handle);
     }
 
-    public function getProvider($handle, $configuredOnly = true)
+    public function getGateway($handle, $configuredOnly = true)
     {
         return craft()->social_gateways->getGateway($handle, $configuredOnly);
     }

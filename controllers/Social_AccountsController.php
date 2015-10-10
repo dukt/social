@@ -36,7 +36,7 @@ class Social_AccountsController extends BaseController
      *
      * @return null
      */
-    public function actionView(array $vars = array())
+    public function actionView()
     {
         craft()->social->checkRequirements();
 
