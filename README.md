@@ -15,6 +15,13 @@ This plugin is still under development, please do not use on production.
 2. Drop the `social` plugin folder to `craft/plugins`
 3. Install Social Login plugin from the control panel in `Settings > Plugins`
 
+## Supported Gateways
+
+### Core Gateways
+
+- Facebook
+- Google
+- Twitter
 
 ## Config
 
