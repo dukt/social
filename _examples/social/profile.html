@@ -28,16 +28,20 @@
 
     <hr>
 
+    {% set stepFields = ['username', 'firstName', 'lastName']  %}
+
     {% set total = 0 %}
-    {% if not user.username is empty %}{% set total = total + 33 %}{% endif %}
-    {% if user.firstName %}{% set total = total + 34 %}{% endif %}
-    {% if user.lastName %}{% set total = total + 33 %}{% endif %}
+    {% set step = 100 / stepFields|length %}
+
+    {% for stepField in stepFields %}
+        {% if attribute(user, stepField) %}{% set total = total + step %}{% endif %}
+    {% endfor %}
 
     {% set progressBarColor = 'success' %}
     {% if total <= 70 %}{% set progressBarColor = 'warning' %}{% endif %}
     {% if total <= 40 %}{% set progressBarColor = 'danger' %}{% endif %}
 
-    <p>Profile complete at {{ total }}%</p>
+    <p>Profile complete at {{ total|round }}%</p>
 
     <div class="progress">
       <div class="progress-bar  progress-bar-{{ progressBarColor }}" role="progressbar" aria-valuenow="{{ total }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ total }}%;">
