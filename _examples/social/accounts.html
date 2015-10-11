@@ -12,7 +12,7 @@
 
     {% for gateway in craft.social.getGateways() %}
 
-        {% set user = craft.social.getAccountByGateway(gateway.handle) %}
+        {% set account = craft.social.getAccountByGateway(gateway.handle) %}
         <hr>
 
         <div class="row">
@@ -25,14 +25,14 @@
                 <h4>{{ gateway.name }}</h4>
 
                 <p>
-                    {% if user %}
+                    {% if account %}
                         You can login using {{ gateway.name }}.
                     {% else %}
                         {{ gateway.name }} login is disabled for your account.
                     {% endif %}
                 </p>
 
-                {% if user %}
+                {% if account %}
                     <p>
                         <a href="{{craft.social.getUnlinkAccountUrl(gateway.handle)}}" class="btn btn-default btn-sm">Unlink {{ gateway.name }} Account</a>
                     </p>
