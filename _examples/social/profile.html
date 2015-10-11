@@ -10,188 +10,158 @@
 
 {% block main %}
 
-    <div class="col-md-6 col-md-offset-3">
+    {# Account Errors #}
 
-        {# Notice #}
+    {% if account is defined %}
+        {% set accountErrors = account.errors %}
 
-        {% set notice = craft.social.getNotice() %}
-
-        {% if notice %}
-
-            <div class="alert alert-success">
-                <p>{{notice}}</p>
-            </div>
-
-        {% endif %}
-
-
-        {# Error #}
-
-        {% set error = craft.social.getError() %}
-
-        {% if error %}
-
+        {% if accountErrors %}
             <div class="alert alert-danger">
-                <p>{{error}}</p>
+                {% for accountError in accountErrors %}
+                    <p>{{(accountError|first)}}</p>
+                {% endfor %}
             </div>
-
         {% endif %}
+    {% endif %}
+
+    <h2>Profile</h2>
+
+    <hr>
+
+    {% set total = 0 %}
+    {% if not user.username is empty %}{% set total = total + 33 %}{% endif %}
+    {% if user.firstName %}{% set total = total + 34 %}{% endif %}
+    {% if user.lastName %}{% set total = total + 33 %}{% endif %}
+
+    {% set progressBarColor = 'success' %}
+    {% if total <= 70 %}{% set progressBarColor = 'warning' %}{% endif %}
+    {% if total <= 40 %}{% set progressBarColor = 'danger' %}{% endif %}
+
+    <p>Profile complete at {{ total }}%</p>
+
+    <div class="progress">
+      <div class="progress-bar  progress-bar-{{ progressBarColor }}" role="progressbar" aria-valuenow="{{ total }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ total }}%;">
+        <span class="sr-only">{{ total }}% Complete</span>
+      </div>
+    </div>
+
+    <hr>
 
 
-        {# Account Errors #}
+    {# Photo #}
 
-        {% if account is defined %}
-            {% set accountErrors = account.errors %}
+    <form method="post" enctype="multipart/form-data">
 
-            {% if accountErrors %}
-                <div class="alert alert-danger">
-                    {% for accountError in accountErrors %}
-                        <p>{{(accountError|first)}}</p>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endif %}
+        <input type="hidden" name="action" value="users/saveUser">
+        <input type="hidden" name="redirect" value="social/profile">
+        <input type="hidden" name="userId" value="{{ user.id }}">
 
-        <h2>Profile</h2>
-
-        <hr>
-
-        {% set total = 0 %}
-        {% if not user.username is empty %}{% set total = total + 33 %}{% endif %}
-        {% if user.firstName %}{% set total = total + 34 %}{% endif %}
-        {% if user.lastName %}{% set total = total + 33 %}{% endif %}
-
-        {% set progressBarColor = 'success' %}
-        {% if total <= 70 %}{% set progressBarColor = 'warning' %}{% endif %}
-        {% if total <= 40 %}{% set progressBarColor = 'danger' %}{% endif %}
-
-        <p>Profile complete at {{ total }}%</p>
-
-        <div class="progress">
-          <div class="progress-bar  progress-bar-{{ progressBarColor }}" role="progressbar" aria-valuenow="{{ total }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ total }}%;">
-            <span class="sr-only">{{ total }}% Complete</span>
-          </div>
-        </div>
-
-        <hr>
-
-
-        {# Photo #}
-
-        <form method="post" enctype="multipart/form-data">
-
-            <input type="hidden" name="action" value="users/saveUser">
-            <input type="hidden" name="redirect" value="social/profile">
-            <input type="hidden" name="userId" value="{{ user.id }}">
-
-            <div class="form-group">
-
-                <div class="row">
-                    <div class="col-md-3">
-
-                        {% if user.photoUrl %}
-                            {% set photoUrl = user.photoUrl %}
-                        {% else %}
-                            {% set photoUrl = resourceUrl('images/user.gif') %}
-                        {% endif %}
-
-                        <img src="{{ photoUrl }}" class="img-responsive img-rounded" />
-                    </div>
-                    <div class="col-md-9">
-
-                        <label for="userPhoto">{{ (user.photoUrl ? 'Change Photo' : 'Upload Photo') }}</label><br />
-                        <p>
-                            <input type="file" name="userPhoto" value="{{ (user.photoUrl ? 'Change Photo' : 'Upload') }}">
-                        </p>
-
-                        <input type="submit" class="btn btn-sm btn-primary" value="Upload Photo">
-
-                        {% if user.photoUrl %}
-                            <input type="submit" class="btn btn-sm btn-danger" name="deleteUserPhoto" value="Delete Photo">
-                        {% endif %}
-
-                    </div>
-                </div>
-            </div>
-
-        </form>
-
-        <hr>
-
-
-        {# Profile #}
-
-        <form method="post" enctype="multipart/form-data">
-
-            <input type="hidden" name="action" value="users/saveUser">
-            <input type="hidden" name="redirect" value="social/profile">
-            <input type="hidden" name="userId" value="{{ user.id }}">
+        <div class="form-group">
 
             <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="firstName">First Name</label>
-                        <input type="text"  class="form-control" id="firstName" name="firstName" value="{{ user.firstName }}">
-                    </div>
+                <div class="col-md-3">
+
+                    {% if user.photoUrl %}
+                        {% set photoUrl = user.photoUrl %}
+                    {% else %}
+                        {% set photoUrl = resourceUrl('images/user.gif') %}
+                    {% endif %}
+
+                    <img src="{{ photoUrl }}" class="img-responsive img-rounded" />
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="lastName">Last Name</label>
-                        <input type="text"  class="form-control" id="lastName" name="lastName" value="{{ user.lastName }}">
-                    </div>
+                <div class="col-md-9">
+
+                    <label for="userPhoto">{{ (user.photoUrl ? 'Change Photo' : 'Upload Photo') }}</label><br />
+                    <p>
+                        <input type="file" name="userPhoto" value="{{ (user.photoUrl ? 'Change Photo' : 'Upload') }}">
+                    </p>
+
+                    <input type="submit" class="btn btn-sm btn-primary" value="Upload Photo">
+
+                    {% if user.photoUrl %}
+                        <input type="submit" class="btn btn-sm btn-danger" name="deleteUserPhoto" value="Delete Photo">
+                    {% endif %}
+
                 </div>
             </div>
+        </div>
 
-            <div class="form-group">
-                <label for="gender">Gender</label>
-                <input type="text"  class="form-control" id="gender" name="gender" value="{{ user.gender }}">
-            </div>
+    </form>
 
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text"  class="form-control" id="username" name="username" value="{{ user.username }}">
-            </div>
+    <hr>
 
-            <div class="form-group">
-                <label for="email">Email</label>
 
-                {% if user.unverifiedEmail %}
-                    <p class="text-success">Check your inbox, an email has been sent to confirm: <strong>{{ user.unverifiedEmail }}</strong> — <a href="#">Resend</a></p>
+    {# Profile #}
 
-                    <p>or change for another address:</p>
+    <form method="post" enctype="multipart/form-data">
 
-                    <input type="text"  class="form-control" id="email" name="email" value="{{ user.email }}">
-                {% else %}
-                    <input type="text"  class="form-control" id="email" name="email" value="{{ user.email }}">
-                {% endif %}
+        <input type="hidden" name="action" value="users/saveUser">
+        <input type="hidden" name="redirect" value="social/profile">
+        <input type="hidden" name="userId" value="{{ user.id }}">
 
-                <p>
-                    <input type="checkbox" name="sendVerificationEmail" value="1" checked /> Send verification email
-                </p>
-            </div>
-
-            {% if socialAccount and not socialAccount.hasPassword %}
-
-                <input type="hidden" name="password" value="{{ socialAccount.hasPassword is defined and not socialAccount.hasPassword ? socialAccount.temporaryPassword : '' }}" />
-
-            {% else %}
-
+        <div class="row">
+            <div class="col-md-6">
                 <div class="form-group">
-                    <label for="email">Current Password</label>
-                    <input type="text"  class="form-control" id="password" name="password" value="{{ socialAccount.hasPassword is defined and not socialAccount.hasPassword ? socialAccount.temporaryPassword : '' }}">
+                    <label for="firstName">First Name</label>
+                    <input type="text"  class="form-control" id="firstName" name="firstName" value="{{ user.firstName }}">
                 </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text"  class="form-control" id="lastName" name="lastName" value="{{ user.lastName }}">
+                </div>
+            </div>
+        </div>
 
+        <div class="form-group">
+            <label for="gender">Gender</label>
+            <input type="text"  class="form-control" id="gender" name="gender" value="{{ user.gender }}">
+        </div>
+
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text"  class="form-control" id="username" name="username" value="{{ user.username }}">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+
+            {% if user.unverifiedEmail %}
+                <p class="text-success">Check your inbox, an email has been sent to confirm: <strong>{{ user.unverifiedEmail }}</strong> — <a href="#">Resend</a></p>
+
+                <p>or change for another address:</p>
+
+                <input type="text"  class="form-control" id="email" name="email" value="{{ user.email }}">
+            {% else %}
+                <input type="text"  class="form-control" id="email" name="email" value="{{ user.email }}">
             {% endif %}
 
+            <p>
+                <input type="checkbox" name="sendVerificationEmail" value="1" checked /> Send verification email
+            </p>
+        </div>
+
+        {% if socialAccount and not socialAccount.hasPassword %}
+
+            <input type="hidden" name="password" value="{{ socialAccount.hasPassword is defined and not socialAccount.hasPassword ? socialAccount.temporaryPassword : '' }}" />
+
+        {% else %}
 
             <div class="form-group">
-                <label for="email">New Password</label>
-                <input type="text"  class="form-control" id="newPassword" name="newPassword" value="">
+                <label for="email">Current Password</label>
+                <input type="text"  class="form-control" id="password" name="password" value="{{ socialAccount.hasPassword is defined and not socialAccount.hasPassword ? socialAccount.temporaryPassword : '' }}">
             </div>
 
-            <input type="submit" class="btn btn-primary" value="Save Profile">
-        </form>
+        {% endif %}
 
-    </div>
+
+        <div class="form-group">
+            <label for="email">New Password</label>
+            <input type="text"  class="form-control" id="newPassword" name="newPassword" value="">
+        </div>
+
+        <input type="submit" class="btn btn-primary" value="Save Profile">
+    </form>
 
 {% endblock %}

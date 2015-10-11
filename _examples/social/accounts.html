@@ -8,59 +8,43 @@
 
 {% block main %}
 
-    <div class="col-md-6 col-md-offset-3">
+    <h2>Accounts</h2>
 
-        {% set error = craft.social.getError() %}
+    {% for gateway in craft.social.getGateways() %}
 
-        {% if error %}
-
-            <div class="alert alert-danger">
-                <p>{{error}}</p>
-            </div>
-
-        {% endif %}
-
-
-        <h2>Accounts</h2>
-
-        {% for gateway in craft.social.getGateways() %}
-
-            {% set user = craft.social.getAccountByGateway(gateway.handle) %}
-            <hr>
-
-            <div class="row">
-                <div class="col-md-2">
-                    <img src="{{ resourceUrl('social/images/icons/'~gateway.handle~'.png') }}" width="100%" class="social-icon img-rounded" />
-                </div>
-
-                <div class="col-md-10">
-
-                    <h4>{{ gateway.name }}</h4>
-
-                    <p>
-                        {% if user %}
-                            You can login using {{ gateway.name }}.
-                        {% else %}
-                            {{ gateway.name }} login is disabled for your account.
-                        {% endif %}
-                    </p>
-
-                    {% if user %}
-                        <p>
-                            <a href="{{craft.social.getUnlinkAccountUrl(gateway.handle)}}" class="btn btn-default btn-sm">Unlink {{ gateway.name }} Account</a>
-                        </p>
-                    {% else %}
-                        <p>
-                            <a href="{{ craft.social.getLinkAccountUrl(gateway.handle) }}" class="btn btn-primary btn-sm">Link {{ gateway.name }} Account</a>
-                        </p>
-                    {% endif %}
-                </div>
-
-            </div>
-
-        {% endfor %}
-
+        {% set user = craft.social.getAccountByGateway(gateway.handle) %}
         <hr>
-    </div>
+
+        <div class="row">
+            <div class="col-md-2">
+                <img src="{{ resourceUrl('social/images/icons/'~gateway.handle~'.png') }}" width="100%" class="social-icon img-rounded" />
+            </div>
+
+            <div class="col-md-10">
+
+                <h4>{{ gateway.name }}</h4>
+
+                <p>
+                    {% if user %}
+                        You can login using {{ gateway.name }}.
+                    {% else %}
+                        {{ gateway.name }} login is disabled for your account.
+                    {% endif %}
+                </p>
+
+                {% if user %}
+                    <p>
+                        <a href="{{craft.social.getUnlinkAccountUrl(gateway.handle)}}" class="btn btn-default btn-sm">Unlink {{ gateway.name }} Account</a>
+                    </p>
+                {% else %}
+                    <p>
+                        <a href="{{ craft.social.getLinkAccountUrl(gateway.handle) }}" class="btn btn-primary btn-sm">Link {{ gateway.name }} Account</a>
+                    </p>
+                {% endif %}
+            </div>
+
+        </div>
+
+    {% endfor %}
 
 {% endblock %}

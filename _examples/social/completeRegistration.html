@@ -1,57 +1,32 @@
-{% extends "social/_layouts/site" %}
-
 {% if currentUser %}
     {% redirect 'social' %}
 {% endif %}
 
+{% extends "social/_layouts/site" %}
+
 {% set title = "Login" %}
+
+{% from 'social/_includes/forms' import errorList %}
 
 {% block main %}
 
-    {% macro errorList(errors) %}
-        {% if errors %}
+    <h2>Complete registration</h2>
 
-            <div class="alert alert-danger">
-                {% for error in errors %}
-                    <p>{{ error }}</p>
-                {% endfor %}
-            </div>
+    <form method="post" action="" accept-charset="UTF-8">
+        <input type="hidden" name="action" value="social/completeRegistration">
+        <input type="hidden" name="redirect" value="social">
 
-        {% endif %}
-    {% endmacro %}
-
-    {% from _self import errorList %}
-
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-
-            <h2>Complete registration</h2>
-
-            {% if errorMessage is defined %}
-                <div class="alert alert-danger">
-                    <p>{{errorMessage}}</p>
-                </div>
-            {% endif %}
-
-            <form method="post" action="" accept-charset="UTF-8">
-                <input type="hidden" name="action" value="social/completeRegistration">
-                <input type="hidden" name="redirect" value="social">
-
-                <div class="form-group{% if completeRegistration is defined and completeRegistration.errors('email')|length > 0 %} has-error{% endif %}">
-                    <label class="control-label" for="email">Email address</label>
-                    <input name="email" type="text" value="{% if completeRegistration is defined %}{{ completeRegistration.email }}{% endif %}" class="form-control" id="email" placeholder="email@example.com">
-
-                </div>
-
-                {% if completeRegistration is defined %}
-                    {{ errorList(completeRegistration.getErrors('email')) }}
-                {% endif %}
-
-                <p><input type="submit" class="btn btn-primary" value="Complete Registration"></p>
-            </form>
-
+        <div class="form-group{% if completeRegistration is defined and completeRegistration.errors('email')|length > 0 %} has-error{% endif %}">
+            <label class="control-label" for="email">Email address</label>
+            <input name="email" type="text" value="{% if completeRegistration is defined %}{{ completeRegistration.email }}{% endif %}" class="form-control" id="email" placeholder="email@example.com">
         </div>
-    </div>
+
+        {% if completeRegistration is defined %}
+            {{ errorList(completeRegistration.getErrors('email')) }}
+        {% endif %}
+
+        <p><input type="submit" class="btn btn-primary" value="Complete Registration"></p>
+    </form>
 
 {% endblock %}
 

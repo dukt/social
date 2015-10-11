@@ -110,6 +110,8 @@ class SocialController extends BaseController
 		// delete token and social user
 		craft()->social_accounts->deleteAccountByProvider($handle);
 
+		craft()->userSession->setNotice(Craft::t('Account unlinked.'));
+
 		// redirect
 		$redirect = craft()->request->getUrlReferrer();
 		$this->redirect($redirect);
@@ -208,6 +210,8 @@ class SocialController extends BaseController
 			{
 				$this->redirect = $this->referer;
 			}
+
+			craft()->userSession->setNotice(Craft::t('Account linked.'));
 
 			$this->redirect($this->redirect);
 		}
@@ -458,7 +462,7 @@ class SocialController extends BaseController
 		// get session variables
 		$token = OauthHelper::arrayToToken(craft()->httpSession->get('social.token'));
 		$gatewayHandle = craft()->httpSession->get('social.gatewayHandle');
-		$socialUid = crft()->httpSession->get('social.uid');
+		$socialUid = craft()->httpSession->get('social.uid');
 
 		// get post
 		$email = craft()->request->getPost('email');
@@ -471,8 +475,6 @@ class SocialController extends BaseController
 		$this->oauthProvider = craft()->oauth->getProvider($gatewayHandle);
 		$this->oauthProvider->setToken($token);
 
-		// account
-		$oauthProviderAccount = $this->oauthProvider->getAccount();
 
 		// attributes
 		$attributes = [];
@@ -483,7 +485,7 @@ class SocialController extends BaseController
 		$completeRegistration = new Social_CompleteRegistrationModel;
 		$completeRegistration->email = $email;
 
-		$errorMessage = null;
+		// $errorMessage = null;
 		$variables = [];
 
 		try
@@ -496,7 +498,7 @@ class SocialController extends BaseController
 				{
 					// register user
 
-					$craftUser = craft()->social_accounts->registerUser($attributes, $gatewayHandle);
+					$craftUser = craft()->social_accounts->registerUser($attributes, $gatewayHandle, $token);
 
 					if ($craftUser)
 					{
@@ -535,22 +537,26 @@ class SocialController extends BaseController
 					$completeRegistration->addError('email', 'Email already in use by another user.');
 				}
 			}
+			else
+			{
+				throw new Exception("Couldn’t complete registration.");
+			}
 
 			if (!empty($completeRegistrationTemplate))
 			{
 				if (!craft()->templates->doesTemplateExist($completeRegistrationTemplate))
 				{
-					throw new Exception("Complete registration template not set");
+					throw new Exception("Complete registration template not set.");
 				}
 			}
 			else
 			{
-				throw new Exception("Complete registration template not set");
+				throw new Exception("Complete registration template not set.");
 			}
 		}
 		catch (\Exception $e)
 		{
-			$variables['errorMessage'] = $e->getMessage();
+			craft()->userSession->setError(Craft::t($e->getMessage()));
 		}
 
 		$variables['completeRegistration'] = $completeRegistration;

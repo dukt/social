@@ -54,18 +54,43 @@
         </div>
     </nav>
 
+
+    <div class="notifications">
+
+        {% set notice = craft.social.getNotice() %}
+
+        {% if notice %}
+
+            <div class="notification notice">
+                {{ notice }}
+            </div>
+
+        {% endif %}
+
+
+        {% set error = craft.social.getError() %}
+
+        {% if error %}
+
+            <div class="notification error">
+                {{ error }}
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    {% if extraPageHeaderHtml is defined %}
+
+        <div id="extra-headers">
+            {{ extraPageHeaderHtml }}
+        </div>
+
+    {% endif %}
+
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-
-                {% if extraPageHeaderHtml is defined %}
-
-                    <div id="extra-headers">
-                        {{ extraPageHeaderHtml }}
-                    </div>
-
-                {% endif %}
-
 
                 {% if tabs is defined and tabs %}
 
@@ -90,10 +115,16 @@
                     {% endblock %}
                 </header>
 
-                <main role="main">
-                    {% block main %}
-                    {% endblock %}
-                </main>
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+
+                        <main role="main">
+                            {% block main %}
+                            {% endblock %}
+                        </main>
+
+                    </div>
+                </div>
 
             </div>
         </div>
