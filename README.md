@@ -17,7 +17,10 @@ This plugin is still under development, please do not use on production.
 
 ## Gateways
 
-The following gateways are natively supported by the plugin:
+
+### Native
+
+The following gateways are natively supported:
 
 - Facebook
 - Google
@@ -25,9 +28,7 @@ The following gateways are natively supported by the plugin:
 
 ### Third-party
 
-Gateway | Developer
---- | ---
-[GitHub](https://dukt.net/craft/github/beta) | [Dukt](https://dukt.net/)
+- [GitHub](https://dukt.net/craft/github/beta) by [Dukt](https://dukt.net/)
 
 You can add support for a custom gateway by creating a Craft plugin compatible with Social Login.
 
@@ -100,8 +101,30 @@ Map fields from social accounts with Craft users fields to autofill user data on
 
     <a href="{{ craft.social.logoutUrl() }}">Logout</a></li>
 
-### Social Accounts
+### Managing Accounts
 
-#### Link
+    <h2>Accounts</h2>
 
-#### Unlink
+    {% for gateway in craft.social.getGateways() %}
+
+        {% set account = craft.social.getAccountByGateway(gateway.handle) %}
+
+        <h4>{{ gateway.name }}</h4>
+
+        <p>
+            {% if account %}
+                You can login using {{ gateway.name }}.
+            {% else %}
+                {{ gateway.name }} login is disabled for your account.
+            {% endif %}
+        </p>
+
+        <p>
+            {% if account %}
+                <a href="{{craft.social.getUnlinkAccountUrl(gateway.handle)}}">Unlink {{ gateway.name }} Account</a>
+            {% else %}
+                <a href="{{ craft.social.getLinkAccountUrl(gateway.handle) }}">Link {{ gateway.name }} Account</a>
+            {% endif %}
+        </p>
+
+    {% endfor %}
