@@ -19,9 +19,14 @@ class Social_GatewaysService extends BaseApplicationComponent
     // Public Methods
     // =========================================================================
 
-    /**
-     * Get gateway
-     */
+	/**
+	 * Get gateway
+	 *
+	 * @param string $gatewayHandle
+	 * @param bool|true $configuredOnly
+	 *
+	 * @return object
+	 */
 	public function getGateway($handle, $configuredOnly = true)
 	{
 		foreach($this->getGateways() as $gateway)
@@ -33,10 +38,12 @@ class Social_GatewaysService extends BaseApplicationComponent
 		}
 	}
 
-    /**
-     * Get gateways
-     */
-    public function getGateways()
+	/**
+	 * Get gateways
+	 *
+	 * @return array
+	 */
+	public function getGateways()
     {
     	if(!$this->gateways)
     	{
@@ -68,6 +75,13 @@ class Social_GatewaysService extends BaseApplicationComponent
     	return $this->gateways;
     }
 
+	/**
+	 * Get gateway scope
+	 *
+	 * @param $handle
+	 *
+	 * @return array
+	 */
 	public function getGatewayScopes($handle)
 	{
 		$scopes = craft()->config->get($handle.'Scopes', 'social');
@@ -82,6 +96,13 @@ class Social_GatewaysService extends BaseApplicationComponent
 		}
 	}
 
+	/**
+	 * Get gateway params
+	 *
+	 * @param $handle
+	 *
+	 * @return array
+	 */
 	public function getGatewayParams($handle)
 	{
 		$gateway = $this->getGateway($handle, false);
@@ -99,10 +120,14 @@ class Social_GatewaysService extends BaseApplicationComponent
     // Private Methods
     // =========================================================================
 
-    /**
-     * Create gateway from gateway type
-     */
-    private function _createGateway($gatewayType)
+	/**
+	 * Instantiate gateway
+	 *
+	 * @param $gatewayType
+	 *
+	 * @return mixed
+	 */
+	private function _createGateway($gatewayType)
     {
         $gateway = new $gatewayType;
 

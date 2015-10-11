@@ -12,14 +12,24 @@ abstract class BaseGateway
     // Public Methods
     // =========================================================================
 
+	/**
+     * Get color
+     *
+     * @return string
+     */
     public function getColor()
     {
         return '#ddd';
     }
 
+	/**
+     * Get gateway handle
+     *
+     * @return string
+     */
     public function getHandle()
     {
-        // from : \Dukt\Share\Service\Twitter
+        // from : \Dukt\Social\Gateway\Twitter
         // to : twitter
 
         $handle = get_class($this);
@@ -32,6 +42,11 @@ abstract class BaseGateway
         return $handle;
     }
 
+    /**
+     * Is gateway configured ?
+     *
+     * @return bool
+     */
     public function isConfigured()
     {
         $oauthProvider = \Craft\craft()->oauth->getProvider($this->getHandle());
@@ -42,21 +57,39 @@ abstract class BaseGateway
         }
     }
 
-    public function setToken($token)
+	/**
+     * Set OAuth token
+     *
+     * @param Oauth_TokenModel $token
+     */
+    public function setToken(Oauth_TokenModel $token)
     {
         $this->token = $token;
     }
 
+	/**
+     * Get OAuth scopes
+     *
+     * @return array
+     */
     public function getScopes()
     {
         return array();
     }
 
+	/**
+     * Get OAuth params
+     *
+     * @return array
+     */
     public function getParams()
     {
         return array();
     }
 
+	/**
+     * On before save token
+     */
     public function onBeforeSaveToken()
     {
     }

@@ -17,6 +17,9 @@ class Social_GatewaysController extends BaseController
 	// Public Methods
 	// =========================================================================
 
+	/**
+     * Init
+     */
     public function init()
     {
         $pluginDependencies = craft()->social_plugin->getPluginDependencies();
@@ -27,7 +30,12 @@ class Social_GatewaysController extends BaseController
         }
     }
 
-	public function actionIndex()
+	/**
+     * Gateways Index
+     *
+     * @return null
+     */
+    public function actionIndex()
 	{
 		$variables['gateways'] = craft()->social_gateways->getGateways(false);
 

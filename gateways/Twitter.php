@@ -10,21 +10,41 @@ class Twitter extends BaseGateway
     // Public Methods
     // =========================================================================
 
+    /**
+     * Get Name
+     *
+     * @return string
+     */
     public function getName()
     {
         return "Twitter";
     }
 
+    /**
+     * Get icon url
+     *
+     * @return string
+     */
     public function getIconUrl()
     {
         return UrlHelper::getResourceUrl('social/svg/twitter.svg');
     }
 
+    /**
+     * Get color
+     *
+     * @return string
+     */
     public function getColor()
     {
         return '#00aced';
     }
 
+    /**
+     * Get profile
+     *
+     * @return array|bool
+     */
     public function getProfile()
     {
         $token = $this->token;
@@ -44,6 +64,17 @@ class Twitter extends BaseGateway
         );
     }
 
+    /**
+     * API
+     *
+     * @param string $method
+     * @param string $uri
+     * @param null|array   $params
+     * @param null|array   $headers
+     * @param null|array   $postFields
+     *
+     * @return array|bool|float|\Guzzle\Http\Message\Response|int|string
+     */
     public function api($method = 'get', $uri, $params = null, $headers = null, $postFields = null)
     {
         $client = new Client('https://api.twitter.com/1.1');

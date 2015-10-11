@@ -12,11 +12,23 @@ class TokenIdentity extends \Craft\UserIdentity
     private $_id;
     public $accountId;
 
+    /**
+     * Constructor
+     *
+     * @param int $accountId
+     *
+     * @return null
+     */
     public function __construct($accountId)
     {
         $this->accountId = $accountId;
     }
 
+	/**
+     * Authenticate
+     *
+     * @return bool
+     */
     public function authenticate()
     {
         \Craft\Craft::log(__METHOD__, \Craft\LogLevel::Info, true);
@@ -37,6 +49,11 @@ class TokenIdentity extends \Craft\UserIdentity
         }
     }
 
+    /**
+     * Get ID
+     *
+     * @return int
+     */
     public function getId()
     {
         return $this->_id;

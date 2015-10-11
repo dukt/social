@@ -17,6 +17,11 @@ class Social_PluginController extends BaseController
     // Public Methods
     // =========================================================================
 
+	/**
+     * Install
+     *
+     * @return null
+     */
     public function actionInstall()
     {
         $variables['pluginDependencies'] = craft()->social_plugin->getPluginDependencies();

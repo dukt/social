@@ -10,26 +10,44 @@ class Facebook extends BaseGateway
     // Public Methods
     // =========================================================================
 
+	/**
+     * Get name
+     *
+     * @return string
+     */
     public function getName()
     {
         return "Facebook";
     }
 
+	/**
+     * Get icon URL
+     *
+     * @return string
+     */
     public function getIconUrl()
     {
         return UrlHelper::getResourceUrl('social/svg/facebook.svg');
     }
 
+	/**
+     * Get color
+     *
+     * @return string
+     */
     public function getColor()
     {
         return '#3b5998';
     }
 
+	/**
+     * Get Profile
+     *
+     * @return array
+     */
     public function getProfile()
     {
         $response = $this->api('get', 'me');
-
-        // return $response;
 
         return array(
             'id' => $response['id'],
@@ -44,6 +62,17 @@ class Facebook extends BaseGateway
         );
     }
 
+	/**
+     * API
+     *
+     * @param string $method
+     * @param string $uri
+     * @param null|array   $params
+     * @param null|array   $headers
+     * @param null|array   $postFields
+     *
+     * @return array|bool|float|\Guzzle\Http\Message\Response|int|string
+     */
     public function api($method = 'get', $uri, $params = null, $headers = null, $postFields = null)
     {
         // client

@@ -11,21 +11,41 @@ class Google extends BaseGateway
     // Public Methods
     // =========================================================================
 
+    /**
+     * Get Name
+     *
+     * @return string
+     */
     public function getName()
     {
         return "Google";
     }
 
+    /**
+     * Get icon url
+     *
+     * @return string
+     */
     public function getIconUrl()
     {
         return UrlHelper::getResourceUrl('social/svg/google.svg');
     }
 
+    /**
+     * Get color
+     *
+     * @return string
+     */
     public function getColor()
     {
         return '#dd4b39';
     }
 
+    /**
+     * Get OAuth scopes
+     *
+     * @return array
+     */
     public function getScopes()
     {
         return array(
@@ -34,6 +54,11 @@ class Google extends BaseGateway
         );
     }
 
+    /**
+     * Get OAuth params
+     *
+     * @return array
+     */
     public function getParams()
     {
         return array(
@@ -42,6 +67,12 @@ class Google extends BaseGateway
         );
     }
 
+	/**
+     * Perform actions before a token gets saved
+     *
+     * @param $token
+     * @param $existingToken
+     */
     public function onBeforeSaveToken($token, $existingToken)
     {
         if (empty($token->refreshToken))
@@ -66,6 +97,11 @@ class Google extends BaseGateway
         }
     }
 
+    /**
+     * Get profile
+     *
+     * @return array|bool
+     */
     public function getProfile()
     {
         try

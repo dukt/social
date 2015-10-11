@@ -18,6 +18,8 @@ class Social_UsersService extends BaseApplicationComponent
     // =========================================================================
 
 	/**
+	 * Get social user from a Craft user ID
+	 *
 	 * @param $userId
 	 *
 	 * @return Social_UserModel
@@ -35,6 +37,14 @@ class Social_UsersService extends BaseApplicationComponent
 		}
 	}
 
+	/**
+	 * Save social user
+	 *
+	 * @param Social_UserModel $account
+	 *
+	 * @return bool
+	 * @throws Exception
+	 */
 	public function saveSocialUser(Social_UserModel $account)
 	{
 		if ($account->id)

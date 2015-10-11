@@ -17,6 +17,11 @@ class Social_AccountsService extends BaseApplicationComponent
     // Public Methods
     // =========================================================================
 
+	/**
+	 * Get accounts
+	 *
+	 * @return array
+	 */
 	public function getAccounts()
 	{
 		$conditions = '';
@@ -30,6 +35,13 @@ class Social_AccountsService extends BaseApplicationComponent
 		}
 	}
 
+	/**
+	 * Get account by ID
+	 *
+	 * @param int $id
+	 *
+	 * @return Social_AccountModel|null
+	 */
 	public function getAccountById($id)
 	{
 		$record = Social_AccountRecord::model()->findByPk($id);
@@ -40,8 +52,13 @@ class Social_AccountsService extends BaseApplicationComponent
 		}
 	}
 
-	// =========================================================================
-
+	/**
+	 * Get account by gateway handle
+	 *
+	 * @param string $gatewayHandle
+	 *
+	 * @return Social_AccountModel|null
+	 */
 	public function getAccountByGateway($gatewayHandle)
 	{
 		$currentUser = craft()->userSession->getUser();
@@ -58,6 +75,14 @@ class Social_AccountsService extends BaseApplicationComponent
 		}
 	}
 
+	/**
+	 * Get account by social UID
+	 *
+	 * @param string $gatewayHandle
+	 * @param string $socialUid
+	 *
+	 * @return BaseModel
+	 */
 	public function getAccountByUid($gatewayHandle, $socialUid)
 	{
 		$conditions = 'gateway=:gateway';
@@ -74,6 +99,14 @@ class Social_AccountsService extends BaseApplicationComponent
 		}
 	}
 
+	/**
+	 * Save Account
+	 *
+	 * @param Social_AccountModel $account
+	 *
+	 * @return bool
+	 * @throws Exception
+	 */
 	public function saveAccount(Social_AccountModel $account)
 	{
 		if ($account->id)
@@ -125,7 +158,7 @@ class Social_AccountsService extends BaseApplicationComponent
 	/**
 	 * Save Token
 	 *
-	 * @param object $tokenModel The token object we want to save
+	 * @param Oauth_TokenModel $token
 	 *
 	 * @return null
 	 */
@@ -152,6 +185,13 @@ class Social_AccountsService extends BaseApplicationComponent
 		craft()->oauth->saveToken($token);
 	}
 
+	/**
+	 * Delete account by provider
+	 *
+	 * @param $gatewayHandle
+	 *
+	 * @return bool
+	 */
 	public function deleteAccountByProvider($gatewayHandle)
 	{
 		$currentUser = craft()->userSession->getUser();
@@ -183,6 +223,13 @@ class Social_AccountsService extends BaseApplicationComponent
 		return false;
 	}
 
+	/**
+	 * Delete account by user ID
+	 *
+	 * @param int $userId
+	 *
+	 * @return bool
+	 */
 	public function deleteAccountByUserId($userId)
     {
         $conditions = 'userId=:userId';
@@ -212,9 +259,11 @@ class Social_AccountsService extends BaseApplicationComponent
 	 * Register User
 	 *
 	 * @param array $attributes Attributes of the user we want to register
+	 * @param string $gatewayHandle
+	 * @param Oauth_TokenModel $token
 	 *
+	 * @return bool
 	 * @throws Exception
-	 * @return null
 	 */
 	public function registerUser($attributes, $gatewayHandle, $token)
 	{
@@ -248,7 +297,7 @@ class Social_AccountsService extends BaseApplicationComponent
 			{
 				if (craft()->config->get('allowEmailMatch', 'social') !== true)
 				{
-					throw new \Exception("An account already exists with this email: ".$attributes['email']);
+					throw new Exception("An account already exists with this email: ".$attributes['email']);
 				}
 			}
 		}
@@ -276,15 +325,30 @@ class Social_AccountsService extends BaseApplicationComponent
 		return $user;
 	}
 
+	/**
+	 * Fires an 'onBeforeRegister' event.
+	 *
+	 * @param Event $event
+	 *
+	 * @return null
+	 */
 	public function onBeforeRegister(Event $event)
 	{
 		$this->raiseEvent('onBeforeRegister', $event);
 	}
 
-
     // Private Methods
     // =========================================================================
 
+	/**
+	 * Register user
+	 * @param $account
+	 * @param $gatewayHandle
+	 * @param $token
+	 *
+	 * @return bool
+	 * @throws Exception
+	 */
 	private function _registerUser($account, $gatewayHandle, $token)
 	{
 		// get social plugin settings
@@ -384,13 +448,11 @@ class Social_AccountsService extends BaseApplicationComponent
 	}
 
 	/**
-	 * Fill Attributes From Profile
+	 * Fill Attributes
 	 *
-	 * @param array $attributes Attributes we want to fill the profile with
-	 * @param array $profile    The profile we want to fill attributes with
-	 *
-	 * @throws Exception
-	 * @return null
+	 * @param $attributes
+	 * @param $gatewayHandle
+	 * @param $token
 	 */
 	private function _fillAttributes(&$attributes, $gatewayHandle, $token)
 	{

@@ -17,7 +17,15 @@ class SocialService extends BaseApplicationComponent
     // Public Methods
     // =========================================================================
 
-	public function getLoginUrl($gatewayHandle, $params = [])
+	/**
+	 * Get login URL
+	 *
+	 * @param $gatewayHandle
+	 * @param array  $params
+	 *
+	 * @return string
+	 */
+	public function getLoginUrl($gatewayHandle, array $params = [])
 	{
 		$params['gateway'] = $gatewayHandle;
 
@@ -33,6 +41,13 @@ class SocialService extends BaseApplicationComponent
 		return $url;
 	}
 
+	/**
+	 * Get logout URL
+	 *
+	 * @param string|null $redirect
+	 *
+	 * @return string
+	 */
 	public function getLogoutUrl($redirect = null)
 	{
 		$params = ['redirect' => $redirect];
@@ -40,6 +55,13 @@ class SocialService extends BaseApplicationComponent
 		return UrlHelper::getActionUrl('social/logout', $params);
 	}
 
+	/**
+	 * Get link account URL
+	 *
+	 * @param $handle
+	 *
+	 * @return string
+	 */
 	public function getLinkAccountUrl($handle)
 	{
 		return UrlHelper::getActionUrl('social/link', [
@@ -47,6 +69,13 @@ class SocialService extends BaseApplicationComponent
 		]);
 	}
 
+	/**
+	 * Get unlink account URL
+	 *
+	 * @param $handle
+	 *
+	 * @return string
+	 */
 	public function getUnlinkAccountUrl($handle)
 	{
 		return UrlHelper::getActionUrl('social/unlink', [
@@ -54,6 +83,14 @@ class SocialService extends BaseApplicationComponent
 		]);
 	}
 
+	/**
+	 * Save remote photo
+	 *
+	 * @param string $photoUrl
+	 * @param UserModel $user
+	 *
+	 * @return bool
+	 */
 	public function saveRemotePhoto($photoUrl, UserModel $user)
 	{
 		$filename = 'photo';
@@ -65,7 +102,6 @@ class SocialService extends BaseApplicationComponent
 		$response = $client->get($photoUrl)
 			->setResponseBody($tempPath.$filename)
 			->send();
-
 
 		$extension = substr($response->getContentType(), strpos($response->getContentType(), "/") + 1);
 

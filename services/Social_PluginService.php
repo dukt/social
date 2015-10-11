@@ -32,8 +32,10 @@ class Social_PluginService extends BaseApplicationComponent
         parent::init();
     }
 
-    /**
-     * Check Requirements
+	/**
+     * Check requirements
+     *
+     * @throws Exception
      */
     public function checkRequirements()
     {
@@ -41,12 +43,16 @@ class Social_PluginService extends BaseApplicationComponent
 
         if (count($pluginDependencies) > 0)
         {
-            throw new \Exception("Social is not configured properly. Check Social settings for more informations.");
+            throw new Exception("Social is not configured properly. Check Social settings for more informations.");
         }
     }
 
-    /**
-     * Get Plugin Dependencies
+	/**
+     * Get plugin dependencies
+     *
+     * @param bool|true $missingOnly
+     *
+     * @return array
      */
     public function getPluginDependencies($missingOnly = true)
     {
@@ -77,10 +83,14 @@ class Social_PluginService extends BaseApplicationComponent
     // Private Methods
     // =========================================================================
 
-    /**
-     * Get Plugin Dependency
+	/**
+     * Get plugin dependency
+     *
+     * @param array $dependency
+     *
+     * @return array
      */
-    private function getPluginDependency($dependency)
+    private function getPluginDependency(array $dependency)
     {
         $isMissing = true;
         $isInstalled = true;
