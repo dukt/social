@@ -4,20 +4,41 @@
 
 {% set selectedTab = 'gateways' %}
 
+{% includeCssResource "social/css/social.css" %}
+
 {% set content %}
 
     {% if gateways|length > 0 %}
 
         <table class="data fullwidth">
 
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Gateway</th>
+                    <th>OAuth Provider</th>
+                </tr>
+            </thead>
+
             {% for gateway in gateways %}
 
                 <tr>
-                    <td>
-                        <span class="status {{(gateway.isConfigured ? 'on' : '')}}"></span>{{gateway.name}}
+                    <td class="thin">
+                        <img src="{{ gateway.getIconUrl() }}" class="social-icon social-{{ gateway.handle }}" style="background-color: {{ gateway.color }};" />
                     </td>
+                    <td>{{gateway.name}}</td>
                     <td>
-                        <a href="{{ url('oauth/'~gateway.handle) }}">{{ 'OAuth settings'|t }}</a>
+                        <span class="status {{ (gateway.isConfigured ? 'on' : '') }}"></span>
+
+                        {% if gateway.isConfigured %}
+                            {{ 'Configured'|t }}
+                        {% else %}
+                            {{ 'Not configured'|t }}
+                        {% endif %}
+
+                        &nbsp;
+
+                        <a class="btn small" href="{{ url('oauth/'~gateway.handle) }}">{{ 'Settings'|t }}</a>
                     </td>
                 </tr>
 

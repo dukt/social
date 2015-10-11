@@ -8,40 +8,46 @@
 
 {% block main %}
 
-    <h2>Login</h2>
+    <div class="row ">
+        <div class="col-md-6 col-md-offset-3">
+            <h2>Login</h2>
 
-    <form method="post" action="" accept-charset="UTF-8">
-        {{ getCsrfInput() }}
+            <form method="post" action="" accept-charset="UTF-8">
+                {{ getCsrfInput() }}
 
-        <input type="hidden" name="action" value="users/login">
-        <input type="hidden" name="redirect" value="social">
+                <input type="hidden" name="action" value="users/login">
+                <input type="hidden" name="redirect" value="social">
 
 
-        <div class="form-group">
-            <label for="loginName">Email address</label>
-            <input name="loginName" type="email" class="form-control" id="loginName" placeholder="Enter username or email" value="{{ craft.request.param('loginName') }}">
+                <div class="form-group">
+                    <label for="loginName">Email address</label>
+                    <input name="loginName" type="email" class="form-control" id="loginName" placeholder="Enter username or email" value="{{ craft.request.param('loginName') }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input name="password" type="password" placeholder="Enter password" class="form-control" id="password">
+                </div>
+
+                <p><input type="submit" class="btn btn-success btn-block btn-social" value="Login with Craft"></p>
+            </form>
+
+
+            <h3>... or connect with</h3>
+
+            {% for gateway in craft.social.getGateways() %}
+
+                <p>
+                    <a href="{{ craft.social.loginUrl(gateway.handle) }}" style="background-color: {{ gateway.color }};" class="btn btn-default btn-block btn-social">
+                        <img src="{{ gateway.getIconUrl() }}" />
+                        {{ gateway.name }}
+                    </a>
+                </p>
+
+            {% endfor %}
+
         </div>
-
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input name="password" type="password" placeholder="Enter password" class="form-control" id="password">
-        </div>
-
-        <p><input type="submit" class="btn btn-success btn-block btn-social" value="Login with Craft"></p>
-    </form>
-
-
-    <h3>... or connect with</h3>
-
-    {% for gateway in craft.social.getGateways() %}
-
-        <p>
-            <a href="{{ craft.social.loginUrl(gateway.handle) }}" class="btn btn-default btn-block btn-social" data-gateway="{{ gateway.handle }}">
-                {{ gateway.name }}
-            </a>
-        </p>
-
-    {% endfor %}
+    </div>
 
 {% endblock %}
 

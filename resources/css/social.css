@@ -1,5 +1,7 @@
 .social-icon {
   width: 16px;
+  height: 16px;
   vertical-align: middle;
   border-radius: 3px;
+  padding: 3px;
 }

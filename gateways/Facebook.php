@@ -2,6 +2,7 @@
 
 namespace Dukt\Social\Gateway;
 
+use Craft\UrlHelper;
 use Guzzle\Http\Client;
 
 class Facebook extends BaseGateway
@@ -12,6 +13,16 @@ class Facebook extends BaseGateway
     public function getName()
     {
         return "Facebook";
+    }
+
+    public function getIconUrl()
+    {
+        return UrlHelper::getResourceUrl('social/svg/facebook.svg');
+    }
+
+    public function getColor()
+    {
+        return '#3b5998';
     }
 
     public function getProfile()

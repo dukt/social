@@ -2,6 +2,7 @@
 
 namespace Dukt\Social\Gateway;
 
+use Craft\UrlHelper;
 use \Google_Client;
 use \Google_Service_Oauth2;
 
@@ -13,6 +14,16 @@ class Google extends BaseGateway
     public function getName()
     {
         return "Google";
+    }
+
+    public function getIconUrl()
+    {
+        return UrlHelper::getResourceUrl('social/svg/google.svg');
+    }
+
+    public function getColor()
+    {
+        return '#dd4b39';
     }
 
     public function getScopes()

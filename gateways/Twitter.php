@@ -2,6 +2,7 @@
 
 namespace Dukt\Social\Gateway;
 
+use Craft\UrlHelper;
 use Guzzle\Http\Client;
 
 class Twitter extends BaseGateway
@@ -12,6 +13,16 @@ class Twitter extends BaseGateway
     public function getName()
     {
         return "Twitter";
+    }
+
+    public function getIconUrl()
+    {
+        return UrlHelper::getResourceUrl('social/svg/twitter.svg');
+    }
+
+    public function getColor()
+    {
+        return '#00aced';
     }
 
     public function getProfile()

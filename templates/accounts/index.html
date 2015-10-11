@@ -17,6 +17,7 @@
         <table class="data fullwidth">
             <thead>
                 <tr>
+                    <th></th>
                     <th>Provider</th>
                     <th>Social User ID</th>
                     <th>Name</th>
@@ -31,8 +32,10 @@
                 {% set gateway = craft.social.getGateway(account.gateway) %}
 
                 <tr>
+                    <td class="thin">
+                        <img src="{{ gateway.getIconUrl() }}" class="social-icon social-{{ gateway.handle }}" style="background-color: {{ gateway.color }};" />
+                    </td>
                     <td>
-                        <img src="{{ resourceUrl('social/images/icons/'~account.gateway~'.png') }}" class="social-icon" />
                         {{ gateway.name }}
                     </td>
                     <td>
