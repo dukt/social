@@ -12,6 +12,11 @@ abstract class BaseGateway
     // Public Methods
     // =========================================================================
 
+    public function getColor()
+    {
+        return '#ddd';
+    }
+
     public function getHandle()
     {
         // from : \Dukt\Share\Service\Twitter
