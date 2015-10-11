@@ -56,7 +56,8 @@ class Social_GatewaysService extends BaseApplicationComponent
 
 	        foreach($gatewayTypes as $gatewayType)
 	        {
-	            $gateways[$gatewayType] = $this->_createGateway($gatewayType);
+                $gateway = $this->_createGateway($gatewayType);
+	            $gateways[$gateway->getHandle()] = $gateway;
 	        }
 
 	        ksort($gateways);
