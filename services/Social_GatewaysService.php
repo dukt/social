@@ -14,48 +14,58 @@ namespace Craft;
 
 class Social_GatewaysService extends BaseApplicationComponent
 {
+    private $gateways;
+
     // Public Methods
     // =========================================================================
 
+    /**
+     * Get gateway
+     */
 	public function getGateway($handle, $configuredOnly = true)
 	{
-		craft()->social_plugin->checkRequirements();
-
-		$className = '\\Dukt\\Social\\Gateway\\'.ucfirst($handle);
-
-		if (class_exists($className))
+		foreach($this->getGateways() as $gateway)
 		{
-			$gateway = new $className;
-
-			$oauthProvider = craft()->oauth->getProvider($handle, $configuredOnly);
-
-			if ($oauthProvider)
+			if($handle == $gateway->getHandle())
 			{
 				return $gateway;
 			}
 		}
 	}
 
-	public function getGateways($configuredOnly = true)
-	{
-		craft()->social_plugin->checkRequirements();
+    /**
+     * Get gateways
+     */
+    public function getGateways()
+    {
+    	if(!$this->gateways)
+    	{
+	        // fetch all Social gateway types
 
-		$oauthProviders = craft()->oauth->getProviders($configuredOnly);
+	        $gatewayTypes = array();
 
-		$gateways = [];
+	        foreach(craft()->plugins->call('getSocialGateways', [], true) as $pluginGatewayTypes)
+	        {
+	            $gatewayTypes = array_merge($gatewayTypes, $pluginGatewayTypes);
+	        }
 
-		foreach ($oauthProviders as $oauthProvider)
-		{
-			$gateway = $this->getGateway($oauthProvider->getHandle(), $configuredOnly);
 
-			if ($gateway)
-			{
-				array_push($gateways, $gateway);
-			}
-		}
+	        // Instantiate gateways
 
-		return $gateways;
-	}
+	        $gateways = [];
+
+	        foreach($gatewayTypes as $gatewayType)
+	        {
+	            $gateways[$gatewayType] = $this->_createGateway($gatewayType);
+	        }
+
+	        ksort($gateways);
+
+	        $this->gateways = $gateways;
+    	}
+
+    	return $this->gateways;
+    }
 
 	public function getGatewayScopes($handle)
 	{
@@ -84,4 +94,17 @@ class Social_GatewaysService extends BaseApplicationComponent
 			return [];
 		}
 	}
+
+    // Private Methods
+    // =========================================================================
+
+    /**
+     * Create gateway from gateway type
+     */
+    private function _createGateway($gatewayType)
+    {
+        $gateway = new $gatewayType;
+
+        return $gateway;
+    }
 }
