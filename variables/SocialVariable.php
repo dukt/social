@@ -23,6 +23,46 @@ class SocialVariable
     // Public Methods
     // =========================================================================
 
+    public function getGateway($gatewayHandle, $configuredOnly = true)
+    {
+        return craft()->social_gateways->getGateway($gatewayHandle, $configuredOnly);
+    }
+
+    public function getGateways($configuredOnly = true)
+    {
+        return craft()->social_gateways->getGateways($configuredOnly);
+    }
+
+    public function getLoginUrl($gatewayHandle, $params = array())
+    {
+        return craft()->social->getLoginUrl($gatewayHandle, $params);
+    }
+
+    public function getLogoutUrl($redirect = null)
+    {
+        return craft()->social->getLogoutUrl($redirect);
+    }
+
+    public function getAccountByGateway($gatewayHandle)
+    {
+        return craft()->social_accounts->getAccountByGateway($gatewayHandle);
+    }
+
+    public function getLinkAccountUrl($gatewayHandle)
+    {
+        return craft()->social->getLinkAccountUrl($gatewayHandle);
+    }
+
+    public function getUnlinkAccountUrl($gatewayHandle)
+    {
+        return craft()->social->getUnlinkAccountUrl($gatewayHandle);
+    }
+
+    public function getSocialUserByUserId($id)
+    {
+        return craft()->social_users->getSocialUserByUserId($id);
+    }
+
     public function getNotice()
     {
         if(!$this->_notice)
@@ -43,50 +83,4 @@ class SocialVariable
         return $this->_error;
     }
 
-    public function getSocialUserByUserId($id)
-    {
-        return craft()->social_users->getSocialUserByUserId($id);
-    }
-
-    public function getAccountByGateway($gatewayHandle)
-    {
-        return craft()->social_accounts->getAccountByGateway($gatewayHandle);
-    }
-
-    public function getGateway($gatewayHandle, $configuredOnly = true)
-    {
-        return craft()->social_gateways->getGateway($gatewayHandle, $configuredOnly);
-    }
-
-    public function getGateways($configuredOnly = true)
-    {
-        try
-        {
-            return craft()->social_gateways->getGateways($configuredOnly);
-        }
-        catch(\Exception $e)
-        {
-            return array();
-        }
-    }
-
-    public function getLoginUrl($gatewayHandle, $params = array())
-    {
-        return craft()->social->getLoginUrl($gatewayHandle, $params);
-    }
-
-    public function getLogoutUrl($redirect = null)
-    {
-        return craft()->social->getLogoutUrl($redirect);
-    }
-
-    public function getLinkAccountUrl($gatewayHandle)
-    {
-        return craft()->social->getLinkAccountUrl($gatewayHandle);
-    }
-
-    public function getUnlinkAccountUrl($gatewayHandle)
-    {
-        return craft()->social->getUnlinkAccountUrl($gatewayHandle);
-    }
 }
