@@ -135,14 +135,12 @@
                 <p class="text-success">Check your inbox, an email has been sent to confirm: <strong>{{ user.unverifiedEmail }}</strong> — <a href="#">Resend</a></p>
 
                 <p>or change for another address:</p>
-
-                <input type="text"  class="form-control" id="email" name="email" value="{{ user.email }}">
-            {% else %}
-                <input type="text"  class="form-control" id="email" name="email" value="{{ user.email }}">
             {% endif %}
 
+            <input type="text"  class="form-control" id="email" name="email" value="{{ user.email }}" data-current-email="{{ user.email }}" />
+
             <p>
-                <input type="checkbox" name="sendVerificationEmail" value="1" checked /> Send verification email
+                <input type="checkbox" id="sendVerificationEmail" name="sendVerificationEmail" value="1" /> Send verification email
             </p>
         </div>
 
@@ -169,3 +167,25 @@
     </form>
 
 {% endblock %}
+
+
+
+
+{% set js %}
+
+    $('#email').change(function() {
+
+        if($(this).val() != $(this).data('current-email'))
+        {
+            $('#sendVerificationEmail').attr('checked', true);
+        }
+        else
+        {
+            $('#sendVerificationEmail').attr('checked', false);
+        }
+
+    });
+
+{% endset %}
+
+{% includeJs js %}
