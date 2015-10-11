@@ -31,9 +31,7 @@ class SocialController extends BaseController
 
 	public function actionInstall()
 	{
-        $plugin = craft()->plugins->getPlugin('social');
-
-        $variables['pluginDependencies'] = $plugin->getPluginDependencies();
+        $variables['pluginDependencies'] = craft()->social_plugin->getPluginDependencies();
 
         if (count($variables['pluginDependencies']) > 0)
         {
@@ -52,7 +50,7 @@ class SocialController extends BaseController
 	 */
 	public function actionLogin()
 	{
-		craft()->social->checkRequirements();
+		craft()->social_plugin->checkRequirements();
 
 
 		// Referer
@@ -119,7 +117,7 @@ class SocialController extends BaseController
 	 */
 	public function actionUnlink()
 	{
-		craft()->social->checkRequirements();
+		craft()->social_plugin->checkRequirements();
 
 		$handle = craft()->request->getParam('gateway');
 
@@ -469,7 +467,7 @@ class SocialController extends BaseController
 	 */
 	private function _completeRegistration()
 	{
-		craft()->social->checkRequirements();
+		craft()->social_plugin->checkRequirements();
 
 		// get session variables
 		$token = OauthHelper::arrayToToken(craft()->httpSession->get('social.token'));

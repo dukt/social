@@ -19,7 +19,7 @@ class Social_GatewaysService extends BaseApplicationComponent
 
 	public function getGateway($handle, $configuredOnly = true)
 	{
-		craft()->social->checkRequirements();
+		craft()->social_plugin->checkRequirements();
 
 		$className = '\\Dukt\\Social\\Gateway\\'.ucfirst($handle);
 
@@ -38,7 +38,7 @@ class Social_GatewaysService extends BaseApplicationComponent
 
 	public function getGateways($configuredOnly = true)
 	{
-		craft()->social->checkRequirements();
+		craft()->social_plugin->checkRequirements();
 
 		$oauthProviders = craft()->oauth->getProviders($configuredOnly);
 

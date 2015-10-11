@@ -16,108 +16,8 @@ require_once(CRAFT_PLUGINS_PATH.'social/vendor/autoload.php');
 
 class SocialPlugin extends BasePlugin
 {
-    /**
-     * Get Name
-     */
-    public function getName()
-    {
-        return Craft::t('Social Login');
-    }
-
-    /**
-     * Get Version
-     */
-    public function getVersion()
-    {
-        return '0.10.1';
-    }
-
-    /**
-     * Get Developer
-     */
-    function getDeveloper()
-    {
-        return 'Dukt';
-    }
-
-    /**
-     * Get Developer URL
-     */
-    function getDeveloperUrl()
-    {
-        return 'https://dukt.net/';
-    }
-
-    /**
-     * Define Settings
-     */
-    protected function defineSettings()
-    {
-        return [
-            'allowSocialRegistration' => [AttributeType::Bool, 'default' => true],
-            'allowSocialLogin'        => [AttributeType::Bool, 'default' => true],
-            'defaultGroup'            => [AttributeType::Number, 'default' => null],
-            'autoFillProfile'         => [AttributeType::Bool, 'default' => true],
-        ];
-    }
-
-    /**
-     * Get Settings URL
-     */
-    public function getSettingsUrl()
-    {
-        return 'social/settings';
-    }
-
-    /**
-     * Has CP Section
-     */
-    public function hasCpSection()
-    {
-        return false;
-    }
-
-    /**
-     * Hook Register CP Routes
-     */
-    public function registerCpRoutes()
-    {
-        return [
-            "social"                   => ['action' => "social/settings"],
-            'social/install'         => ['action' => "social/install"],
-            'social/gateways'         => ['action' => "social/gateways/index"],
-            'social/settings'          => ['action' => "social/settings/index"],
-            "social/accounts"             => ['action' => "social/accounts/index"],
-            "social/accounts/(?P<id>\d+)" => ['action' => "social/accounts/view"],
-        ];
-    }
-
-    /**
-     * On Before Uninstall
-     */
-    public function onBeforeUninstall()
-    {
-        if (isset(craft()->oauth))
-        {
-            craft()->oauth->deleteTokensByPlugin('social');
-        }
-    }
-
-
-    /**
-     * Get Required Dependencies
-     */
-    public function getRequiredPlugins()
-    {
-        return [
-            [
-                'name'    => "OAuth",
-                'handle'  => 'oauth',
-                'url'     => 'https://dukt.net/craft/oauth',
-                'version' => '0.9.70'
-            ]
-        ];
-    }
+    // Public Methods
+    // =========================================================================
 
     public function init()
     {
@@ -187,76 +87,118 @@ class SocialPlugin extends BasePlugin
         parent::init();
     }
 
-    /* ------------------------------------------------------------------------- */
-
     /**
-     * Get Plugin Dependencies
+     * Get Required Dependencies
      */
-    public function getPluginDependencies($missingOnly = true)
+    public function getRequiredPlugins()
     {
-        $dependencies = [];
-
-        $plugins = $this->getRequiredPlugins();
-
-        foreach ($plugins as $key => $plugin)
-        {
-            $dependency = $this->getPluginDependency($plugin);
-
-            if ($missingOnly)
-            {
-                if ($dependency['isMissing'])
-                {
-                    $dependencies[] = $dependency;
-                }
-            }
-            else
-            {
-                $dependencies[] = $dependency;
-            }
-        }
-
-        return $dependencies;
+        return [
+            [
+                'name'    => "OAuth",
+                'handle'  => 'oauth',
+                'url'     => 'https://dukt.net/craft/oauth',
+                'version' => '0.9.70'
+            ]
+        ];
     }
 
     /**
-     * Get Plugin Dependency
+     * Get Social Gateways
      */
-    private function getPluginDependency($dependency)
+    public function getSocialGateways()
     {
-        $isMissing = true;
-        $isInstalled = true;
+        return [
+            'Dukt\Social\Gateway\Facebook',
+            'Dukt\Social\Gateway\Github',
+            'Dukt\Social\Gateway\Google',
+            'Dukt\Social\Gateway\Twitter',
+        ];
+    }
 
-        $plugin = craft()->plugins->getPlugin($dependency['handle'], false);
+    /**
+     * Get Name
+     */
+    public function getName()
+    {
+        return Craft::t('Social Login');
+    }
 
-        if ($plugin)
+    /**
+     * Get Version
+     */
+    public function getVersion()
+    {
+        return '0.10.1';
+    }
+
+    /**
+     * Get Developer
+     */
+    function getDeveloper()
+    {
+        return 'Dukt';
+    }
+
+    /**
+     * Get Developer URL
+     */
+    function getDeveloperUrl()
+    {
+        return 'https://dukt.net/';
+    }
+
+    /**
+     * Define Settings
+     */
+    protected function defineSettings()
+    {
+        return [
+            'allowSocialRegistration' => [AttributeType::Bool, 'default' => true],
+            'allowSocialLogin'        => [AttributeType::Bool, 'default' => true],
+            'defaultGroup'            => [AttributeType::Number, 'default' => null],
+            'autoFillProfile'         => [AttributeType::Bool, 'default' => true],
+        ];
+    }
+
+    /**
+     * Get Settings URL
+     */
+    public function getSettingsUrl()
+    {
+        return 'social/settings';
+    }
+
+    /**
+     * Has CP Section
+     */
+    public function hasCpSection()
+    {
+        return false;
+    }
+
+    /**
+     * Hook Register CP Routes
+     */
+    public function registerCpRoutes()
+    {
+        return [
+            "social"                   => ['action' => "social/settings"],
+            'social/install'         => ['action' => "social/plugin/install"],
+            'social/gateways'         => ['action' => "social/gateways/index"],
+            'social/settings'          => ['action' => "social/settings/index"],
+            "social/accounts"             => ['action' => "social/accounts/index"],
+            "social/accounts/(?P<id>\d+)" => ['action' => "social/accounts/view"],
+        ];
+    }
+
+    /**
+     * On Before Uninstall
+     */
+    public function onBeforeUninstall()
+    {
+        if (isset(craft()->oauth))
         {
-            $currentVersion = $plugin->version;
-
-
-            // requires update ?
-
-            if (version_compare($currentVersion, $dependency['version']) >= 0)
-            {
-                // no (requirements OK)
-
-                if ($plugin->isInstalled && $plugin->isEnabled)
-                {
-                    $isMissing = false;
-                }
-            }
-            else
-            {
-                // yes (requirement not OK)
-            }
+            craft()->oauth->deleteTokensByPlugin('social');
         }
-        else
-        {
-            // not installed
-        }
-
-        $dependency['isMissing'] = $isMissing;
-        $dependency['plugin'] = $plugin;
-
-        return $dependency;
     }
 }

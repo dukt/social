@@ -38,7 +38,7 @@ class Social_AccountsController extends BaseController
      */
     public function actionView()
     {
-        craft()->social->checkRequirements();
+        craft()->social_plugin->checkRequirements();
 
         $routeParams = craft()->urlManager->getRouteParams();
 

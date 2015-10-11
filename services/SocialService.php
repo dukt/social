@@ -88,19 +88,4 @@ class SocialService extends BaseApplicationComponent
 
 		return true;
 	}
-
-	/**
-	 * Check Requirements
-	 */
-	public function checkRequirements()
-	{
-		$plugin = craft()->plugins->getPlugin('social');
-
-		$pluginDependencies = $plugin->getPluginDependencies();
-
-		if (count($pluginDependencies) > 0)
-		{
-			throw new \Exception("Social is not configured properly. Check Social settings for more informations.");
-		}
-	}
 }

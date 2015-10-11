@@ -19,8 +19,7 @@ class Social_GatewaysController extends BaseController
 
     public function init()
     {
-        $plugin = craft()->plugins->getPlugin('social');
-        $pluginDependencies = $plugin->getPluginDependencies();
+        $pluginDependencies = craft()->social_plugin->getPluginDependencies();
 
         if (count($pluginDependencies) > 0)
         {
