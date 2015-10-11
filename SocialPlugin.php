@@ -146,7 +146,6 @@ class SocialPlugin extends BasePlugin
     public function initEventListeners()
     {
         // delete social user when craft user is deleted
-        craft()->social->usersOnBeforeDeleteUser();
 
         craft()->on('users.onBeforeDeleteUser', function (Event $event)
         {
