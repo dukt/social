@@ -535,6 +535,7 @@ class SocialController extends BaseController
 				else
 				{
 					$completeRegistration->addError('email', 'Email already in use by another user.');
+					throw new Exception("Couldn’t complete registration.");
 				}
 			}
 			else
