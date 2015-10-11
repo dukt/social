@@ -20,6 +20,16 @@ class SocialPlugin extends BasePlugin
     // =========================================================================
 
     /**
+     * Initialization
+     */
+    public function init()
+    {
+        $this->initEventListeners();
+
+        parent::init();
+    }
+
+    /**
      * Get Required Dependencies
      */
     public function getRequiredPlugins()
@@ -133,9 +143,10 @@ class SocialPlugin extends BasePlugin
         }
     }
 
-    public function init()
+    public function initEventListeners()
     {
         // delete social user when craft user is deleted
+        craft()->social->usersOnBeforeDeleteUser();
 
         craft()->on('users.onBeforeDeleteUser', function (Event $event)
         {
@@ -197,7 +208,5 @@ class SocialPlugin extends BasePlugin
                 }
             }
         });
-
-        parent::init();
     }
 }
