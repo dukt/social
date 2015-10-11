@@ -1,0 +1,31 @@
+{% extends "_layouts/cp" %}
+
+{% set crumbs = [
+    { label: "Settings"|t, url: url('settings') },
+    { label: "Plugins"|t, url: url('settings/plugins') }
+] %}
+
+{% set title = "Social Login"|t %}
+
+{% set content %}
+
+    <h2>{{ "Missing Requirements"|t }}</h2>
+
+    <p>{{ "Please install or update the following plugins in order to meet Social Login's requirements."|t }}</p>
+
+    {% for dependency in pluginDependencies %}
+
+        <hr>
+
+        <h2>{{ dependency.name }}</h2>
+
+        <ul>
+            <li>{{ "Required: {version}"|t({ version: dependency.version }) }}</li>
+            <li>{{ "Installed: {version}"|t({ version: dependency.plugin.version }) }}</li>
+        </ul>
+
+        <p><a class="btn" href="{{ dependency.url }}" target="_blank">{{ "Download {dependency}"|t({ dependency: dependency.name }) }}</a></p>
+
+    {% endfor %}
+
+{% endset %}

@@ -29,6 +29,22 @@ class SocialController extends BaseController
 	// Public Methods
 	// =========================================================================
 
+	public function actionInstall()
+	{
+        $plugin = craft()->plugins->getPlugin('social');
+
+        $variables['pluginDependencies'] = $plugin->getPluginDependencies();
+
+        if (count($variables['pluginDependencies']) > 0)
+        {
+            $this->renderTemplate('social/install/_index', $variables);
+        }
+        else
+        {
+        	$this->redirect('social/settings');
+        }
+	}
+
 	/**
 	 * Login
 	 *

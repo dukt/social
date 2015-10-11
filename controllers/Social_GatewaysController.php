@@ -17,6 +17,17 @@ class Social_GatewaysController extends BaseController
 	// Public Methods
 	// =========================================================================
 
+    public function init()
+    {
+        $plugin = craft()->plugins->getPlugin('social');
+        $pluginDependencies = $plugin->getPluginDependencies();
+
+        if (count($pluginDependencies) > 0)
+        {
+            $this->redirect('social/install');
+        }
+    }
+
 	public function actionIndex()
 	{
 		$variables['gateways'] = craft()->social_gateways->getGateways(false);

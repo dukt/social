@@ -18,6 +18,22 @@ class Social_SettingsController extends BaseController
 	// =========================================================================
 
 	/**
+	 * Init
+	 *
+	 * @return null
+	 */
+    public function init()
+    {
+        $plugin = craft()->plugins->getPlugin('social');
+        $pluginDependencies = $plugin->getPluginDependencies();
+
+        if (count($pluginDependencies) > 0)
+        {
+            $this->redirect('social/install');
+        }
+    }
+
+	/**
 	 * Settings
 	 *
 	 * @return null
