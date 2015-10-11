@@ -1,6 +1,6 @@
 # Social Login for Craft CMS
 
-A simple plugin to connect to YouTube's API.
+Social Login with popular web services like Facebook, Google, Twitter, and more.
 
 -------------------------------------------
 
@@ -8,20 +8,42 @@ A simple plugin to connect to YouTube's API.
 
 This plugin is still under development, please do not use on production.
 
+## Features
+
+- Visitors can social login and register with their favorite social gateway
+- Craft users can link to and unlink from accounts they want to be able to social login with
+- When registering with a social gateway, the user's profile is automatically filled with the data retrieved from his social account
+- You can decide which social account fields will map with Craft user fields through config variables
+
+## Gateways
+
+The following gateways are natively supported by the plugin:
+
+- Facebook
+- Google
+- Twitter
+
+### Third-party
+
+Gateway | Developer
+--- | ---
+[GitHub](https://dukt.net/craft/github/beta) | [Dukt](https://dukt.net/)
+
+You can add support for a custom gateway by creating a Craft plugin compatible with Social Login.
+
+To add your gateway to this list, please contact us as: [support@dukt.net](mailto:support@dukt.net)
+
+### Creating a gateway
+
+More detailed instructions are upcoming for helping you creating your own custom social gateways.
+
+For now, you can still take a look at GitHub's integration to see how a Craft plugin can add a social gateway.
 
 ## Installation
 
 1. Download the latest release of the plugin
 2. Drop the `social` plugin folder to `craft/plugins`
 3. Install Social Login plugin from the control panel in `Settings > Plugins`
-
-## Supported Gateways
-
-### Core Gateways
-
-- Facebook
-- Google
-- Twitter
 
 ## Config
 
