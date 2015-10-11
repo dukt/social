@@ -41,7 +41,6 @@ class SocialPlugin extends BasePlugin
     {
         return [
             'Dukt\Social\Gateway\Facebook',
-            'Dukt\Social\Gateway\Github',
             'Dukt\Social\Gateway\Google',
             'Dukt\Social\Gateway\Twitter',
         ];
