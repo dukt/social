@@ -19,10 +19,9 @@ abstract class BaseGateway
 
         $handle = get_class($this);
 
-        $start = strlen("\\Dukt\\Social\\Gateway\\") - 1;
+        $start = strrpos($handle, "\\") + 1;
 
         $handle = substr($handle, $start);
-
         $handle = strtolower($handle);
 
         return $handle;
