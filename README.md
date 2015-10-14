@@ -28,8 +28,12 @@ The following gateways are natively supported:
 
 ### Third-party
 
+The following gateways are provided as Craft plugins:
+
 - [GitHub](https://dukt.net/craft/github) by [Dukt](https://dukt.net/)
 - [LinkedIn](https://dukt.net/craft/linkedin) by [Dukt](https://dukt.net/)
+
+Once installed, the gateway will appear in Social Login's settings.
 
 You can add support for a custom gateway by creating a Craft plugin compatible with Social Login.
 
