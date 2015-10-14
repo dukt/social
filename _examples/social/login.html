@@ -29,18 +29,18 @@
                     <input name="password" type="password" placeholder="Enter password" class="form-control" id="password">
                 </div>
 
-                <p><input type="submit" class="btn btn-success btn-block btn-social" value="Login with Craft"></p>
+                <p><input type="submit" class="btn btn-primary btn-block btn-social" value="Login with Craft"></p>
             </form>
 
 
-            <h3>... or connect with</h3>
+            <h3 class="text-center">— or —</h3><br />
 
             {% for gateway in craft.social.getGateways() %}
 
                 <p>
-                    <a href="{{ craft.social.loginUrl(gateway.handle) }}" style="background-color: {{ gateway.color }};" class="btn btn-default btn-block btn-social">
+                    <a href="{{ craft.social.loginUrl(gateway.handle) }}" class="btn btn-default btn-block btn-social" data-gateway="{{ gateway.handle }}">
                         <img src="{{ gateway.getIconUrl() }}" />
-                        {{ gateway.name }}
+                        Login with {{ gateway.name }}
                     </a>
                 </p>
 

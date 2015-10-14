@@ -8,11 +8,13 @@ nav { position: relative; z-index: 1; }
 
 .masthead { margin: 100px 0; }
 
-.btn-social { border: 0; padding: 10px; font-weight: bold; color: #fff; opacity: .9; }
-.btn-social:hover { color: #fff; opacity: 1; }
-.btn-social img { width: 20px; }
+.btn-social { border: 0; padding: 10px; font-weight: bold; }
+.btn-social:not(.btn-primary) { background: rgba(0,0,0,0.05); text-align: left; }
 
-.img-social { width: 64px; padding: 7px; border-radius: 2px; }
+.btn-social:not(.btn-primary):hover { background: rgba(0,0,0, 0.1); }
+.btn-social:not(.btn-primary) img { width: 20px; margin-left: 4px; margin-right: 7px; border-radius: 3px; }
+
+.img-social { width: 64px; padding: 7px; border-radius: 10px; }
 
 .notifications { position: relative; text-align: center; margin-top: -20px; }
 .notifications .notification { text-align: center; background: #999; display: inline-block; padding: 7px 14px; color: #fff; }
