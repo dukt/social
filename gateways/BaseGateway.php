@@ -2,6 +2,8 @@
 
 namespace Dukt\Social\Gateway;
 
+use Craft\Oauth_TokenModel;
+
 abstract class BaseGateway
 {
     // Properties
