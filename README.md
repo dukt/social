@@ -37,7 +37,7 @@ Once installed, the gateway will appear in Social Login's settings.
 
 You can add support for a custom gateway by creating a Craft plugin compatible with Social Login.
 
-To add your gateway to this list, please contact us as: [support@dukt.net](mailto:support@dukt.net)
+If you have developed a social gateway and want it to be added to this list, please contact us as: [support@dukt.net](mailto:support@dukt.net)
 
 ### Creating a gateway
 
