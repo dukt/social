@@ -114,7 +114,7 @@ class SocialPlugin extends BasePlugin
      */
     public function hasCpSection()
     {
-        return false;
+        return true;
     }
 
     /**
