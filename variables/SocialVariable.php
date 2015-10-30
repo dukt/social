@@ -23,6 +23,10 @@ class SocialVariable
     // Public Methods
     // =========================================================================
 
+    public function getProviders()
+    {
+        return craft()->social_providers->getProviders();
+    }
 	/**
      * Get gateway
      *
