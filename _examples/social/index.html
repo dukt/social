@@ -17,6 +17,7 @@
         <img src="{{ photoUrl }}" class="img-rounded" />
 
         <h1>Hello, {{currentUser.friendlyName}} !</h1>
+
         <p class="lead">You are connected to the Social Login demo.</p>
 
         {% set socialAccount = craft.social.getSocialUserByUserId(currentUser.id) %}

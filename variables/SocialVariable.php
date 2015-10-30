@@ -27,28 +27,6 @@ class SocialVariable
     {
         return craft()->social_providers->getProviders();
     }
-	/**
-     * Get gateway
-     *
-     * @param string $gatewayHandle
-     * @param bool|true $configuredOnly
-     *
-     * @return object
-     */
-    public function getGateway($gatewayHandle, $configuredOnly = true)
-    {
-        return craft()->social_gateways->getGateway($gatewayHandle, $configuredOnly);
-    }
-
-    /**
-     * Get gateways
-     *
-     * @return array
-     */
-    public function getGateways($configuredOnly = true)
-    {
-        return craft()->social_gateways->getGateways($configuredOnly);
-    }
 
     /**
      * Get login URL
@@ -85,6 +63,11 @@ class SocialVariable
     public function getAccountByGateway($gatewayHandle)
     {
         return craft()->social_accounts->getAccountByGateway($gatewayHandle);
+    }
+
+    public function getAccountByProvider($providerHandle)
+    {
+        return craft()->social_accounts->getAccountByGateway($providerHandle);
     }
 
     /**

@@ -12,7 +12,6 @@
                 <th scope="col">{{ "Name"|t }}</th>
                 <th scope="col">{{ "Scope"|t }}</th>
                 <th scope="col">{{ "Options"|t }}</th>
-                <th scope="col">{{ "Available Scopes"|t }}</th>
             </tr>
         </thead>
 
@@ -43,12 +42,6 @@
                             {{ provider.getOptions()|join('<br />')|raw }}
                         {% else %}
                             —
-                        {% endif %}
-                    </td>
-
-                    <td>
-                        {% if provider.scopeDocsUrl %}
-                            <a href="{{ provider.scopeDocsUrl }}" target="_blank">See Available Scopes</a>
                         {% endif %}
                     </td>
                 </tr>

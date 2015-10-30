@@ -178,8 +178,6 @@ class Social_AccountsService extends BaseApplicationComponent
 		}
 
 		// onBeforeSaveToken
-		$gateway = craft()->social_gateways->getGateway($token->providerHandle);
-		$gateway->onBeforeSaveToken($token, $existingToken);
 
 		// save token
 		craft()->oauth->saveToken($token);
@@ -456,29 +454,29 @@ class Social_AccountsService extends BaseApplicationComponent
 	 */
 	private function _fillAttributes(&$attributes, $gatewayHandle, $token)
 	{
-		$socialProvider = craft()->social_gateways->getGateway($gatewayHandle);
-		$socialProvider->setToken($token);
-		$profile = $socialProvider->getProfile();
+		// $socialProvider = craft()->social_gateways->getGateway($gatewayHandle);
+		// $socialProvider->setToken($token);
+		// $profile = $socialProvider->getProfile();
 
-		$plugin = craft()->plugins->getPlugin('social');
-		$settings = $plugin->getSettings();
+		// $plugin = craft()->plugins->getPlugin('social');
+		// $settings = $plugin->getSettings();
 
-		if ($settings->autoFillProfile)
-		{
-			if (!empty($profile['firstName']))
-			{
-				$attributes['firstName'] = $profile['firstName'];
-			}
+		// if ($settings->autoFillProfile)
+		// {
+		// 	if (!empty($profile['firstName']))
+		// 	{
+		// 		$attributes['firstName'] = $profile['firstName'];
+		// 	}
 
-			if (!empty($profile['lastName']))
-			{
-				$attributes['lastName'] = $profile['lastName'];
-			}
+		// 	if (!empty($profile['lastName']))
+		// 	{
+		// 		$attributes['lastName'] = $profile['lastName'];
+		// 	}
 
-			if (!empty($profile['photo']))
-			{
-				$attributes['photo'] = $profile['photo'];
-			}
-		}
+		// 	if (!empty($profile['photo']))
+		// 	{
+		// 		$attributes['photo'] = $profile['photo'];
+		// 	}
+		// }
 	}
 }

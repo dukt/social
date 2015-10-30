@@ -181,8 +181,7 @@ class SocialController extends BaseController
 			$socialProvider = craft()->social_providers->getProvider($gatewayHandle);
 
 			$scope = $socialProvider->getScope();
-
-			$params = craft()->social_gateways->getGatewayParams($gatewayHandle);
+			$params = $socialProvider->getOptions();
 
 			if ($forcePrompt)
 			{
@@ -249,23 +248,8 @@ class SocialController extends BaseController
 
 			$account = $this->oauthProvider->getAccount($this->token);
 
-			// account
-
-			if(method_exists($account, 'getArrayCopy'))
-			{
-				$oauthProviderAccount = (array) $account->getArrayCopy();
-			}
-			elseif(method_exists($account, 'getIterator'))
-			{
-				$oauthProviderAccount = (array) $account->getIterator();
-			}
-			else
-			{
-				throw new Exception("Couldn’t get account");
-			}
-
 			// socialUid
-			$this->socialUid = $oauthProviderAccount['uid'];
+			$this->socialUid = $account['uid'];
 
 			// user
 			$craftUser = craft()->userSession->getUser();
@@ -376,20 +360,7 @@ class SocialController extends BaseController
 		}
 		else
 		{
-            // account
-
-            if(method_exists($this->oauthProvider->getAccount(), 'getArrayCopy'))
-            {
-                $attributes = (array) $this->oauthProvider->getAccount()->getArrayCopy();
-            }
-            elseif(method_exists($this->oauthProvider->getAccount(), 'getIterator'))
-            {
-                $attributes = (array) $this->oauthProvider->getAccount()->getIterator();
-            }
-            else
-            {
-                throw Exception("Couldn’t get account");
-            }
+			$attributes = $this->oauthProvider->getAccount($this->token);
 
 			if (empty($attributes['email']) && craft()->config->get('requireEmail', 'social'))
 			{
