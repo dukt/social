@@ -35,7 +35,7 @@
 
             <h3 class="text-center">— or —</h3><br />
 
-            {% for gateway in craft.social.getGateways() %}
+            {% for gateway in craft.social.getProviders() %}
 
                 <p>
                     <a href="{{ craft.social.loginUrl(gateway.handle) }}" class="btn btn-default btn-block btn-social" data-gateway="{{ gateway.handle }}">

@@ -1,0 +1,50 @@
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% set title = provider.name %}
+
+{% set crumbs = [
+{ label: "Settings"|t, url: url('settings') },
+{ label: "Plugin"|t, url: url('settings/plugins') },
+{ label: "Social Login"|t, url: url('social') },
+{ label: "Providers"|t, url: url('social/providers') },
+] %}
+
+{% macro configWarning(setting, file) -%}
+{{ "This is being overridden by the {setting} config setting."|t({
+setting: '<strong>'~setting~'</strong>'
+})|raw }}
+{%- endmacro %}
+
+{% from _self import configWarning %}
+
+{% set content %}
+
+
+    <h2 class="first">{{ "Scope"|t }}</h2>
+    <p class="light">{{ provider.getScope()|length }} permissions defined</p>
+
+    {% if provider.getScope() %}
+        <ul>
+            {% for scope in provider.getScope() %}
+                <li>- {{ scope }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="light">{{ "No scope." }}</p>
+    {% endif %}
+
+    <hr>
+
+    <div class="light">
+        <p>
+            Scopes express the permissions you'll be authorized for when making requests.
+
+            {% if provider.scopeDocsUrl %}
+                <a href="{{ provider.scopeDocsUrl }}" target="_blank">See available permissions for {{ provider.name }}</a>
+            {% endif %}
+        </p>
+
+        <p>Customize the scope of this provider by creating a config file under <code>craft/config/social.php</code>.</p>
+    </div>
+{% endset %}
