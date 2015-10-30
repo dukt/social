@@ -34,9 +34,14 @@ return [
     ],
 
 	/**
-	 * GitHub Scopes
-     *
-     * https://developer.github.com/v3/oauth/#scopes
+	 * OAuth Configuration
 	 */
-     'githubScopes' => ['user']
+     'oauthConfig' => [
+        'google' => [
+            'options' => [
+                'access_type' => 'offline',
+                'approval_prompt' => 'force'
+            ]
+        ]
+     ]
 ];
