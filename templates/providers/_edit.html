@@ -39,12 +39,16 @@ setting: '<strong>'~setting~'</strong>'
     <div class="light">
         <p>
             Scopes express the permissions you'll be authorized for when making requests.
-
-            {% if provider.scopeDocsUrl %}
-                <a href="{{ provider.scopeDocsUrl }}" target="_blank">See available permissions for {{ provider.name }}</a>
-            {% endif %}
         </p>
 
+        <p>If there is no scope set, Social Login will use the default scope provided by the OAuth provider.</p>
+
         <p>Customize the scope of this provider by creating a config file under <code>craft/config/social.php</code>.</p>
+
+        <p>
+            {% if provider.scopeDocsUrl %}
+                <a href="{{ provider.scopeDocsUrl }}" target="_blank">See available scopes for {{ provider.name }}</a>
+            {% endif %}
+        </p>
     </div>
 {% endset %}
