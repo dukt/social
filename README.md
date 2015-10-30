@@ -10,9 +10,9 @@ This plugin is still under development, please do not use on production.
 
 ## Features
 
-- Visitors can social login and register with their favorite social gateway
+- Visitors can social login and register with their favorite social provider
 - Craft users can link to and unlink from accounts they want to be able to social login with
-- When registering with a social gateway, the user's profile is automatically filled with the data retrieved from his social account
+- When registering with a social provider, the user's profile is automatically filled with the data retrieved from his social account
 - You can decide which social account fields will map with Craft user fields through config variables
 
 ## Gateways
@@ -20,7 +20,7 @@ This plugin is still under development, please do not use on production.
 
 ### Native
 
-The following gateways are natively supported:
+The following providers are natively supported:
 
 - Facebook
 - Google
@@ -28,22 +28,22 @@ The following gateways are natively supported:
 
 ### Third-party
 
-The following gateways are provided as Craft plugins:
+The following providers are provided as Craft plugins:
 
 - [GitHub](https://dukt.net/craft/github) by [Dukt](https://dukt.net/)
 - [LinkedIn](https://dukt.net/craft/linkedin) by [Dukt](https://dukt.net/)
 
-Once installed, the gateway will appear in Social Login's settings.
+Once installed, the provider will appear in Social Login's settings.
 
-You can add support for a custom gateway by creating a Craft plugin compatible with Social Login.
+You can add support for a custom provider by creating a Craft plugin compatible with Social Login.
 
-If you have developed a social gateway and want it to be added to this list, please contact us as: [support@dukt.net](mailto:support@dukt.net)
+If you have developed a social provider and want it to be added to this list, please contact us as: [support@dukt.net](mailto:support@dukt.net)
 
-### Creating a gateway
+### Creating a provider
 
-More detailed instructions are upcoming for helping you creating your own custom social gateways.
+More detailed instructions are upcoming for helping you creating your own custom social providers.
 
-For now, you can still take a look at GitHub's integration to see how a Craft plugin can add a social gateway.
+For now, you can still take a look at GitHub's integration to see how a Craft plugin can add a social provider.
 
 ## Installation
 
@@ -61,7 +61,7 @@ Read the notices carefully and you will be safe and good to go !
 
     'allowEmailMatch' => false
 
-Will connect a social user to an existing Craft if the email provided by the social gateway matches the email of a Craft user.
+Will connect a social user to an existing Craft if the email provided by the social provider matches the email of a Craft user.
 
 **Be extra carefull** with this config because it can make your site easily hackable.
 If the service you use for social login doesn't check the email of their customers, anyone could easily change their address to use the same one as one of your Craft users and get in straightaway.
@@ -110,25 +110,25 @@ Map fields from social accounts with Craft users fields to autofill user data on
 
     <h2>Accounts</h2>
 
-    {% for gateway in craft.social.getGateways() %}
+    {% for provider in craft.social.getGateways() %}
 
-        {% set account = craft.social.getAccountByGateway(gateway.handle) %}
+        {% set account = craft.social.getAccountByGateway(provider.handle) %}
 
-        <h4>{{ gateway.name }}</h4>
+        <h4>{{ provider.name }}</h4>
 
         <p>
             {% if account %}
-                You can login using {{ gateway.name }}.
+                You can login using {{ provider.name }}.
             {% else %}
-                {{ gateway.name }} login is disabled for your account.
+                {{ provider.name }} login is disabled for your account.
             {% endif %}
         </p>
 
         <p>
             {% if account %}
-                <a href="{{craft.social.getUnlinkAccountUrl(gateway.handle)}}">Unlink {{ gateway.name }} Account</a>
+                <a href="{{craft.social.getUnlinkAccountUrl(provider.handle)}}">Unlink {{ provider.name }} Account</a>
             {% else %}
-                <a href="{{ craft.social.getLinkAccountUrl(gateway.handle) }}">Link {{ gateway.name }} Account</a>
+                <a href="{{ craft.social.getLinkAccountUrl(provider.handle) }}">Link {{ provider.name }} Account</a>
             {% endif %}
         </p>
 

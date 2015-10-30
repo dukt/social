@@ -53,19 +53,19 @@ class Social_AccountsService extends BaseApplicationComponent
 	}
 
 	/**
-	 * Get account by gateway handle
+	 * Get account by provider handle
 	 *
-	 * @param string $gatewayHandle
+	 * @param string $providerHandle
 	 *
 	 * @return Social_AccountModel|null
 	 */
-	public function getAccountByGateway($gatewayHandle)
+	public function getAccountByGateway($providerHandle)
 	{
 		$currentUser = craft()->userSession->getUser();
 		$userId = $currentUser->id;
 
-		$conditions = 'gateway=:gateway and userId=:userId';
-		$params = [':gateway' => $gatewayHandle, ':userId' => $userId];
+		$conditions = 'provider=:provider and userId=:userId';
+		$params = [':provider' => $providerHandle, ':userId' => $userId];
 
 		$record = Social_AccountRecord::model()->find($conditions, $params);
 
@@ -78,15 +78,15 @@ class Social_AccountsService extends BaseApplicationComponent
 	/**
 	 * Get account by social UID
 	 *
-	 * @param string $gatewayHandle
+	 * @param string $providerHandle
 	 * @param string $socialUid
 	 *
 	 * @return BaseModel
 	 */
-	public function getAccountByUid($gatewayHandle, $socialUid)
+	public function getAccountByUid($providerHandle, $socialUid)
 	{
-		$conditions = 'gateway=:gateway';
-		$params = [':gateway' => $gatewayHandle];
+		$conditions = 'provider=:provider';
+		$params = [':provider' => $providerHandle];
 
 		$conditions .= ' AND socialUid=:socialUid';
 		$params[':socialUid'] = $socialUid;
@@ -130,7 +130,7 @@ class Social_AccountsService extends BaseApplicationComponent
 		// populate
 		$accountRecord->userId = $account->userId;
 		$accountRecord->tokenId = $account->tokenId;
-		$accountRecord->gateway = $account->gateway;
+		$accountRecord->provider = $account->provider;
 		$accountRecord->socialUid = $account->socialUid;
 
 		// validate
@@ -186,17 +186,17 @@ class Social_AccountsService extends BaseApplicationComponent
 	/**
 	 * Delete account by provider
 	 *
-	 * @param $gatewayHandle
+	 * @param $providerHandle
 	 *
 	 * @return bool
 	 */
-	public function deleteAccountByProvider($gatewayHandle)
+	public function deleteAccountByProvider($providerHandle)
 	{
 		$currentUser = craft()->userSession->getUser();
 		$userId = $currentUser->id;
 
-		$conditions = 'gateway=:gateway and userId=:userId';
-		$params = [':gateway' => $gatewayHandle, ':userId' => $userId];
+		$conditions = 'provider=:provider and userId=:userId';
+		$params = [':provider' => $providerHandle, ':userId' => $userId];
 
 		$record = Social_AccountRecord::model()->find($conditions, $params);
 
@@ -257,15 +257,15 @@ class Social_AccountsService extends BaseApplicationComponent
 	 * Register User
 	 *
 	 * @param array $attributes Attributes of the user we want to register
-	 * @param string $gatewayHandle
+	 * @param string $providerHandle
 	 * @param Oauth_TokenModel $token
 	 *
 	 * @return bool
 	 * @throws Exception
 	 */
-	public function registerUser($attributes, $gatewayHandle, $token)
+	public function registerUser($attributes, $providerHandle, $token)
 	{
-		$this->_fillAttributes($attributes, $gatewayHandle, $token);
+		$this->_fillAttributes($attributes, $providerHandle, $token);
 
 		$temporaryPassword = md5(time());
 
@@ -278,7 +278,7 @@ class Social_AccountsService extends BaseApplicationComponent
 
 			if (!$user)
 			{
-				$user = $this->_registerUser($attributes, $gatewayHandle, $token);
+				$user = $this->_registerUser($attributes, $providerHandle, $token);
 
 				if ($user)
 				{
@@ -303,9 +303,9 @@ class Social_AccountsService extends BaseApplicationComponent
 		{
 			// no email at this point ? create a fake one
 
-			$attributes['email'] = strtolower($gatewayHandle).'.'.$attributes['uid'].'@example.com';
+			$attributes['email'] = strtolower($providerHandle).'.'.$attributes['uid'].'@example.com';
 
-			$user = $this->_registerUser($attributes, $gatewayHandle, $token);
+			$user = $this->_registerUser($attributes, $providerHandle, $token);
 
 			if ($user)
 			{
@@ -341,13 +341,13 @@ class Social_AccountsService extends BaseApplicationComponent
 	/**
 	 * Register user
 	 * @param $account
-	 * @param $gatewayHandle
+	 * @param $providerHandle
 	 * @param $token
 	 *
 	 * @return bool
 	 * @throws Exception
 	 */
-	private function _registerUser($account, $gatewayHandle, $token)
+	private function _registerUser($account, $providerHandle, $token)
 	{
 		// get social plugin settings
 
@@ -404,11 +404,11 @@ class Social_AccountsService extends BaseApplicationComponent
 
 			$profileFieldsMapping = craft()->config->get('profileFieldsMapping', 'social');
 
-			if(isset($profileFieldsMapping[$gatewayHandle]))
+			if(isset($profileFieldsMapping[$providerHandle]))
 			{
 				$variables = $account;
 
-				foreach($profileFieldsMapping[$gatewayHandle] as $field => $template)
+				foreach($profileFieldsMapping[$providerHandle] as $field => $template)
 				{
 					$newUser->getContent()->{$field} = craft()->templates->renderString($template, $variables);
 				}
@@ -449,34 +449,34 @@ class Social_AccountsService extends BaseApplicationComponent
 	 * Fill Attributes
 	 *
 	 * @param $attributes
-	 * @param $gatewayHandle
+	 * @param $providerHandle
 	 * @param $token
 	 */
-	private function _fillAttributes(&$attributes, $gatewayHandle, $token)
+	private function _fillAttributes(&$attributes, $providerHandle, $token)
 	{
-		// $socialProvider = craft()->social_gateways->getGateway($gatewayHandle);
-		// $socialProvider->setToken($token);
-		// $profile = $socialProvider->getProfile();
+		$socialProvider = craft()->social_providers->getProvider($providerHandle);
+		$socialProvider->setToken($token);
+		$profile = $socialProvider->getProfile();
 
-		// $plugin = craft()->plugins->getPlugin('social');
-		// $settings = $plugin->getSettings();
+		$plugin = craft()->plugins->getPlugin('social');
+		$settings = $plugin->getSettings();
 
-		// if ($settings->autoFillProfile)
-		// {
-		// 	if (!empty($profile['firstName']))
-		// 	{
-		// 		$attributes['firstName'] = $profile['firstName'];
-		// 	}
+		if ($settings->autoFillProfile)
+		{
+			if (!empty($profile['firstName']))
+			{
+				$attributes['firstName'] = $profile['firstName'];
+			}
 
-		// 	if (!empty($profile['lastName']))
-		// 	{
-		// 		$attributes['lastName'] = $profile['lastName'];
-		// 	}
+			if (!empty($profile['lastName']))
+			{
+				$attributes['lastName'] = $profile['lastName'];
+			}
 
-		// 	if (!empty($profile['photo']))
-		// 	{
-		// 		$attributes['photo'] = $profile['photo'];
-		// 	}
-		// }
+			if (!empty($profile['photo']))
+			{
+				$attributes['photo'] = $profile['photo'];
+			}
+		}
 	}
 }

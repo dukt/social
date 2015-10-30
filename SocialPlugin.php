@@ -69,7 +69,7 @@ class SocialPlugin extends BasePlugin
      */
     public function getVersion()
     {
-        return '0.10.37';
+        return '0.10.38';
     }
 
     /**
@@ -124,12 +124,15 @@ class SocialPlugin extends BasePlugin
     {
         return [
             "social" => ['action' => "social/settings"],
+
+            'social/install' => ['action' => "social/plugin/install"],
+
             "social/accounts" => ['action' => "social/accounts/index"],
             "social/accounts/(?P<id>\d+)" => ['action' => "social/accounts/view"],
-            'social/gateways' => ['action' => "social/gateways/index"],
-            'social/install' => ['action' => "social/plugin/install"],
+
             'social/providers' => ['action' => "social/providers/index"],
             'social/providers/(?P<handle>.*)' => ['action' => "social/providers/edit"],
+
             'social/settings' => ['action' => "social/settings/index"],
         ];
     }

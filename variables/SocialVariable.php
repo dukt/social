@@ -31,14 +31,14 @@ class SocialVariable
     /**
      * Get login URL
      *
-     * @param $gatewayHandle
+     * @param $providerHandle
      * @param array  $params
      *
      * @return string
      */
-    public function getLoginUrl($gatewayHandle, $params = array())
+    public function getLoginUrl($providerHandle, $params = array())
     {
-        return craft()->social->getLoginUrl($gatewayHandle, $params);
+        return craft()->social->getLoginUrl($providerHandle, $params);
     }
 
     /**
@@ -54,15 +54,15 @@ class SocialVariable
     }
 
     /**
-     * Get account by gateway handle
+     * Get account by provider handle
      *
-     * @param string $gatewayHandle
+     * @param string $providerHandle
      *
      * @return Social_AccountModel|null
      */
-    public function getAccountByGateway($gatewayHandle)
+    public function getAccountByGateway($providerHandle)
     {
-        return craft()->social_accounts->getAccountByGateway($gatewayHandle);
+        return craft()->social_accounts->getAccountByGateway($providerHandle);
     }
 
     public function getAccountByProvider($providerHandle)
@@ -77,9 +77,9 @@ class SocialVariable
      *
      * @return string
      */
-    public function getLinkAccountUrl($gatewayHandle)
+    public function getLinkAccountUrl($providerHandle)
     {
-        return craft()->social->getLinkAccountUrl($gatewayHandle);
+        return craft()->social->getLinkAccountUrl($providerHandle);
     }
 
     /**
@@ -89,9 +89,9 @@ class SocialVariable
      *
      * @return string
      */
-    public function getUnlinkAccountUrl($gatewayHandle)
+    public function getUnlinkAccountUrl($providerHandle)
     {
-        return craft()->social->getUnlinkAccountUrl($gatewayHandle);
+        return craft()->social->getUnlinkAccountUrl($providerHandle);
     }
 
     /**

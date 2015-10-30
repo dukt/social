@@ -35,12 +35,12 @@
 
             <h3 class="text-center">— or —</h3><br />
 
-            {% for gateway in craft.social.getProviders() %}
+            {% for provider in craft.social.getProviders() %}
 
                 <p>
-                    <a href="{{ craft.social.loginUrl(gateway.handle) }}" class="btn btn-default btn-block btn-social" data-gateway="{{ gateway.handle }}">
-                        <img src="{{ gateway.getIconUrl() }}" />
-                        Login with {{ gateway.name }}
+                    <a href="{{ craft.social.loginUrl(provider.handle) }}" class="btn btn-default btn-block btn-social" data-provider="{{ provider.handle }}">
+                        <img src="{{ provider.getIconUrl() }}" />
+                        Login with {{ provider.name }}
                     </a>
                 </p>
 

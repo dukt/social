@@ -29,14 +29,14 @@
             {% for account in accounts %}
 
                 {% set user = account.user %}
-                {% set gateway = craft.social.getGateway(account.gateway) %}
+                {% set provider = craft.social.getGateway(account.provider) %}
 
                 <tr>
                     <td class="thin">
-                        <img src="{{ gateway.getIconUrl() }}" class="social-icon social-{{ gateway.handle }}" />
+                        <img src="{{ provider.getIconUrl() }}" class="social-icon social-{{ provider.handle }}" />
                     </td>
                     <td>
-                        {{ gateway.name }}
+                        {{ provider.name }}
                     </td>
                     <td>
                         {{ account.socialUid }}
