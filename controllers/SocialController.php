@@ -178,14 +178,9 @@ class SocialController extends BaseController
 
 			// gateway scopes & params
 
-			$scopes = craft()->social_gateways->getGatewayScopes($gatewayHandle);
+			$socialProvider = craft()->social_providers->getProvider($gatewayHandle);
 
-			if ($extraScopes)
-			{
-				$extraScopes = unserialize(base64_decode(urldecode($extraScopes)));
-
-				$scopes = array_merge($scopes, $extraScopes);
-			}
+			$scope = $socialProvider->getScope();
 
 			$params = craft()->social_gateways->getGatewayParams($gatewayHandle);
 
@@ -197,7 +192,7 @@ class SocialController extends BaseController
 			if ($response = craft()->oauth->connect([
 				'plugin'   => 'social',
 				'provider' => $gatewayHandle,
-				'scopes'   => $scopes,
+				'scopes'   => $scope,
 				'params'   => $params
 			]))
 			{
@@ -251,21 +246,22 @@ class SocialController extends BaseController
 
 			// OAuth Provider
 			$this->oauthProvider = craft()->oauth->getProvider($gatewayHandle);
-			$this->oauthProvider->setToken($this->token);
+
+			$account = $this->oauthProvider->getAccount($this->token);
 
 			// account
 
-			if(method_exists($this->oauthProvider->getAccount(), 'getArrayCopy'))
+			if(method_exists($account, 'getArrayCopy'))
 			{
-				$oauthProviderAccount = (array) $this->oauthProvider->getAccount()->getArrayCopy();
+				$oauthProviderAccount = (array) $account->getArrayCopy();
 			}
-			elseif(method_exists($this->oauthProvider->getAccount(), 'getIterator'))
+			elseif(method_exists($account, 'getIterator'))
 			{
-				$oauthProviderAccount = (array) $this->oauthProvider->getAccount()->getIterator();
+				$oauthProviderAccount = (array) $account->getIterator();
 			}
 			else
 			{
-				throw Exception("Couldn’t get account");
+				throw new Exception("Couldn’t get account");
 			}
 
 			// socialUid
