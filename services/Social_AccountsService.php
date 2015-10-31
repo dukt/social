@@ -64,8 +64,8 @@ class Social_AccountsService extends BaseApplicationComponent
 		$currentUser = craft()->userSession->getUser();
 		$userId = $currentUser->id;
 
-		$conditions = 'provider=:provider and userId=:userId';
-		$params = [':provider' => $providerHandle, ':userId' => $userId];
+		$conditions = 'providerHandle=:providerHandle and userId=:userId';
+		$params = [':providerHandle' => $providerHandle, ':userId' => $userId];
 
 		$record = Social_AccountRecord::model()->find($conditions, $params);
 
@@ -85,8 +85,8 @@ class Social_AccountsService extends BaseApplicationComponent
 	 */
 	public function getAccountByUid($providerHandle, $socialUid)
 	{
-		$conditions = 'provider=:provider';
-		$params = [':provider' => $providerHandle];
+		$conditions = 'providerHandle=:providerHandle';
+		$params = [':providerHandle' => $providerHandle];
 
 		$conditions .= ' AND socialUid=:socialUid';
 		$params[':socialUid'] = $socialUid;
@@ -130,7 +130,7 @@ class Social_AccountsService extends BaseApplicationComponent
 		// populate
 		$accountRecord->userId = $account->userId;
 		$accountRecord->tokenId = $account->tokenId;
-		$accountRecord->provider = $account->provider;
+		$accountRecord->providerHandle = $account->providerHandle;
 		$accountRecord->socialUid = $account->socialUid;
 
 		// validate
@@ -195,8 +195,8 @@ class Social_AccountsService extends BaseApplicationComponent
 		$currentUser = craft()->userSession->getUser();
 		$userId = $currentUser->id;
 
-		$conditions = 'provider=:provider and userId=:userId';
-		$params = [':provider' => $providerHandle, ':userId' => $userId];
+		$conditions = 'providerHandle=:providerHandle and userId=:userId';
+		$params = [':providerHandle' => $providerHandle, ':userId' => $userId];
 
 		$record = Social_AccountRecord::model()->find($conditions, $params);
 

@@ -314,7 +314,7 @@ class SocialController extends BaseController
 			// save social user
 			$account = new Social_AccountModel;
 			$account->userId = $craftUser->id;
-			$account->provider = $this->oauthProvider->getHandle();
+			$account->providerHandle = $this->oauthProvider->getHandle();
 			$account->socialUid = $this->socialUid;
 			$account->tokenId = $this->token->id;
 
@@ -401,7 +401,7 @@ class SocialController extends BaseController
 					// save social user
 					$account = new Social_AccountModel;
 					$account->userId = $craftUser->id;
-					$account->provider = $this->oauthProvider->getHandle();
+					$account->providerHandle = $this->oauthProvider->getHandle();
 					$account->socialUid = $this->socialUid;
 					$account->tokenId = $this->token->id;
 					craft()->social_accounts->saveAccount($account);
@@ -475,7 +475,7 @@ class SocialController extends BaseController
 						// save social user
 						$account = new Social_AccountModel;
 						$account->userId = $craftUser->id;
-						$account->provider = $providerHandle;
+						$account->providerHandle = $providerHandle;
 						$account->socialUid = $socialUid;
 						$account->tokenId = $token->id;
 						craft()->social_accounts->saveAccount($account);
