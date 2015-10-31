@@ -59,7 +59,7 @@ class Social_AccountsService extends BaseApplicationComponent
 	 *
 	 * @return Social_AccountModel|null
 	 */
-	public function getAccountByGateway($providerHandle)
+	public function getAccountByProvider($providerHandle)
 	{
 		$currentUser = craft()->userSession->getUser();
 		$userId = $currentUser->id;

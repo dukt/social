@@ -45,18 +45,6 @@ class SocialPlugin extends BasePlugin
     }
 
     /**
-     * Get Social Gateways
-     */
-    public function getSocialGateways()
-    {
-        return [
-            'Dukt\Social\Gateway\Facebook',
-            'Dukt\Social\Gateway\Google',
-            'Dukt\Social\Gateway\Twitter',
-        ];
-    }
-
-    /**
      * Get Name
      */
     public function getName()

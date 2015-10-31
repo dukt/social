@@ -29,7 +29,7 @@
             {% for account in accounts %}
 
                 {% set user = account.user %}
-                {% set provider = craft.social.getGateway(account.provider) %}
+                {% set provider = craft.social.getProvider(account.provider) %}
 
                 <tr>
                     <td class="thin">

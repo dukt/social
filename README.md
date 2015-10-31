@@ -15,7 +15,7 @@ This plugin is still under development, please do not use on production.
 - When registering with a social provider, the user's profile is automatically filled with the data retrieved from his social account
 - You can decide which social account fields will map with Craft user fields through config variables
 
-## Gateways
+## Providers
 
 
 ### Native
@@ -110,9 +110,9 @@ Map fields from social accounts with Craft users fields to autofill user data on
 
     <h2>Accounts</h2>
 
-    {% for provider in craft.social.getGateways() %}
+    {% for provider in craft.social.getProviders() %}
 
-        {% set account = craft.social.getAccountByGateway(provider.handle) %}
+        {% set account = craft.social.getAccountByProvider(provider.handle) %}
 
         <h4>{{ provider.name }}</h4>
 

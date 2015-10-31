@@ -54,7 +54,7 @@
 
     <h2>Social Profile</h2>
 
-    {% set provider = craft.social.getGateway(account.provider) %}
+    {% set provider = craft.social.getProvider(account.provider) %}
 
     {{ provider.setToken(account.token) }}
 

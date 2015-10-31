@@ -60,14 +60,9 @@ class SocialVariable
      *
      * @return Social_AccountModel|null
      */
-    public function getAccountByGateway($providerHandle)
-    {
-        return craft()->social_accounts->getAccountByGateway($providerHandle);
-    }
-
     public function getAccountByProvider($providerHandle)
     {
-        return craft()->social_accounts->getAccountByGateway($providerHandle);
+        return craft()->social_accounts->getAccountByProvider($providerHandle);
     }
 
     /**
