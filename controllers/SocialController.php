@@ -440,8 +440,6 @@ class SocialController extends BaseController
 
 		// OAuth Provider
 		$this->oauthProvider = craft()->oauth->getProvider($providerHandle);
-		$this->oauthProvider->setToken($token);
-
 
 		// attributes
 		$attributes = [];

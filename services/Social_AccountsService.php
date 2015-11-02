@@ -454,9 +454,8 @@ class Social_AccountsService extends BaseApplicationComponent
 	 */
 	private function _fillAttributes(&$attributes, $providerHandle, $token)
 	{
-		$socialProvider = craft()->social_providers->getProvider($providerHandle);
-		$socialProvider->setToken($token);
-		$profile = $socialProvider->getProfile();
+		$oauthProvider = craft()->oauth->getProvider($providerHandle);
+		$profile = $oauthProvider->getAccount($token);
 
 		$plugin = craft()->plugins->getPlugin('social');
 		$settings = $plugin->getSettings();
