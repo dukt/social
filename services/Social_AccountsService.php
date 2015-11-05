@@ -424,9 +424,9 @@ class Social_AccountsService extends BaseApplicationComponent
 
 			// save photo
 
-			if (!empty($account['photo']))
+			if (!empty($account['imageUrl']))
 			{
-				craft()->social->saveRemotePhoto($account['photo'], $user);
+				craft()->social->saveRemotePhoto($account['imageUrl'], $user);
 			}
 
 
@@ -472,9 +472,9 @@ class Social_AccountsService extends BaseApplicationComponent
 				$attributes['lastName'] = $profile['lastName'];
 			}
 
-			if (!empty($profile['photo']))
+			if (!empty($profile['imageUrl']))
 			{
-				$attributes['photo'] = $profile['photo'];
+				$attributes['imageUrl'] = $profile['imageUrl'];
 			}
 		}
 	}
