@@ -28,13 +28,13 @@ class Social_ProviderModel extends BaseModel
         );
     }
 
-    public function getOptions()
+    public function getAuthorizationOptions()
     {
-        $oauthConfig = craft()->config->get('oauthConfig', 'social');
+        $authorizationOptions = craft()->config->get('authorizationOptions', 'social');
 
-        if(isset($oauthConfig[$this->oauthProviderHandle]['options']))
+        if(isset($authorizationOptions[$this->oauthProviderHandle]))
         {
-            return $oauthConfig[$this->oauthProviderHandle]['options'];
+            return $authorizationOptions[$this->oauthProviderHandle];
         }
     }
 

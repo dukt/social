@@ -36,12 +36,10 @@ return [
 	/**
 	 * OAuth Configuration
 	 */
-     'oauthConfig' => [
+     'authorizationOptions' => [
         'google' => [
-            'options' => [
-                'access_type' => 'offline',
-                'approval_prompt' => 'force'
-            ]
+            'access_type' => 'offline',
+            'approval_prompt' => 'force'
         ]
      ]
 ];

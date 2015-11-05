@@ -11,7 +11,7 @@
                 <th scope="col"></th>
                 <th scope="col">{{ "Name"|t }}</th>
                 <th scope="col">{{ "Scope"|t }}</th>
-                <th scope="col">{{ "Options"|t }}</th>
+                <th scope="col">{{ "Authorization Options"|t }}</th>
             </tr>
         </thead>
 
@@ -38,8 +38,8 @@
                     </td>
 
                     <td class="light">
-                        {% if provider.getOptions() %}
-                            {{ provider.getOptions()|join('<br />')|raw }}
+                        {% if provider.getAuthorizationOptions() %}
+                            {{ provider.getAuthorizationOptions()|join('<br />')|raw }}
                         {% else %}
                             —
                         {% endif %}

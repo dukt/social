@@ -150,7 +150,7 @@ class SocialController extends BaseController
 		$providerHandle = craft()->request->getParam('provider');
 		$forcePrompt = craft()->request->getParam('forcePrompt');
 		$requestUri = craft()->request->requestUri;
-		$extraScopes = craft()->request->getParam('scopes');
+		$extraScopes = craft()->request->getParam('scope');
 
 		if (!$forcePrompt)
 		{
@@ -176,23 +176,23 @@ class SocialController extends BaseController
 				throw new Exception("Craft Pro is required");
 			}
 
-			// provider scopes & params
+			// provider scope & authorizationOptions
 
 			$socialProvider = craft()->social_providers->getProvider($providerHandle);
 
 			$scope = $socialProvider->getScope();
-			$params = $socialProvider->getOptions();
+			$authorizationOptions = $socialProvider->getAuthorizationOptions();
 
 			if ($forcePrompt)
 			{
-				$params['approval_prompt'] = 'force';
+				$authorizationOptions['approval_prompt'] = 'force';
 			}
 
 			if ($response = craft()->oauth->connect([
 				'plugin'   => 'social',
 				'provider' => $providerHandle,
-				'scopes'   => $scope,
-				'params'   => $params
+				'scope'   => $scope,
+				'authorizationOptions'   => $authorizationOptions
 			]))
 			{
 				$this->_handleOAuthResponse($providerHandle, $response);
