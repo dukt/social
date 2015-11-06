@@ -1,4 +1,4 @@
-# Social Login for Craft CMS
+# Craft Social Login
 
 Social Login with popular web services like Facebook, Google, Twitter, and more.
 
@@ -15,8 +15,12 @@ This plugin is still under development, please do not use on production.
 - When registering with a social provider, the user's profile is automatically filled with the data retrieved from his social account
 - You can decide which social account fields will map with Craft user fields through config variables
 
-## Providers
+## Requirements
 
+- Craft 2.5
+- Craft OAuth 1.0
+
+## Providers
 
 ### Native
 
