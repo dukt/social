@@ -73,7 +73,7 @@ class Social_ProviderModel extends BaseModel
 
     public function getOauthProvider()
     {
-        return craft()->oauth->getProvider($this->oauthProviderHandle);
+        return craft()->oauth->getProvider($this->oauthProviderHandle, false);
     }
 
     public function getIconUrl()
