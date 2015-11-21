@@ -336,37 +336,30 @@ class SocialController extends BaseController
 		{
 			$attributes = $this->oauthProvider->getAccount($this->token);
 
-			if (empty($attributes['email']))
+			$providerHandle	= $this->oauthProvider->getHandle();
+
+			// register user
+			$craftUser = craft()->social_accounts->registerUser($attributes, $providerHandle, $this->token);
+
+			if ($craftUser)
 			{
-				throw new Exception("Email not provided.");
+				// save token
+				craft()->social_accounts->saveToken($this->token);
+
+				// save social user
+				$account = new Social_AccountModel;
+				$account->userId = $craftUser->id;
+				$account->providerHandle = $this->oauthProvider->getHandle();
+				$account->socialUid = $this->socialUid;
+				$account->tokenId = $this->token->id;
+				craft()->social_accounts->saveAccount($account);
+
+				// login
+				craft()->social_userSession->login($account->id);
 			}
 			else
 			{
-				$providerHandle	= $this->oauthProvider->getHandle();
-
-				// register user
-				$craftUser = craft()->social_accounts->registerUser($attributes, $providerHandle, $this->token);
-
-				if ($craftUser)
-				{
-					// save token
-					craft()->social_accounts->saveToken($this->token);
-
-					// save social user
-					$account = new Social_AccountModel;
-					$account->userId = $craftUser->id;
-					$account->providerHandle = $this->oauthProvider->getHandle();
-					$account->socialUid = $this->socialUid;
-					$account->tokenId = $this->token->id;
-					craft()->social_accounts->saveAccount($account);
-
-					// login
-					craft()->social_userSession->login($account->id);
-				}
-				else
-				{
-					throw new Exception("Craft user couldn’t be created.");
-				}
+				throw new Exception("Craft user couldn’t be created.");
 			}
 		}
 	}

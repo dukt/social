@@ -265,7 +265,7 @@ class Social_AccountsService extends BaseApplicationComponent
 	 */
 	public function registerUser($attributes, $providerHandle, $token)
 	{
-		$this->_fillAttributes($attributes, $providerHandle, $token);
+		// $this->_fillAttributes($attributes, $providerHandle, $token);
 
 		$temporaryPassword = md5(time());
 
@@ -301,23 +301,7 @@ class Social_AccountsService extends BaseApplicationComponent
 		}
 		else
 		{
-			// no email at this point ? create a fake one
-
-			$attributes['email'] = strtolower($providerHandle).'.'.$attributes['uid'].'@example.com';
-
-			$user = $this->_registerUser($attributes, $providerHandle, $token);
-
-			if ($user)
-			{
-				$socialUser = new Social_UserModel;
-				$socialUser->userId = $user->id;
-				$socialUser->hasEmail = false;
-				$socialUser->hasPassword = false;
-				$socialUser->temporaryEmail = $user->email;
-				$socialUser->temporaryPassword = $temporaryPassword;
-
-				craft()->social_users->saveSocialUser($socialUser);
-			}
+			throw new Exception("Email address not provided.");
 		}
 
 		return $user;
@@ -347,7 +331,7 @@ class Social_AccountsService extends BaseApplicationComponent
 	 * @return bool
 	 * @throws Exception
 	 */
-	private function _registerUser($account, $providerHandle, $token)
+	private function _registerUser($attributes, $providerHandle, $token)
 	{
 		// get social plugin settings
 
@@ -360,23 +344,10 @@ class Social_AccountsService extends BaseApplicationComponent
 		}
 
 
-		// new user
-
-		if (isset($account['email']))
-		{
-			// define email
-			$usernameOrEmail = $account['email'];
-		}
-		else
-		{
-			throw new Exception("Email address not provided.");
-		}
-
-
 		// Fire an 'onBeforeRegister' event
 
 		$event = new Event($this, [
-			'account' => $account,
+			'account' => $attributes,
 		]);
 
 		$this->onBeforeRegister($event);
@@ -384,29 +355,32 @@ class Social_AccountsService extends BaseApplicationComponent
 		if ($event->performAction)
 		{
 			$newUser = new UserModel();
-			$newUser->username = $usernameOrEmail;
-			$newUser->email = $usernameOrEmail;
+			$newUser->username = $attributes['email'];
+			$newUser->email = $attributes['email'];
 
-			if (!empty($account['firstName']))
+
+			// fill attributes
+
+			if (!empty($attributes['firstName']))
 			{
-				$newUser->firstName = $account['firstName'];
+				$newUser->firstName = $attributes['firstName'];
 			}
 
-			if (!empty($account['lastName']))
+			if (!empty($attributes['lastName']))
 			{
-				$newUser->lastName = $account['lastName'];
+				$newUser->lastName = $attributes['lastName'];
 			}
 
-			$newUser->newPassword = $account['newPassword'];
+			$newUser->newPassword = $attributes['newPassword'];
 
 
-			// save profile attributes
+			// fill attributes for user fields
 
 			$profileFieldsMapping = craft()->config->get('profileFieldsMapping', 'social');
 
 			if(isset($profileFieldsMapping[$providerHandle]))
 			{
-				$variables = $account;
+				$variables = $attributes;
 
 				foreach($profileFieldsMapping[$providerHandle] as $field => $template)
 				{
@@ -419,14 +393,14 @@ class Social_AccountsService extends BaseApplicationComponent
 
 			craft()->users->saveUser($newUser);
 			craft()->db->getSchema()->refresh();
-			$user = craft()->users->getUserByUsernameOrEmail($usernameOrEmail);
+			$user = craft()->users->getUserByUsernameOrEmail($attributes['email']);
 
 
 			// save photo
 
-			if (!empty($account['imageUrl']))
+			if (!empty($attributes['imageUrl']))
 			{
-				craft()->social->saveRemotePhoto($account['imageUrl'], $user);
+				craft()->social->saveRemotePhoto($attributes['imageUrl'], $user);
 			}
 
 
