@@ -10,11 +10,18 @@
 
 {% if CraftEdition == CraftPro %}
 
-    {% set tabs = {
-        settings: { label: "Settings"|t, url: url('social/settings') },
-        providers: { label: "Providers"|t, url: url('social/providers') },
-        accounts: { label: "Accounts"|t, url: url('social/accounts') },
-    } %}
+    {% if not craft.config.get('enableAccounts', 'social') %}
+        {% set tabs = {
+            settings: { label: "Settings"|t, url: url('social/settings') },
+            providers: { label: "Providers"|t, url: url('social/providers') },
+        } %}
+    {% else %}
+        {% set tabs = {
+            settings: { label: "Settings"|t, url: url('social/settings') },
+            providers: { label: "Providers"|t, url: url('social/providers') },
+            accounts: { label: "Accounts"|t, url: url('social/accounts') },
+        } %}
+    {% endif %}
 
 {% else %}
 
