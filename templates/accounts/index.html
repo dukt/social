@@ -1,12 +1,6 @@
-{% extends "_layouts/cp" %}
+{% extends "social/_layouts/cp" %}
 
-{% set title = 'Accounts' %}
-
-{% set crumbs = [
-    { label: "Settings"|t, url: url('settings') },
-    { label: "Plugins"|t, url: url('settings/plugins') },
-    { label: "Social Login"|t, url: url('social/settings') }
-] %}
+{% set selectedTab = 'accounts' %}
 
 {% includeCssResource "social/css/social.css" %}
 
