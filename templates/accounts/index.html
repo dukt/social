@@ -29,14 +29,14 @@
             {% for account in accounts %}
 
                 {% set user = account.user %}
-                {% set provider = craft.social.getProvider(account.provider) %}
+                {% set oauthProvider = craft.oauth.getProvider(account.providerHandle) %}
 
                 <tr>
                     <td class="thin">
-                        <img src="{{ provider.getIconUrl() }}" class="social-icon social-{{ provider.handle }}" />
+                        <img src="{{ oauthProvider.getIconUrl() }}" class="social-icon social-{{ oauthProvider.handle }}" />
                     </td>
                     <td>
-                        {{ provider.name }}
+                        {{ oauthProvider.name }}
                     </td>
                     <td>
                         {{ account.socialUid }}
