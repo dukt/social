@@ -20,28 +20,41 @@ setting: '<strong>'~setting~'</strong>'
 
 {% set content %}
 
+    {% set providerScope = provider.getScope() %}
+    {% set providerAuthorizationOptions = provider.getAuthorizationOptions() %}
 
     <h2 class="first">{{ "Scope"|t }}</h2>
 
-    <p class="light">{{ provider.getScope()|length }} permissions defined</p>
-
-    {% if provider.getScope() %}
+    {% if providerScope %}
         <ul>
-            {% for scope in provider.getScope() %}
-                <li>- {{ scope }}</li>
+            {% for scope in providerScope %}
+                <li>{{ scope }}</li>
             {% endfor %}
         </ul>
     {% else %}
-        <p class="light">{{ "No scope." }}</p>
+        <p class="light">{{ "No scope defined." }}</p>
     {% endif %}
 
+    <h2>{{ "Authorization Options"|t }}</h2>
+
+    {% if providerAuthorizationOptions %}
+        <ul>
+            {% for optionKey, optionValue in providerAuthorizationOptions %}
+                <li><strong>{{ optionKey }}:</strong> {{ optionValue }} </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="light">{{ "No authorization options defined." }}</p>
+    {% endif %}
     <hr>
 
     <div class="light">
 
         <p>{{ "Scopes express the permissions that users will get when they login with {provider}."|t({ provider: provider.name }) }}</p>
 
-        <p>{{ "Customize the scope of this provider by creating a config file under: {path}."|t({ path: '<code>craft/config/social.php</code>' })|raw }}</p>
+        <p>{{ "Authorization options are extra parameters which are passed when connecting to the provider."|t }}</p>
+
+        <p>{{ "Customize the scope and authorization options of this provider by creating a config file under: {path}."|t({ path: '<code>craft/config/social.php</code>' })|raw }}</p>
 
         {% if provider.scopeDocsUrl %}
             <p>

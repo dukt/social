@@ -30,19 +30,11 @@
                     </td>
 
                     <td class="light">
-                        {% if provider.getScope() %}
-                            {{ provider.getScope()|join('<br />')|raw }}
-                        {% else %}
-                            —
-                        {% endif %}
+                        {{ provider.getScope()|length }} permissions
                     </td>
 
                     <td class="light">
-                        {% if provider.getAuthorizationOptions() %}
-                            {{ provider.getAuthorizationOptions()|join('<br />')|raw }}
-                        {% else %}
-                            —
-                        {% endif %}
+                        {{ provider.getAuthorizationOptions()|length }} options
                     </td>
                 </tr>
 
