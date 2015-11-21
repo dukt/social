@@ -14,16 +14,6 @@ return [
 	 */
     'allowEmailMatch' => false,
 
-	/**
-	 * Require Email Address
-	 */
-    'requireEmail' => true,
-
-	/**
-	 * Complete Registration Template
-	 */
-    'completeRegistrationTemplate' => null,
-
     /**
      * Auto-fill rules / Profile Fields Mapping
      */

@@ -38,9 +38,6 @@ class SocialController extends BaseController
 	{
 		craft()->social_plugin->checkRequirements();
 
-
-		// Referer
-
 		$this->referer = craft()->httpSession->get('social.referer');
 
 		if (!$this->referer)
@@ -49,22 +46,9 @@ class SocialController extends BaseController
 			craft()->httpSession->add('social.referer', $this->referer);
 		}
 
-
-		// Redirect
-
 		$this->redirect = craft()->request->getParam('redirect');
 
-
-		// Connect or complete registration
-
-		if (craft()->request->getPost('action') != 'social/completeRegistration')
-		{
-			$this->_connect();
-		}
-		else
-		{
-			$this->_completeRegistration();
-		}
+		$this->_connect();
 	}
 
 	/**
@@ -148,14 +132,9 @@ class SocialController extends BaseController
 	{
 		// request params
 		$providerHandle = craft()->request->getParam('provider');
-		$forcePrompt = craft()->request->getParam('forcePrompt');
 		$requestUri = craft()->request->requestUri;
 		$extraScopes = craft()->request->getParam('scope');
-
-		if (!$forcePrompt)
-		{
-			craft()->httpSession->add('social.requestUri', $requestUri);
-		}
+		craft()->httpSession->add('social.requestUri', $requestUri);
 
 		// settings
 		$plugin = craft()->plugins->getPlugin('social');
@@ -182,11 +161,6 @@ class SocialController extends BaseController
 
 			$scope = $socialProvider->getScope();
 			$authorizationOptions = $socialProvider->getAuthorizationOptions();
-
-			if ($forcePrompt)
-			{
-				$authorizationOptions['approval_prompt'] = 'force';
-			}
 
 			if ($response = craft()->oauth->connect([
 				'plugin'   => 'social',
@@ -362,29 +336,9 @@ class SocialController extends BaseController
 		{
 			$attributes = $this->oauthProvider->getAccount($this->token);
 
-			if (empty($attributes['email']) && craft()->config->get('requireEmail', 'social'))
+			if (empty($attributes['email']))
 			{
-				craft()->httpSession->add('social.token', OauthHelper::tokenToArray($this->token));
-				craft()->httpSession->add('social.uid', $this->socialUid);
-				craft()->httpSession->add('social.providerHandle', $this->oauthProvider->getHandle());
-
-				$completeRegistrationTemplate = craft()->config->get('completeRegistrationTemplate', 'social');
-
-				if (!empty($completeRegistrationTemplate))
-				{
-					if (!craft()->templates->doesTemplateExist($completeRegistrationTemplate))
-					{
-						throw new Exception("Complete registration template not set");
-					}
-				}
-				else
-				{
-					throw new Exception("Complete registration template not set");
-				}
-
-				$this->renderTemplate($completeRegistrationTemplate);
-
-				return;
+				throw new Exception("Email not provided.");
 			}
 			else
 			{
@@ -415,123 +369,6 @@ class SocialController extends BaseController
 				}
 			}
 		}
-	}
-
-	/**
-	 * Complete Registration
-	 *
-	 * @return null
-	 */
-	private function _completeRegistration()
-	{
-		craft()->social_plugin->checkRequirements();
-
-		// get session variables
-		$token = OauthHelper::arrayToToken(craft()->httpSession->get('social.token'));
-		$providerHandle = craft()->httpSession->get('social.providerHandle');
-		$socialUid = craft()->httpSession->get('social.uid');
-
-		// get post
-		$email = craft()->request->getPost('email');
-
-		// settings
-		$plugin = craft()->plugins->getPlugin('social');
-		$pluginSettings = $plugin->getSettings();
-
-		// OAuth Provider
-		$this->oauthProvider = craft()->oauth->getProvider($providerHandle);
-
-		// attributes
-		$attributes = [];
-		$attributes['email'] = $email;
-
-		$completeRegistrationTemplate = craft()->config->get('completeRegistrationTemplate', 'social');
-
-		$completeRegistration = new Social_CompleteRegistrationModel;
-		$completeRegistration->email = $email;
-
-		// $errorMessage = null;
-		$variables = [];
-
-		try
-		{
-			if ($completeRegistration->validate())
-			{
-				$emailExists = craft()->users->getUserByUsernameOrEmail($email);
-
-				if (!$emailExists)
-				{
-					// register user
-
-					$craftUser = craft()->social_accounts->registerUser($attributes, $providerHandle, $token);
-
-					if ($craftUser)
-					{
-						// save token
-						craft()->social_accounts->saveToken($token);
-
-						// save social user
-						$account = new Social_AccountModel;
-						$account->userId = $craftUser->id;
-						$account->providerHandle = $providerHandle;
-						$account->socialUid = $socialUid;
-						$account->tokenId = $token->id;
-						craft()->social_accounts->saveAccount($account);
-
-						// login
-						craft()->social_userSession->login($account->id);
-
-						// redirect
-
-						$this->_cleanSession();
-
-						if (!$this->redirect)
-						{
-							$this->redirect = $this->referer;
-						}
-
-						$this->redirect($this->redirect);
-					}
-					else
-					{
-						throw new Exception("Craft user couldn’t be created.");
-					}
-				}
-				else
-				{
-					$completeRegistration->addError('email', 'Email already in use by another user.');
-					throw new Exception("Couldn’t complete registration.");
-				}
-			}
-			else
-			{
-				throw new Exception("Couldn’t complete registration.");
-			}
-
-			if (!empty($completeRegistrationTemplate))
-			{
-				if (!craft()->templates->doesTemplateExist($completeRegistrationTemplate))
-				{
-					throw new Exception("Complete registration template not set.");
-				}
-			}
-			else
-			{
-				throw new Exception("Complete registration template not set.");
-			}
-		}
-		catch (\Exception $e)
-		{
-			craft()->userSession->setError(Craft::t($e->getMessage()));
-		}
-
-		$variables['completeRegistration'] = $completeRegistration;
-
-		// Render template
-		$this->renderTemplate($completeRegistrationTemplate, $variables);
-
-		// Send the account back to the template
-		craft()->urlManager->setRouteVariables($variables);
 	}
 
 	/**
