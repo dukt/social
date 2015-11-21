@@ -265,8 +265,6 @@ class Social_AccountsService extends BaseApplicationComponent
 	 */
 	public function registerUser($attributes, $providerHandle, $token)
 	{
-		// $this->_fillAttributes($attributes, $providerHandle, $token);
-
 		$temporaryPassword = md5(time());
 
 		$attributes['newPassword'] = $temporaryPassword;
@@ -417,39 +415,5 @@ class Social_AccountsService extends BaseApplicationComponent
 		}
 
 		return false;
-	}
-
-	/**
-	 * Fill Attributes
-	 *
-	 * @param $attributes
-	 * @param $providerHandle
-	 * @param $token
-	 */
-	private function _fillAttributes(&$attributes, $providerHandle, $token)
-	{
-		$oauthProvider = craft()->oauth->getProvider($providerHandle);
-		$profile = $oauthProvider->getAccount($token);
-
-		$plugin = craft()->plugins->getPlugin('social');
-		$settings = $plugin->getSettings();
-
-		if ($settings->autoFillProfile)
-		{
-			if (!empty($profile['firstName']))
-			{
-				$attributes['firstName'] = $profile['firstName'];
-			}
-
-			if (!empty($profile['lastName']))
-			{
-				$attributes['lastName'] = $profile['lastName'];
-			}
-
-			if (!empty($profile['imageUrl']))
-			{
-				$attributes['imageUrl'] = $profile['imageUrl'];
-			}
-		}
 	}
 }
