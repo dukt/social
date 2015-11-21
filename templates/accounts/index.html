@@ -11,11 +11,12 @@
         <table class="data fullwidth">
             <thead>
                 <tr>
+                    <th>User</th>
+                    <th>Name</th>
+                    <th>Email</th>
                     <th></th>
                     <th>Provider</th>
                     <th>Social User ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
                     <th></th>
                 </tr>
             </thead>
@@ -26,6 +27,11 @@
                 {% set oauthProvider = craft.oauth.getProvider(account.providerHandle) %}
 
                 <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.fullName }}</td>
+                    <td>
+                        <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+                    </td>
                     <td class="thin">
                         <img src="{{ oauthProvider.getIconUrl() }}" class="social-icon social-{{ oauthProvider.handle }}" />
                     </td>
@@ -34,10 +40,6 @@
                     </td>
                     <td>
                         {{ account.socialUid }}
-                    </td>
-                    <td>{{ user.fullName }}</td>
-                    <td>
-                        <a href="mailto:{{ user.email }}">{{ user.email }}</a>
                     </td>
                     <td class="thin nowrap">
 
