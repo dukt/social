@@ -31,13 +31,6 @@
 
         <div id="enableSocialRegistration"{% if not settings.enableSocialRegistration %} class="hidden"{% endif %}>
 
-            {{ forms.lightswitchField({
-                label: 'Auto-Fill Profile'|t,
-                instructions: "Automatically fills user fields when a user registers, based on `userMapping` and `userFieldsMapping` config variables."|t,
-                name: 'settings[autoFillProfile]',
-                on:   settings.autoFillProfile
-            }) }}
-
             <div id="defaultGroup">
                 {% set groups = [{ label: "None"|t, value: '' }] %}
                 {% for group in craft.userGroups.getAllGroups() %}
@@ -52,6 +45,13 @@
                     value: (settings.defaultGroup is defined ? settings.defaultGroup : null)
                 }) }}
             </div>
+
+            {{ forms.lightswitchField({
+                label: 'Auto-Fill Profile'|t,
+                instructions: "Automatically fills user fields when a user registers, based on `userMapping` and `userFieldsMapping` config variables."|t,
+                name: 'settings[autoFillProfile]',
+                on:   settings.autoFillProfile
+            }) }}
 
         </div>
 
