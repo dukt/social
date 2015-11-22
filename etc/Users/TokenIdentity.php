@@ -1,4 +1,9 @@
 <?php
+/**
+ * @link      https://dukt.net/craft/social/
+ * @copyright Copyright (c) 2015, Dukt
+ * @license   https://dukt.net/craft/social/docs/license
+ */
 
 namespace Dukt\Social\Etc\Users;
 

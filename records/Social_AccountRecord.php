@@ -1,12 +1,7 @@
 <?php
-
 /**
- * Social plugin for Craft
- *
- * @package   Craft Social
- * @author    Benjamin David
- * @copyright Copyright (c) 2015, Dukt
  * @link      https://dukt.net/craft/social/
+ * @copyright Copyright (c) 2015, Dukt
  * @license   https://dukt.net/craft/social/docs/license
  */
 
