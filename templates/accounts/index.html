@@ -11,13 +11,11 @@
         <table class="data fullwidth">
             <thead>
                 <tr>
-                    <th>User</th>
-                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Full Name</th>
                     <th>Email</th>
-                    <th></th>
-                    <th>Provider</th>
+                    <th>OAuth Provider</th>
                     <th>Social User ID</th>
-                    <th></th>
                 </tr>
             </thead>
 
@@ -27,25 +25,24 @@
                 {% set oauthProvider = craft.oauth.getProvider(account.providerHandle) %}
 
                 <tr>
-                    <td>{{ user.username }}</td>
+                    <td>
+                        <span class="status{% if user.status == 'active' %} {{ user.status }}{% endif %}"></span>
+
+                        <div class="socialthumb">
+                            <img src="{{ user.photoUrl }}" />
+                        </div>
+
+                        <a href="{{ user.cpEditUrl }}">{{ user.username }}</a>
+                    </td>
                     <td>{{ user.fullName }}</td>
                     <td>
                         <a href="mailto:{{ user.email }}">{{ user.email }}</a>
                     </td>
-                    <td class="thin">
-                        <img src="{{ oauthProvider.getIconUrl() }}" class="social-icon social-{{ oauthProvider.handle }}" />
-                    </td>
-                    <td>
-                        {{ oauthProvider.name }}
+                    <td class="provider">
+                        <img src="{{ oauthProvider.getIconUrl() }}" class="social-icon social-{{ oauthProvider.handle }}" />{{ oauthProvider.name }}
                     </td>
                     <td>
                         {{ account.socialUid }}
-                    </td>
-                    <td class="thin nowrap">
-
-                        <a href="{{ url('social/accounts/'~account.id) }}" class="btn small">Social Profile</a> &nbsp;
-                        <a href="{{ user.cpEditUrl }}" class="btn small">Craft User</a>
-
                     </td>
                 </tr>
             {% endfor %}

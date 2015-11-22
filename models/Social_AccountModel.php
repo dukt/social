@@ -32,6 +32,17 @@ class Social_AccountModel extends BaseModel
     /**
      * Get User
      */
+    public function getOauthProvider()
+    {
+        if ($this->providerHandle)
+        {
+            return craft()->oauth->getProvider($this->providerHandle);
+        }
+    }
+
+    /**
+     * Get User
+     */
     public function getUser()
     {
         if ($this->userId)

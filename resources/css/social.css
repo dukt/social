@@ -1,6 +1,23 @@
 .social-icon {
-    display: block;
-    width: 24px;
-    height: 24px;
-    border-radius: 3px;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 2px;
+}
+
+table.data td.provider {
+    white-space: nowrap;
+}
+
+table.data td.provider img {
+    margin-top: -3px;
+    margin-right: 7px;
+    vertical-align: middle;
+}
+
+
+.socialthumb { display: inline-block; }
+.socialthumb img {
+    width: 30px;
+    vertical-align: middle;
 }

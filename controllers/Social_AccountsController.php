@@ -25,26 +25,4 @@ class Social_AccountsController extends BaseController
             'accounts' => $accounts
         ]);
     }
-
-    /**
-     * View Account Details
-     *
-     * @return null
-     */
-    public function actionView()
-    {
-        craft()->social_plugin->checkRequirements();
-
-        $routeParams = craft()->urlManager->getRouteParams();
-
-        $accountId = $routeParams['variables']['id'];
-
-        $account = craft()->social_accounts->getAccountById($accountId);
-
-        $variables = [
-            'account' => $account
-        ];
-
-        $this->renderTemplate('social/accounts/_view', $variables);
-    }
 }
