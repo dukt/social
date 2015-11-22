@@ -15,12 +15,24 @@ return [
     'allowEmailMatch' => false,
 
     /**
-     * Auto-fill rules / Profile Fields Mapping
+     * User Mapping
      */
-    'profileFieldsMapping' => [
-        'facebook' => [
-            'gender' => '{{ gender }}',
-        ],
+    'userMapping' => [
+        'email' => '{{ email }}',
+        'username' => '{{ email }}',
+        'firstName' => '{{ firstName }}',
+        'lastName' => '{{ lastName }}',
+    ],
+
+    /**
+     * User Fields Mapping
+     */
+    'userFieldsMapping' => [
+        // 'facebook' => [
+        //     'fields' => [
+        //         'gender' => '{{ gender }}',
+        //     ],
+        // ],
     ],
 
 	/**
@@ -30,6 +42,6 @@ return [
         'google' => [
             'access_type' => 'offline',
             'approval_prompt' => 'force'
-        ]
-     ]
+        ],
+     ],
 ];

@@ -332,33 +332,28 @@ class Social_AccountsService extends BaseApplicationComponent
 
 		if ($event->performAction)
 		{
+			$variables = $attributes;
+
 			$newUser = new UserModel();
-			$newUser->username = $attributes['email'];
-			$newUser->email = $attributes['email'];
 
 
-			// fill attributes
+			// fill user from attributes
 
-			if (!empty($attributes['firstName']))
+			$userMapping = craft()->config->get('userMapping', 'social');
+
+			foreach($userMapping as $attribute => $template)
 			{
-				$newUser->firstName = $attributes['firstName'];
-			}
-
-			if (!empty($attributes['lastName']))
-			{
-				$newUser->lastName = $attributes['lastName'];
+				$newUser->{$attribute} = craft()->templates->renderString($template, $variables);
 			}
 
 
-			// fill attributes for user fields
+			// fill user fields from attributes
 
-			$profileFieldsMapping = craft()->config->get('profileFieldsMapping', 'social');
+			$userFieldsMapping = craft()->config->get('userFieldsMapping', 'social');
 
-			if(isset($profileFieldsMapping[$providerHandle]))
+			if(isset($userFieldsMapping[$providerHandle]))
 			{
-				$variables = $attributes;
-
-				foreach($profileFieldsMapping[$providerHandle] as $field => $template)
+				foreach($userFieldsMapping[$providerHandle] as $field => $template)
 				{
 					$newUser->getContent()->{$field} = craft()->templates->renderString($template, $variables);
 				}
