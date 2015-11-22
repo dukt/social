@@ -335,30 +335,35 @@ class Social_AccountsService extends BaseApplicationComponent
 			$variables = $attributes;
 
 			$newUser = new UserModel();
+			$newUser->username = $attributes['email'];
+			$newUser->email = $attributes['email'];
 
 
-			// fill user from attributes
-
-			$userMapping = craft()->config->get('userMapping', 'social');
-
-			if(is_array($userMapping))
+			if($settings['autoFillProfile'])
 			{
-				foreach($userMapping as $attribute => $template)
+				// fill user from attributes
+
+				$userMapping = craft()->config->get('userMapping', 'social');
+
+				if(is_array($userMapping))
 				{
-					$newUser->{$attribute} = craft()->templates->renderString($template, $variables);
+					foreach($userMapping as $attribute => $template)
+					{
+						$newUser->{$attribute} = craft()->templates->renderString($template, $variables);
+					}
 				}
-			}
 
 
-			// fill user fields from attributes
+				// fill user fields from attributes
 
-			$userFieldsMapping = craft()->config->get('userFieldsMapping', 'social');
+				$userFieldsMapping = craft()->config->get('userFieldsMapping', 'social');
 
-			if(isset($userFieldsMapping[$providerHandle]) && is_array($userFieldsMapping[$providerHandle]))
-			{
-				foreach($userFieldsMapping[$providerHandle] as $field => $template)
+				if(isset($userFieldsMapping[$providerHandle]) && is_array($userFieldsMapping[$providerHandle]))
 				{
-					$newUser->getContent()->{$field} = craft()->templates->renderString($template, $variables);
+					foreach($userFieldsMapping[$providerHandle] as $field => $template)
+					{
+						$newUser->getContent()->{$field} = craft()->templates->renderString($template, $variables);
+					}
 				}
 			}
 
@@ -372,9 +377,12 @@ class Social_AccountsService extends BaseApplicationComponent
 
 			// save remote photo
 
-			if (!empty($attributes['imageUrl']))
+			if($settings['autoFillProfile'])
 			{
-				craft()->social->saveRemotePhoto($attributes['imageUrl'], $user);
+				if (!empty($attributes['imageUrl']))
+				{
+					craft()->social->saveRemotePhoto($attributes['imageUrl'], $user);
+				}
 			}
 
 

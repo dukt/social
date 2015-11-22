@@ -18,8 +18,6 @@ return [
      * User Mapping
      */
     'userMapping' => [
-        'email' => '{{ email }}',
-        'username' => '{{ email }}',
         'firstName' => '{{ firstName }}',
         'lastName' => '{{ lastName }}',
     ],
