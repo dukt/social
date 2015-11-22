@@ -57,7 +57,7 @@ class SocialPlugin extends BasePlugin
      */
     public function getVersion()
     {
-        return '1.0.40';
+        return '1.0.42';
     }
 
     /**
@@ -145,60 +145,6 @@ class SocialPlugin extends BasePlugin
             $user = $event->params['user'];
 
             craft()->social_accounts->deleteAccountByUserId($user->id);
-        });
-
-
-        // update hasEmail and hasPassword when user is saved
-
-        craft()->on('users.onSaveUser', function (Event $event)
-        {
-            $user = $event->params['user'];
-
-            $socialAccount = craft()->social_users->getSocialUserByUserId($user->id);
-
-            if ($socialAccount)
-            {
-                if (!$socialAccount->hasEmail || !$socialAccount->hasPassword)
-                {
-                    if ($socialAccount->temporaryEmail != $user->email)
-                    {
-                        $socialAccount->hasEmail = true;
-                    }
-
-                    $currentHashedPassword = $user->password;
-                    $currentPassword = $socialAccount->temporaryPassword;
-
-                    if (!craft()->users->validatePassword($currentHashedPassword, $currentPassword))
-                    {
-                        $socialAccount->hasPassword = true;
-                    }
-
-                    craft()->social_users->saveSocialUser($socialAccount);
-                }
-            }
-        });
-
-
-        // update hasEmail when user is activated
-
-        craft()->on('users.onActivateUser', function (Event $event)
-        {
-            $user = $event->params['user'];
-
-            $socialAccount = craft()->social_users->getSocialUserByUserId($user->id);
-
-            if ($socialAccount)
-            {
-                if (!$socialAccount->hasEmail)
-                {
-                    if ($socialAccount->temporaryEmail != $user->email || $socialAccount->temporaryEmail != $user->unverifiedEmail)
-                    {
-                        $socialAccount->hasEmail = true;
-                    }
-
-                    craft()->social_users->saveSocialUser($socialAccount);
-                }
-            }
         });
     }
 }

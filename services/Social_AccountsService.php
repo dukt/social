@@ -265,29 +265,14 @@ class Social_AccountsService extends BaseApplicationComponent
 	 */
 	public function registerUser($attributes, $providerHandle, $token)
 	{
-		$temporaryPassword = md5(time());
-
-		$attributes['newPassword'] = $temporaryPassword;
-
 		if (!empty($attributes['email']))
 		{
-			// find with email
+			// find user from email
 			$user = craft()->users->getUserByUsernameOrEmail($attributes['email']);
 
 			if (!$user)
 			{
 				$user = $this->_registerUser($attributes, $providerHandle, $token);
-
-				if ($user)
-				{
-					$socialUser = new Social_UserModel;
-					$socialUser->userId = $user->id;
-					$socialUser->hasEmail = true;
-					$socialUser->hasPassword = false;
-					$socialUser->temporaryPassword = $temporaryPassword;
-
-					craft()->social_users->saveSocialUser($socialUser);
-				}
 			}
 			else
 			{
@@ -368,8 +353,6 @@ class Social_AccountsService extends BaseApplicationComponent
 			{
 				$newUser->lastName = $attributes['lastName'];
 			}
-
-			$newUser->newPassword = $attributes['newPassword'];
 
 
 			// fill attributes for user fields

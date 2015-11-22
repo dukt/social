@@ -89,18 +89,6 @@ class SocialVariable
         return craft()->social->getUnlinkAccountUrl($providerHandle);
     }
 
-    /**
-     * Get social user from a Craft user ID
-     *
-     * @param $userId
-     *
-     * @return Social_UserModel
-     */
-    public function getSocialUserByUserId($id)
-    {
-        return craft()->social_users->getSocialUserByUserId($id);
-    }
-
 	/**
      * Retrieve a notice stored in the user’s flash data
      *
