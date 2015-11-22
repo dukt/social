@@ -341,9 +341,12 @@ class Social_AccountsService extends BaseApplicationComponent
 
 			$userMapping = craft()->config->get('userMapping', 'social');
 
-			foreach($userMapping as $attribute => $template)
+			if(is_array($userMapping))
 			{
-				$newUser->{$attribute} = craft()->templates->renderString($template, $variables);
+				foreach($userMapping as $attribute => $template)
+				{
+					$newUser->{$attribute} = craft()->templates->renderString($template, $variables);
+				}
 			}
 
 
@@ -351,7 +354,7 @@ class Social_AccountsService extends BaseApplicationComponent
 
 			$userFieldsMapping = craft()->config->get('userFieldsMapping', 'social');
 
-			if(isset($userFieldsMapping[$providerHandle]))
+			if(isset($userFieldsMapping[$providerHandle]) && is_array($userFieldsMapping[$providerHandle]))
 			{
 				foreach($userFieldsMapping[$providerHandle] as $field => $template)
 				{
@@ -367,7 +370,7 @@ class Social_AccountsService extends BaseApplicationComponent
 			$user = craft()->users->getUserByUsernameOrEmail($attributes['email']);
 
 
-			// save photo
+			// save remote photo
 
 			if (!empty($attributes['imageUrl']))
 			{
