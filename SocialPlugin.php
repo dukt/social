@@ -77,8 +77,8 @@ class SocialPlugin extends BasePlugin
     protected function defineSettings()
     {
         return [
-            'allowSocialRegistration' => [AttributeType::Bool, 'default' => true],
-            'allowSocialLogin'        => [AttributeType::Bool, 'default' => true],
+            'enableSocialRegistration' => [AttributeType::Bool, 'default' => true],
+            'enableSocialLogin'        => [AttributeType::Bool, 'default' => true],
             'defaultGroup'            => [AttributeType::Number, 'default' => null],
             'autoFillProfile'         => [AttributeType::Bool, 'default' => true],
         ];

@@ -14,25 +14,32 @@
         <input type="hidden" name="pluginClass" value="Social">
         <input type="hidden" name="redirect" value="social/settings">
 
-        {{ forms.checkboxField({
-            label: 'Allow authentication'|t,
+        {{ forms.lightswitchField({
+            label: 'Enable Social Login'|t,
             instructions: "Allow people to social login to existing accounts."|t,
-            name: 'settings[allowSocialLogin]',
-            checked:   settings.allowSocialLogin,
+            name: 'settings[enableSocialLogin]',
+            on:   settings.enableSocialLogin,
             toggle: 'enableSocialLogin'
         }) }}
 
-        <div id="enableSocialLogin"{% if not settings.allowSocialLogin %} class="hidden"{% endif %}>
+        <div id="enableSocialLogin"{% if not settings.enableSocialLogin %} class="hidden"{% endif %}>
 
-            {{ forms.checkboxField({
-                label: 'Accept new registrations'|t,
-                instructions: "Accept user registration with social login."|t,
-                name: 'settings[allowSocialRegistration]',
-                checked:   settings.allowSocialRegistration,
+            {{ forms.lightswitchField({
+                label: 'Enable Social Registration'|t,
+                instructions: "Accept user registration through a Social service."|t,
+                name: 'settings[enableSocialRegistration]',
+                on:   settings.enableSocialRegistration,
                 toggle: 'enableSocialRegistration'
             }) }}
 
-            <div id="enableSocialRegistration"{% if not settings.allowSocialRegistration %} class="hidden"{% endif %}>
+            <div id="enableSocialRegistration"{% if not settings.enableSocialRegistration %} class="hidden"{% endif %}>
+
+                {{ forms.lightswitchField({
+                    label: 'Auto Fill Profile'|t,
+                    instructions: "Automatically fills user fields when a user registers, based on `userMapping` and `userFieldsMapping` config variables."|t,
+                    name: 'settings[autoFillProfile]',
+                    on:   settings.autoFillProfile
+                }) }}
 
                 <div id="defaultGroup">
                     {% set groups = [{ label: "None"|t, value: '' }] %}
@@ -48,13 +55,6 @@
                         value: (settings.defaultGroup is defined ? settings.defaultGroup : null)
                     }) }}
                 </div>
-
-                {{ forms.checkboxField({
-                    label: 'Auto Fill Profile'|t,
-                    instructions: "Automatically fills first name, last name and photo fields (if they are available) when the user registers."|t,
-                    name: 'settings[autoFillProfile]',
-                    checked:   settings.autoFillProfile
-                }) }}
 
             </div>
         </div>

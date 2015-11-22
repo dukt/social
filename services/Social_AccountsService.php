@@ -316,7 +316,7 @@ class Social_AccountsService extends BaseApplicationComponent
 		$socialPlugin = craft()->plugins->getPlugin('social');
 		$settings = $socialPlugin->getSettings();
 
-		if (!$settings['allowSocialRegistration'])
+		if (!$settings['enableSocialRegistration'])
 		{
 			throw new Exception("Social registration is disabled.");
 		}

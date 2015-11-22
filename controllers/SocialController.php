@@ -141,11 +141,6 @@ class SocialController extends BaseController
 
 		try
 		{
-			if (!$this->pluginSettings['allowSocialLogin'])
-			{
-				throw new Exception("Social login disabled");
-			}
-
 			if (craft()->getEdition() != Craft::Pro)
 			{
 				throw new Exception("Craft Pro is required");
@@ -211,10 +206,6 @@ class SocialController extends BaseController
 
 			$plugin = craft()->plugins->getPlugin('social');
 
-			if (!$this->pluginSettings['allowSocialLogin'])
-			{
-				throw new Exception("Social login disabled");
-			}
 
 			// user
 			$craftUser = craft()->userSession->getUser();
@@ -230,7 +221,7 @@ class SocialController extends BaseController
 		}
 		else
 		{
-			throw new \Exception($response['errorMsg'], 1);
+			throw new \Exception($response['errorMsg']);
 		}
 	}
 
@@ -305,29 +296,36 @@ class SocialController extends BaseController
 
 		if ($account)
 		{
-			$craftUser = craft()->users->getUserById($account->userId);
-
-			if ($craftUser)
+			if ($this->pluginSettings['enableSocialLogin'])
 			{
-				// existing token
-				if (!empty($account->tokenId))
+				$craftUser = craft()->users->getUserById($account->userId);
+
+				if ($craftUser)
 				{
-					$this->token->id = $account->tokenId;
+					// existing token
+					if (!empty($account->tokenId))
+					{
+						$this->token->id = $account->tokenId;
+					}
+
+					// save token
+					craft()->social_accounts->saveToken($this->token);
+
+					// save user
+					$account->tokenId = $this->token->id;
+					craft()->social_accounts->saveAccount($account);
+
+					// login
+					craft()->social_userSession->login($account->id);
 				}
-
-				// save token
-				craft()->social_accounts->saveToken($this->token);
-
-				// save user
-				$account->tokenId = $this->token->id;
-				craft()->social_accounts->saveAccount($account);
-
-				// login
-				craft()->social_userSession->login($account->id);
+				else
+				{
+					throw new Exception("Social account exists but Craft user doesn't");
+				}
 			}
 			else
 			{
-				throw new Exception("Social account exists but Craft user doesn't");
+				throw new Exception("Social login is disabled");
 			}
 		}
 		else
