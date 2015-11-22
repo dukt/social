@@ -16,48 +16,45 @@
 
         {{ forms.lightswitchField({
             label: 'Enable Social Login'|t,
-            instructions: "Allow people to social login to existing accounts."|t,
+            instructions: "When disabled, users will not be able to social login & register."|t,
             name: 'settings[enableSocialLogin]',
-            on:   settings.enableSocialLogin,
-            toggle: 'enableSocialLogin'
+            on:   settings.enableSocialLogin
         }) }}
 
-        <div id="enableSocialLogin"{% if not settings.enableSocialLogin %} class="hidden"{% endif %}>
+        {{ forms.lightswitchField({
+            label: 'Enable Social Registration'|t,
+            instructions: "When disabled, users will not able to register with a social service, but will still be able to social login to an existing account."|t,
+            name: 'settings[enableSocialRegistration]',
+            on:   settings.enableSocialRegistration,
+            toggle: 'enableSocialRegistration'
+        }) }}
+
+        <div id="enableSocialRegistration"{% if not settings.enableSocialRegistration %} class="hidden"{% endif %}>
 
             {{ forms.lightswitchField({
-                label: 'Enable Social Registration'|t,
-                instructions: "Accept user registration through a Social service."|t,
-                name: 'settings[enableSocialRegistration]',
-                on:   settings.enableSocialRegistration,
-                toggle: 'enableSocialRegistration'
+                label: 'Auto-Fill Profile'|t,
+                instructions: "Automatically fills user fields when a user registers, based on `userMapping` and `userFieldsMapping` config variables."|t,
+                name: 'settings[autoFillProfile]',
+                on:   settings.autoFillProfile
             }) }}
 
-            <div id="enableSocialRegistration"{% if not settings.enableSocialRegistration %} class="hidden"{% endif %}>
+            <div id="defaultGroup">
+                {% set groups = [{ label: "None"|t, value: '' }] %}
+                {% for group in craft.userGroups.getAllGroups() %}
+                    {% set groups = groups|merge([{ label: group.name, value: group.id }]) %}
+                {% endfor %}
 
-                {{ forms.lightswitchField({
-                    label: 'Auto Fill Profile'|t,
-                    instructions: "Automatically fills user fields when a user registers, based on `userMapping` and `userFieldsMapping` config variables."|t,
-                    name: 'settings[autoFillProfile]',
-                    on:   settings.autoFillProfile
+                {{ forms.selectField({
+                    label: "Default User Group"|t,
+                    instructions: "Choose a user group that users will be added to when registering with a social service."|t,
+                    name: 'settings[defaultGroup]',
+                    options: groups,
+                    value: (settings.defaultGroup is defined ? settings.defaultGroup : null)
                 }) }}
-
-                <div id="defaultGroup">
-                    {% set groups = [{ label: "None"|t, value: '' }] %}
-                    {% for group in craft.userGroups.getAllGroups() %}
-                        {% set groups = groups|merge([{ label: group.name, value: group.id }]) %}
-                    {% endfor %}
-
-                    {{ forms.selectField({
-                        label: "Default User Group"|t,
-                        instructions: "Choose a user group that socially-registered members will be added to by default."|t,
-                        name: 'settings[defaultGroup]',
-                        options: groups,
-                        value: (settings.defaultGroup is defined ? settings.defaultGroup : null)
-                    }) }}
-                </div>
-
             </div>
+
         </div>
+
 
         <div class="buttons">
             <input type="submit" class="btn submit force" value="Save">
