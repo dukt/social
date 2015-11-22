@@ -141,6 +141,11 @@ class SocialController extends BaseController
 
 		try
 		{
+			if (!$this->pluginSettings['enableSocialLogin'])
+			{
+				throw new Exception("Social login is disabled");
+			}
+
 			if (craft()->getEdition() != Craft::Pro)
 			{
 				throw new Exception("Craft Pro is required");
@@ -296,36 +301,29 @@ class SocialController extends BaseController
 
 		if ($account)
 		{
-			if ($this->pluginSettings['enableSocialLogin'])
+			$craftUser = craft()->users->getUserById($account->userId);
+
+			if ($craftUser)
 			{
-				$craftUser = craft()->users->getUserById($account->userId);
-
-				if ($craftUser)
+				// existing token
+				if (!empty($account->tokenId))
 				{
-					// existing token
-					if (!empty($account->tokenId))
-					{
-						$this->token->id = $account->tokenId;
-					}
-
-					// save token
-					craft()->social_accounts->saveToken($this->token);
-
-					// save user
-					$account->tokenId = $this->token->id;
-					craft()->social_accounts->saveAccount($account);
-
-					// login
-					craft()->social_userSession->login($account->id);
+					$this->token->id = $account->tokenId;
 				}
-				else
-				{
-					throw new Exception("Social account exists but Craft user doesn't");
-				}
+
+				// save token
+				craft()->social_accounts->saveToken($this->token);
+
+				// save user
+				$account->tokenId = $this->token->id;
+				craft()->social_accounts->saveAccount($account);
+
+				// login
+				craft()->social_userSession->login($account->id);
 			}
 			else
 			{
-				throw new Exception("Social login is disabled");
+				throw new Exception("Social account exists but Craft user doesn't");
 			}
 		}
 		else
