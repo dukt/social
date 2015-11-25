@@ -56,6 +56,14 @@ class SocialPlugin extends BasePlugin
     }
 
     /**
+     * Get SchemaVersion
+     */
+    public function getSchemaVersion()
+    {
+        return '1.0.0';
+    }
+
+    /**
      * Get Developer
      */
     function getDeveloper()
