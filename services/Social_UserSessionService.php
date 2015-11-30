@@ -31,8 +31,6 @@ class Social_UserSessionService extends UserSessionService
     {
         $rememberMe = true;
 
-        Craft::log(__METHOD__, LogLevel::Info, true);
-
         $this->_identity = new TokenIdentity($accountId);
         $this->_identity->authenticate();
 

@@ -31,8 +31,6 @@ class SocialService extends BaseApplicationComponent
 
 		$url = UrlHelper::getSiteUrl(craft()->config->get('actionTrigger').'/social/login', $params);
 
-		Craft::log(__METHOD__." : Authenticate : ".$url, LogLevel::Info, true);
-
 		return $url;
 	}
 
