@@ -95,7 +95,7 @@ class Social_UserSessionService extends UserSessionService
             return !$this->getIsGuest();
         }
 
-        Craft::log('Tried to log in unsuccessfully.', LogLevel::Warning);
+        SocialPlugin::log('Tried to log in unsuccessfully.', LogLevel::Warning);
 
         return false;
     }
