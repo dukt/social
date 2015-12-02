@@ -22,6 +22,7 @@ setting: '<strong>'~setting~'</strong>'
 
     {% set providerScope = provider.getScope() %}
     {% set providerAuthorizationOptions = provider.getAuthorizationOptions() %}
+    {% set oauthProvider = provider.getOauthProvider() %}
 
     <h2 class="first">{{ "Scope"|t }}</h2>
 
@@ -46,6 +47,21 @@ setting: '<strong>'~setting~'</strong>'
     {% else %}
         <p class="light">{{ "No authorization options defined." }}</p>
     {% endif %}
+
+    <hr>
+
+    <h2>{{ "OAuth Provider"|t }}</h2>
+
+    <p class="light">
+        {% if oauthProvider.isConfigured %}
+            <span class="status on"></span> {{ "Configured"|t }}
+        {% else %}
+            <span class="status"></span><span class="light">{{ "Not Configured"|t }}</span>
+        {% endif %}
+    </p>
+
+    <a href="{{ url('oauth/providers/'~provider.handle) }}">{{ "View OAuth settings for "~provider.name|t }}</a>
+
     <hr>
 
     <div class="light">
