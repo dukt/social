@@ -7,7 +7,7 @@
 
 namespace Craft;
 
-class Social_ProvidersController extends BaseController
+class Social_LoginProvidersController extends BaseController
 {
     // Public Methods
     // =========================================================================
@@ -19,9 +19,9 @@ class Social_ProvidersController extends BaseController
      */
     public function actionIndex()
     {
-        $variables['providers'] = craft()->social_providers->getProviders(false);
+        $variables['loginProviders'] = craft()->social_loginProviders->getLoginProviders();
 
-        $this->renderTemplate('social/providers/_index', $variables);
+        $this->renderTemplate('social/loginproviders/_index', $variables);
     }
 
     /**
@@ -33,12 +33,12 @@ class Social_ProvidersController extends BaseController
     {
         if(!empty($variables['handle']))
         {
-            $provider = craft()->social_providers->getProvider($variables['handle'], false, true);
+            $loginProvider = craft()->social_loginProviders->getLoginProvider($variables['handle'], false, true);
 
-            if($provider)
+            if($loginProvider)
             {
                 $variables['infos'] = craft()->oauth->getProviderInfos($variables['handle']);;
-                $variables['provider'] = $provider;
+                $variables['loginProvider'] = $loginProvider;
 
                 $configInfos = craft()->config->get('providerInfos', 'oauth');
 
@@ -47,7 +47,7 @@ class Social_ProvidersController extends BaseController
                     $variables['configInfos'] = $configInfos[$variables['handle']];
                 }
 
-                $this->renderTemplate('social/providers/_edit', $variables);
+                $this->renderTemplate('social/loginproviders/_edit', $variables);
             }
             else
             {

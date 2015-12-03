@@ -18,9 +18,9 @@ class SocialVariable
     // Public Methods
     // =========================================================================
 
-    public function getProviders()
+    public function getLoginProviders()
     {
-        return craft()->social_providers->getProviders();
+        return craft()->social_loginProviders->getLoginProviders();
     }
 
     /**
@@ -51,13 +51,13 @@ class SocialVariable
     /**
      * Get account by provider handle
      *
-     * @param string $providerHandle
+     * @param string $loginProviderHandle
      *
      * @return Social_AccountModel|null
      */
-    public function getAccountByProvider($providerHandle)
+    public function getAccountByLoginProvider($loginProviderHandle)
     {
-        return craft()->social_accounts->getAccountByProvider($providerHandle);
+        return craft()->social_accounts->getAccountByLoginProvider($loginProviderHandle);
     }
 
     /**

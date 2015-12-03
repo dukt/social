@@ -101,7 +101,7 @@ Map fields from social accounts with Craft users fields to autofill user data on
 
     <h2>Accounts</h2>
 
-    {% for provider in craft.social.getProviders() %}
+    {% for provider in craft.social.getLoginProviders() %}
 
         {% set account = craft.social.getAccountByProvider(provider.handle) %}
 

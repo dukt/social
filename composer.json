@@ -1,7 +1,8 @@
 {
     "autoload": {
         "psr-4": {
-            "Dukt\\Social\\Etc\\": "etc/"
+            "Dukt\\Social\\Etc\\": "etc/",
+            "Dukt\\Social\\LoginProviders\\": "providers/login/"
         }
     },
     "scripts": {

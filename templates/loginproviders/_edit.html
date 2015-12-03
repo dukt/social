@@ -1,13 +1,13 @@
 {% extends "_layouts/cp" %}
 {% import "_includes/forms" as forms %}
 
-{% set title = provider.name %}
+{% set title = loginProvider.name %}
 
 {% set crumbs = [
 { label: "Settings"|t, url: url('settings') },
 { label: "Plugin"|t, url: url('settings/plugins') },
 { label: "Social Login"|t, url: url('social') },
-{ label: "Providers"|t, url: url('social/providers') },
+{ label: "Login Providers"|t, url: url('social/loginproviders') },
 ] %}
 
 {% macro configWarning(setting, file) -%}
@@ -20,9 +20,9 @@ setting: '<strong>'~setting~'</strong>'
 
 {% set content %}
 
-    {% set providerScope = provider.getScope() %}
-    {% set providerAuthorizationOptions = provider.getAuthorizationOptions() %}
-    {% set oauthProvider = provider.getOauthProvider() %}
+    {% set providerScope = loginProvider.getScope() %}
+    {% set providerAuthorizationOptions = loginProvider.getAuthorizationOptions() %}
+    {% set oauthProvider = loginProvider.getOauthProvider() %}
 
     <h2 class="first">{{ "Scope"|t }}</h2>
 
@@ -60,21 +60,21 @@ setting: '<strong>'~setting~'</strong>'
         {% endif %}
     </p>
 
-    <a href="{{ url('oauth/providers/'~provider.handle) }}">{{ "View OAuth settings for "~provider.name|t }}</a>
+    <a href="{{ url('oauth/providers/'~loginProvider.handle) }}">{{ "View OAuth settings for "~loginProvider.name|t }}</a>
 
     <hr>
 
     <div class="light">
 
-        <p>{{ "Scopes express the permissions that users will get when they login with {provider}."|t({ provider: provider.name }) }}</p>
+        <p>{{ "Scopes express the permissions that users will get when they login with {provider}."|t({ provider: loginProvider.name }) }}</p>
 
-        <p>{{ "Authorization options are extra parameters which are passed when connecting to the provider."|t }}</p>
+        <p>{{ "Authorization options are extra parameters which are passed when connecting to the loginProvider."|t }}</p>
 
         <p>{{ "Customize the scope and authorization options for this provider by creating a config file under: {path}."|t({ path: '<code>craft/config/social.php</code>' })|raw }}</p>
 
-        {% if provider.scopeDocsUrl %}
+        {% if loginProvider.getOauthProvider().scopeDocsUrl %}
             <p>
-                <a href="{{ provider.scopeDocsUrl }}" target="_blank">{{ "See available scopes for {provider}"|t({ provider: provider.name }) }}</a>.
+                <a href="{{ loginProvider.getOauthProvider().scopeDocsUrl }}" target="_blank">{{ "See available scopes for {provider}"|t({ provider: loginProvider.name }) }}</a>.
             </p>
         {% endif %}
     </div>

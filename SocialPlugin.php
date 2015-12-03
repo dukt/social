@@ -25,6 +25,18 @@ class SocialPlugin extends BasePlugin
     }
 
     /**
+     * Get OAuth Providers
+     */
+    public function getSocialLoginProviders()
+    {
+        return [
+            'Dukt\Social\LoginProviders\Facebook',
+            'Dukt\Social\LoginProviders\Google',
+            'Dukt\Social\LoginProviders\Twitter',
+        ];
+    }
+
+    /**
      * Get Required Dependencies
      */
     public function getRequiredPlugins()
@@ -121,8 +133,8 @@ class SocialPlugin extends BasePlugin
             "social/accounts" => ['action' => "social/accounts/index"],
             "social/accounts/(?P<id>\d+)" => ['action' => "social/accounts/view"],
 
-            'social/providers' => ['action' => "social/providers/index"],
-            'social/providers/(?P<handle>.*)' => ['action' => "social/providers/edit"],
+            'social/loginproviders' => ['action' => "social/loginProviders/index"],
+            'social/loginproviders/(?P<handle>.*)' => ['action' => "social/loginProviders/edit"],
 
             'social/settings' => ['action' => "social/settings/index"],
         ];

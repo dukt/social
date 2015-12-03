@@ -1,7 +1,7 @@
 {% extends "social/_layouts/cp" %}
 {% import "_includes/forms" as forms %}
 
-{% set selectedTab = 'providers' %}
+{% set selectedTab = 'loginproviders' %}
 
 {% set content %}
 
@@ -18,18 +18,18 @@
         </thead>
 
         <tbody>
-            {% for provider in providers %}
+            {% for provider in loginProviders %}
                 {% set oauthProvider = provider.getOauthProvider() %}
 
                 <tr>
                     <td class="thin">
-                        {% if provider.iconUrl %}
-                            <img src="{{ provider.iconUrl }}" height="24" />
+                        {% if oauthProvider.iconUrl %}
+                            <img src="{{ oauthProvider.iconUrl }}" height="24" />
                         {% endif %}
                     </td>
 
                     <td>
-                        <a href="{{ url('social/providers/'~provider.handle) }}">{{ provider.name }}</a>
+                        <a href="{{ url('social/loginproviders/'~provider.handle) }}">{{ provider.name }}</a>
                     </td>
 
                     <td class="light">

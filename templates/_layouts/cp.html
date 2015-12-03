@@ -13,12 +13,12 @@
     {% if not craft.config.get('enableAccounts', 'social') %}
         {% set tabs = {
             settings: { label: "Settings"|t, url: url('social/settings') },
-            providers: { label: "Providers"|t, url: url('social/providers') },
+            loginproviders: { label: "Login Providers"|t, url: url('social/loginproviders') },
         } %}
     {% else %}
         {% set tabs = {
             settings: { label: "Settings"|t, url: url('social/settings') },
-            providers: { label: "Providers"|t, url: url('social/providers') },
+            loginproviders: { label: "Login Providers"|t, url: url('social/loginproviders') },
             accounts: { label: "Accounts"|t, url: url('social/accounts') },
         } %}
     {% endif %}

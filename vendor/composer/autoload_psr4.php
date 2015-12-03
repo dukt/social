@@ -6,5 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Dukt\\Social\\LoginProviders\\' => array($baseDir . '/providers/login'),
     'Dukt\\Social\\Etc\\' => array($baseDir . '/etc'),
 );
