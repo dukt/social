@@ -12,9 +12,9 @@ class Social_LoginProvidersService extends BaseApplicationComponent
     // Public Methods
     // =========================================================================
 
-    public function getLoginProvider($handle)
+    public function getLoginProvider($handle, $configuredOnly = true)
     {
-        $loginProviders = $this->getLoginProviders();
+        $loginProviders = $this->getLoginProviders($configuredOnly);
 
         foreach($loginProviders as $loginProvider)
         {
@@ -25,12 +25,12 @@ class Social_LoginProvidersService extends BaseApplicationComponent
         }
     }
 
-    public function getLoginProviders()
+    public function getLoginProviders($configuredOnly = true)
     {
-        return $this->_getLoginProviders();
+        return $this->_getLoginProviders($configuredOnly);
     }
 
-    private function _getLoginProviders()
+    private function _getLoginProviders($configuredOnly)
     {
         // fetch all OAuth provider types
 
@@ -48,7 +48,12 @@ class Social_LoginProvidersService extends BaseApplicationComponent
 
         foreach($socialLoginProviderTypes as $socialLoginProviderType)
         {
-            $loginProviders[$socialLoginProviderType] = $this->_createLoginProvider($socialLoginProviderType);
+            $loginProvider = $this->_createLoginProvider($socialLoginProviderType);
+
+            if(!$configuredOnly || $configuredOnly && $loginProvider->getOauthProvider()->isConfigured())
+            {
+                $loginProviders[$socialLoginProviderType] = $loginProvider;
+            }
         }
 
         ksort($loginProviders);

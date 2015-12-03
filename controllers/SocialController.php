@@ -153,7 +153,7 @@ class SocialController extends BaseController
 
 			// provider scope & authorizationOptions
 
-			$socialProvider = craft()->social_loginProviders->getProvider($providerHandle);
+			$socialProvider = craft()->social_loginProviders->getLoginProvider($providerHandle);
 
 			$scope = $socialProvider->getScope();
 			$authorizationOptions = $socialProvider->getAuthorizationOptions();

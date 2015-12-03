@@ -18,9 +18,9 @@ class SocialVariable
     // Public Methods
     // =========================================================================
 
-    public function getLoginProviders()
+    public function getLoginProviders($configuredOnly = true)
     {
-        return craft()->social_loginProviders->getLoginProviders();
+        return craft()->social_loginProviders->getLoginProviders($configuredOnly);
     }
 
     /**

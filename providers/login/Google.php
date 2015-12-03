@@ -21,19 +21,11 @@ class Google extends BaseProvider
         return 'google';
     }
 
-    // public function getDefaultScope()
-    // {
-    //     return [
-    //         'https://www.googleapis.com/auth/userinfo.profile',
-    //         'https://www.googleapis.com/auth/userinfo.email'
-    //     ];
-    // }
-
-    // public function getDefaultAuthorizationOptions()
-    // {
-    //     return [
-    //         'access_type' => 'offline',
-    //         'approval_prompt' => 'force'
-    //     ];
-    // }
+    public function getDefaultScope()
+    {
+        return [
+            'https://www.googleapis.com/auth/userinfo.profile',
+            'https://www.googleapis.com/auth/userinfo.email'
+        ];
+    }
 }

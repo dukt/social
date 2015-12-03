@@ -19,7 +19,7 @@ class Social_LoginProvidersController extends BaseController
      */
     public function actionIndex()
     {
-        $variables['loginProviders'] = craft()->social_loginProviders->getLoginProviders();
+        $variables['loginProviders'] = craft()->social_loginProviders->getLoginProviders(false);
 
         $this->renderTemplate('social/loginproviders/_index', $variables);
     }
