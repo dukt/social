@@ -35,18 +35,15 @@ return [
      * Login Providers
      */
 
-     // 'loginProviders' => [
-
-     //    'google' => [
-     //        'scope' => [
-     //            'https://www.googleapis.com/auth/userinfo.profile',
-     //            'https://www.googleapis.com/auth/userinfo.email',
-     //        ],
-     //        'authorizationOptions' => [
-     //            'access_type' => 'offline',
-     //            'approval_prompt' => 'force'
-     //        ]
-     //    ]
-
-     // ]
+      'googleLoginProvider' => [
+          'enabled' => false,
+          'scope' => [
+              'https://www.googleapis.com/auth/userinfo.profile',
+              'https://www.googleapis.com/auth/userinfo.email',
+          ],
+          'authorizationOptions' => [
+              'access_type' => 'offline',
+              'approval_prompt' => 'force'
+          ]
+      ]
 ];

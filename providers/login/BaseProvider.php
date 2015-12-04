@@ -66,15 +66,22 @@ abstract class BaseProvider
     }
 
     /**
+     * Default Enabled Status
+     */
+    public function getDefaultIsEnabled()
+    {
+    }
+
+    /**
      * Returns `scope` from login provider class by default, or `scope` overidden by the config
      */
     public function getScope()
     {
-        $loginProvidersConfig = Craft::app()->config->get('loginProviders', 'social');
+        $loginProvidersConfig = Craft::app()->config->get($this->getHandle().'LoginProvider', 'social');
 
-        if(isset($loginProvidersConfig[$this->getHandle()]['scope']))
+        if(isset($loginProvidersConfig['scope']))
         {
-            return $loginProvidersConfig[$this->getHandle()]['scope'];
+            return $loginProvidersConfig['scope'];
         }
         else
         {
@@ -87,15 +94,40 @@ abstract class BaseProvider
      */
     public function getAuthorizationOptions()
     {
-        $loginProvidersConfig = Craft::app()->config->get('loginProviders', 'social');
+        $loginProvidersConfig = Craft::app()->config->get($this->getHandle().'LoginProvider', 'social');
 
-        if(isset($loginProvidersConfig[$this->getHandle()]['authorizationOptions']))
+        if(isset($loginProvidersConfig['authorizationOptions']))
         {
-            return $loginProvidersConfig[$this->getHandle()]['authorizationOptions'];
+            return $loginProvidersConfig['authorizationOptions'];
         }
         else
         {
             return $this->getDefaultAuthorizationOptions();
+        }
+    }
+
+    /**
+     * Returns `enabled` from login provider class by default, or `enabled` overidden by the config
+     */
+    public function getIsEnabled()
+    {
+        $loginProvidersConfig = Craft::app()->config->get($this->getHandle().'LoginProvider', 'social');
+
+        // Check the main plugin settings if this provider is enabled (enabled by default)
+        $pluginSettings = Craft::app()->plugins->getPlugin('social')->getSettings();
+
+        if(isset($pluginSettings['enabledProviders'][$this->getHandle()]))
+        {
+            return$pluginSettings['enabledProviders'][$this->getHandle()];
+        }
+
+        if(isset($loginProvidersConfig['enabled']))
+        {
+            return $loginProvidersConfig['enabled'];
+        }
+        else
+        {
+            return $this->getDefaultIsEnabled();
         }
     }
 }

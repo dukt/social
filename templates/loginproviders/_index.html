@@ -12,8 +12,8 @@
                 <th scope="col">{{ "Name"|t }}</th>
                 <th scope="col">{{ "Scope"|t }}</th>
                 <th scope="col">{{ "Authorization Options"|t }}</th>
-                <th scope="col">{{ "Configured"|t }}</th>
-                <th class="thin"></th>
+                <th scope="col">{{ "Enabled"|t }}</th>
+                <th scope="col"></th>
             </tr>
         </thead>
 
@@ -41,14 +41,14 @@
                     </td>
 
                     <td>
-                        {% if oauthProvider.isConfigured %}
-                            <span class="status on"></span> {{ "Configured"|t }}
+                        {% if provider.isEnabled %}
+                            <span class="status on"></span> {{ "Enabled"|t }}
                         {% else %}
-                            <span class="status"></span><span class="light">{{ "Not Configured"|t }}</span>
+                            <span class="status"></span><span class="light">{{ "Disabled"|t }}</span>
                         {% endif %}
                     </td>
 
-                    <td>
+                    <td class="thin">
                         <a href="{{ url('oauth/providers/'~provider.handle) }}" title="{{ 'OAuth Settings'|t }}" data-icon="settings"></a>
                     </td>
                 </tr>

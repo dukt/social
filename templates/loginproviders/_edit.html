@@ -24,7 +24,19 @@ setting: '<strong>'~setting~'</strong>'
     {% set providerAuthorizationOptions = loginProvider.getAuthorizationOptions() %}
     {% set oauthProvider = loginProvider.getOauthProvider() %}
 
-    <h2 class="first">{{ "Scope"|t }}</h2>
+    <h2 class="first">{{ "Enabled"|t }}</h2>
+
+    {#{{ forms.lightswitchField({
+        first: true,
+        label: 'Enable Social Login'|t,
+        instructions: "When disabled, users will not be able to social login & register."|t,
+        on:   provider.enableSocialLogin,
+        toggle: 'enable-sociallogin'
+    }) }}#}
+
+    <hr>
+
+    <h2>{{ "Scope"|t }}</h2>
 
     {% if providerScope %}
         <ul>
