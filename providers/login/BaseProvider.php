@@ -116,9 +116,9 @@ abstract class BaseProvider
         // Check the main plugin settings if this provider is enabled (enabled by default)
         $pluginSettings = Craft::app()->plugins->getPlugin('social')->getSettings();
 
-        if(isset($pluginSettings['enabledProviders'][$this->getHandle()]))
+        if(isset($pluginSettings['enabledLoginProviders'][$this->getHandle()]))
         {
-            return$pluginSettings['enabledProviders'][$this->getHandle()];
+            return$pluginSettings['enabledLoginProviders'][$this->getHandle()];
         }
 
         if(isset($loginProvidersConfig['enabled']))

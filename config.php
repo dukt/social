@@ -14,6 +14,8 @@ return [
 	 */
     'allowEmailMatch' => false,
 
+    'enableAccounts' => true,
+
     /**
      * User Mapping
      */
@@ -26,24 +28,24 @@ return [
      * User Fields Mapping
      */
     'userFieldsMapping' => [
-        // 'facebook' => [
-        //     'gender' => '{{ gender }}',
-        // ],
+        'facebook' => [
+            'gender' => '{{ gender }}',
+        ],
     ],
 
     /**
      * Login Providers
      */
 
-      'googleLoginProvider' => [
-          'enabled' => false,
-          'scope' => [
-              'https://www.googleapis.com/auth/userinfo.profile',
-              'https://www.googleapis.com/auth/userinfo.email',
-          ],
-          'authorizationOptions' => [
-              'access_type' => 'offline',
-              'approval_prompt' => 'force'
-          ]
-      ]
+    // 'googleLoginProvider' => [
+    //     'enabled' => true,
+    //     'scope' => [
+    //         'https://www.googleapis.com/auth/userinfo.profile',
+    //         'https://www.googleapis.com/auth/userinfo.email',
+    //     ],
+    //     'authorizationOptions' => [
+    //         'access_type' => 'offline',
+    //         'approval_prompt' => 'force'
+    //     ]
+    // ]
 ];
