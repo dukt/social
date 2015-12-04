@@ -373,7 +373,7 @@ class Social_AccountsService extends BaseApplicationComponent
 					foreach($userFieldsMapping[$providerHandle] as $field => $template)
 					{
 						// Check to make sure custom field exists for user profile
-						if (property_exists($newUser->getContent(), $field))
+						if (isset($newUser->getContent()[$field]))
 						{
 							$newUser->getContent()->{$field} = craft()->templates->renderString($template, $variables);
 						}
