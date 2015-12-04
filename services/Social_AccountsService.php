@@ -355,7 +355,11 @@ class Social_AccountsService extends BaseApplicationComponent
 				{
 					foreach($userMapping as $attribute => $template)
 					{
-						$newUser->{$attribute} = craft()->templates->renderString($template, $variables);
+						// Check to make sure custom field exists for user profile
+						if (array_key_exists($attribute, $newUser->getAttributes()))
+						{
+							$newUser->{$attribute} = craft()->templates->renderString($template, $variables);
+						}
 					}
 				}
 
@@ -368,7 +372,11 @@ class Social_AccountsService extends BaseApplicationComponent
 				{
 					foreach($userFieldsMapping[$providerHandle] as $field => $template)
 					{
-						$newUser->getContent()->{$field} = craft()->templates->renderString($template, $variables);
+						// Check to make sure custom field exists for user profile
+						if (property_exists($newUser->getContent(), $field))
+						{
+							$newUser->getContent()->{$field} = craft()->templates->renderString($template, $variables);
+						}
 					}
 				}
 			}

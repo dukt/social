@@ -28,9 +28,9 @@ return [
      * User Fields Mapping
      */
     'userFieldsMapping' => [
-        'facebook' => [
-            'gender' => '{{ gender }}',
-        ],
+        //'facebook' => [
+        //    'gender' => '{{ gender }}',
+        //],
     ],
 
     /**
