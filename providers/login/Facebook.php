@@ -20,4 +20,11 @@ class Facebook extends BaseProvider
     {
         return 'facebook';
     }
+
+    public function getDefaultScope()
+    {
+        return [
+            'email'
+        ];
+    }
 }
