@@ -57,6 +57,12 @@ class Social_AccountsService extends BaseApplicationComponent
 	public function getAccountByLoginProvider($providerHandle)
 	{
 		$currentUser = craft()->userSession->getUser();
+
+		// Check if there is a current user or not
+		if (!$currentUser) {
+			return false;
+		}
+
 		$userId = $currentUser->id;
 
 		$conditions = 'providerHandle=:providerHandle and userId=:userId';
