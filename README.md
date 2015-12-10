@@ -4,64 +4,70 @@ Social Login with popular web services like Facebook, Google, Twitter, and more.
 
 -------------------------------------------
 
+## Table of Contents
+
+- [Beta Warning](#beta-warning)
+- [Getting Started](#getting-started)
+    - [Introduction](#introduction)
+    - [Requirements](#requirements)
+    - [Installation](#installation)
+    - [Configuration](#configuration)
+- [Login Providers](#login-providers)
+- [Templating](#templating)
+
+
 ## Beta Warning
 
 This plugin is still under development, please do not use on production.
 
-## Features
+## Getting Started
+
+### Introduction
 
 - Visitors can social login and register with their favorite social provider
 - Craft users can link to and unlink from accounts they want to be able to social login with
 - When registering with a social provider, the user's profile is automatically filled with the data retrieved from his social account
 - You can decide which social account fields will map with Craft user fields through config variables
 
-## Requirements
+### Requirements
 
-- Craft 2.5
-- Craft OAuth 1.0
+- [Craft 2.5](https://craftcms.com/)
+- [Craft OAuth 1.0](https://dukt.net/craft/oauth)
 
-## Providers
-
-### Native
-
-The following providers are natively supported:
-
-- Facebook
-- Google
-- Twitter
-
-### Third-party
-
-The following providers are provided as Craft plugins:
-
-- [GitHub](https://dukt.net/craft/github) by [Dukt](https://dukt.net/)
-- [LinkedIn](https://dukt.net/craft/linkedin) by [Dukt](https://dukt.net/)
-
-Once installed, the provider will appear in Social Login's settings.
-
-You can add support for a custom provider by creating a Craft plugin compatible with Social Login.
-
-If you have developed a social provider and want it to be added to this list, please contact us as: [support@dukt.net](mailto:support@dukt.net)
-
-### Creating a provider
-
-More detailed instructions are upcoming for helping you creating your own custom social providers.
-
-For now, you can still take a look at GitHub's integration to see how a Craft plugin can add a social provider.
-
-## Installation
+### Installation
 
 1. Download the latest release of the plugin
 2. Drop the `social` plugin folder to `craft/plugins`
 3. Install Social Login plugin from the control panel in `Settings > Plugins`
 
-## Config
+### Configuration
 
-Please keep in mind that changing the default values can expose your website to security risks.
+#### Configuring Login Providers
 
-Read the notices carefully and you will be safe and good to go !
+    '{provider}LoginProvider' => [
+        'enabled' => true,
+        'scope' => [],
+        'authorizationOptions' => []
+    ]
 
-### allowEmailMatch
+Example with Google:
+
+    'googleLoginProvider' => [
+
+        'enabled' => true,
+
+        'scope' => [
+            'https://www.googleapis.com/auth/userinfo.profile',
+            'https://www.googleapis.com/auth/userinfo.email',
+        ],
+
+        'authorizationOptions' => [
+            'access_type' => 'offline',
+            'approval_prompt' => 'force'
+        ]
+    ]
+
+#### allowEmailMatch
 
     'allowEmailMatch' => false
 
@@ -75,7 +81,7 @@ Double check and double test all of the possible scenarios to make sure your soc
 **If you don't know what you're doing, please keep that setting set to `false`.**
 
 
-### profileFieldsMapping
+#### profileFieldsMapping
 
 Map fields from social accounts with Craft users fields to autofill user data on registration.
 
@@ -84,6 +90,36 @@ Map fields from social accounts with Craft users fields to autofill user data on
             'gender' => '{{ gender }}',
         ],
     ],
+
+### Login Providers
+
+#### Native
+
+The following providers are natively supported:
+
+- Facebook
+- Google
+- Twitter
+
+#### Third-party
+
+The following providers are provided as Craft plugins:
+
+- [GitHub](https://dukt.net/craft/github) by [Dukt](https://dukt.net/)
+- [LinkedIn](https://dukt.net/craft/linkedin) by [Dukt](https://dukt.net/)
+- [Slack](https://dukt.net/craft/slack) by [Dukt](https://dukt.net/)
+
+Once installed, the provider will appear in Social Login's settings.
+
+You can add support for a custom provider by creating a Craft plugin compatible with Social Login.
+
+If you have developed a social provider and want it to be added to this list, please contact us as: [support@dukt.net](mailto:support@dukt.net)
+
+#### Creating a provider
+
+More detailed instructions are upcoming for helping you creating your own custom social providers.
+
+For now, you can still take a look at GitHub's integration to see how a Craft plugin can add a social provider.
 
 ## Templating
 
