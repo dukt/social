@@ -67,9 +67,9 @@ class SocialVariable
      *
      * @return string
      */
-    public function getLinkAccountUrl($providerHandle)
+    public function getLoginAccountConnectUrl($providerHandle)
     {
-        return craft()->social->getLinkAccountUrl($providerHandle);
+        return craft()->social->getLoginAccountConnectUrl($providerHandle);
     }
 
     /**
