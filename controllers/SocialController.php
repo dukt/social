@@ -71,7 +71,7 @@ class SocialController extends BaseController
 	 *
 	 * @return null
 	 */
-	public function actionLink()
+	public function actionConnectLoginAccount()
 	{
 		$this->actionLogin();
 	}
@@ -81,7 +81,7 @@ class SocialController extends BaseController
 	 *
 	 * @return null
 	 */
-	public function actionUnlink()
+	public function actionDisconnectLoginAccount()
 	{
 		craft()->social_plugin->checkRequirements();
 
@@ -90,7 +90,7 @@ class SocialController extends BaseController
 		// delete token and social user
 		craft()->social_loginAccounts->deleteLoginAccountByProvider($handle);
 
-		craft()->userSession->setNotice(Craft::t('Account unlinked.'));
+		craft()->userSession->setNotice(Craft::t('Login account disconnected.'));
 
 		// redirect
 		$redirect = craft()->request->getUrlReferrer();
@@ -128,6 +128,7 @@ class SocialController extends BaseController
 	{
 		// request params
 		$providerHandle = craft()->request->getParam('provider');
+		$oauthProvider = craft()->oauth->getProvider($providerHandle);
 		$requestUri = craft()->request->requestUri;
 		$extraScopes = craft()->request->getParam('scope');
 		craft()->httpSession->add('social.requestUri', $requestUri);
@@ -141,6 +142,11 @@ class SocialController extends BaseController
 
 		try
 		{
+			if(!$oauthProvider || $oauthProvider && !$oauthProvider->isConfigured())
+			{
+				throw new Exception("OAuth provider is not configured");
+			}
+
 			if (!$this->pluginSettings['enableSocialLogin'])
 			{
 				throw new Exception("Social login is disabled");
@@ -150,6 +156,7 @@ class SocialController extends BaseController
 			{
 				throw new Exception("Craft Pro is required");
 			}
+
 
 			// provider scope & authorizationOptions
 
@@ -175,7 +182,7 @@ class SocialController extends BaseController
 				$this->redirect = $this->referer;
 			}
 
-			craft()->userSession->setNotice(Craft::t('Account linked.'));
+			craft()->userSession->setNotice(Craft::t('Login account connected.'));
 
 			$this->redirect($this->redirect);
 		}

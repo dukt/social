@@ -57,7 +57,7 @@ class SocialService extends BaseApplicationComponent
 	 */
 	public function getLoginAccountConnectUrl($handle)
 	{
-		return UrlHelper::getActionUrl('social/link', [
+		return UrlHelper::getActionUrl('social/connectLoginAccount', [
 			'provider' => $handle
 		]);
 	}
@@ -71,7 +71,7 @@ class SocialService extends BaseApplicationComponent
 	 */
 	public function getLoginAccountDisconnectUrl($handle)
 	{
-		return UrlHelper::getActionUrl('social/unlink', [
+		return UrlHelper::getActionUrl('social/disconnectLoginAccount', [
 			'provider' => $handle
 		]);
 	}
