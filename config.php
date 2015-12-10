@@ -13,7 +13,6 @@ return [
 	 * Allow Email Match
 	 */
     'allowEmailMatch' => false,
-
     'enableAccounts' => false,
 
     /**
@@ -27,11 +26,11 @@ return [
     /**
      * User Fields Mapping
      */
-    'userFieldsMapping' => [
-        'facebook' => [
-            'gender' => '{{ gender }}',
-        ],
-    ],
+    // 'userFieldsMapping' => [
+    //     'facebook' => [
+    //         'gender' => '{{ gender }}',
+    //     ],
+    // ],
 
     /**
      * Login Providers
