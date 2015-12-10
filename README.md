@@ -128,9 +128,9 @@ For now, you can still take a look at GitHub's integration to see how a Craft pl
 
         <p>
             {% if account %}
-                <a href="{{craft.social.getUnlinkAccountUrl(provider.handle)}}">Unlink {{ provider.name }} Account</a>
+                <a href="{{craft.social.getLoginAccountDisconnectUrl(provider.handle)}}">Unlink {{ provider.name }} Account</a>
             {% else %}
-                <a href="{{ craft.social.getLinkAccountUrl(provider.handle) }}">Link {{ provider.name }} Account</a>
+                <a href="{{ craft.social.getLoginAccountConnectUrl(provider.handle) }}">Link {{ provider.name }} Account</a>
             {% endif %}
         </p>
 
