@@ -42,31 +42,6 @@ This plugin is still under development, please do not use on production.
 
 ### Configuration
 
-#### Configuring Login Providers
-
-    '{provider}LoginProvider' => [
-        'enabled' => true,
-        'scope' => [],
-        'authorizationOptions' => []
-    ]
-
-Example with Google:
-
-    'googleLoginProvider' => [
-
-        'enabled' => true,
-
-        'scope' => [
-            'https://www.googleapis.com/auth/userinfo.profile',
-            'https://www.googleapis.com/auth/userinfo.email',
-        ],
-
-        'authorizationOptions' => [
-            'access_type' => 'offline',
-            'approval_prompt' => 'force'
-        ]
-    ]
-
 #### allowEmailMatch
 
     'allowEmailMatch' => false
@@ -95,7 +70,7 @@ Map fields from social accounts with Craft users fields to autofill user data on
 
 #### Native
 
-The following providers are natively supported:
+The following login providers are natively supported by Craft Social:
 
 - Facebook
 - Google
@@ -103,7 +78,7 @@ The following providers are natively supported:
 
 #### Third-party
 
-The following providers are provided as Craft plugins:
+The following third-party providers are provided as Craft plugins:
 
 - [GitHub](https://dukt.net/craft/github) by [Dukt](https://dukt.net/)
 - [LinkedIn](https://dukt.net/craft/linkedin) by [Dukt](https://dukt.net/)
@@ -139,7 +114,7 @@ For now, you can still take a look at GitHub's integration to see how a Craft pl
 
     {% for provider in craft.social.getLoginProviders() %}
 
-        {% set account = craft.social.getAccountByLoginProvider(provider.handle) %}
+        {% set account = craft.social.getLoginAccountByLoginProvider(provider.handle) %}
 
         <h4>{{ provider.name }}</h4>
 
