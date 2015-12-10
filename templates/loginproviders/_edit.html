@@ -98,9 +98,9 @@ setting: '<strong>'~setting~'</strong>'
 
     <p>
         {% if oauthProvider.isConfigured %}
-            <span class="status on"></span> {{ "Configured"|t }}
+            {{ "{provider} OAuth provider is configured"|t({ provider: oauthProvider.name }) }}
         {% else %}
-            <span class="status"></span>{{ "Not Configured"|t }}
+            {{ "{provider} OAuth provider is not configured"|t({ provider: oauthProvider.name }) }}
         {% endif %}
     </p>
 
