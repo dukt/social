@@ -12,6 +12,32 @@ class Social_LoginProvidersService extends BaseApplicationComponent
     // Public Methods
     // =========================================================================
 
+    public function disableLoginProvider($handle)
+    {
+        $plugin = craft()->plugins->getPlugin('social');
+        $settings = $plugin->getSettings();
+
+        $loginProviders = $settings->loginProviders;
+        $loginProviders[$handle]['enabled'] = false;
+
+        $settings->loginProviders = $loginProviders;
+
+        return craft()->plugins->savePluginSettings($plugin, $settings);
+    }
+
+    public function enableLoginProvider($handle)
+    {
+        $plugin = craft()->plugins->getPlugin('social');
+        $settings = $plugin->getSettings();
+
+        $loginProviders = $settings->loginProviders;
+        $loginProviders[$handle]['enabled'] = true;
+
+        $settings->loginProviders = $loginProviders;
+
+        return craft()->plugins->savePluginSettings($plugin, $settings);
+    }
+
     public function getLoginProvider($handle, $enabledOnly = true)
     {
         $loginProviders = $this->getLoginProviders($enabledOnly);

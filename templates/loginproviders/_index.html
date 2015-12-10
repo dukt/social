@@ -11,7 +11,7 @@
                 <th scope="col"></th>
                 <th scope="col">{{ "Name"|t }}</th>
                 <th scope="col">{{ "Handle"|t }}</th>
-                <th scope="col">{{ "Login Status"|t }}</th>
+                <th scope="col">{{ "Login Provider Status"|t }}</th>
 
                 {% if craft.config.get('advancedMode', 'social') %}
                     <th scope="col">{{ "Scope"|t }}</th>
@@ -41,11 +41,21 @@
                     <td class="light">{{ loginProvider.handle }}</td>
 
                     <td>
-                        {% if loginProvider.isEnabled %}
-                            <span class="status on"></span> {{ "Enabled"|t }}
-                        {% else %}
-                            <span class="status"></span> {{ "Disabled"|t }}
-                        {% endif %}
+                        <form method="post" accept-charset="UTF-8">
+
+                            <input type="hidden" name="loginProvider" value="{{ loginProvider.handle }}">
+
+                            {{ getCsrfInput() }}
+
+                            {% if loginProvider.isEnabled %}
+                                <span class="status on"></span> {{ "Enabled"|t }} 
+                                <input type="button" value="{{ 'Disable'|t }}" class="btn small formsubmit" data-action="social/loginProviders/disableLoginProvider">
+                            {% else %}
+                                <span class="status"></span> {{ "Disabled"|t }} 
+                                <input type="button" value="{{ 'Enable'|t }}" class="btn small formsubmit" data-action="social/loginProviders/enableLoginProvider">
+                            {% endif %}
+                        </form>
+
                     </td>
 
                     {% if craft.config.get('advancedMode', 'social') %}

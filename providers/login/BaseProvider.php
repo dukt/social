@@ -104,16 +104,13 @@ abstract class BaseProvider
      */
     public function getIsEnabled()
     {
-        $oauthProvider = $this->getOauthProvider();
+        // get plugin settings
+        $pluginSettings = \Craft\Craft::app()->plugins->getPlugin('social')->getSettings();
+        $loginProviders = $pluginSettings->loginProviders;
 
-        if($oauthProvider && $oauthProvider->isConfigured())
+        if(isset($loginProviders[$this->getHandle()]['enabled']) && $loginProviders[$this->getHandle()]['enabled'])
         {
-            $loginProvidersConfig = Craft::app()->config->get($this->getHandle().'LoginProvider', 'social');
-
-            if(isset($loginProvidersConfig['enabled']))
-            {
-                return $loginProvidersConfig['enabled'];
-            }
+            return true;
         }
 
         return false;

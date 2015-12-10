@@ -59,4 +59,38 @@ class Social_LoginProvidersController extends BaseController
             throw new HttpException(404);
         }
     }
+
+    public function actionEnableLoginProvider()
+    {
+        $this->requirePostRequest();
+        $loginProvider = craft()->request->getRequiredPost('loginProvider');
+
+        if (craft()->social_loginProviders->enableLoginProvider($loginProvider))
+        {
+            craft()->userSession->setNotice(Craft::t('Login provider enabled.'));
+        }
+        else
+        {
+            craft()->userSession->setError(Craft::t('Couldn’t enable login provider.'));
+        }
+
+        $this->redirectToPostedUrl();
+    }
+
+    public function actionDisableLoginProvider()
+    {
+        $this->requirePostRequest();
+        $loginProvider = craft()->request->getRequiredPost('loginProvider');
+
+        if (craft()->social_loginProviders->disableLoginProvider($loginProvider))
+        {
+            craft()->userSession->setNotice(Craft::t('Login provider disabled.'));
+        }
+        else
+        {
+            craft()->userSession->setError(Craft::t('Couldn’t disable login provider.'));
+        }
+
+        $this->redirectToPostedUrl();
+    }
 }
