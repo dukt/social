@@ -9,11 +9,15 @@
 
 return [
 
+    /**
+     * Allow Email Match
+     */
+    'advancedMode' => false,
+
 	/**
 	 * Allow Email Match
 	 */
     'allowEmailMatch' => false,
-    'enableAccounts' => false,
 
     /**
      * User Mapping

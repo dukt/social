@@ -12,8 +12,12 @@
                 <th scope="col">{{ "Name"|t }}</th>
                 <th scope="col">{{ "Handle"|t }}</th>
                 <th scope="col">{{ "Login Status"|t }}</th>
-                <th scope="col">{{ "Scope"|t }}</th>
-                <th scope="col">{{ "Authorization Options"|t }}</th>
+
+                {% if craft.config.get('advancedMode', 'social') %}
+                    <th scope="col">{{ "Scope"|t }}</th>
+                    <th scope="col">{{ "Authorization Options"|t }}</th>
+                {% endif %}
+
                 <th scope="col">{{ "OAuth Provider Settings"|t }}</th>
             </tr>
         </thead>
@@ -28,9 +32,11 @@
                         {% endif %}
                     </td>
 
-                    <td>
-                        <a href="{{ url('social/loginproviders/'~loginProvider.handle) }}">{{ loginProvider.name }}</a>
-                    </td>
+                    {% if craft.config.get('advancedMode', 'social') %}
+                        <td><a href="{{ url('social/loginproviders/'~loginProvider.handle) }}">{{ loginProvider.name }}</a></td>
+                    {% else %}
+                        <th>{{ loginProvider.name }}</th>
+                    {% endif %}
 
                     <td class="light">{{ loginProvider.handle }}</td>
 
@@ -41,8 +47,11 @@
                             <span class="status"></span> {{ "Disabled"|t }}
                         {% endif %}
                     </td>
-                    <td class="light">{{ loginProvider.getScope()|length }} permission(s)</td>
-                    <td class="light">{{ loginProvider.getAuthorizationOptions()|length }} authorization option(s)</td>
+
+                    {% if craft.config.get('advancedMode', 'social') %}
+                        <td class="light">{{ loginProvider.getScope()|length }} permission(s)</td>
+                        <td class="light">{{ loginProvider.getAuthorizationOptions()|length }} authorization option(s)</td>
+                    {% endif %}
 
                     <td class="thin"><a href="{{ url('oauth/providers/'~loginProvider.handle) }}" title="{{ 'OAuth Settings'|t }}" data-icon="settings"></a></td>
                 </tr>

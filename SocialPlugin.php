@@ -99,11 +99,7 @@ class SocialPlugin extends BasePlugin
         return [
             'enableSocialRegistration' => [AttributeType::Bool, 'default' => true],
             'enableSocialLogin'        => [AttributeType::Bool, 'default' => true],
-            'enabledLoginProviders'        => [AttributeType::Mixed, 'default' => [
-                'facebook' => true,
-                'twitter' => true,
-                'google' => true,
-            ]],
+            'enabledLoginProviders'        => [AttributeType::Mixed],
             'defaultGroup'            => [AttributeType::Number, 'default' => null],
             'autoFillProfile'         => [AttributeType::Bool, 'default' => true],
         ];

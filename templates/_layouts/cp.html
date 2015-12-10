@@ -10,10 +10,10 @@
 
 {% if CraftEdition == CraftPro %}
 
-    {% if not craft.config.get('enableAccounts', 'social') %}
+    {% if not craft.config.get('advancedMode', 'social') %}
         {% set tabs = {
             settings: { label: "Settings"|t, url: url('social/settings') },
-            loginproviders: { label: "Login Providers"|t, url: url('social/loginproviders') },
+            loginProviders: { label: "Login Providers"|t, url: url('social/loginproviders') },
         } %}
     {% else %}
         {% set tabs = {
