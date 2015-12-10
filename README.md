@@ -76,15 +76,15 @@ Map fields from social accounts with Craft users fields to autofill user data on
 
 The following login providers are natively supported by Craft Social:
 
-- Facebook
-- Google
-- Twitter
+- [Facebook](#facebook)
+- [Google](#google)
+- [Twitter](#twitter)
 
 The following third-party providers are provided as Craft plugins:
 
-- [GitHub](https://dukt.net/craft/github) by [Dukt](https://dukt.net/)
-- [LinkedIn](https://dukt.net/craft/linkedin) by [Dukt](https://dukt.net/)
-- [Slack](https://dukt.net/craft/slack) by [Dukt](https://dukt.net/)
+- [GitHub](https://github.com/dukt/craft-github) by [Dukt](https://dukt.net/)
+- [LinkedIn](https://github.com/dukt/craft-linkedin) by [Dukt](https://dukt.net/)
+- [Slack](https://github.com/dukt/craft-slack) by [Dukt](https://dukt.net/)
 
 Once installed, the provider will appear in Social Login's settings.
 
@@ -108,7 +108,7 @@ If you have developed a social provider and want it to be added to this list, pl
 
 Social Login is extensible and supports third-party login providers.
 
-You can take Craft GitHub or Craft Slack as a starting point for create your own login provider.
+You can take [Craft GitHub](https://github.com/dukt/craft-github) or [Craft Slack](https://github.com/dukt/craft-slack) as a starting point for create your own login provider.
 
 
 ## Templating
