@@ -69,7 +69,7 @@ class SocialService extends BaseApplicationComponent
 	 *
 	 * @return string
 	 */
-	public function getUnlinkAccountUrl($handle)
+	public function getLoginAccountDisconnectUrl($handle)
 	{
 		return UrlHelper::getActionUrl('social/unlink', [
 			'provider' => $handle
