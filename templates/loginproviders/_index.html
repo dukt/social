@@ -10,9 +10,10 @@
             <tr>
                 <th scope="col"></th>
                 <th scope="col">{{ "Name"|t }}</th>
+                <th scope="col">{{ "Handle"|t }}</th>
+                <th scope="col">{{ "Enabled"|t }}</th>
                 <th scope="col">{{ "Scope"|t }}</th>
                 <th scope="col">{{ "Authorization Options"|t }}</th>
-                <th scope="col">{{ "Enabled"|t }}</th>
                 <th scope="col"></th>
             </tr>
         </thead>
@@ -20,7 +21,6 @@
         <tbody>
             {% for provider in loginProviders %}
                 {% set oauthProvider = provider.getOauthProvider() %}
-
                 <tr>
                     <td class="thin">
                         {% if oauthProvider.iconUrl %}
@@ -32,13 +32,7 @@
                         <a href="{{ url('social/loginproviders/'~provider.handle) }}">{{ provider.name }}</a>
                     </td>
 
-                    <td class="light">
-                        {{ provider.getScope()|length }} permissions
-                    </td>
-
-                    <td class="light">
-                        {{ provider.getAuthorizationOptions()|length }} options
-                    </td>
+                    <td class="light">{{ provider.handle }}</td>
 
                     <td>
                         {% if provider.isEnabled %}
@@ -48,11 +42,11 @@
                         {% endif %}
                     </td>
 
-                    <td class="thin">
-                        <a href="{{ url('oauth/providers/'~provider.handle) }}" title="{{ 'OAuth Settings'|t }}" data-icon="settings"></a>
-                    </td>
-                </tr>
+                    <td class="light">{{ provider.getScope()|length }} permissions</td>
+                    <td class="light">{{ provider.getAuthorizationOptions()|length }} options</td>
 
+                    <td class="thin"><a href="{{ url('oauth/providers/'~provider.handle) }}" title="{{ 'OAuth Settings'|t }}" data-icon="settings"></a></td>
+                </tr>
             {% endfor %}
         </tbody>
     </table>
