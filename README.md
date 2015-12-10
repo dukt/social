@@ -108,9 +108,9 @@ For now, you can still take a look at GitHub's integration to see how a Craft pl
 
     <a href="{{ craft.social.logoutUrl() }}">Logout</a></li>
 
-### Managing Accounts
+### Managing Login Accounts
 
-    <h2>Accounts</h2>
+    <h2>Login Accounts</h2>
 
     {% for provider in craft.social.getLoginProviders() %}
 
@@ -128,9 +128,9 @@ For now, you can still take a look at GitHub's integration to see how a Craft pl
 
         <p>
             {% if account %}
-                <a href="{{craft.social.getLoginAccountDisconnectUrl(provider.handle)}}">Unlink {{ provider.name }} Account</a>
+                <a href="{{craft.social.getLoginAccountDisconnectUrl(loginProvider.handle)}}">Disable Social Login with {{ loginProvider.name }}</a>
             {% else %}
-                <a href="{{ craft.social.getLoginAccountConnectUrl(provider.handle) }}">Link {{ provider.name }} Account</a>
+                <a href="{{ craft.social.getLoginAccountConnectUrl(loginProvider.handle) }}">Enable Social Login with {{ loginProvider.name }}</a>
             {% endif %}
         </p>
 
