@@ -79,9 +79,9 @@ class SocialVariable
      *
      * @return string
      */
-    public function getUnlinkAccountUrl($providerHandle)
+    public function getLoginAccountDisconnectUrl($providerHandle)
     {
-        return craft()->social->getUnlinkAccountUrl($providerHandle);
+        return craft()->social->getLoginAccountDisconnectUrl($providerHandle);
     }
 
 	/**
