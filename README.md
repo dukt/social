@@ -13,8 +13,14 @@ Social Login with popular web services like Facebook, Google, Twitter, and more.
     - [Installation](#installation)
     - [Configuration](#configuration)
 - [Login Providers](#login-providers)
+    - [Facebook](#facebook)
+    - [Google](#google)
+    - [Twitter](#twitter)
+    - [Custom](#custom)
 - [Templating](#templating)
-
+    - [Login](#login)
+    - [Logout](#logout)
+    - [Managing Login Accounts](#managing-login-accounts)
 
 ## Beta Warning
 
@@ -66,17 +72,13 @@ Map fields from social accounts with Craft users fields to autofill user data on
         ],
     ],
 
-### Login Providers
-
-#### Native
+## Login Providers
 
 The following login providers are natively supported by Craft Social:
 
 - Facebook
 - Google
 - Twitter
-
-#### Third-party
 
 The following third-party providers are provided as Craft plugins:
 
@@ -90,14 +92,26 @@ You can add support for a custom provider by creating a Craft plugin compatible 
 
 If you have developed a social provider and want it to be added to this list, please contact us as: [support@dukt.net](mailto:support@dukt.net)
 
-#### Creating a provider
+### Facebook
 
-More detailed instructions are upcoming for helping you creating your own custom social providers.
+[Detailed instructions for Facebook]
 
-For now, you can still take a look at GitHub's integration to see how a Craft plugin can add a social provider.
+### Google
+
+[Detailed instructions for Facebook]
+
+### Twitter
+
+[Detailed instructions for Facebook]
+
+### Custom
+
+Social Login is extensible and supports third-party login providers.
+
+You can take Craft GitHub or Craft Slack as a starting point for create your own login provider.
+
 
 ## Templating
-
 
 ### Login
 
