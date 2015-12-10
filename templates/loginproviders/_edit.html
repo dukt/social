@@ -24,8 +24,15 @@ setting: '<strong>'~setting~'</strong>'
     {% set providerAuthorizationOptions = loginProvider.getAuthorizationOptions() %}
     {% set oauthProvider = loginProvider.getOauthProvider() %}
 
-    <h2 class="first">{{ "Enabled"|t }}</h2>
+    <h2 class="first">{{ "Login Provider"|t }}</h2>
 
+        <p>
+            {% if loginProvider.isEnabled %}
+                <span class="status on"></span> {{ "Enabled"|t }}
+            {% else %}
+                <span class="status"></span><span class="light">{{ "Disabled"|t }}</span>
+            {% endif %}
+        </p>
     {#{{ forms.lightswitchField({
         first: true,
         label: 'Enable Social Login'|t,
@@ -38,8 +45,24 @@ setting: '<strong>'~setting~'</strong>'
 
     <h2>{{ "Scope"|t }}</h2>
 
+
+        <p class="light">{{ "Scopes express the permissions that users will get when they login with {provider}."|t({ provider: loginProvider.name }) }}</p>
+
+        <p class="light">{{ "To customize the scope for {provider}, add a <strong><code>{configVariable}</code></strong> variable containing an array of permissions to the social login config file under: {path}."|t({
+            provider: oauthProvider.name,
+            configVariable: oauthProvider.handle~'Scope',
+            path: '<code>craft/config/social.php</code>'
+        })|raw }}</p>
+
+        {% if loginProvider.getOauthProvider().scopeDocsUrl %}
+            <p class="light">
+                <a href="{{ loginProvider.getOauthProvider().scopeDocsUrl }}" target="_blank">{{ "See available scopes for {provider}"|t({ provider: loginProvider.name }) }}</a>
+            </p>
+        {% endif %}
+
+
     {% if providerScope %}
-        <ul>
+        <ul class="bullets">
             {% for scope in providerScope %}
                 <li>{{ scope }}</li>
             {% endfor %}
@@ -48,46 +71,39 @@ setting: '<strong>'~setting~'</strong>'
         <p class="light">{{ "No scope defined." }}</p>
     {% endif %}
 
+    <hr>
+
     <h2>{{ "Authorization Options"|t }}</h2>
+    <p class="light">{{ "Authorization options are extra parameters which are passed when connecting to the loginProvider."|t }}</p>
+
+    <p class="light">{{ "To customize the authorization options for {provider}, add a <strong><code>{configVariable}</code></strong> variable containing a key/value array of authorization options to the social login config file under: {path}."|t({
+        provider: oauthProvider.name,
+        configVariable: oauthProvider.handle~'AuthorizationOptions',
+        path: '<code>craft/config/social.php</code>'
+    })|raw }}</p>
 
     {% if providerAuthorizationOptions %}
-        <ul>
+        <ul class="bullets">
             {% for optionKey, optionValue in providerAuthorizationOptions %}
                 <li><strong>{{ optionKey }}:</strong> {{ optionValue }} </li>
             {% endfor %}
         </ul>
     {% else %}
-        <p class="light">{{ "No authorization options defined." }}</p>
+        <p>{{ "No authorization options defined." }}</p>
     {% endif %}
 
     <hr>
 
     <h2>{{ "OAuth Provider"|t }}</h2>
 
-    <p class="light">
+    <p>
         {% if oauthProvider.isConfigured %}
             <span class="status on"></span> {{ "Configured"|t }}
         {% else %}
-            <span class="status"></span><span class="light">{{ "Not Configured"|t }}</span>
+            <span class="status"></span>{{ "Not Configured"|t }}
         {% endif %}
     </p>
 
-    <a href="{{ url('oauth/providers/'~loginProvider.handle) }}">{{ "View OAuth settings for "~loginProvider.name|t }}</a>
+    <a href="{{ url('oauth/providers/'~loginProvider.handle) }}">{{ "{provider} OAuth provider settings"|t({ provider: loginProvider.name }) }}</a>
 
-    <hr>
-
-    <div class="light">
-
-        <p>{{ "Scopes express the permissions that users will get when they login with {provider}."|t({ provider: loginProvider.name }) }}</p>
-
-        <p>{{ "Authorization options are extra parameters which are passed when connecting to the loginProvider."|t }}</p>
-
-        <p>{{ "Customize the scope and authorization options for this provider by creating a config file under: {path}."|t({ path: '<code>craft/config/social.php</code>' })|raw }}</p>
-
-        {% if loginProvider.getOauthProvider().scopeDocsUrl %}
-            <p>
-                <a href="{{ loginProvider.getOauthProvider().scopeDocsUrl }}" target="_blank">{{ "See available scopes for {provider}"|t({ provider: loginProvider.name }) }}</a>.
-            </p>
-        {% endif %}
-    </div>
 {% endset %}
