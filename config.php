@@ -14,7 +14,7 @@ return [
 	 */
     'allowEmailMatch' => false,
 
-    'enableAccounts' => true,
+    'enableAccounts' => false,
 
     /**
      * User Mapping
