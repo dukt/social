@@ -66,13 +66,6 @@ abstract class BaseProvider
     }
 
     /**
-     * Default Enabled Status
-     */
-    public function getDefaultIsEnabled()
-    {
-    }
-
-    /**
      * Returns `scope` from login provider class by default, or `scope` overidden by the config
      */
     public function getScope()
@@ -111,23 +104,18 @@ abstract class BaseProvider
      */
     public function getIsEnabled()
     {
-        $loginProvidersConfig = Craft::app()->config->get($this->getHandle().'LoginProvider', 'social');
+        $oauthProvider = $this->getOauthProvider();
 
-        // Check the main plugin settings if this provider is enabled (enabled by default)
-        $pluginSettings = Craft::app()->plugins->getPlugin('social')->getSettings();
-
-        if(isset($pluginSettings['enabledLoginProviders'][$this->getHandle()]))
+        if($oauthProvider && $oauthProvider->isConfigured())
         {
-            return$pluginSettings['enabledLoginProviders'][$this->getHandle()];
+            $loginProvidersConfig = Craft::app()->config->get($this->getHandle().'LoginProvider', 'social');
+
+            if(isset($loginProvidersConfig['enabled']))
+            {
+                return $loginProvidersConfig['enabled'];
+            }
         }
 
-        if(isset($loginProvidersConfig['enabled']))
-        {
-            return $loginProvidersConfig['enabled'];
-        }
-        else
-        {
-            return $this->getDefaultIsEnabled();
-        }
+        return false;
     }
 }

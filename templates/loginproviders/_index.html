@@ -11,16 +11,16 @@
                 <th scope="col"></th>
                 <th scope="col">{{ "Name"|t }}</th>
                 <th scope="col">{{ "Handle"|t }}</th>
-                <th scope="col">{{ "Enabled"|t }}</th>
+                <th scope="col">{{ "Login Status"|t }}</th>
                 <th scope="col">{{ "Scope"|t }}</th>
                 <th scope="col">{{ "Authorization Options"|t }}</th>
-                <th scope="col"></th>
+                <th scope="col">{{ "OAuth Provider Settings"|t }}</th>
             </tr>
         </thead>
 
         <tbody>
-            {% for provider in loginProviders %}
-                {% set oauthProvider = provider.getOauthProvider() %}
+            {% for loginProvider in loginProviders %}
+                {% set oauthProvider = loginProvider.getOauthProvider() %}
                 <tr>
                     <td class="thin">
                         {% if oauthProvider.iconUrl %}
@@ -29,23 +29,22 @@
                     </td>
 
                     <td>
-                        <a href="{{ url('social/loginproviders/'~provider.handle) }}">{{ provider.name }}</a>
+                        <a href="{{ url('social/loginproviders/'~loginProvider.handle) }}">{{ loginProvider.name }}</a>
                     </td>
 
-                    <td class="light">{{ provider.handle }}</td>
+                    <td class="light">{{ loginProvider.handle }}</td>
 
                     <td>
-                        {% if provider.isEnabled %}
+                        {% if loginProvider.isEnabled %}
                             <span class="status on"></span> {{ "Enabled"|t }}
                         {% else %}
-                            <span class="status"></span><span class="light">{{ "Disabled"|t }}</span>
+                            <span class="status"></span> {{ "Disabled"|t }}
                         {% endif %}
                     </td>
+                    <td class="light">{{ loginProvider.getScope()|length }} permission(s)</td>
+                    <td class="light">{{ loginProvider.getAuthorizationOptions()|length }} authorization option(s)</td>
 
-                    <td class="light">{{ provider.getScope()|length }} permissions</td>
-                    <td class="light">{{ provider.getAuthorizationOptions()|length }} options</td>
-
-                    <td class="thin"><a href="{{ url('oauth/providers/'~provider.handle) }}" title="{{ 'OAuth Settings'|t }}" data-icon="settings"></a></td>
+                    <td class="thin"><a href="{{ url('oauth/providers/'~loginProvider.handle) }}" title="{{ 'OAuth Settings'|t }}" data-icon="settings"></a></td>
                 </tr>
             {% endfor %}
         </tbody>
