@@ -7,7 +7,7 @@
 
 namespace Craft;
 
-class Social_AccountModel extends BaseModel
+class Social_LoginAccountModel extends BaseModel
 {
     // Public Methods
     // =========================================================================

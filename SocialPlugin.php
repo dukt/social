@@ -64,7 +64,7 @@ class SocialPlugin extends BasePlugin
      */
     public function getVersion()
     {
-        return '1.0.44';
+        return '1.0.45';
     }
 
     /**
@@ -72,7 +72,7 @@ class SocialPlugin extends BasePlugin
      */
     public function getSchemaVersion()
     {
-        return '1.0.0';
+        return '1.0.1';
     }
 
     /**
@@ -135,8 +135,8 @@ class SocialPlugin extends BasePlugin
 
             'social/install' => ['action' => "social/plugin/install"],
 
-            "social/accounts" => ['action' => "social/accounts/index"],
-            "social/accounts/(?P<id>\d+)" => ['action' => "social/accounts/view"],
+            "social/loginaccounts" => ['action' => "social/loginAccounts/index"],
+            "social/loginaccounts/(?P<id>\d+)" => ['action' => "social/loginAccounts/view"],
 
             'social/loginproviders' => ['action' => "social/loginProviders/index"],
             'social/loginproviders/(?P<handle>.*)' => ['action' => "social/loginProviders/edit"],
@@ -164,7 +164,7 @@ class SocialPlugin extends BasePlugin
         {
             $user = $event->params['user'];
 
-            craft()->social_accounts->deleteAccountByUserId($user->id);
+            craft()->social_loginAccounts->deleteLoginAccountByUserId($user->id);
         });
     }
 }

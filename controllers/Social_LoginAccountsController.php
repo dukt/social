@@ -7,22 +7,22 @@
 
 namespace Craft;
 
-class Social_AccountsController extends BaseController
+class Social_LoginAccountsController extends BaseController
 {
     // Public Methods
     // =========================================================================
 
     /**
-     * List Accounts
+     * List Login Accounts
      *
      * @return null
      */
     public function actionIndex()
     {
-        $accounts = craft()->social_accounts->getAccounts();
+        $loginAccounts = craft()->social_loginAccounts->getLoginAccounts();
 
-        $this->renderTemplate('social/accounts', [
-            'accounts' => $accounts
+        $this->renderTemplate('social/loginaccounts', [
+            'loginAccounts' => $loginAccounts
         ]);
     }
 }

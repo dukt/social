@@ -7,7 +7,7 @@
 
 namespace Craft;
 
-class Social_AccountsService extends BaseApplicationComponent
+class Social_LoginAccountsService extends BaseApplicationComponent
 {
     // Public Methods
     // =========================================================================
@@ -17,16 +17,16 @@ class Social_AccountsService extends BaseApplicationComponent
 	 *
 	 * @return array
 	 */
-	public function getAccounts()
+	public function getLoginAccounts()
 	{
 		$conditions = '';
 		$params = [];
 
-		$records = Social_AccountRecord::model()->findAll($conditions, $params);
+		$records = Social_LoginAccountRecord::model()->findAll($conditions, $params);
 
 		if ($records)
 		{
-			return Social_AccountModel::populateModels($records);
+			return Social_LoginAccountModel::populateModels($records);
 		}
 	}
 
@@ -35,15 +35,15 @@ class Social_AccountsService extends BaseApplicationComponent
 	 *
 	 * @param int $id
 	 *
-	 * @return Social_AccountModel|null
+	 * @return Social_LoginAccountModel|null
 	 */
-	public function getAccountById($id)
+	public function getLoginAccountById($id)
 	{
-		$record = Social_AccountRecord::model()->findByPk($id);
+		$record = Social_LoginAccountRecord::model()->findByPk($id);
 
 		if ($record)
 		{
-			return Social_AccountModel::populateModel($record);
+			return Social_LoginAccountModel::populateModel($record);
 		}
 	}
 
@@ -52,9 +52,9 @@ class Social_AccountsService extends BaseApplicationComponent
 	 *
 	 * @param string $providerHandle
 	 *
-	 * @return Social_AccountModel|null
+	 * @return Social_LoginAccountModel|null
 	 */
-	public function getAccountByLoginProvider($providerHandle)
+	public function getLoginAccountByLoginProvider($providerHandle)
 	{
 		$currentUser = craft()->userSession->getUser();
 
@@ -68,11 +68,11 @@ class Social_AccountsService extends BaseApplicationComponent
 		$conditions = 'providerHandle=:providerHandle and userId=:userId';
 		$params = [':providerHandle' => $providerHandle, ':userId' => $userId];
 
-		$record = Social_AccountRecord::model()->find($conditions, $params);
+		$record = Social_LoginAccountRecord::model()->find($conditions, $params);
 
 		if ($record)
 		{
-			return Social_AccountModel::populateModel($record);
+			return Social_LoginAccountModel::populateModel($record);
 		}
 	}
 
@@ -84,7 +84,7 @@ class Social_AccountsService extends BaseApplicationComponent
 	 *
 	 * @return BaseModel
 	 */
-	public function getAccountByUid($providerHandle, $socialUid)
+	public function getLoginAccountByUid($providerHandle, $socialUid)
 	{
 		$conditions = 'providerHandle=:providerHandle';
 		$params = [':providerHandle' => $providerHandle];
@@ -92,39 +92,39 @@ class Social_AccountsService extends BaseApplicationComponent
 		$conditions .= ' AND socialUid=:socialUid';
 		$params[':socialUid'] = $socialUid;
 
-		$record = Social_AccountRecord::model()->find($conditions, $params);
+		$record = Social_LoginAccountRecord::model()->find($conditions, $params);
 
 		if ($record)
 		{
-			return Social_AccountModel::populateModel($record);
+			return Social_LoginAccountModel::populateModel($record);
 		}
 	}
 
 	/**
 	 * Save Account
 	 *
-	 * @param Social_AccountModel $account
+	 * @param Social_LoginAccountModel $account
 	 *
 	 * @return bool
 	 * @throws Exception
 	 */
-	public function saveAccount(Social_AccountModel $account)
+	public function saveLoginAccount(Social_LoginAccountModel $account)
 	{
 		if ($account->id)
 		{
-			$accountRecord = Social_AccountRecord::model()->findById($account->id);
+			$accountRecord = Social_LoginAccountRecord::model()->findById($account->id);
 
 			if (!$accountRecord)
 			{
 				throw new Exception(Craft::t('No social user exists with the ID “{id}”', ['id' => $account->id]));
 			}
 
-			$oldSocialUser = Social_AccountModel::populateModel($accountRecord);
+			$oldSocialUser = Social_LoginAccountModel::populateModel($accountRecord);
 			$isNewUser = false;
 		}
 		else
 		{
-			$accountRecord = new Social_AccountRecord;
+			$accountRecord = new Social_LoginAccountRecord;
 			$isNewUser = true;
 		}
 
@@ -191,7 +191,7 @@ class Social_AccountsService extends BaseApplicationComponent
 	 *
 	 * @return bool
 	 */
-	public function deleteAccountByProvider($providerHandle)
+	public function deleteLoginAccountByProvider($providerHandle)
 	{
 		$currentUser = craft()->userSession->getUser();
 		$userId = $currentUser->id;
@@ -199,7 +199,7 @@ class Social_AccountsService extends BaseApplicationComponent
 		$conditions = 'providerHandle=:providerHandle and userId=:userId';
 		$params = [':providerHandle' => $providerHandle, ':userId' => $userId];
 
-		$record = Social_AccountRecord::model()->find($conditions, $params);
+		$record = Social_LoginAccountRecord::model()->find($conditions, $params);
 
 		$tokenId = $record->tokenId;
 
@@ -229,12 +229,12 @@ class Social_AccountsService extends BaseApplicationComponent
 	 *
 	 * @return bool
 	 */
-	public function deleteAccountByUserId($userId)
+	public function deleteLoginAccountByUserId($userId)
     {
         $conditions = 'userId=:userId';
         $params = array(':userId' => $userId);
 
-        $accountRecords = Social_AccountRecord::model()->findAll($conditions, $params);
+        $accountRecords = Social_LoginAccountRecord::model()->findAll($conditions, $params);
 
         foreach($accountRecords as $accountRecord)
         {

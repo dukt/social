@@ -1,0 +1,57 @@
+{% extends "social/_layouts/cp" %}
+
+{% set selectedTab = 'loginAccounts' %}
+
+{% includeCssResource "social/css/social.css" %}
+
+{% set content %}
+
+    {% if loginAccounts|length > 0 %}
+
+        <table class="data fullwidth">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>OAuth Provider</th>
+                    <th>Social User ID</th>
+                </tr>
+            </thead>
+
+            {% for account in loginAccounts %}
+
+                {% set user = account.user %}
+                {% set oauthProvider = craft.oauth.getProvider(account.providerHandle) %}
+
+                {% if oauthProvider %}
+                    <tr>
+                        <td>
+                            <span class="status{% if user.status == 'active' %} {{ user.status }}{% endif %}"></span>
+
+                            <div class="socialthumb">
+                                <img src="{{ user.photoUrl }}" />
+                            </div>
+
+                            <a href="{{ user.cpEditUrl }}">{{ user.username }}</a>
+                        </td>
+                        <td>{{ user.fullName }}</td>
+                        <td>
+                            <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+                        </td>
+                        <td class="provider">
+                            <img src="{{ oauthProvider.getIconUrl() }}" class="social-icon social-{{ oauthProvider.handle }}" />{{ oauthProvider.name }}
+                        </td>
+                        <td>
+                            {{ account.socialUid }}
+                        </td>
+                    </tr>
+                {% endif %}
+
+            {% endfor %}
+        </table>
+
+    {% else %}
+        <p class="light">No login accounts.</p>
+    {% endif %}
+{% endset %}

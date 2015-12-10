@@ -53,11 +53,11 @@ class SocialVariable
      *
      * @param string $loginProviderHandle
      *
-     * @return Social_AccountModel|null
+     * @return Social_LoginAccountModel|null
      */
     public function getAccountByLoginProvider($loginProviderHandle)
     {
-        return craft()->social_accounts->getAccountByLoginProvider($loginProviderHandle);
+        return craft()->social_loginAccounts->getLoginAccountByLoginProvider($loginProviderHandle);
     }
 
     /**

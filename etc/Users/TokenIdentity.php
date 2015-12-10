@@ -36,7 +36,7 @@ class TokenIdentity extends \Craft\UserIdentity
      */
     public function authenticate()
     {
-        $account = \Craft\craft()->social_accounts->getAccountById($this->accountId);
+        $account = \Craft\craft()->social_loginAccounts->getLoginAccountById($this->accountId);
 
         if($account)
         {

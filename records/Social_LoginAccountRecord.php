@@ -7,7 +7,7 @@
 
 namespace Craft;
 
-class Social_AccountRecord extends BaseRecord
+class Social_LoginAccountRecord extends BaseRecord
 {
     // Public Methods
     // =========================================================================
@@ -17,7 +17,7 @@ class Social_AccountRecord extends BaseRecord
      */
     public function getTableName()
     {
-        return 'social_accounts';
+        return 'social_login_accounts';
     }
 
     /**

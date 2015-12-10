@@ -88,7 +88,7 @@ class SocialController extends BaseController
 		$handle = craft()->request->getParam('provider');
 
 		// delete token and social user
-		craft()->social_accounts->deleteAccountByProvider($handle);
+		craft()->social_loginAccounts->deleteLoginAccountByProvider($handle);
 
 		craft()->userSession->setNotice(Craft::t('Account unlinked.'));
 
@@ -244,7 +244,7 @@ class SocialController extends BaseController
 
 		$socialUid = $remoteAccount['uid'];
 
-		$account = craft()->social_accounts->getAccountByUid($this->oauthProviderHandle, $socialUid);
+		$account = craft()->social_loginAccounts->getLoginAccountByUid($this->oauthProviderHandle, $socialUid);
 
 		if ($account)
 		{
@@ -260,11 +260,11 @@ class SocialController extends BaseController
 					$this->token->id = $existingToken->id;
 				}
 
-				craft()->social_accounts->saveToken($this->token);
+				craft()->social_loginAccounts->saveToken($this->token);
 
 				// save user
 				$account->tokenId = $this->token->id;
-				craft()->social_accounts->saveAccount($account);
+				craft()->social_loginAccounts->saveLoginAccount($account);
 			}
 			else
 			{
@@ -274,16 +274,16 @@ class SocialController extends BaseController
 		else
 		{
 			// save token
-			craft()->social_accounts->saveToken($this->token);
+			craft()->social_loginAccounts->saveToken($this->token);
 
 			// save social user
-			$account = new Social_AccountModel;
+			$account = new Social_LoginAccountModel;
 			$account->userId = $craftUser->id;
 			$account->providerHandle = $this->oauthProviderHandle;
 			$account->socialUid = $socialUid;
 			$account->tokenId = $this->token->id;
 
-			craft()->social_accounts->saveAccount($account);
+			craft()->social_loginAccounts->saveLoginAccount($account);
 		}
 	}
 
@@ -297,7 +297,7 @@ class SocialController extends BaseController
 		$attributes = $this->oauthProvider->getAccount($this->token);
 		$socialUid = $attributes['uid'];
 
-		$account = craft()->social_accounts->getAccountByUid($this->oauthProviderHandle, $socialUid);
+		$account = craft()->social_loginAccounts->getLoginAccountByUid($this->oauthProviderHandle, $socialUid);
 
 		if ($account)
 		{
@@ -312,11 +312,11 @@ class SocialController extends BaseController
 				}
 
 				// save token
-				craft()->social_accounts->saveToken($this->token);
+				craft()->social_loginAccounts->saveToken($this->token);
 
 				// save user
 				$account->tokenId = $this->token->id;
-				craft()->social_accounts->saveAccount($account);
+				craft()->social_loginAccounts->saveLoginAccount($account);
 
 				// login
 				craft()->social_userSession->login($account->id);
@@ -329,20 +329,20 @@ class SocialController extends BaseController
 		else
 		{
 			// register user
-			$craftUser = craft()->social_accounts->registerUser($attributes, $this->oauthProviderHandle, $this->token);
+			$craftUser = craft()->social_loginAccounts->registerUser($attributes, $this->oauthProviderHandle, $this->token);
 
 			if ($craftUser)
 			{
 				// save token
-				craft()->social_accounts->saveToken($this->token);
+				craft()->social_loginAccounts->saveToken($this->token);
 
 				// save social user
-				$account = new Social_AccountModel;
+				$account = new Social_LoginAccountModel;
 				$account->userId = $craftUser->id;
 				$account->providerHandle = $this->oauthProviderHandle;
 				$account->socialUid = $socialUid;
 				$account->tokenId = $this->token->id;
-				craft()->social_accounts->saveAccount($account);
+				craft()->social_loginAccounts->saveLoginAccount($account);
 
 				// login
 				craft()->social_userSession->login($account->id);
