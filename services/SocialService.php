@@ -55,7 +55,7 @@ class SocialService extends BaseApplicationComponent
 	 *
 	 * @return string
 	 */
-	public function getLinkAccountUrl($handle)
+	public function getLoginAccountConnectUrl($handle)
 	{
 		return UrlHelper::getActionUrl('social/link', [
 			'provider' => $handle
