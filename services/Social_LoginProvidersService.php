@@ -50,7 +50,7 @@ class Social_LoginProvidersService extends BaseApplicationComponent
         {
             $loginProvider = $this->_createLoginProvider($socialLoginProviderType);
 
-            if(!$configuredOnly || $configuredOnly && $loginProvider->getOauthProvider()->isConfigured())
+            if(!$configuredOnly || $configuredOnly && $loginProvider->getIsEnabled())
             {
                 $loginProviders[$socialLoginProviderType] = $loginProvider;
             }
