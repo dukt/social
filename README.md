@@ -94,15 +94,38 @@ If you have developed a social provider and want it to be added to this list, pl
 
 ### Facebook
 
-[Detailed instructions for Facebook]
+1. Go to [Facebook API Manager](https://developers.facebook.com/apps).
+1. Create a new Facebook application: `My Apps > Add a new App > Website`
+1. Once created, configure the Facebook App's OAuth settings: `FB App > Settings > Advanced > Client OAuth Settings`
+1. Enable **Client Login** and **Web OAuth Login**
+1. Fill the **Valid OAuth redirect URIs** field with the Redirect URI found in in `Craft CP > Settings > OAuth > Facebook` (Example: http://playground.dev/index.php/actions/oauth/connect)
+1. Use the client ID & secret from the OAuth application that you've just created to configure Craft OAuth's Facebook provider in `Craft CP > Settings > OAuth > Facebook`
+1. Social login is now setup and available for Facebook
 
 ### Google
 
-[Detailed instructions for Facebook]
+1. Go to [Google Console](https://code.google.com/apis/console/).
+1. Create a new Google application
+1. Then go to `Your Application > API Manager > Credentials` and create a new **OAuth client ID** of type **Web Application**
+1. Fill `Authorized JavaScript origins` and `Authorized redirect URIs` fields with the informations found in `Craft CP > Settings > OAuth > Google` and save.
+1. Use the client ID & secret from the OAuth application that you've just created to configure Craft OAuth's Google provider in `Craft CP > Settings > OAuth > Google`
+1. Social login is now setup and available for Google
+
 
 ### Twitter
 
-[Detailed instructions for Facebook]
+1. Go to [Twitter Application Manager](https://dev.twitter.com/apps).
+1. Create a new Twitter application: `Create New App`
+1. Fill all required fields
+1. Fill `Callback URL` field with the Redirect URI found in in `Craft CP > Settings > OAuth > Twitter` (Example: http://playground.dev/index.php/actions/oauth/connect)
+1. Agree the terms and save the application
+1. Use the Consumer Key & secret from the OAuth application that you've just created to configure Craft OAuth's Twitter provider in `Craft CP > Settings > OAuth > Twitter`
+1. Go to [https://support.twitter.com/forms/platform](https://support.twitter.com/forms/platform)
+1. Click `I need access to special permissions` and fill your application details.
+1. In `Permissions Requested` ask for `email`
+1. Twitter will send you an email to confirm that you have email access (usually takes ~15min)
+1. Social login is now setup and available for Twitter
+
 
 ### Custom
 
