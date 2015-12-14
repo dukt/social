@@ -6,9 +6,8 @@ Social Login with popular web services like Facebook, Google, Twitter, and more.
 
 ## Table of Contents
 
-- [Beta Warning](#beta-warning)
+- [Introduction](#introduction)
 - [Getting Started](#getting-started)
-    - [Introduction](#introduction)
     - [Requirements](#requirements)
     - [Installation](#installation)
     - [Configuration](#configuration)
@@ -22,18 +21,19 @@ Social Login with popular web services like Facebook, Google, Twitter, and more.
     - [Logout](#logout)
     - [Managing Login Accounts](#managing-login-accounts)
 
-## Beta Warning
 
-This plugin is still under development, please do not use on production.
-
-## Getting Started
-
-### Introduction
+## Introduction
 
 - Visitors can social login and register with their favorite social provider
 - Craft users can link to and unlink from accounts they want to be able to social login with
 - When registering with a social provider, the user's profile is automatically filled with the data retrieved from his social account
 - You can decide which social account fields will map with Craft user fields through config variables
+
+### Beta Warning
+
+This plugin is still under development, please do not use on production.
+
+## Getting Started
 
 ### Requirements
 
