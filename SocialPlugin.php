@@ -118,7 +118,12 @@ class SocialPlugin extends BasePlugin
      */
     public function hasCpSection()
     {
-        return true;
+        if(craft()->config->get('showCpSection', 'social') === true)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     /**
