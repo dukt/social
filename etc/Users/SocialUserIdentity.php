@@ -20,7 +20,7 @@ class SocialUserIdentity extends \Craft\UserIdentity
     // Properties
     // =========================================================================
 
-    public $accountId;
+    public $account;
 
     /**
      * @var int
@@ -41,14 +41,11 @@ class SocialUserIdentity extends \Craft\UserIdentity
      */
     public function __construct($accountId)
     {
-        $this->accountId = $accountId;
+        $this->account = \Craft\craft()->social_loginAccounts->getLoginAccountById($accountId);
 
-
-        $account = \Craft\craft()->social_loginAccounts->getLoginAccountById($this->accountId);
-
-        if($account)
+        if($this->account)
         {
-            $this->_userModel = $account->getUser();
+            $this->_userModel = $this->account->getUser();
         }
     }
 
@@ -67,11 +64,9 @@ class SocialUserIdentity extends \Craft\UserIdentity
      */
     public function authenticate()
     {
-        $account = \Craft\craft()->social_loginAccounts->getLoginAccountById($this->accountId);
-
-        if($account)
+        if($this->account)
         {
-            $user = $account->getUser();
+            $user = $this->account->getUser();
 
             if($user)
             {
