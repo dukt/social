@@ -21,8 +21,35 @@ class Social_LoginAccountsController extends BaseController
     {
         $loginAccounts = craft()->social_loginAccounts->getLoginAccounts();
 
-        $this->renderTemplate('social/loginaccounts', [
+        $this->renderTemplate('social/loginaccounts/_index', [
             'loginAccounts' => $loginAccounts
         ]);
+    }
+
+    public function actionEdit(array $variables = array())
+    {
+        if(!empty($variables['userId']))
+        {
+            $user = craft()->users->getUserById($variables['userId']);
+
+            if($user)
+            {
+                $variables['user'] = $user;
+
+                $loginAccounts = craft()->social_loginAccounts->getLoginAccountsByUserId($user->id);
+
+                $variables['loginAccounts'] = $loginAccounts;
+
+                $this->renderTemplate('social/loginaccounts/_edit', $variables);
+            }
+            else
+            {
+                throw new HttpException(404);
+            }
+        }
+        else
+        {
+            throw new HttpException(404);
+        }
     }
 }

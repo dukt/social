@@ -137,7 +137,7 @@ class SocialPlugin extends BasePlugin
             'social/install' => ['action' => "social/plugin/install"],
 
             "social/loginaccounts" => ['action' => "social/loginAccounts/index"],
-            "social/loginaccounts/(?P<id>\d+)" => ['action' => "social/loginAccounts/view"],
+            "social/loginaccounts/(?P<userId>\d+)" => ['action' => "social/loginAccounts/edit"],
 
             'social/loginproviders' => ['action' => "social/loginProviders/index"],
             'social/loginproviders/(?P<handle>.*)' => ['action' => "social/loginProviders/edit"],

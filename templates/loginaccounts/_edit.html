@@ -1,0 +1,65 @@
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% set title = user.email  %}
+
+{% set crumbs = [
+    { label: "Settings"|t, url: url('settings') },
+    { label: "Plugin"|t, url: url('settings/plugins') },
+    { label: "Social Login"|t, url: url('social') },
+    { label: "Login Accounts"|t, url: url('social/loginaccounts') },
+] %}
+
+{% includeCssResource "social/css/social.css" %}
+
+{% set content %}
+
+    <h2>{{ "User"|t }}</h2>
+
+    <ul>
+        <li><strong>{{ "Username:"|t }}</strong> {{ user.username }}</li>
+        <li><strong>{{ "Email:"|t }}</strong> {{ user.email }}</li>
+    </ul>
+
+    <p>
+        <a href="{{ user.cpEditUrl }}" class="btn small">{{ "Edit User"|t }}</a>
+    </p>
+
+
+    {% if loginAccounts|length > 0 %}
+        <hr>
+
+        <h2>{{ "Login Accounts"|t }}</h2>
+
+        <table class="data fullwidth">
+            <thead>
+                <tr>
+                    <th>{{ "OAuth Provider"|t }}</th>
+                    <th>{{ "Social User ID"|t }}</th>
+                </tr>
+            </thead>
+
+            {% for account in loginAccounts %}
+
+                {% set user = account.user %}
+                {% set oauthProvider = craft.oauth.getProvider(account.providerHandle) %}
+
+                {% if oauthProvider %}
+                    <tr>
+                        <td class="provider">
+                            <img src="{{ oauthProvider.getIconUrl() }}" class="social-icon social-{{ oauthProvider.handle }}" />{{ oauthProvider.name }}
+                        </td>
+                        <td>
+                            {{ account.socialUid }}
+                        </td>
+                    </tr>
+                {% endif %}
+
+            {% endfor %}
+        </table>
+
+    {% else %}
+        <p class="light">{{ "No login accounts."|t }}</p>
+    {% endif %}
+
+{% endset %}

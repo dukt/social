@@ -33,7 +33,7 @@
                                 <img src="{{ user.photoUrl }}" />
                             </div>
 
-                            <a href="{{ user.cpEditUrl }}">{{ user.username }}</a>
+                            <a href="{{ url('social/loginaccounts/'~user.id) }}">{{ user.username }}</a>
                         </td>
                         <td>{{ user.fullName }}</td>
                         <td>
