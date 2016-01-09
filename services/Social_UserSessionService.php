@@ -15,7 +15,20 @@ class Social_UserSessionService extends UserSessionService
     // =========================================================================
 
     public $allowAutoLogin = true;
+
+    /**
+     * Stores the user identity.
+     *
+     * @var UserIdentity
+     */
     private $_identity;
+
+    /**
+     * Stores the user identity cookie.
+     *
+     * @var HttpCookie
+     */
+    private $_identityCookie;
 
     // Public Methods
     // =========================================================================
@@ -32,69 +45,27 @@ class Social_UserSessionService extends UserSessionService
         $rememberMe = true;
 
         $this->_identity = new TokenIdentity($accountId);
-        $this->_identity->authenticate();
 
-        // Was the login successful?
-        if ($this->_identity->errorCode == TokenIdentity::ERROR_NONE)
+        // Did we authenticate?
+        if($this->_identity->authenticate())
         {
-            // Get how long this session is supposed to last.
-
-            $this->authTimeout = craft()->config->getUserSessionDuration($rememberMe);
-
-            $id = $this->_identity->getId();
-
-            $user = craft()->users->getUserById($id);
-
-            $states = $this->_identity->getPersistentStates();
-
-
-            // Run any before login logic.
-            if ($this->beforeLogin($id, $states, false))
-            {
-                $this->changeIdentity($id, $this->_identity->getName(), $states);
-
-                if ($this->authTimeout)
-                {
-                    if ($this->allowAutoLogin)
-                    {
-                        if ($user)
-                        {
-                            // Save the necessary info to the identity cookie.
-                            $sessionToken = StringHelper::UUID();
-                            $hashedToken = craft()->security->hashData(base64_encode(serialize($sessionToken)));
-                            $uid = craft()->users->handleSuccessfulLogin($user, $hashedToken);
-
-                            $data = [
-                                $this->getName(),
-                                $sessionToken,
-                                $uid,
-                                ($rememberMe ? 1 : 0),
-                                craft()->request->getUserAgent(),
-                                $this->saveIdentityStates(),
-                            ];
-
-                            $this->saveCookie('', $data, $this->authTimeout);
-                        }
-                        else
-                        {
-                            throw new Exception(Craft::t('Could not find a user with Id of {userId}.', ['{userId}' => $this->getId()]));
-                        }
-                    }
-                    else
-                    {
-                        throw new Exception(Craft::t('{class}.allowAutoLogin must be set true in order to use cookie-based authentication.', ['{class}' => get_class($this)]));
-                    }
-                }
-
-                // Run any after login logic.
-                $this->afterLogin(false);
-            }
-
-            return !$this->getIsGuest();
+            return $this->loginByUserId($this->_identity->getUserModel()->id, $rememberMe, true);
         }
 
         SocialPlugin::log('Tried to log in unsuccessfully.', LogLevel::Warning);
-
         return false;
+    }
+
+    /**
+     * Returns the login error code from the user identity.
+     *
+     * @return int|null The login error code, or `null` if there isn’t one.
+     */
+    public function getLoginErrorCode()
+    {
+        if (isset($this->_identity))
+        {
+            return $this->_identity->errorCode;
+        }
     }
 }

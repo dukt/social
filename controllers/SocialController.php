@@ -174,17 +174,6 @@ class SocialController extends BaseController
 			{
 				$this->_handleOAuthResponse($providerHandle, $response);
 			}
-
-			$this->_cleanSession();
-
-			if (!$this->redirect)
-			{
-				$this->redirect = $this->referer;
-			}
-
-			craft()->userSession->setNotice(Craft::t('Login account connected.'));
-
-			$this->redirect($this->redirect);
 		}
 		catch (\Exception $e)
 		{
@@ -247,6 +236,13 @@ class SocialController extends BaseController
 	 */
 	private function _linkAccount($craftUser)
 	{
+		$this->_cleanSession();
+
+		if (!$this->redirect)
+		{
+			$this->redirect = $this->referer;
+		}
+
 		$remoteAccount = $this->oauthProvider->getAccount($this->token);
 
 		$socialUid = $remoteAccount['uid'];
@@ -272,6 +268,10 @@ class SocialController extends BaseController
 				// save user
 				$account->tokenId = $this->token->id;
 				craft()->social_loginAccounts->saveLoginAccount($account);
+
+				craft()->userSession->setNotice(Craft::t('Social account linked.'));
+
+				$this->redirect($this->redirect);
 			}
 			else
 			{
@@ -291,6 +291,10 @@ class SocialController extends BaseController
 			$account->tokenId = $this->token->id;
 
 			craft()->social_loginAccounts->saveLoginAccount($account);
+
+			craft()->userSession->setNotice(Craft::t('Social account linked.'));
+
+			$this->redirect($this->redirect);
 		}
 	}
 
@@ -326,7 +330,7 @@ class SocialController extends BaseController
 				craft()->social_loginAccounts->saveLoginAccount($account);
 
 				// login
-				craft()->social_userSession->login($account->id);
+				$this->_handleLogin($account);
 			}
 			else
 			{
@@ -352,13 +356,40 @@ class SocialController extends BaseController
 				craft()->social_loginAccounts->saveLoginAccount($account);
 
 				// login
-				craft()->social_userSession->login($account->id);
+				$this->_handleLogin($account);
 			}
 			else
 			{
 				throw new Exception("Craft user couldn’t be created.");
 			}
 		}
+	}
+
+	private function _handleLogin(Social_LoginAccountModel $account)
+	{
+		$this->_cleanSession();
+
+		if (!$this->redirect)
+		{
+			$this->redirect = $this->referer;
+		}
+
+		if(craft()->social_userSession->login($account->id))
+		{
+			craft()->userSession->setNotice(Craft::t('Social logged in.'));
+
+			$this->redirect($this->redirect);
+		}
+		else
+		{
+			$errorCode = craft()->social_userSession->getLoginErrorCode();
+			$errorMessage = craft()->social_userSession->getLoginErrorMessage($errorCode, $account->user->username);
+
+			craft()->userSession->setError($errorMessage);
+
+			$this->redirect($this->referer);
+		}
+
 	}
 
 	/**
