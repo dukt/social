@@ -375,7 +375,15 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 						// Check to make sure custom field exists for user profile
 						if (isset($newUser->getContent()[$field]))
 						{
-							$newUser->getContent()->{$field} = craft()->templates->renderString($template, $variables);
+							try
+							{
+								$newUser->getContent()->{$field} = craft()->templates->renderString($template, $variables);
+							}
+							catch(\Exception $e)
+							{
+								// error with template string rendering ? just don't fill the user field
+							}
+
 						}
 					}
 				}
