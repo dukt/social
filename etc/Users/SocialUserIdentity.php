@@ -11,11 +11,11 @@ use Craft\UserModel;
 use Craft\UserStatus;
 
 /**
- * TokenIdentity represents the data needed to identify a user with a token and an email
+ * SocialUserIdentity represents the data needed to identify a user with a token and an email
  * It contains the authentication method that checks if the provided data can identity the user.
  */
 
-class TokenIdentity extends \Craft\UserIdentity
+class SocialUserIdentity extends \Craft\UserIdentity
 {
     // Properties
     // =========================================================================

@@ -7,7 +7,7 @@
 
 namespace Craft;
 
-use Dukt\Social\Etc\Users\TokenIdentity;
+use Dukt\Social\Etc\Users\SocialUserIdentity;
 
 class Social_UserSessionService extends UserSessionService
 {
@@ -44,7 +44,7 @@ class Social_UserSessionService extends UserSessionService
     {
         $rememberMe = true;
 
-        $this->_identity = new TokenIdentity($accountId);
+        $this->_identity = new SocialUserIdentity($accountId);
 
         // Did we authenticate?
         if($this->_identity->authenticate())
