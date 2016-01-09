@@ -31,6 +31,24 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 	}
 
 	/**
+	 * Get accounts by user id
+	 *
+	 * @return array
+	 */
+	public function getLoginAccountsByUserId($userId)
+	{
+		$conditions = 'userId=:userId';
+		$params = [':userId' => $userId];
+
+		$records = Social_LoginAccountRecord::model()->findAll($conditions, $params);
+
+		if ($records)
+		{
+			return Social_LoginAccountModel::populateModels($records);
+		}
+	}
+
+	/**
 	 * Get account by ID
 	 *
 	 * @param int $id
