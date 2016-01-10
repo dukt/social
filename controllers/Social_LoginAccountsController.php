@@ -52,4 +52,15 @@ class Social_LoginAccountsController extends BaseController
             throw new HttpException(404);
         }
     }
+
+    public function actionDeleteLoginAccount()
+    {
+        $this->requirePostRequest();
+        $this->requireAjaxRequest();
+
+        $loginAccountId = craft()->request->getRequiredPost('id');
+
+        craft()->social_loginAccounts->deleteLoginAccountById($loginAccountId);
+        $this->returnJson(array('success' => true));
+    }
 }

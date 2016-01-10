@@ -272,6 +272,22 @@ class Social_LoginAccountsService extends BaseApplicationComponent
         return true;
     }
 
+    public function deleteLoginAccountById($id)
+    {
+        $accountRecord = Social_LoginAccountRecord::model()->findByPk($id);
+
+        if($accountRecord)
+        {
+        	$accountRecord->delete();
+
+        	return true;
+        }
+        else
+        {
+        	return false;
+        }
+    }
+
 	/**
 	 * Register User
 	 *

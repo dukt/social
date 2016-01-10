@@ -14,7 +14,7 @@
 
 {% set content %}
 
-    <h2>{{ "User"|t }}</h2>
+    <h2>{{ "Craft User"|t }}</h2>
 
     <ul>
         <li><strong>{{ "Username:"|t }}</strong> {{ user.username }}</li>
@@ -25,13 +25,17 @@
         <a href="{{ user.cpEditUrl }}" class="btn small">{{ "Edit User"|t }}</a>
     </p>
 
+    <hr>
+
+    <h2>{{ "Login Accounts"|t }}</h2>
+
+    <div id="nologinaccounts"{% if loginAccounts|length == 0 %} class="hidden"{% endif %}>
+        <p>{{ "No login accounts exist yet."|t }}</p>
+    </div>
 
     {% if loginAccounts|length > 0 %}
-        <hr>
 
-        <h2>{{ "Login Accounts"|t }}</h2>
-
-        <table class="data fullwidth">
+        <table id="loginAccounts" class="data fullwidth">
             <thead>
                 <tr>
                     <th>{{ "OAuth Provider"|t }}</th>
@@ -45,21 +49,39 @@
                 {% set oauthProvider = craft.oauth.getProvider(account.providerHandle) %}
 
                 {% if oauthProvider %}
-                    <tr>
+                    <tr data-id="{{ account.id }}" data-name="{{ oauthProvider.name|t }}">
                         <td class="provider">
                             <img src="{{ oauthProvider.getIconUrl() }}" class="social-icon social-{{ oauthProvider.handle }}" />{{ oauthProvider.name }}
                         </td>
                         <td>
                             {{ account.socialUid }}
                         </td>
+
+                        <td class="thin"><a class="delete icon" title="{{ 'Delete'|t }}" role="button"></a></td>
                     </tr>
                 {% endif %}
 
             {% endfor %}
         </table>
 
-    {% else %}
-        <p class="light">{{ "No login accounts."|t }}</p>
     {% endif %}
 
+    {% includejs %}
+        var adminTable = new Craft.AdminTable({
+            tableSelector: '#loginAccounts',
+            noObjectsSelector: '#nologinaccounts',
+            deleteAction: 'social/loginAccounts/deleteLoginAccount',
+            confirmDeleteMessage: '{{ "Are you sure you want to delete “{name}”?"|t }}',
+            onDeleteObject: function()
+            {
+                // Hide the Entries tab if that was the last one
+                // if (adminTable.totalObjects == 0)
+                // {
+                //     $('#nav-entries').remove();
+                // }
+            }
+        });
+    {% endincludejs %}
 {% endset %}
+
+
