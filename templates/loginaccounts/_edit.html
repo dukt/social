@@ -71,15 +71,7 @@
             tableSelector: '#loginAccounts',
             noObjectsSelector: '#nologinaccounts',
             deleteAction: 'social/loginAccounts/deleteLoginAccount',
-            confirmDeleteMessage: '{{ "Are you sure you want to delete “{name}”?"|t }}',
-            onDeleteObject: function()
-            {
-                // Hide the Entries tab if that was the last one
-                // if (adminTable.totalObjects == 0)
-                // {
-                //     $('#nav-entries').remove();
-                // }
-            }
+            confirmDeleteMessage: '{{ "Are you sure you want to unlink “{name}” login account?"|t }}',
         });
     {% endincludejs %}
 {% endset %}
