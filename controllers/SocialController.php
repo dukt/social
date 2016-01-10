@@ -365,6 +365,11 @@ class SocialController extends BaseController
 		}
 	}
 
+    /**
+     * Handle Login
+     *
+     * @return null
+     */
 	private function _handleLogin(Social_LoginAccountModel $account)
 	{
 		$this->_cleanSession();

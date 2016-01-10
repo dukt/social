@@ -78,7 +78,7 @@ class SocialPlugin extends BasePlugin
     /**
      * Get Developer
      */
-    function getDeveloper()
+    public function getDeveloper()
     {
         return 'Dukt';
     }
@@ -86,23 +86,9 @@ class SocialPlugin extends BasePlugin
     /**
      * Get Developer URL
      */
-    function getDeveloperUrl()
+    public function getDeveloperUrl()
     {
         return 'https://dukt.net/';
-    }
-
-    /**
-     * Define Settings
-     */
-    protected function defineSettings()
-    {
-        return [
-            'enableSocialRegistration' => [AttributeType::Bool, 'default' => true],
-            'enableSocialLogin' => [AttributeType::Bool, 'default' => true],
-            'loginProviders' => [AttributeType::Mixed],
-            'defaultGroup' => [AttributeType::Number, 'default' => null],
-            'autoFillProfile' => [AttributeType::Bool, 'default' => true],
-        ];
     }
 
     /**
@@ -157,7 +143,30 @@ class SocialPlugin extends BasePlugin
         }
     }
 
-    public function initEventListeners()
+    // Protected Methods
+    // =========================================================================
+
+    /**
+     * Define Settings
+     */
+    protected function defineSettings()
+    {
+        return [
+            'enableSocialRegistration' => [AttributeType::Bool, 'default' => true],
+            'enableSocialLogin' => [AttributeType::Bool, 'default' => true],
+            'loginProviders' => [AttributeType::Mixed],
+            'defaultGroup' => [AttributeType::Number, 'default' => null],
+            'autoFillProfile' => [AttributeType::Bool, 'default' => true],
+        ];
+    }
+
+    // Private Methods
+    // =========================================================================
+
+    /**
+     * Initialize event listeners
+     */
+    private function initEventListeners()
     {
         // delete social user when craft user is deleted
 

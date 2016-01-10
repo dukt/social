@@ -13,7 +13,7 @@ class Social_LoginAccountsController extends BaseController
     // =========================================================================
 
     /**
-     * List Login Accounts
+     * Login Accounts Index
      *
      * @return null
      */
@@ -26,6 +26,11 @@ class Social_LoginAccountsController extends BaseController
         ]);
     }
 
+    /**
+     * Edit User's Login Accounts
+     *
+     * @return null
+     */
     public function actionEdit(array $variables = array())
     {
         if(!empty($variables['userId']))
@@ -53,6 +58,11 @@ class Social_LoginAccountsController extends BaseController
         }
     }
 
+    /**
+     * Delete Login Account
+     *
+     * @return null
+     */
     public function actionDeleteLoginAccount()
     {
         $this->requirePostRequest();

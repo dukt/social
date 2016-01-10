@@ -13,7 +13,7 @@ class Social_LoginProvidersController extends BaseController
     // =========================================================================
 
     /**
-     * Settings
+     * Login Providers Index
      *
      * @return null
      */
@@ -25,7 +25,7 @@ class Social_LoginProvidersController extends BaseController
     }
 
     /**
-     * Edit Provider
+     * Edit Login Provider
      *
      * @return null
      */
@@ -60,6 +60,11 @@ class Social_LoginProvidersController extends BaseController
         }
     }
 
+    /**
+     * Enable Login Provider
+     *
+     * @return null
+     */
     public function actionEnableLoginProvider()
     {
         $this->requirePostRequest();
@@ -77,6 +82,11 @@ class Social_LoginProvidersController extends BaseController
         $this->redirectToPostedUrl();
     }
 
+    /**
+     * Disable Login Provider
+     *
+     * @return null
+     */
     public function actionDisableLoginProvider()
     {
         $this->requirePostRequest();

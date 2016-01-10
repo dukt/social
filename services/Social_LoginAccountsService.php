@@ -272,6 +272,13 @@ class Social_LoginAccountsService extends BaseApplicationComponent
         return true;
     }
 
+	/**
+	 * Delete login account by ID
+	 *
+	 * @param int $id
+	 *
+	 * @return bool
+	 */
     public function deleteLoginAccountById($id)
     {
         $record = Social_LoginAccountRecord::model()->findByPk($id);

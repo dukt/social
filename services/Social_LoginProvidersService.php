@@ -12,6 +12,13 @@ class Social_LoginProvidersService extends BaseApplicationComponent
     // Public Methods
     // =========================================================================
 
+    /**
+     * Disable login provider by handle
+     *
+     * @param string $handle
+     *
+     * @return bool
+     */
     public function disableLoginProvider($handle)
     {
         $plugin = craft()->plugins->getPlugin('social');
@@ -25,6 +32,13 @@ class Social_LoginProvidersService extends BaseApplicationComponent
         return craft()->plugins->savePluginSettings($plugin, $settings);
     }
 
+    /**
+     * Enable login provider by handle
+     *
+     * @param string $handle
+     *
+     * @return bool
+     */
     public function enableLoginProvider($handle)
     {
         $plugin = craft()->plugins->getPlugin('social');
@@ -38,6 +52,14 @@ class Social_LoginProvidersService extends BaseApplicationComponent
         return craft()->plugins->savePluginSettings($plugin, $settings);
     }
 
+    /**
+     * Get login provider by handle
+     *
+     * @param string $handle
+     * @param bool|true $enabledOnly
+     *
+     * @return Social_LoginProviderModel
+     */
     public function getLoginProvider($handle, $enabledOnly = true)
     {
         $loginProviders = $this->getLoginProviders($enabledOnly);
@@ -51,11 +73,25 @@ class Social_LoginProvidersService extends BaseApplicationComponent
         }
     }
 
+    /**
+     * Get login providers
+     *
+     * @param bool|true $enabledOnly
+     *
+     * @return array
+     */
     public function getLoginProviders($enabledOnly = true)
     {
         return $this->_getLoginProviders($enabledOnly);
     }
 
+    /**
+     * Get login providers and instantiate them
+     *
+     * @param bool $enabledOnly
+     *
+     * @return array
+     */
     private function _getLoginProviders($enabledOnly)
     {
         // fetch all OAuth provider types

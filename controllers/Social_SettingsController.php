@@ -28,7 +28,7 @@ class Social_SettingsController extends BaseController
     }
 
 	/**
-	 * Settings
+	 * Settings Index
 	 *
 	 * @return null
 	 */

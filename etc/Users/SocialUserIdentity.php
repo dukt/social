@@ -20,6 +20,9 @@ class SocialUserIdentity extends \Craft\UserIdentity
     // Properties
     // =========================================================================
 
+    /**
+     * @var Social_LoginAccountModel
+     */
     public $account;
 
     /**
@@ -50,14 +53,6 @@ class SocialUserIdentity extends \Craft\UserIdentity
     }
 
     /**
-     * @return UserModel
-     */
-    public function getUserModel()
-    {
-        return $this->_userModel;
-    }
-
-	/**
      * Authenticate
      *
      * @return bool
@@ -83,7 +78,32 @@ class SocialUserIdentity extends \Craft\UserIdentity
         }
     }
 
-    public function _processUserStatus(UserModel $user)
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->_id;
+    }
+
+    /**
+     * @return UserModel
+     */
+    public function getUserModel()
+    {
+        return $this->_userModel;
+    }
+
+    // Private Methods
+    // =========================================================================
+
+    /**
+     * @param UserModel $user
+     *
+     * @throws Exception
+     * @return null
+     */
+    private function _processUserStatus(UserModel $user)
     {
         switch ($user->status)
         {
@@ -130,15 +150,5 @@ class SocialUserIdentity extends \Craft\UserIdentity
         }
 
         return $this->errorCode === static::ERROR_NONE;
-    }
-
-    /**
-     * Get ID
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->_id;
     }
 }

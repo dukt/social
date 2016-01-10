@@ -14,6 +14,11 @@ class Social_UserSessionService extends UserSessionService
     // Properties
     // =========================================================================
 
+    /**
+     * Allow auto login
+     *
+     * @var bool
+     */
     public $allowAutoLogin = true;
 
     /**

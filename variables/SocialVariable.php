@@ -18,6 +18,13 @@ class SocialVariable
     // Public Methods
     // =========================================================================
 
+    /**
+     * Get login providers
+     *
+     * @param bool|true $enabledOnly
+     *
+     * @return array
+     */
     public function getLoginProviders($enabledOnly = true)
     {
         return craft()->social_loginProviders->getLoginProviders($enabledOnly);
