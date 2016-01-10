@@ -274,13 +274,23 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 
     public function deleteLoginAccountById($id)
     {
-        $accountRecord = Social_LoginAccountRecord::model()->findByPk($id);
+        $record = Social_LoginAccountRecord::model()->findByPk($id);
 
-        if($accountRecord)
+        if($record)
         {
-        	$accountRecord->delete();
+			$tokenId = $record->tokenId;
 
-        	return true;
+			if ($tokenId)
+			{
+				$tokenRecord = Oauth_TokenRecord::model()->findByPk($tokenId);
+
+				if ($tokenRecord)
+				{
+					$tokenRecord->delete();
+				}
+			}
+
+        	return $record->delete();
         }
         else
         {
