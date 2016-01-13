@@ -172,3 +172,5 @@ You can take [Craft GitHub](https://github.com/dukt/craft-github) or [Craft Slac
         </p>
 
     {% endfor %}
+
+[Dukt.net](https://dukt.net/) © 2016 - All rights reserved
