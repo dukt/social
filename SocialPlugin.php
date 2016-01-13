@@ -92,6 +92,14 @@ class SocialPlugin extends BasePlugin
     }
 
     /**
+     * Get Documentation URL
+     */
+    public function getDocumentationUrl()
+    {
+        return 'https://dukt.net/craft/social/docs/';
+    }
+
+    /**
      * Get Settings URL
      */
     public function getSettingsUrl()
