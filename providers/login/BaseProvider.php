@@ -48,7 +48,7 @@ abstract class BaseProvider
      */
     public function getOauthProvider()
     {
-        return Craft::app()->oauth->getProvider($this->getOauthProviderHandle(), false);
+        return Craft::app()->oauth->getProvider($this->getHandle(), false);
     }
 
     /**
