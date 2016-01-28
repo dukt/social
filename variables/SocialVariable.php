@@ -91,19 +91,4 @@ class SocialVariable
         return craft()->social->getLoginAccountDisconnectUrl($providerHandle);
     }
 
-    /**
-     * Retrieve an error stored in the user’s flash data
-     *
-     * @return string
-     */
-    public function getError()
-    {
-        if(!$this->_error)
-        {
-            $this->_error = craft()->userSession->getFlash('error');
-        }
-
-        return $this->_error;
-    }
-
 }
