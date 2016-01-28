@@ -13,18 +13,6 @@ class SocialVariable
     // =========================================================================
 
     /**
-     * Get login providers
-     *
-     * @param bool|true $enabledOnly
-     *
-     * @return array
-     */
-    public function getLoginProviders($enabledOnly = true)
-    {
-        return craft()->social_loginProviders->getLoginProviders($enabledOnly);
-    }
-
-    /**
      * Get login URL
      *
      * @param $providerHandle
@@ -85,4 +73,15 @@ class SocialVariable
         return craft()->social->getLoginAccountDisconnectUrl($providerHandle);
     }
 
+    /**
+     * Get login providers
+     *
+     * @param bool|true $enabledOnly
+     *
+     * @return array
+     */
+    public function getLoginProviders($enabledOnly = true)
+    {
+        return craft()->social_loginProviders->getLoginProviders($enabledOnly);
+    }
 }
