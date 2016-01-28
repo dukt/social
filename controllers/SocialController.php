@@ -356,7 +356,7 @@ class SocialController extends BaseController
 				craft()->social_loginAccounts->saveLoginAccount($account);
 
 				// login
-				$this->_handleLogin($account);
+				$this->_handleLogin($account, true);
 			}
 			else
 			{
@@ -370,7 +370,7 @@ class SocialController extends BaseController
      *
      * @return null
      */
-	private function _handleLogin(Social_LoginAccountModel $account)
+	private function _handleLogin(Social_LoginAccountModel $account, $registrationMode = false)
 	{
 		$this->_cleanSession();
 
@@ -381,7 +381,14 @@ class SocialController extends BaseController
 
 		if(craft()->social_userSession->login($account->id))
 		{
-			craft()->userSession->setNotice(Craft::t('Social logged in.'));
+			if($registrationMode)
+			{
+				craft()->userSession->setNotice(Craft::t('Account created.'));
+			}
+			else
+			{
+				craft()->userSession->setNotice(Craft::t('Logged in.'));
+			}
 
 			$this->redirect($this->redirect);
 		}
