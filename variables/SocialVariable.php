@@ -91,21 +91,6 @@ class SocialVariable
         return craft()->social->getLoginAccountDisconnectUrl($providerHandle);
     }
 
-	/**
-     * Retrieve a notice stored in the user’s flash data
-     *
-     * @return string
-     */
-    public function getNotice()
-    {
-        if(!$this->_notice)
-        {
-            $this->_notice = craft()->userSession->getFlash('notice');
-        }
-
-        return $this->_notice;
-    }
-
     /**
      * Retrieve an error stored in the user’s flash data
      *
