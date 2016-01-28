@@ -9,12 +9,6 @@ namespace Craft;
 
 class SocialVariable
 {
-    // Properties
-    // =========================================================================
-
-    private $_error = false;
-    private $_notice = false;
-
     // Public Methods
     // =========================================================================
 
