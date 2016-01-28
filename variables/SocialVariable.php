@@ -56,7 +56,7 @@ class SocialVariable
     }
 
     /**
-     * Get account by provider handle
+     * Get login account by provider handle
      *
      * @param string $loginProviderHandle
      *
@@ -68,7 +68,7 @@ class SocialVariable
     }
 
     /**
-     * Get link account URL
+     * Get login account connect URL
      *
      * @param $handle
      *
@@ -80,7 +80,7 @@ class SocialVariable
     }
 
     /**
-     * Get unlink account URL
+     * Get login account disconnect URL
      *
      * @param $handle
      *
