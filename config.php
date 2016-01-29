@@ -28,27 +28,11 @@ return [
     ],
 
     /**
-     * User Fields Mapping
+     * Profile Fields Mapping
      */
     // 'profileFieldsMapping' => [
     //     'facebook' => [
     //         'gender' => '{{ gender }}',
     //     ],
     // ],
-
-    /**
-     * Login Providers
-     */
-
-    // 'googleLoginProvider' => [
-    //     'enabled' => true,
-    //     'scope' => [
-    //         'https://www.googleapis.com/auth/userinfo.profile',
-    //         'https://www.googleapis.com/auth/userinfo.email',
-    //     ],
-    //     'authorizationOptions' => [
-    //         'access_type' => 'offline',
-    //         'approval_prompt' => 'force'
-    //     ]
-    // ]
 ];
