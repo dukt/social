@@ -115,4 +115,9 @@ abstract class BaseProvider
 
         return false;
     }
+
+    public function getAccount($token)
+    {
+        return $this->getOauthProvider()->getAccount($token);
+    }
 }
