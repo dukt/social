@@ -14,8 +14,7 @@ class SocialController extends BaseController
 
 	protected $allowAnonymous = ['actionLogin'];
 
-	private $oauthProviderHandle;
-	private $oauthProvider;
+	private $socialLoginProvider;
 	private $pluginSettings;
 	private $socialUid;
 	private $redirect;
@@ -196,8 +195,7 @@ class SocialController extends BaseController
 	 */
 	private function _handleOAuthResponse($providerHandle, $response)
 	{
-		$this->oauthProviderHandle = $providerHandle;
-		$this->oauthProvider = craft()->oauth->getProvider($this->oauthProviderHandle);
+		$this->socialLoginProvider = craft()->social_loginProviders->getLoginProvider($providerHandle);
 
 		if ($response['success'])
 		{
@@ -243,11 +241,11 @@ class SocialController extends BaseController
 			$this->redirect = $this->referer;
 		}
 
-		$remoteAccount = $this->oauthProvider->getAccount($this->token);
+		$remoteAccount = $this->socialLoginProvider->getAccount($this->token);
 
 		$socialUid = $remoteAccount['uid'];
 
-		$account = craft()->social_loginAccounts->getLoginAccountByUid($this->oauthProviderHandle, $socialUid);
+		$account = craft()->social_loginAccounts->getLoginAccountByUid($this->socialLoginProvider->getHandle(), $socialUid);
 
 		if ($account)
 		{
@@ -286,7 +284,7 @@ class SocialController extends BaseController
 			// save social user
 			$account = new Social_LoginAccountModel;
 			$account->userId = $craftUser->id;
-			$account->providerHandle = $this->oauthProviderHandle;
+			$account->providerHandle = $this->socialLoginProvider->getHandle();
 			$account->socialUid = $socialUid;
 			$account->tokenId = $this->token->id;
 
@@ -305,10 +303,10 @@ class SocialController extends BaseController
 	 */
 	private function _login()
 	{
-		$attributes = $this->oauthProvider->getAccount($this->token);
+		$attributes = $this->socialLoginProvider->getAccount($this->token);
 		$socialUid = $attributes['uid'];
 
-		$account = craft()->social_loginAccounts->getLoginAccountByUid($this->oauthProviderHandle, $socialUid);
+		$account = craft()->social_loginAccounts->getLoginAccountByUid($this->socialLoginProvider->getHandle(), $socialUid);
 
 		if ($account)
 		{
@@ -340,7 +338,7 @@ class SocialController extends BaseController
 		else
 		{
 			// register user
-			$craftUser = craft()->social_loginAccounts->registerUser($attributes, $this->oauthProviderHandle, $this->token);
+			$craftUser = craft()->social_loginAccounts->registerUser($attributes, $this->socialLoginProvider->getHandle(), $this->token);
 
 			if ($craftUser)
 			{
@@ -350,7 +348,7 @@ class SocialController extends BaseController
 				// save social user
 				$account = new Social_LoginAccountModel;
 				$account->userId = $craftUser->id;
-				$account->providerHandle = $this->oauthProviderHandle;
+				$account->providerHandle = $this->socialLoginProvider->getHandle();
 				$account->socialUid = $socialUid;
 				$account->tokenId = $this->token->id;
 				craft()->social_loginAccounts->saveLoginAccount($account);
