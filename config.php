@@ -30,7 +30,7 @@ return [
     /**
      * User Fields Mapping
      */
-    // 'userFieldsMapping' => [
+    // 'profileFieldsMapping' => [
     //     'facebook' => [
     //         'gender' => '{{ gender }}',
     //     ],
