@@ -24,8 +24,6 @@ class Social_LoginAccountModel extends BaseModel
 
             'providerHandle' => array(AttributeType::String, 'required' => true),
             'socialUid' => array(AttributeType::String, 'required' => true),
-
-            'photo' => AttributeType::String,
         );
     }
 
