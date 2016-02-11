@@ -303,7 +303,9 @@ class SocialController extends BaseController
 	 */
 	private function _login()
 	{
-		$attributes = $this->socialLoginProvider->getAccount($this->token);
+		$leagueUser = $this->socialLoginProvider->getAccount($this->token);
+		$attributes = $leagueUser->getArrayCopy();
+
 		$socialUid = $attributes['uid'];
 
 		$account = craft()->social_loginAccounts->getLoginAccountByUid($this->socialLoginProvider->getHandle(), $socialUid);
