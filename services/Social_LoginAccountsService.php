@@ -432,6 +432,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 							}
 							catch(\Exception $e)
 							{
+								SocialPlugin::log('Could not map:'.print_r([$template, $variables, $e->getMessage()], true), LogLevel::Error);
 								// error with template string rendering ? just don't fill the user field
 							}
 
