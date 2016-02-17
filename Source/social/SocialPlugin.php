@@ -7,8 +7,6 @@
 
 namespace Craft;
 
-require_once(CRAFT_PLUGINS_PATH.'social/vendor/autoload.php');
-
 class SocialPlugin extends BasePlugin
 {
     // Public Methods
@@ -25,16 +23,22 @@ class SocialPlugin extends BasePlugin
     }
 
     /**
-     * Get OAuth Providers
+     * Get Social Login Providers
      */
     public function getSocialLoginProviders()
     {
+        require_once(CRAFT_PLUGINS_PATH.'social/providers/login/BaseProvider.php');
+        require_once(CRAFT_PLUGINS_PATH.'social/providers/login/Facebook.php');
+        require_once(CRAFT_PLUGINS_PATH.'social/providers/login/Google.php');
+        require_once(CRAFT_PLUGINS_PATH.'social/providers/login/Twitter.php');
+
         return [
             'Dukt\Social\LoginProviders\Facebook',
             'Dukt\Social\LoginProviders\Google',
             'Dukt\Social\LoginProviders\Twitter',
         ];
     }
+
 
     /**
      * Get Required Dependencies

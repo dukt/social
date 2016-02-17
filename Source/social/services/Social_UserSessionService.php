@@ -43,6 +43,8 @@ class Social_UserSessionService extends UserSessionService
         $this->setStateKeyPrefix(md5('Yii.Craft\UserSessionService.'.craft()->getId()));
 
         parent::init();
+
+        require_once(CRAFT_PLUGINS_PATH.'social/etc/Users/SocialUserIdentity.php');
     }
 
     public function login($accountId)
