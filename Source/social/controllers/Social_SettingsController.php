@@ -19,6 +19,8 @@ class Social_SettingsController extends BaseController
 	 */
     public function init()
     {
+        parent::init();
+
         $pluginDependencies = craft()->social_plugin->getPluginDependencies();
 
         if (count($pluginDependencies) > 0)

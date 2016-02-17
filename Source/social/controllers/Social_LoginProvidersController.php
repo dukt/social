@@ -13,6 +13,23 @@ class Social_LoginProvidersController extends BaseController
     // =========================================================================
 
     /**
+     * Init
+     *
+     * @return null
+     */
+    public function init()
+    {
+        parent::init();
+
+        $pluginDependencies = craft()->social_plugin->getPluginDependencies();
+
+        if (count($pluginDependencies) > 0)
+        {
+            $this->redirect('social/install');
+        }
+    }
+
+    /**
      * Login Providers Index
      *
      * @return null

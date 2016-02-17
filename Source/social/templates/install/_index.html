@@ -20,8 +20,12 @@
         <h2>{{ dependency.name }}</h2>
 
         <ul>
-            <li>{{ "Required: {version}"|t({ version: dependency.version }) }}</li>
-            <li>{{ "Installed: {version}"|t({ version: dependency.plugin.version }) }}</li>
+            <li>{{ "Required: OAuth {version}"|t({ version: dependency.version }) }}</li>
+            <li>
+                {% if dependency.plugin %}
+                    {{ "Installed: OAuth {version}"|t({ version: dependency.plugin.version }) }}
+                {% endif %}
+            </li>
         </ul>
 
         <p><a class="btn" href="{{ dependency.url }}" target="_blank">{{ "Download {dependency}"|t({ dependency: dependency.name }) }}</a></p>
