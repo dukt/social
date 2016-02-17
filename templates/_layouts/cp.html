@@ -1,27 +1,14 @@
 {% extends "_layouts/cp" %}
 
-{% set crumbs = [
-    { label: "Settings"|t, url: url('settings') },
-    { label: "Plugins"|t, url: url('settings/plugins') }
-] %}
-
 {% set title = "Social Login"|t %}
-
 
 {% if CraftEdition == CraftPro %}
 
-    {% if not craft.config.get('advancedMode', 'social') %}
-        {% set tabs = {
-            settings: { label: "Settings"|t, url: url('social/settings') },
-            loginProviders: { label: "Login Providers"|t, url: url('social/loginproviders') },
-        } %}
-    {% else %}
-        {% set tabs = {
-            settings: { label: "Settings"|t, url: url('social/settings') },
-            loginProviders: { label: "Login Providers"|t, url: url('social/loginproviders') },
-            loginAccounts: { label: "Login Accounts"|t, url: url('social/loginaccounts') },
-        } %}
-    {% endif %}
+    {% set tabs = {
+        loginProviders: { label: "Login Providers"|t, url: url('social/loginproviders') },
+        loginAccounts: { label: "Login Accounts"|t, url: url('social/loginaccounts') },
+        settings: { label: "Settings"|t, url: url('social/settings') },
+    } %}
 
 {% else %}
 
@@ -31,6 +18,5 @@
         <p>{{ 'Social Login plugin requires {link} unlimited user accounts feature.'|t({link:'<a href="http://buildwithcraft.com/pricing">Craft Pro</a>'})|raw }}</p>
 
     {% endset %}
-
 
 {% endif %}

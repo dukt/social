@@ -126,7 +126,7 @@ class SocialPlugin extends BasePlugin
     public function registerCpRoutes()
     {
         return [
-            "social" => ['action' => "social/settings"],
+            "social" => ['action' => "social/loginProviders/index"],
 
             'social/install' => ['action' => "social/plugin/install"],
 
