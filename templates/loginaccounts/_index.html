@@ -30,7 +30,7 @@
                             <span class="status{% if user.status == 'active' %} {{ user.status }}{% endif %}"></span>
 
                             <div class="socialthumb">
-                                <img src="{{ user.photoUrl }}" />
+                                <img src="{{ user.getThumbUrl(40) }}" />
                             </div>
 
                             <a href="{{ url('social/loginaccounts/'~user.id) }}">{{ user.username }}</a>

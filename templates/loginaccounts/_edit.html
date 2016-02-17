@@ -14,16 +14,12 @@
 
 {% set content %}
 
-    <h2>{{ "Craft User"|t }}</h2>
+    <a href="{{ user.cpEditUrl }}"><img width="80" src="{{ user.getThumbUrl(80) }}" /></a>
 
     <ul>
-        <li><strong>{{ "Username:"|t }}</strong> {{ user.username }}</li>
+        <li><strong>{{ "Username:"|t }}</strong> <a href="{{ user.cpEditUrl }}">{{ user.username }}</a></li>
         <li><strong>{{ "Email:"|t }}</strong> {{ user.email }}</li>
     </ul>
-
-    <p>
-        <a href="{{ user.cpEditUrl }}" class="btn small">{{ "Edit User"|t }}</a>
-    </p>
 
     <hr>
 
