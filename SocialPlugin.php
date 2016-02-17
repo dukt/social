@@ -100,6 +100,14 @@ class SocialPlugin extends BasePlugin
     }
 
     /**
+     * Get Release Feed URL
+     */
+    public function getReleaseFeedUrl()
+    {
+        return 'https://dukt.net/craft/social/updates.json';
+    }
+
+    /**
      * Get Settings URL
      */
     public function getSettingsUrl()
