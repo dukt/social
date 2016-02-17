@@ -51,8 +51,16 @@
 
     {% else %}
         <div class="empty">
-            <h2>{{ "Manage login accounts" }}</h2>
-            <p class="light">{{ "Login accounts will appear here once users start to login with social services." }}</p>
+
+            {% set loginProviders = craft.social.getLoginProviders() %}
+
+            {% if loginProviders|length > 0 %}
+                <h2>{{ "Manage login accounts" }}</h2>
+                <p class="light">{{ "Login accounts will appear here once users start to login with social login providers." }}</p>
+            {% else %}
+                <h2>{{ "Configure a login provider" }}</h2>
+                <p class="light">{{ "To get started you need to {link} that users will be able to login with."|t({ link: '<a href="'~url('social/loginproviders')~'">{label}</a>'|t({label: 'configure a login provider'|t }) })|raw }}</p>
+            {% endif %}
         </div>
     {% endif %}
 {% endset %}
