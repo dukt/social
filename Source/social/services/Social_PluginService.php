@@ -78,7 +78,7 @@ class Social_PluginService extends BaseApplicationComponent
     // Private Methods
     // =========================================================================
 
-	/**
+    /**
      * Get plugin dependency
      *
      * @param array $dependency
@@ -87,8 +87,8 @@ class Social_PluginService extends BaseApplicationComponent
      */
     private function getPluginDependency(array $dependency)
     {
-        $isMissing = true;
-        $isInstalled = true;
+        $isDependencyMissing = true;
+        $requiresUpdate = true;
 
         $plugin = craft()->plugins->getPlugin($dependency['handle'], false);
 
@@ -103,9 +103,11 @@ class Social_PluginService extends BaseApplicationComponent
             {
                 // no (requirements OK)
 
+                $requiresUpdate = false;
+
                 if ($plugin->isInstalled && $plugin->isEnabled)
                 {
-                    $isMissing = false;
+                    $isDependencyMissing = false;
                 }
             }
             else
@@ -118,7 +120,8 @@ class Social_PluginService extends BaseApplicationComponent
             // not installed
         }
 
-        $dependency['isMissing'] = $isMissing;
+        $dependency['isMissing'] = $isDependencyMissing;
+        $dependency['requiresUpdate'] = $requiresUpdate;
         $dependency['plugin'] = $plugin;
 
         return $dependency;

@@ -19,16 +19,26 @@
 
         <h2>{{ dependency.name }}</h2>
 
-        <ul>
-            <li>{{ "Required: OAuth {version}"|t({ version: dependency.version }) }}</li>
-            <li>
-                {% if dependency.plugin %}
-                    {{ "Installed: OAuth {version}"|t({ version: dependency.plugin.version }) }}
-                {% endif %}
-            </li>
-        </ul>
+        {% if dependency.requiresUpdate %}
 
-        <p><a class="btn" href="{{ dependency.url }}" target="_blank">{{ "Download {dependency}"|t({ dependency: dependency.name }) }}</a></p>
+            {# requires update ? update link #}
+            <ul>
+                <li>{{ "Required version: OAuth {version}+"|t({ version: dependency.version }) }}</li>
+                <li>
+                    {% if dependency.plugin %}
+                        {{ "The version you have: OAuth {version}"|t({ version: dependency.plugin.version }) }}
+                    {% endif %}
+                </li>
+            </ul>
+            <p><a class="btn" href="{{ dependency.url }}" target="_blank">{{ "Download {dependency}"|t({ dependency: dependency.name }) }}</a></p>
+
+        {% else %}
+
+            {# doesn't require update ? the plugin is just uninstalled or disabled #}
+            <p>{{ '{dependency} is present but is not installed or enabled.'|t({ dependency: dependency.name }) }}</p>
+            <p>{{ 'Please install/enable {dependency} plugin from {link}.'|t({ dependency: dependency.name, link: '<a href="'~url('settings/plugins')~'">plugin settings</a>'|t })|raw }}</p>
+
+        {% endif %}
 
     {% endfor %}
 
