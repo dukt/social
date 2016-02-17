@@ -13,9 +13,9 @@
                 <tr>
                     <th>{{ "Username"|t }}</th>
                     <th>{{ "Full Name"|t }}</th>
-                    <th>{{ "Email"|t }}</th>
                     <th>{{ "OAuth Provider"|t }}</th>
                     <th>{{ "Social User ID"|t }}</th>
+                    <th>{{ "Last login"|t }}</th>
                 </tr>
             </thead>
 
@@ -36,14 +36,14 @@
                             <a href="{{ url('social/loginaccounts/'~user.id) }}">{{ user.username }}</a>
                         </td>
                         <td>{{ user.fullName }}</td>
-                        <td>
-                            <a href="mailto:{{ user.email }}">{{ user.email }}</a>
-                        </td>
                         <td class="provider">
                             <img src="{{ oauthProvider.getIconUrl() }}" class="social-icon social-{{ oauthProvider.handle }}" />{{ oauthProvider.name }}
                         </td>
                         <td>
                             {{ account.socialUid }}
+                        </td>
+                        <td>
+                            {{ user.lastLoginDate.nice }}
                         </td>
                     </tr>
                 {% endif %}
