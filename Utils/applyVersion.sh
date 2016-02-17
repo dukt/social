@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ./Source/facebook/
+cd ./Source/social/
 
 # Create Info.php with plugin version constant
 
@@ -8,6 +8,6 @@ cat > Info.php << EOF
 <?php
 namespace Craft;
 
-define('FACEBOOK_VERSION', '${PLUGIN_VERSION}');
+define('SOCIAL_VERSION', '${PLUGIN_VERSION}');
 
 EOF
