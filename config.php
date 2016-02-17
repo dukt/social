@@ -14,6 +14,11 @@ return [
      */
     'advancedMode' => false,
 
+    /**
+     * Show CP section
+     */
+    'showCpSection' => true,
+
 	/**
 	 * Allow Email Match
 	 */
