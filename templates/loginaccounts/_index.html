@@ -2,8 +2,6 @@
 
 {% set selectedTab = 'loginAccounts' %}
 
-{% includeCssResource "social/css/social.css" %}
-
 {% set content %}
 
     {% if loginAccounts|length > 0 %}
@@ -52,6 +50,9 @@
         </table>
 
     {% else %}
-        <p class="light">No login accounts.</p>
+        <div class="empty">
+            <h2>{{ "Manage login accounts" }}</h2>
+            <p class="light">{{ "Login accounts will appear here once users start to login with social services." }}</p>
+        </div>
     {% endif %}
 {% endset %}
