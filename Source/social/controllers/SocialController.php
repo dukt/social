@@ -129,7 +129,6 @@ class SocialController extends BaseController
 		$providerHandle = craft()->request->getParam('provider');
 		$oauthProvider = craft()->oauth->getProvider($providerHandle);
 		$requestUri = craft()->request->requestUri;
-		$extraScopes = craft()->request->getParam('scope');
 		craft()->httpSession->add('social.requestUri', $requestUri);
 
 		// settings
@@ -202,9 +201,6 @@ class SocialController extends BaseController
 			$token = $response['token'];
 
 			$this->token = $token;
-
-			$plugin = craft()->plugins->getPlugin('social');
-
 
 			// user
 			$craftUser = craft()->userSession->getUser();
