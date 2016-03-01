@@ -23,6 +23,11 @@ class Social_ProviderModel extends BaseModel
         );
     }
 
+    /**
+     * Get authorization options for the provider.
+     *
+     * @return mixed
+     */
     public function getAuthorizationOptions()
     {
         $authorizationOptions = craft()->config->get('authorizationOptions', 'social');
@@ -33,6 +38,11 @@ class Social_ProviderModel extends BaseModel
         }
     }
 
+    /**
+     * Get scope for the provider.
+     *
+     * @return array
+     */
     public function getScope()
     {
         $scope = [];
@@ -51,31 +61,61 @@ class Social_ProviderModel extends BaseModel
         return $scope;
     }
 
+    /**
+     * Return the default scope for the provider.
+     *
+     * @return mixed
+     */
     public function getDefaultScope()
     {
         return $this->getOauthProvider()->getDefaultScope();
     }
 
+    /**
+     * Get the provider's name.
+     *
+     * @return mixed
+     */
     public function getName()
     {
         return $this->getOauthProvider()->getName();
     }
 
+    /**
+     * Get the provider's handle.
+     *
+     * @return mixed
+     */
     public function getHandle()
     {
         return $this->getOauthProvider()->getHandle();
     }
 
+    /**
+     * Get the provider itself.
+     *
+     * @return mixed
+     */
     public function getOauthProvider()
     {
         return craft()->oauth->getProvider($this->oauthProviderHandle, false);
     }
 
+    /**
+     * Get the URL to the icon.
+     *
+     * @return mixed
+     */
     public function getIconUrl()
     {
         return $this->getOauthProvider()->getIconUrl();
     }
 
+    /**
+     * Get the documentation URL for provider scopes.
+     * 
+     * @return mixed
+     */
     public function getScopeDocsUrl()
     {
         return $this->getOauthProvider()->getScopeDocsUrl();
