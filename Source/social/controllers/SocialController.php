@@ -185,7 +185,7 @@ class SocialController extends BaseController
 	 * @param string $providerHandle	Handle of the provider
 	 * @param string $response      Provider response as an array
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return null
 	 */
 	private function _handleOAuthResponse($providerHandle, $response)
@@ -290,6 +290,7 @@ class SocialController extends BaseController
 	/**
 	 * Handle Guest User
 	 *
+	 * @throws Exception
 	 * @return null
 	 */
 	private function _login()
