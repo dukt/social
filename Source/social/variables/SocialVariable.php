@@ -13,7 +13,7 @@ class SocialVariable
     // =========================================================================
 
     /**
-     * Get login URL
+     * Get the login URL
      *
      * @param $providerHandle
      * @param array  $params
@@ -26,7 +26,7 @@ class SocialVariable
     }
 
     /**
-     * Get logout URL
+     * Get the logout URL
      *
      * @param string|null $redirect
      *
@@ -38,7 +38,7 @@ class SocialVariable
     }
 
     /**
-     * Get login account by provider handle
+     * Get the login account by provider handle
      *
      * @param string $loginProviderHandle
      *
@@ -50,7 +50,7 @@ class SocialVariable
     }
 
     /**
-     * Get login account connect URL
+     * Get the login account connect URL
      *
      * @param $handle
      *
@@ -62,7 +62,7 @@ class SocialVariable
     }
 
     /**
-     * Get login account disconnect URL
+     * Get the login account disconnect URL
      *
      * @param $handle
      *
@@ -74,7 +74,7 @@ class SocialVariable
     }
 
     /**
-     * Get login providers
+     * Get a list of login providers
      *
      * @param bool|true $enabledOnly
      *
