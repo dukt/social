@@ -12,7 +12,9 @@ use Craft\Craft;
 abstract class BaseProvider
 {
     /**
-     * Get Handle
+     * Get the provider handle.
+     *
+     * @return string
      */
     public function getHandle()
     {
@@ -24,10 +26,11 @@ abstract class BaseProvider
     }
 
     /**
-     * Get provider class
+     * Get the class name, stripping all the namespaces.
      *
-     * from : Dukt\Social\LoginProviders\Dribbble
-     * to : Dribbble
+     * For example, "Dukt\Social\LoginProviders\Dribbble" becomes "Dribbble"
+     *
+     * @return string
      */
     public function getClass()
     {
@@ -38,13 +41,20 @@ abstract class BaseProvider
         return $class;
     }
 
+    /**
+     * Get the icon URL.
+     *
+     * @return mixed
+     */
     public function getIconUrl()
     {
         return $this->getOauthProvider()->getIconUrl();
     }
 
     /**
-     * Get OAuth provider
+     * Get the OAuth provider.
+     *
+     * @return mixed
      */
     public function getOauthProvider()
     {
@@ -52,21 +62,27 @@ abstract class BaseProvider
     }
 
     /**
-     * Default Scope
+     * Get the default scope.
+     *
+     * @return mixed
      */
     public function getDefaultScope()
     {
     }
 
     /**
-     * Default Authorization Options
+     * Get the defaul authorization options.
+     *
+     * @return mixed
      */
     public function getDefaultAuthorizationOptions()
     {
     }
 
     /**
-     * Returns `scope` from login provider class by default, or `scope` overidden by the config
+     * Returns the `scope` from login provider class by default, or the `scope` overridden by the config
+     *
+     * @return mixed
      */
     public function getScope()
     {
@@ -83,7 +99,9 @@ abstract class BaseProvider
     }
 
     /**
-     * Returns `authorizationOptions` from login provider class by default, or `authorizationOptions` overidden by the config
+     * Returns the `authorizationOptions` from login provider class by default, or `authorizationOptions` overridden by the config
+     *
+     * @return mixed
      */
     public function getAuthorizationOptions()
     {
@@ -100,7 +118,9 @@ abstract class BaseProvider
     }
 
     /**
-     * Returns `enabled` from login provider class by default, or `enabled` overidden by the config
+     * Returns the `enabled` setting from login provider class by default, or `enabled` overridden by the config.
+     *
+     * @return bool
      */
     public function getIsEnabled()
     {
@@ -116,6 +136,11 @@ abstract class BaseProvider
         return false;
     }
 
+    /**
+     * @param $token
+     *
+     * @return mixed
+     */
     public function getAccount($token)
     {
         return $this->getOauthProvider()->getAccount($token);
