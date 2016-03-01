@@ -135,9 +135,7 @@ class SocialController extends BaseController
 		$plugin = craft()->plugins->getPlugin('social');
 		$this->pluginSettings = $plugin->getSettings();
 
-
 		// try to connect
-
 		try
 		{
 			if(!$oauthProvider || $oauthProvider && !$oauthProvider->isConfigured())
@@ -155,9 +153,7 @@ class SocialController extends BaseController
 				throw new Exception("Craft Pro is required");
 			}
 
-
 			// provider scope & authorizationOptions
-
 			$socialProvider = craft()->social_loginProviders->getLoginProvider($providerHandle);
 
 			$scope = $socialProvider->getScope();
@@ -248,7 +244,6 @@ class SocialController extends BaseController
 			if ($craftUser->id == $account->userId)
 			{
 				// save token
-
 				$tokenId = $account->tokenId;
 				$existingToken = craft()->oauth->getTokenById($tokenId);
 
