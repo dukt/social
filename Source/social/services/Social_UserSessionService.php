@@ -27,14 +27,7 @@ class Social_UserSessionService extends UserSessionService
      * @var UserIdentity
      */
     private $_identity;
-
-    /**
-     * Stores the user identity cookie.
-     *
-     * @var HttpCookie
-     */
-    private $_identityCookie;
-
+    
     // Public Methods
     // =========================================================================
 
