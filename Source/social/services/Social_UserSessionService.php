@@ -27,7 +27,7 @@ class Social_UserSessionService extends UserSessionService
      * @var UserIdentity
      */
     private $_identity;
-    
+
     // Public Methods
     // =========================================================================
 
@@ -40,6 +40,13 @@ class Social_UserSessionService extends UserSessionService
         require_once(CRAFT_PLUGINS_PATH.'social/etc/Users/SocialUserIdentity.php');
     }
 
+    /**
+     * Login a user by social account ID.
+     * 
+     * @param $accountId
+     *
+     * @return bool
+     */
     public function login($accountId)
     {
         $rememberMe = true;
