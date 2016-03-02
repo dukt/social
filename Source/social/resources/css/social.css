@@ -1,10 +1,16 @@
-.social-icon { display: inline-block; width: 16px; height: 16px; border-radius: 2px; }
+.social-icon { display: inline-block; width: 20px; height: 20px; border-radius: 2px; }
 
-table.data td.provider { white-space: nowrap; }
-table.data td.provider img { margin-top: -3px; margin-right: 7px; vertical-align: middle; }
+.provider .thumb {  display: inline-block;  margin-right: 7px;  }
+.provider .thumb img { height: 20px; vertical-align: middle;  }
+.provider .label {  display: inline-block;  vertical-align: middle;  }
 
 .socialthumb { display: inline-block; }
 .socialthumb img { width: 30px; vertical-align: middle; }
+
+
+
+
+/* Empty screens */
 
 .empty {
     text-align: center;

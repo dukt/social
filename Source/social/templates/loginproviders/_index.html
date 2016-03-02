@@ -8,7 +8,6 @@
     <table id="fields" class="data fullwidth collapsible">
         <thead>
             <tr>
-                <th scope="col"></th>
                 <th scope="col">{{ "Name"|t }}</th>
                 <th scope="col">{{ "Handle"|t }}</th>
                 <th scope="col">{{ "Login Provider Status"|t }}</th>
@@ -26,17 +25,20 @@
             {% for loginProvider in loginProviders %}
                 {% set oauthProvider = loginProvider.getOauthProvider() %}
                 <tr>
-                    <td class="thin">
-                        {% if oauthProvider.iconUrl %}
-                            <img src="{{ oauthProvider.iconUrl }}" height="24" />
-                        {% endif %}
-                    </td>
-
-                    {% if craft.config.get('advancedMode', 'social') %}
-                        <td><a href="{{ url('social/loginproviders/'~loginProvider.handle) }}">{{ loginProvider.name }}</a></td>
-                    {% else %}
-                        <th>{{ loginProvider.name }}</th>
-                    {% endif %}
+                    <td>
+						<div class="provider">
+							<div class="thumb">
+								<img src="{{ loginProvider.getIconUrl() }}" width="32" height="32" />
+							</div>
+							<div class="label">
+								{% if craft.config.get('advancedMode', 'social') %}
+									<a href="{{ url('social/loginproviders/'~loginProvider.handle) }}">{{ loginProvider.name }}</a>
+								{% else %}
+									{{ loginProvider.name }}
+								{% endif %}
+							</div>
+						</div>
+					</td>
 
                     <td class="light">{{ loginProvider.handle }}</td>
 

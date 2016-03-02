@@ -25,23 +25,34 @@
                 {% if oauthProvider %}
                     <tr>
                         <td>
-                            <span class="status{% if user.status == 'active' %} {{ user.status }}{% endif %}"></span>
+							<div class="element small hasthumb hasstatus">
+								<span class="status{% if user.status == 'active' %} {{ user.status }}{% endif %}"></span>
 
-                            <div class="socialthumb">
-                                <img src="{{ user.getThumbUrl(40) }}" />
-                            </div>
+								<div class="elementthumb">
+									<img src="{{ user.getThumbUrl(40) }}" />
+								</div>
 
-                            <a href="{{ url('social/loginaccounts/'~user.id) }}">{{ user.username }}</a>
+								<div class="label">
+									<a href="{{ url('social/loginaccounts/'~user.id) }}">{{ user.username }}</a>
+								</div>
+							</div>
                         </td>
                         <td>{{ user.fullName }}</td>
-                        <td class="provider">
-                            <img src="{{ oauthProvider.getIconUrl() }}" class="social-icon social-{{ oauthProvider.handle }}" />{{ oauthProvider.name }}
+                        <td>
+							<div class="provider">
+                            	<div class="thumb">
+									<img src="{{ oauthProvider.getIconUrl() }}" width="32" height="32" />
+								</div>
+								<div class="label">
+									{{ oauthProvider.name }}
+								</div>
+							</div>
                         </td>
                         <td>
                             {{ account.socialUid }}
                         </td>
                         <td>
-                            {{ user.lastLoginDate.nice }}
+							{% if user.lastLoginDate %}{{ user.lastLoginDate.localeDate() }} {{ user.lastLoginDate.localeTime() }}{% else %}{{ "Never"|t }}{% endif %}
                         </td>
                     </tr>
                 {% endif %}

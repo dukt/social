@@ -1,6 +1,8 @@
 {% extends "_layouts/cp" %}
 {% import "_includes/forms" as forms %}
 
+{% includeCssResource "social/css/social.css" %}
+
 {% set title = user.email  %}
 
 {% set crumbs = [
@@ -43,7 +45,11 @@
                 {% if oauthProvider %}
                     <tr data-id="{{ account.id }}" data-name="{{ oauthProvider.name|t }}">
                         <td class="provider">
-                            <img src="{{ oauthProvider.getIconUrl() }}" class="social-icon social-{{ oauthProvider.handle }}" />{{ oauthProvider.name }}
+                            <div class="thumb">
+								<img width="20" src="{{ oauthProvider.getIconUrl() }}" class="social-icon social-{{ oauthProvider.handle }}" />
+							</div>
+
+							<div class="label">{{ oauthProvider.name }}</div>
                         </td>
                         <td>
                             {{ account.socialUid }}
