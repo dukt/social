@@ -11,11 +11,21 @@ use Craft\Craft;
 
 class Twitter extends BaseProvider
 {
+    /**
+     * Get the provider name.
+     *
+     * @return string
+     */
     public function getName()
     {
         return 'Twitter';
     }
 
+    /**
+     * Get the provider handle.
+     *
+     * @return string
+     */
     public function getOauthProviderHandle()
     {
         return 'twitter';

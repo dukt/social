@@ -98,11 +98,9 @@ class Social_PluginService extends BaseApplicationComponent
 
 
             // requires update ?
-
             if (version_compare($currentVersion, $dependency['version']) >= 0)
             {
                 // no (requirements OK)
-
                 $requiresUpdate = false;
 
                 if ($plugin->isInstalled && $plugin->isEnabled)

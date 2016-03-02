@@ -28,7 +28,7 @@ class Social_LoginAccountModel extends BaseModel
     }
 
     /**
-     * Get User
+     * Get the OAuth provider for the social account.
      */
     public function getOauthProvider()
     {
@@ -39,7 +39,7 @@ class Social_LoginAccountModel extends BaseModel
     }
 
     /**
-     * Get User
+     * Get the associated Craft user for this social account.
      */
     public function getUser()
     {
@@ -50,7 +50,7 @@ class Social_LoginAccountModel extends BaseModel
     }
 
     /**
-     * Get Token
+     * Get the OAuth token for the social account.
      */
     public function getToken()
     {

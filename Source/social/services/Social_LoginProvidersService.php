@@ -13,7 +13,7 @@ class Social_LoginProvidersService extends BaseApplicationComponent
     // =========================================================================
 
     /**
-     * Disable login provider by handle
+     * Disable a login provider by handle.
      *
      * @param string $handle
      *
@@ -33,7 +33,7 @@ class Social_LoginProvidersService extends BaseApplicationComponent
     }
 
     /**
-     * Enable login provider by handle
+     * Enable a login provider by handle.
      *
      * @param string $handle
      *
@@ -53,12 +53,12 @@ class Social_LoginProvidersService extends BaseApplicationComponent
     }
 
     /**
-     * Get login provider by handle
+     * Get a login provider by handle.
      *
      * @param string $handle
      * @param bool|true $enabledOnly
      *
-     * @return Social_LoginProviderModel
+     * @return Social_ProviderModel|null
      */
     public function getLoginProvider($handle, $enabledOnly = true)
     {
@@ -74,7 +74,7 @@ class Social_LoginProvidersService extends BaseApplicationComponent
     }
 
     /**
-     * Get login providers
+     * Get login providers.
      *
      * @param bool|true $enabledOnly
      *
@@ -95,7 +95,6 @@ class Social_LoginProvidersService extends BaseApplicationComponent
     private function _getLoginProviders($enabledOnly)
     {
         // fetch all OAuth provider types
-
         $socialLoginProviderTypes = array();
 
         foreach(craft()->plugins->call('getSocialLoginProviders', [], true) as $pluginSocialLoginProviderTypes)
@@ -103,9 +102,7 @@ class Social_LoginProvidersService extends BaseApplicationComponent
             $socialLoginProviderTypes = array_merge($socialLoginProviderTypes, $pluginSocialLoginProviderTypes);
         }
 
-
         // instantiate providers
-
         $loginProviders = [];
 
         foreach($socialLoginProviderTypes as $socialLoginProviderType)

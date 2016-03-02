@@ -13,9 +13,9 @@ class Social_LoginAccountsService extends BaseApplicationComponent
     // =========================================================================
 
 	/**
-	 * Get accounts
+	 * Get all social accounts.
 	 *
-	 * @return array
+	 * @return array|null
 	 */
 	public function getLoginAccounts()
 	{
@@ -31,9 +31,9 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 	}
 
 	/**
-	 * Get accounts by user id
+	 * Get all of the social accounts for a given user id.
 	 *
-	 * @return array
+	 * @return array|null
 	 */
 	public function getLoginAccountsByUserId($userId)
 	{
@@ -49,7 +49,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 	}
 
 	/**
-	 * Get account by ID
+	 * Get a social account by it's id.
 	 *
 	 * @param int $id
 	 *
@@ -66,7 +66,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 	}
 
 	/**
-	 * Get account by provider handle
+	 * Get a social account by provider handle for the currently logged in user.
 	 *
 	 * @param string $providerHandle
 	 *
@@ -77,7 +77,8 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 		$currentUser = craft()->userSession->getUser();
 
 		// Check if there is a current user or not
-		if (!$currentUser) {
+		if (!$currentUser)
+		{
 			return false;
 		}
 
@@ -95,12 +96,12 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 	}
 
 	/**
-	 * Get account by social UID
+	 * Get a social account by social UID.
 	 *
 	 * @param string $providerHandle
 	 * @param string $socialUid
 	 *
-	 * @return BaseModel
+	 * @return Social_LoginAccountModel
 	 */
 	public function getLoginAccountByUid($providerHandle, $socialUid)
 	{
@@ -123,8 +124,8 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 	 *
 	 * @param Social_LoginAccountModel $account
 	 *
-	 * @return bool
 	 * @throws Exception
+	 * @return bool
 	 */
 	public function saveLoginAccount(Social_LoginAccountModel $account)
 	{
@@ -136,14 +137,10 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 			{
 				throw new Exception(Craft::t('No social user exists with the ID “{id}”', ['id' => $account->id]));
 			}
-
-			$oldSocialUser = Social_LoginAccountModel::populateModel($accountRecord);
-			$isNewUser = false;
 		}
 		else
 		{
 			$accountRecord = new Social_LoginAccountRecord;
-			$isNewUser = true;
 		}
 
 		// populate
@@ -203,7 +200,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 	}
 
 	/**
-	 * Delete account by provider
+	 * Delete a social account by provider
 	 *
 	 * @param $providerHandle
 	 *
@@ -231,7 +228,6 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 			}
 		}
 
-
 		if ($record)
 		{
 			return $record->delete();
@@ -241,7 +237,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 	}
 
 	/**
-	 * Delete account by user ID
+	 * Delete all social accounts by user ID
 	 *
 	 * @param int $userId
 	 *
@@ -273,7 +269,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
     }
 
 	/**
-	 * Delete login account by ID
+	 * Delete a social login account by it's ID
 	 *
 	 * @param int $id
 	 *
@@ -306,14 +302,14 @@ class Social_LoginAccountsService extends BaseApplicationComponent
     }
 
 	/**
-	 * Register User
+	 * Register a user.
 	 *
 	 * @param array $attributes Attributes of the user we want to register
 	 * @param string $providerHandle
 	 * @param Oauth_TokenModel $token
 	 *
-	 * @return bool
 	 * @throws Exception
+	 * @return UserModel|null
 	 */
 	public function registerUser($attributes, $providerHandle, $token)
 	{
@@ -358,15 +354,16 @@ class Social_LoginAccountsService extends BaseApplicationComponent
     // =========================================================================
 
 	/**
-	 * Register user
-	 * @param $account
-	 * @param $providerHandle
+	 * Register a user.
+	 *
+	 * @param array $attributes Attributes of the user we want to register
+	 * @param string $providerHandle
 	 * @param $token
 	 *
-	 * @return bool
 	 * @throws Exception
+	 * @return UserModel|null
 	 */
-	private function _registerUser($attributes, $providerHandle, $token)
+	private function _registerUser($attributes, $providerHandle)
 	{
 		// get social plugin settings
 
@@ -378,9 +375,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 			throw new Exception("Social registration is disabled.");
 		}
 
-
 		// Fire an 'onBeforeRegister' event
-
 		$event = new Event($this, [
 			'account' => $attributes,
 		]);
@@ -395,11 +390,9 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 			$newUser->username = $attributes['email'];
 			$newUser->email = $attributes['email'];
 
-
 			if($settings['autoFillProfile'])
 			{
 				// fill user from attributes
-
 				$userMapping = craft()->config->get('userMapping', 'social');
 
 				if(is_array($userMapping))
@@ -414,9 +407,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 					}
 				}
 
-
 				// fill user fields from attributes
-
 				$profileFieldsMapping = craft()->config->get('profileFieldsMapping', 'social');
 
 				if(isset($profileFieldsMapping[$providerHandle]) && is_array($profileFieldsMapping[$providerHandle]))
@@ -441,16 +432,12 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 				}
 			}
 
-
 			// save user
-
 			craft()->users->saveUser($newUser);
 			craft()->db->getSchema()->refresh();
 			$user = craft()->users->getUserByUsernameOrEmail($attributes['email']);
 
-
 			// save remote photo
-
 			if($settings['autoFillProfile'])
 			{
 				if (!empty($attributes['imageUrl']))
@@ -459,9 +446,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 				}
 			}
 
-
 			// save groups
-
 			if (!empty($settings['defaultGroup']))
 			{
 				craft()->userGroups->assignUserToGroups($user->id, [$settings['defaultGroup']]);
@@ -472,6 +457,6 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 			return $user;
 		}
 
-		return false;
+		return null;
 	}
 }

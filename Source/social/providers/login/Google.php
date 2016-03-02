@@ -11,16 +11,29 @@ use Craft\Craft;
 
 class Google extends BaseProvider
 {
+    /**
+     * Get the provider name.
+     *
+     * @return string
+     */
     public function getName()
     {
         return 'Google';
     }
 
+    /**
+     * Get the provider handle.
+     *
+     * @return string
+     */
     public function getOauthProviderHandle()
     {
         return 'google';
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getDefaultScope()
     {
         return [

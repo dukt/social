@@ -46,6 +46,9 @@ class Social_LoginAccountsController extends BaseController
     /**
      * Edit User's Login Accounts
      *
+     * @param array $variable Route variables
+     *
+     * @throws HttpException
      * @return null
      */
     public function actionEdit(array $variables = array())

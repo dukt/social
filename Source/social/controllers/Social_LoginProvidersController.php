@@ -44,6 +44,9 @@ class Social_LoginProvidersController extends BaseController
     /**
      * Edit Login Provider
      *
+     * @param array $variable Route variables
+     *
+     * @throws HttpException
      * @return null
      */
     public function actionEdit(array $variables = array())

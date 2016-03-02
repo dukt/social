@@ -13,7 +13,9 @@ class Social_LoginAccountRecord extends BaseRecord
     // =========================================================================
 
     /**
-     * Get Table Name
+     * Returns the name of the associated database table.
+     *
+     * @return string
      */
     public function getTableName()
     {
@@ -21,7 +23,9 @@ class Social_LoginAccountRecord extends BaseRecord
     }
 
     /**
-     * Define Attributes
+     * Defines this model's attributes.
+     *
+     * @return array
      */
     public function defineAttributes()
     {
@@ -33,7 +37,9 @@ class Social_LoginAccountRecord extends BaseRecord
     }
 
     /**
-     * Define Relations
+     * Defines this model's relations to other models.
+     *
+     * @return array
      */
     public function defineRelations()
     {
@@ -43,7 +49,7 @@ class Social_LoginAccountRecord extends BaseRecord
     }
 
     /**
-     * Define Indexes
+     * Defines this model's database table indexes.
      *
      * @return array
      */

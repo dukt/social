@@ -129,16 +129,13 @@ class SocialController extends BaseController
 		$providerHandle = craft()->request->getParam('provider');
 		$oauthProvider = craft()->oauth->getProvider($providerHandle);
 		$requestUri = craft()->request->requestUri;
-		$extraScopes = craft()->request->getParam('scope');
 		craft()->httpSession->add('social.requestUri', $requestUri);
 
 		// settings
 		$plugin = craft()->plugins->getPlugin('social');
 		$this->pluginSettings = $plugin->getSettings();
 
-
 		// try to connect
-
 		try
 		{
 			if(!$oauthProvider || $oauthProvider && !$oauthProvider->isConfigured())
@@ -156,9 +153,7 @@ class SocialController extends BaseController
 				throw new Exception("Craft Pro is required");
 			}
 
-
 			// provider scope & authorizationOptions
-
 			$socialProvider = craft()->social_loginProviders->getLoginProvider($providerHandle);
 
 			$scope = $socialProvider->getScope();
@@ -190,7 +185,7 @@ class SocialController extends BaseController
 	 * @param string $providerHandle	Handle of the provider
 	 * @param string $response      Provider response as an array
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return null
 	 */
 	private function _handleOAuthResponse($providerHandle, $response)
@@ -202,9 +197,6 @@ class SocialController extends BaseController
 			$token = $response['token'];
 
 			$this->token = $token;
-
-			$plugin = craft()->plugins->getPlugin('social');
-
 
 			// user
 			$craftUser = craft()->userSession->getUser();
@@ -252,7 +244,6 @@ class SocialController extends BaseController
 			if ($craftUser->id == $account->userId)
 			{
 				// save token
-
 				$tokenId = $account->tokenId;
 				$existingToken = craft()->oauth->getTokenById($tokenId);
 
@@ -299,6 +290,7 @@ class SocialController extends BaseController
 	/**
 	 * Handle Guest User
 	 *
+	 * @throws Exception
 	 * @return null
 	 */
 	private function _login()
