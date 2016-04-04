@@ -414,11 +414,11 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 				}
 
 				// fill user fields from attributes
-				$profileFieldsMapping = craft()->config->get('profileFieldsMapping', 'social');
+				$userContentMapping = craft()->config->get('userContentMapping', 'social');
 
-				if(isset($profileFieldsMapping[$providerHandle]) && is_array($profileFieldsMapping[$providerHandle]))
+				if(isset($userContentMapping[$providerHandle]) && is_array($userContentMapping[$providerHandle]))
 				{
-					foreach($profileFieldsMapping[$providerHandle] as $field => $template)
+					foreach($userContentMapping[$providerHandle] as $field => $template)
 					{
 						// Check to make sure custom field exists for user profile
 						if (isset($newUser->getContent()[$field]))

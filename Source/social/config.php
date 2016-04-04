@@ -33,9 +33,9 @@ return [
     ],
 
     /**
-     * Profile Fields Mapping
+     * User Content Mapping
      */
-    // 'profileFieldsMapping' => [
+    // 'userContentMapping' => [
     //     'facebook' => [
     //         'gender' => '{{ gender }}',
     //     ],

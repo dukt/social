@@ -62,11 +62,11 @@ Double check and double test all of the possible scenarios to make sure your soc
 **If you don't know what you're doing, please keep that setting set to `false`.**
 
 
-#### profileFieldsMapping
+#### userContentMapping
 
 Map fields from social accounts with Craft users fields to autofill user data on registration.
 
-    'profileFieldsMapping' => [
+    'userContentMapping' => [
         'facebook' => [
             'gender' => '{{ gender }}',
         ],
