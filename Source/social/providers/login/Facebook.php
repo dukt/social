@@ -40,4 +40,26 @@ class Facebook extends BaseProvider
             'email'
         ];
     }
+
+    public function getProfile($token)
+    {
+        $remoteAccount = $this->getRemoteAccount($token);
+        
+        return [
+            'id' => $remoteAccount->getId(),
+            'email' => $remoteAccount->getEmail(),
+            'firstName' => $remoteAccount->getFirstName(),
+            'lastName' => $remoteAccount->getLastName(),
+            'photoUrl' => $remoteAccount->getPictureUrl(),
+        
+            'name' => $remoteAccount->getName(),
+            'hometown' => $remoteAccount->getHometown(),
+            'bio' => $remoteAccount->getBio(),
+            'isDefaultPicture' => $remoteAccount->isDefaultPicture(),
+            'coverPhotoUrl' => $remoteAccount->getCoverPhotoUrl(),
+            'gender' => $remoteAccount->getGender(),
+            'locale' => $remoteAccount->getLocale(),
+            'link' => $remoteAccount->getLink(),
+        ];
+    }
 }

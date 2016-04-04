@@ -135,14 +135,9 @@ abstract class BaseProvider
 
         return false;
     }
-
-    /**
-     * @param $token
-     *
-     * @return mixed
-     */
-    public function getAccount($token)
+    
+    public function getRemoteAccount($token)
     {
-        return $this->getOauthProvider()->getAccount($token);
+        return $this->getOauthProvider()->getRemoteAccount($token);
     }
 }

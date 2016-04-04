@@ -399,10 +399,16 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 				{
 					foreach($userMapping as $attribute => $template)
 					{
-						// Check to make sure custom field exists for user profile
 						if (array_key_exists($attribute, $newUser->getAttributes()))
 						{
-							$newUser->{$attribute} = craft()->templates->renderString($template, $variables);
+							try
+							{
+								$newUser->{$attribute} = craft()->templates->renderString($template, $variables);
+							}
+							catch(\Exception $e)
+							{
+								SocialPlugin::log('Could not map:'.print_r([$attribute, $template, $variables, $e->getMessage()], true), LogLevel::Error);
+							}
 						}
 					}
 				}
@@ -424,9 +430,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 							catch(\Exception $e)
 							{
 								SocialPlugin::log('Could not map:'.print_r([$template, $variables, $e->getMessage()], true), LogLevel::Error);
-								// error with template string rendering ? just don't fill the user field
 							}
-
 						}
 					}
 				}
@@ -440,9 +444,9 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 			// save remote photo
 			if($settings['autoFillProfile'])
 			{
-				if (!empty($attributes['imageUrl']))
+				if (!empty($attributes['photoUrl']))
 				{
-					craft()->social->saveRemotePhoto($attributes['imageUrl'], $user);
+					craft()->social->saveRemotePhoto($attributes['photoUrl'], $user);
 				}
 			}
 

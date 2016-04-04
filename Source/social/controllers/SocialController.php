@@ -233,9 +233,9 @@ class SocialController extends BaseController
 			$this->redirect = $this->referer;
 		}
 
-		$remoteAccount = $this->socialLoginProvider->getAccount($this->token);
+		$attributes = $this->socialLoginProvider->getProfile($this->token);
 
-		$socialUid = $remoteAccount['uid'];
+		$socialUid = $attributes['id'];
 
 		$account = craft()->social_loginAccounts->getLoginAccountByUid($this->socialLoginProvider->getHandle(), $socialUid);
 
@@ -295,18 +295,9 @@ class SocialController extends BaseController
 	 */
 	private function _login()
 	{
-		$leagueUser = $this->socialLoginProvider->getAccount($this->token);
+		$attributes = $this->socialLoginProvider->getProfile($this->token);
 
-		if(!is_array($leagueUser))
-		{
-			$attributes = $leagueUser->getArrayCopy();
-		}
-		else
-		{
-			$attributes = $leagueUser;
-		}
-
-		$socialUid = $attributes['uid'];
+		$socialUid = $attributes['id'];
 
 		$account = craft()->social_loginAccounts->getLoginAccountByUid($this->socialLoginProvider->getHandle(), $socialUid);
 
