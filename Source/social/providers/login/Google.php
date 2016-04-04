@@ -44,19 +44,19 @@ class Google extends BaseProvider
     
     public function getProfile($token)
     {
-        $remoteAccount = $this->getRemoteAccount($token);
+        $remoteProfile = $this->getRemoteProfile($token);
         
-        $photoUrl = $remoteAccount->getAvatar();
+        $photoUrl = $remoteProfile->getAvatar();
         $photoUrl = substr($photoUrl, 0, strpos($photoUrl, "?"));
         
         return [
-            'id' => $remoteAccount->getId(),
-            'email' => $remoteAccount->getEmail(),
-            'firstName' => $remoteAccount->getFirstName(),
-            'lastName' => $remoteAccount->getLastName(),
+            'id' => $remoteProfile->getId(),
+            'email' => $remoteProfile->getEmail(),
+            'firstName' => $remoteProfile->getFirstName(),
+            'lastName' => $remoteProfile->getLastName(),
             'photoUrl' => $photoUrl,
             
-            'name' => $remoteAccount->getName(),
+            'name' => $remoteProfile->getName(),
         ];
     }
 }

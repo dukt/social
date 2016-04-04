@@ -136,8 +136,8 @@ abstract class BaseProvider
         return false;
     }
     
-    public function getRemoteAccount($token)
+    public function getRemoteProfile($token)
     {
-        return $this->getOauthProvider()->getRemoteAccount($token);
+        return $this->getOauthProvider()->getRemoteResourceOwner($token);
     }
 }

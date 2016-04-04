@@ -43,23 +43,23 @@ class Facebook extends BaseProvider
 
     public function getProfile($token)
     {
-        $remoteAccount = $this->getRemoteAccount($token);
+        $remoteProfile = $this->getRemoteProfile($token);
         
         return [
-            'id' => $remoteAccount->getId(),
-            'email' => $remoteAccount->getEmail(),
-            'firstName' => $remoteAccount->getFirstName(),
-            'lastName' => $remoteAccount->getLastName(),
-            'photoUrl' => $remoteAccount->getPictureUrl(),
+            'id' => $remoteProfile->getId(),
+            'email' => $remoteProfile->getEmail(),
+            'firstName' => $remoteProfile->getFirstName(),
+            'lastName' => $remoteProfile->getLastName(),
+            'photoUrl' => $remoteProfile->getPictureUrl(),
         
-            'name' => $remoteAccount->getName(),
-            'hometown' => $remoteAccount->getHometown(),
-            'bio' => $remoteAccount->getBio(),
-            'isDefaultPicture' => $remoteAccount->isDefaultPicture(),
-            'coverPhotoUrl' => $remoteAccount->getCoverPhotoUrl(),
-            'gender' => $remoteAccount->getGender(),
-            'locale' => $remoteAccount->getLocale(),
-            'link' => $remoteAccount->getLink(),
+            'name' => $remoteProfile->getName(),
+            'hometown' => $remoteProfile->getHometown(),
+            'bio' => $remoteProfile->getBio(),
+            'isDefaultPicture' => $remoteProfile->isDefaultPicture(),
+            'coverPhotoUrl' => $remoteProfile->getCoverPhotoUrl(),
+            'gender' => $remoteProfile->getGender(),
+            'locale' => $remoteProfile->getLocale(),
+            'link' => $remoteProfile->getLink(),
         ];
     }
 }
