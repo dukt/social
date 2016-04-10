@@ -64,6 +64,14 @@ class SocialPlugin extends BasePlugin
     }
 
     /**
+     * Get Description
+     */
+    public function getDescription()
+    {
+        return Craft::t('Let your visitors log into Craft with web services like Facebook, Google, Twitter…');
+    }
+
+    /**
      * Get Version
      */
     public function getVersion()
