@@ -7,6 +7,8 @@
 
 namespace Craft;
 
+require_once(CRAFT_PLUGINS_PATH.'social/providers/login/BaseProvider.php');
+
 class SocialPlugin extends BasePlugin
 {
     // Public Methods
@@ -27,7 +29,6 @@ class SocialPlugin extends BasePlugin
      */
     public function getSocialLoginProviders()
     {
-        require_once(CRAFT_PLUGINS_PATH.'social/providers/login/BaseProvider.php');
         require_once(CRAFT_PLUGINS_PATH.'social/providers/login/Facebook.php');
         require_once(CRAFT_PLUGINS_PATH.'social/providers/login/Google.php');
         require_once(CRAFT_PLUGINS_PATH.'social/providers/login/Twitter.php');
