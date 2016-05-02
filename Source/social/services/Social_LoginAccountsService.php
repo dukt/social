@@ -437,7 +437,12 @@ class Social_LoginAccountsService extends BaseApplicationComponent
             }
 
             // save user
-            craft()->users->saveUser($newUser);
+            if (!craft()->users->saveUser($newUser))
+            {
+                SocialPlugin::log('There was a problem creating the user:'.print_r($newUser->getErrors(), true), LogLevel::Error);
+                throw new Exception("Craft user couldn’t be created.");
+            }
+
             craft()->db->getSchema()->refresh();
             $user = craft()->users->getUserByUsernameOrEmail($attributes['email']);
 
