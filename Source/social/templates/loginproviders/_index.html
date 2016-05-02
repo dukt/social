@@ -26,19 +26,19 @@
                 {% set oauthProvider = loginProvider.getOauthProvider() %}
                 <tr>
                     <td>
-						<div class="provider">
-							<div class="thumb">
-								<img src="{{ loginProvider.getIconUrl() }}" width="32" height="32" />
-							</div>
-							<div class="label">
-								{% if craft.config.get('advancedMode', 'social') %}
-									<a href="{{ url('social/loginproviders/'~loginProvider.handle) }}">{{ loginProvider.name }}</a>
-								{% else %}
-									{{ loginProvider.name }}
-								{% endif %}
-							</div>
-						</div>
-					</td>
+                        <div class="provider">
+                            <div class="thumb">
+                                <img src="{{ loginProvider.getIconUrl() }}" width="32" height="32" />
+                            </div>
+                            <div class="label">
+                                {% if craft.config.get('advancedMode', 'social') %}
+                                    <a href="{{ url('social/loginproviders/'~loginProvider.handle) }}">{{ loginProvider.name }}</a>
+                                {% else %}
+                                    {{ loginProvider.name }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </td>
 
                     <td class="light">{{ loginProvider.handle }}</td>
 

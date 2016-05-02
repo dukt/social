@@ -6,13 +6,13 @@ namespace Craft;
  */
 class m141106_220045_social_add_accounts_table extends BaseMigration
 {
-	/**
-	 * Any migration code in here is wrapped inside of a transaction.
-	 *
-	 * @return bool
-	 */
-	public function safeUp()
-	{
+    /**
+     * Any migration code in here is wrapped inside of a transaction.
+     *
+     * @return bool
+     */
+    public function safeUp()
+    {
         if (!craft()->db->tableExists('social_accounts'))
         {
             // Create the craft_social_accounts table
@@ -31,6 +31,6 @@ class m141106_220045_social_add_accounts_table extends BaseMigration
             craft()->db->createCommand()->addForeignKey('social_accounts', 'userId', 'users', 'id', 'CASCADE', null);
         }
 
-		return true;
-	}
+        return true;
+    }
 }

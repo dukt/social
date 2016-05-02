@@ -12,7 +12,7 @@ class Social_PluginController extends BaseController
     // Public Methods
     // =========================================================================
 
-	/**
+    /**
      * Install
      *
      * @return null

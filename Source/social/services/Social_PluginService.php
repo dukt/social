@@ -27,7 +27,7 @@ class Social_PluginService extends BaseApplicationComponent
         parent::init();
     }
 
-	/**
+    /**
      * Check requirements
      *
      * @throws Exception
@@ -42,7 +42,7 @@ class Social_PluginService extends BaseApplicationComponent
         }
     }
 
-	/**
+    /**
      * Get plugin dependencies
      *
      * @param bool|true $missingOnly

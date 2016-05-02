@@ -19,9 +19,9 @@ return [
      */
     'showCpSection' => true,
 
-	/**
-	 * Allow Email Match
-	 */
+    /**
+     * Allow Email Match
+     */
     'allowEmailMatch' => false,
 
     /**

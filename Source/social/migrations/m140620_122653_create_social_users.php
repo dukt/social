@@ -6,13 +6,13 @@ namespace Craft;
  */
 class m140620_122653_create_social_users extends BaseMigration
 {
-	/**
-	 * Any migration code in here is wrapped inside of a transaction.
-	 *
-	 * @return bool
-	 */
-	public function safeUp()
-	{
+    /**
+     * Any migration code in here is wrapped inside of a transaction.
+     *
+     * @return bool
+     */
+    public function safeUp()
+    {
         if (!craft()->db->tableExists('social_users'))
         {
             Craft::log('Creating the social_users table.', LogLevel::Info, true);
@@ -32,6 +32,6 @@ class m140620_122653_create_social_users extends BaseMigration
             craft()->db->createCommand()->addForeignKey('social_users', 'userId', 'users', 'id', 'CASCADE', null);
         }
 
-		return true;
-	}
+        return true;
+    }
 }
