@@ -443,27 +443,24 @@ class Social_LoginAccountsService extends BaseApplicationComponent
                 throw new Exception("Craft user couldn’t be created.");
             }
 
-            craft()->db->getSchema()->refresh();
-            $user = craft()->users->getUserByUsernameOrEmail($attributes['email']);
-
             // save remote photo
             if($settings['autoFillProfile'])
             {
                 if (!empty($attributes['photoUrl']))
                 {
-                    craft()->social->saveRemotePhoto($attributes['photoUrl'], $user);
+                    craft()->social->saveRemotePhoto($attributes['photoUrl'], $newUser);
                 }
             }
 
             // save groups
             if (!empty($settings['defaultGroup']))
             {
-                craft()->userGroups->assignUserToGroups($user->id, [$settings['defaultGroup']]);
+                craft()->userGroups->assignUserToGroups($newUser->id, [$settings['defaultGroup']]);
             }
 
-            craft()->users->saveUser($user);
+            craft()->users->saveUser($newUser);
 
-            return $user;
+            return $newUser;
         }
 
         return null;
