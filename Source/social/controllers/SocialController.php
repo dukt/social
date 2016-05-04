@@ -156,6 +156,11 @@ class SocialController extends BaseController
             // provider scope & authorizationOptions
             $socialProvider = craft()->social_loginProviders->getLoginProvider($providerHandle);
 
+            if (!$socialProvider)
+            {
+                throw new Exception("Login provider is not configured");
+            }
+
             $scope = $socialProvider->getScope();
             $authorizationOptions = $socialProvider->getAuthorizationOptions();
 
