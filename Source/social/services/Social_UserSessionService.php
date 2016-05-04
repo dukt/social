@@ -42,7 +42,7 @@ class Social_UserSessionService extends UserSessionService
 
     /**
      * Login a user by social account ID.
-     * 
+     *
      * @param $accountId
      *
      * @return bool
@@ -59,7 +59,7 @@ class Social_UserSessionService extends UserSessionService
             return $this->loginByUserId($this->_identity->getUserModel()->id, $rememberMe, true);
         }
 
-        SocialPlugin::log('Tried to log in unsuccessfully.', LogLevel::Warning);
+        SocialPlugin::log('Tried to log in unsuccessfully:'.print_r($this->_identity->getUserModel(), true), LogLevel::Error);
         return false;
     }
 
