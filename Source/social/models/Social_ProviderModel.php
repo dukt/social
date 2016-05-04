@@ -113,7 +113,7 @@ class Social_ProviderModel extends BaseModel
 
     /**
      * Get the documentation URL for provider scopes.
-     * 
+     *
      * @return mixed
      */
     public function getScopeDocsUrl()

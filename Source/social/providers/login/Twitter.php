@@ -30,19 +30,19 @@ class Twitter extends BaseProvider
     {
         return 'twitter';
     }
-    
+
     public function getProfile($token)
     {
         $remoteProfile = $this->getRemoteProfile($token);
-        
+
         $photoUrl = $remoteProfile->imageUrl;
         $photoUrl = str_replace("_normal.", ".", $photoUrl);
-        
+
         return [
             'id' => $remoteProfile->uid,
             'email' => $remoteProfile->email,
             'photoUrl' => $photoUrl,
-            
+
             'nickname' => $remoteProfile->nickname,
             'name' => $remoteProfile->name,
             'location' => $remoteProfile->location,

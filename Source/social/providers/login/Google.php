@@ -41,21 +41,21 @@ class Google extends BaseProvider
             'https://www.googleapis.com/auth/userinfo.email'
         ];
     }
-    
+
     public function getProfile($token)
     {
         $remoteProfile = $this->getRemoteProfile($token);
-        
+
         $photoUrl = $remoteProfile->getAvatar();
         $photoUrl = substr($photoUrl, 0, strpos($photoUrl, "?"));
-        
+
         return [
             'id' => $remoteProfile->getId(),
             'email' => $remoteProfile->getEmail(),
             'firstName' => $remoteProfile->getFirstName(),
             'lastName' => $remoteProfile->getLastName(),
             'photoUrl' => $photoUrl,
-            
+
             'name' => $remoteProfile->getName(),
         ];
     }

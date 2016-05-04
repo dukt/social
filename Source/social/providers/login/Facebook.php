@@ -44,14 +44,14 @@ class Facebook extends BaseProvider
     public function getProfile($token)
     {
         $remoteProfile = $this->getRemoteProfile($token);
-        
+
         return [
             'id' => $remoteProfile->getId(),
             'email' => $remoteProfile->getEmail(),
             'firstName' => $remoteProfile->getFirstName(),
             'lastName' => $remoteProfile->getLastName(),
             'photoUrl' => $remoteProfile->getPictureUrl(),
-        
+
             'name' => $remoteProfile->getName(),
             'hometown' => $remoteProfile->getHometown(),
             'bio' => $remoteProfile->getBio(),
