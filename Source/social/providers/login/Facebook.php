@@ -8,6 +8,7 @@
 namespace Dukt\Social\LoginProviders;
 
 use Craft\Craft;
+use Guzzle\Http\Client;
 
 class Facebook extends BaseProvider
 {
@@ -37,29 +38,54 @@ class Facebook extends BaseProvider
     public function getDefaultScope()
     {
         return [
-            'email'
+            'email',
+	        'user_location',
         ];
     }
 
+	public function getRemoteProfile($token)
+	{
+		$oauthProvider = $this->getOauthProvider();
+
+		$client = new Client('https://graph.facebook.com/v2.6');
+		$client->addSubscriber($oauthProvider->getSubscriber($token));
+		
+		$fields = implode(',', [
+			'id', 'name', 'first_name', 'last_name',
+			'email', 'hometown', 'bio', 'picture.type(large){url,is_silhouette}',
+			'cover{source}', 'gender', 'locale', 'link',
+			'location',
+		]);
+
+		$request = $client->get('/me?fields='.$fields);
+
+		$response = $request->send();
+		$json = $response->json();
+
+		return $json;
+	}
+	
     public function getProfile($token)
     {
         $remoteProfile = $this->getRemoteProfile($token);
 
         return [
-            'id' => $remoteProfile->getId(),
-            'email' => $remoteProfile->getEmail(),
-            'firstName' => $remoteProfile->getFirstName(),
-            'lastName' => $remoteProfile->getLastName(),
-            'photoUrl' => $remoteProfile->getPictureUrl(),
+            'id' => (isset($remoteProfile['id']) ? $remoteProfile['id'] : null ),
+            'email' => (isset($remoteProfile['email']) ? $remoteProfile['email'] : null ),
+            'firstName' => (isset($remoteProfile['first_name']) ? $remoteProfile['first_name'] : null ),
+            'lastName' => (isset($remoteProfile['last_name']) ? $remoteProfile['last_name'] : null ),
+            'photoUrl' => (isset($remoteProfile['picture_url']) ? $remoteProfile['picture_url'] : null ),
 
-            'name' => $remoteProfile->getName(),
-            'hometown' => $remoteProfile->getHometown(),
-            'bio' => $remoteProfile->getBio(),
-            'isDefaultPicture' => $remoteProfile->isDefaultPicture(),
-            'coverPhotoUrl' => $remoteProfile->getCoverPhotoUrl(),
-            'gender' => $remoteProfile->getGender(),
-            'locale' => $remoteProfile->getLocale(),
-            'link' => $remoteProfile->getLink(),
+            'name' => (isset($remoteProfile['name']) ? $remoteProfile['name'] : null ),
+            'hometown' => (isset($remoteProfile['hometown']) ? $remoteProfile['hometown'] : null ),
+            'bio' => (isset($remoteProfile['bio']) ? $remoteProfile['bio'] : null ),
+            'isDefaultPicture' => (isset($remoteProfile['is_silhouette']) ? $remoteProfile['is_silhouette'] : null ),
+            'coverPhotoUrl' => (isset($remoteProfile['cover_photo_url']) ? $remoteProfile['cover_photo_url'] : null ),
+            'gender' => (isset($remoteProfile['gender']) ? $remoteProfile['gender'] : null ),
+            'locale' => (isset($remoteProfile['locale']) ? $remoteProfile['locale'] : null ),
+            'link' => (isset($remoteProfile['link']) ? $remoteProfile['link'] : null ),
+            'locationId' => (isset($remoteProfile['location']['id']) ? $remoteProfile['location']['id'] : null ),
+            'location' => (isset($remoteProfile['location']['name']) ? $remoteProfile['location']['name'] : null ),
         ];
     }
 }
