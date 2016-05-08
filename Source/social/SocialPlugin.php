@@ -7,6 +7,7 @@
 
 namespace Craft;
 
+require_once(CRAFT_PLUGINS_PATH.'social/etc/providers/ISocial_Provider.php');
 require_once(CRAFT_PLUGINS_PATH.'social/providers/login/BaseProvider.php');
 
 class SocialPlugin extends BasePlugin

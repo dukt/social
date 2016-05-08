@@ -8,6 +8,7 @@
 namespace Dukt\Social\LoginProviders;
 
 use Craft\Craft;
+use Craft\Oauth_TokenModel;
 
 class Twitter extends BaseProvider
 {
@@ -31,7 +32,7 @@ class Twitter extends BaseProvider
         return 'twitter';
     }
 
-    public function getProfile($token)
+	public function getProfile(Oauth_TokenModel $token)
     {
         $remoteProfile = $this->getRemoteProfile($token);
 

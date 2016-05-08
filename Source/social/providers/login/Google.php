@@ -8,6 +8,7 @@
 namespace Dukt\Social\LoginProviders;
 
 use Craft\Craft;
+use Craft\Oauth_TokenModel;
 
 class Google extends BaseProvider
 {
@@ -42,7 +43,7 @@ class Google extends BaseProvider
         ];
     }
 
-    public function getProfile($token)
+	public function getProfile(Oauth_TokenModel $token)
     {
         $remoteProfile = $this->getRemoteProfile($token);
 

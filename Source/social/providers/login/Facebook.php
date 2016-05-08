@@ -9,6 +9,7 @@ namespace Dukt\Social\LoginProviders;
 
 use Craft\Craft;
 use Guzzle\Http\Client;
+use Craft\Oauth_TokenModel;
 
 class Facebook extends BaseProvider
 {
@@ -65,7 +66,7 @@ class Facebook extends BaseProvider
 		return $json;
 	}
 	
-    public function getProfile($token)
+    public function getProfile(Oauth_TokenModel $token)
     {
         $remoteProfile = $this->getRemoteProfile($token);
 

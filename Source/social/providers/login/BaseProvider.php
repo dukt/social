@@ -8,8 +8,10 @@
 namespace Dukt\Social\LoginProviders;
 
 use Craft\Craft;
+use Craft\ISocial_Provider;
+use Craft\Oauth_TokenModel;
 
-abstract class BaseProvider
+abstract class BaseProvider implements ISocial_Provider
 {
     /**
      * Get the provider handle.
@@ -136,7 +138,14 @@ abstract class BaseProvider
         return false;
     }
 
-    public function getRemoteProfile($token)
+	/**
+	 * Returns the remote profile
+	 *
+	 * @param $token
+	 *
+	 * @return mixed
+	 */
+	public function getRemoteProfile(Oauth_TokenModel $token)
     {
         return $this->getOauthProvider()->getRemoteResourceOwner($token);
     }
