@@ -399,8 +399,6 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 	        }
 
             $newUser = new UserModel();
-            $newUser->username = craft()->templates->renderString($userMapping['username'], $variables);
-            $newUser->email = craft()->templates->renderString($userMapping['email'], $variables);
 
             if($settings['autoFillProfile'])
             {
@@ -448,6 +446,11 @@ class Social_LoginAccountsService extends BaseApplicationComponent
                     }
                 }
             }
+	        else
+	        {
+		        $newUser->username = craft()->templates->renderString($userMapping['username'], $variables);
+		        $newUser->email = craft()->templates->renderString($userMapping['email'], $variables);
+	        }
 
 
             // save user
