@@ -386,14 +386,25 @@ class Social_LoginAccountsService extends BaseApplicationComponent
         {
             $variables = $attributes;
 
+	        $defaultUserMapping = craft()->config->get('userMapping', 'social');
+	        $providerUserMapping = craft()->config->get($providerHandle.'UserMapping', 'social');
+
+	        if(is_array($providerUserMapping))
+	        {
+		        $userMapping = array_merge($defaultUserMapping, $providerUserMapping);
+	        }
+	        else
+	        {
+		        $userMapping = $defaultUserMapping;
+	        }
+
             $newUser = new UserModel();
-            $newUser->username = $attributes['email'];
-            $newUser->email = $attributes['email'];
+            $newUser->username = craft()->templates->renderString($userMapping['username'], $variables);
+            $newUser->email = craft()->templates->renderString($userMapping['email'], $variables);
 
             if($settings['autoFillProfile'])
             {
                 // fill user from attributes
-                $userMapping = craft()->config->get('userMapping', 'social');
 
                 if(is_array($userMapping))
                 {
@@ -413,12 +424,14 @@ class Social_LoginAccountsService extends BaseApplicationComponent
                     }
                 }
 
-                // fill user fields from attributes
-                $userContentMapping = craft()->config->get('userContentMapping', 'social');
 
-                if(isset($userContentMapping[$providerHandle]) && is_array($userContentMapping[$providerHandle]))
+                // fill user fields from attributes
+
+	            $userContentMapping = craft()->config->get($providerHandle.'UserContentMapping', 'social');
+
+                if(is_array($userContentMapping))
                 {
-                    foreach($userContentMapping[$providerHandle] as $field => $template)
+                    foreach($userContentMapping as $field => $template)
                     {
                         // Check to make sure custom field exists for user profile
                         if (isset($newUser->getContent()[$field]))
@@ -436,7 +449,9 @@ class Social_LoginAccountsService extends BaseApplicationComponent
                 }
             }
 
+
             // save user
+
             if (!craft()->users->saveUser($newUser))
             {
                 SocialPlugin::log('There was a problem creating the user:'.print_r($newUser->getErrors(), true), LogLevel::Error);
