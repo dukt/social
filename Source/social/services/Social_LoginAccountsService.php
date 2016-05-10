@@ -429,6 +429,8 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 
                 if(is_array($userContentMapping))
                 {
+                    $userContent = [];
+
                     foreach($userContentMapping as $field => $template)
                     {
                         // Check to make sure custom field exists for user profile
@@ -436,7 +438,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
                         {
                             try
                             {
-                                $newUser->getContent()->{$field} = craft()->templates->renderString($template, $variables);
+                                $userContent[$field] = craft()->templates->renderString($template, $variables);
                             }
                             catch(\Exception $e)
                             {
@@ -444,6 +446,8 @@ class Social_LoginAccountsService extends BaseApplicationComponent
                             }
                         }
                     }
+
+                    $newUser->setContentFromPost($userContent);
                 }
             }
 	        else
