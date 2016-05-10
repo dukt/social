@@ -7,24 +7,57 @@
 
 namespace Craft;
 
-class Social_LoginAccountModel extends BaseModel
+class Social_LoginAccountModel extends BaseElementModel
 {
+    protected $elementType = 'Social_LoginAccount';
+
+    private $_user;
+
     // Public Methods
     // =========================================================================
+
+    /**
+     * Use the login account's email as its string representation.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getUser()->username;
+    }
+
+    /**
+     * Returns the URL to the element's thumbnail, if there is one.
+     *
+     * @param int|null $size
+     *
+     * @return string|null
+     */
+    public function getThumbUrl($size = 100)
+    {
+        $url = $this->getUser()->getPhotoUrl($size);
+
+        if (!$url)
+        {
+            $url = UrlHelper::getResourceUrl('defaultuserphoto');
+        }
+
+        return $url;
+    }
 
     /**
      * Define Attributes
      */
     public function defineAttributes()
     {
-        return array(
+        return array_merge(parent::defineAttributes(), array(
             'id' => AttributeType::Number,
             'userId' => AttributeType::Number,
             'tokenId' => AttributeType::Number,
 
             'providerHandle' => array(AttributeType::String, 'required' => true),
             'socialUid' => array(AttributeType::String, 'required' => true),
-        );
+        ));
     }
 
     /**
@@ -43,10 +76,15 @@ class Social_LoginAccountModel extends BaseModel
      */
     public function getUser()
     {
-        if ($this->userId)
+        if (!isset($this->_user))
         {
-            return craft()->users->getUserById($this->userId);
+            if ($this->userId)
+            {
+                $this->_user = craft()->users->getUserById($this->userId);
+            }
         }
+
+        return $this->_user;
     }
 
     /**

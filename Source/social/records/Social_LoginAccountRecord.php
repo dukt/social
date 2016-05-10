@@ -44,6 +44,7 @@ class Social_LoginAccountRecord extends BaseRecord
     public function defineRelations()
     {
         return array(
+            'element' => array(static::BELONGS_TO, 'ElementRecord', 'id', 'onDelete' => static::CASCADE, 'required' => true),
             'user' => array(static::BELONGS_TO, 'UserRecord', 'onDelete' => static::CASCADE, 'required' => true),
         );
     }

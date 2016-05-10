@@ -96,7 +96,7 @@ class SocialPlugin extends BasePlugin
      */
     public function getSchemaVersion()
     {
-        return '1.0.1';
+        return '1.0.2';
     }
 
     /**
@@ -162,6 +162,7 @@ class SocialPlugin extends BasePlugin
 
             'social/install' => ['action' => "social/plugin/install"],
 
+            "social/loginaccounts_bkp" => ['action' => "social/loginAccounts/index_bkp"],
             "social/loginaccounts" => ['action' => "social/loginAccounts/index"],
             "social/loginaccounts/(?P<userId>\d+)" => ['action' => "social/loginAccounts/edit"],
 

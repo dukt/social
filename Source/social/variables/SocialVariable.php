@@ -13,6 +13,18 @@ class SocialVariable
     // =========================================================================
 
     /**
+     * Returns an ElementCriteriaModell for Social_LoginAccount elements.
+     *
+     * @param array|null $criteria
+     *
+     * @return ElementCriteriaModel
+     */
+    public function loginAccounts($criteria = null)
+    {
+        return craft()->elements->getCriteria('Social_LoginAccount', $criteria);
+    }
+
+    /**
      * Get the login URL
      *
      * @param $providerHandle

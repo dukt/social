@@ -129,7 +129,9 @@ class Social_LoginAccountsService extends BaseApplicationComponent
      */
     public function saveLoginAccount(Social_LoginAccountModel $account)
     {
-        if ($account->id)
+        $isNewAccount = !$account->id;
+
+        if (!$isNewAccount)
         {
             $accountRecord = Social_LoginAccountRecord::model()->findById($account->id);
 
@@ -156,11 +158,36 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 
         if (!$account->hasErrors())
         {
-            $accountRecord->save(false);
+            $transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
 
-            if (!$account->id)
+            try
             {
-                $account->id = $accountRecord->id;
+                if (craft()->elements->saveElement($account))
+                {
+                    // Now that we have an element ID, save it on the other stuff
+                    if ($isNewAccount)
+                    {
+                        $accountRecord->id = $account->id;
+                    }
+
+                    $accountRecord->save(false);
+
+                    if ($transaction !== null)
+                    {
+                        $transaction->commit();
+                    }
+
+                    return true;
+                }
+            }
+            catch (\Exception $e)
+            {
+                if ($transaction !== null)
+                {
+                    $transaction->rollback();
+                }
+
+                throw $e;
             }
 
             return true;
@@ -386,17 +413,17 @@ class Social_LoginAccountsService extends BaseApplicationComponent
         {
             $variables = $attributes;
 
-	        $defaultUserMapping = craft()->config->get('userMapping', 'social');
-	        $providerUserMapping = craft()->config->get($providerHandle.'UserMapping', 'social');
+            $defaultUserMapping = craft()->config->get('userMapping', 'social');
+            $providerUserMapping = craft()->config->get($providerHandle.'UserMapping', 'social');
 
-	        if(is_array($providerUserMapping))
-	        {
-		        $userMapping = array_merge($defaultUserMapping, $providerUserMapping);
-	        }
-	        else
-	        {
-		        $userMapping = $defaultUserMapping;
-	        }
+            if(is_array($providerUserMapping))
+            {
+                $userMapping = array_merge($defaultUserMapping, $providerUserMapping);
+            }
+            else
+            {
+                $userMapping = $defaultUserMapping;
+            }
 
             $newUser = new UserModel();
 
@@ -425,7 +452,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 
                 // fill user fields from attributes
 
-	            $userContentMapping = craft()->config->get($providerHandle.'UserContentMapping', 'social');
+                $userContentMapping = craft()->config->get($providerHandle.'UserContentMapping', 'social');
 
                 if(is_array($userContentMapping))
                 {
@@ -450,11 +477,11 @@ class Social_LoginAccountsService extends BaseApplicationComponent
                     $newUser->setContentFromPost($userContent);
                 }
             }
-	        else
-	        {
-		        $newUser->username = craft()->templates->renderString($userMapping['username'], $variables);
-		        $newUser->email = craft()->templates->renderString($userMapping['email'], $variables);
-	        }
+            else
+            {
+                $newUser->username = craft()->templates->renderString($userMapping['username'], $variables);
+                $newUser->email = craft()->templates->renderString($userMapping['email'], $variables);
+            }
 
 
             // save user
