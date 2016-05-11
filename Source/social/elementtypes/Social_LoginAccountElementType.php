@@ -49,7 +49,7 @@ class Social_LoginAccountElementType extends BaseElementType
     {
         $sources = array(
             '*' => array(
-                'label' => Craft::t('All login accounts'),
+                'label' => Craft::t('All login providers'),
             )
         );
         return $sources;
