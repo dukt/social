@@ -21,6 +21,7 @@ class SocialPlugin extends BasePlugin
         require_once(CRAFT_PLUGINS_PATH.'social/providers/login/BaseProvider.php');
 
         $this->initEventListeners();
+        $this->initTemplateHooks();
 
         parent::init();
     }
@@ -173,6 +174,30 @@ class SocialPlugin extends BasePlugin
         ];
     }
 
+    public function defineAdditionalUserTableAttributes()
+    {
+        return [
+            'loginAccounts' => Craft::t('Login Accounts')
+        ];
+    }
+
+    public function getUserTableAttributeHtml(UserModel $user, $attribute)
+    {
+        if ($attribute == 'loginAccounts')
+        {
+            $providerHandles = $this->_getProviderHandlesByUserId($user->id);
+
+            if (!$providerHandles)
+            {
+                return '';
+            }
+
+            $html = implode(', ', $providerHandles);
+
+            return $html;
+        }
+    }
+
     /**
      * On Before Uninstall
      */
@@ -217,5 +242,58 @@ class SocialPlugin extends BasePlugin
 
             craft()->social_loginAccounts->deleteLoginAccountByUserId($user->id);
         });
+    }
+
+    /**
+     * Initialize template hooks
+     */
+    private function initTemplateHooks()
+    {
+        craft()->templates->hook('cp.users.edit.right-pane', function(&$context)
+        {
+            $account = $context['account'];
+
+            if ($account)
+            {
+                $variables = [
+                    'user' => $account,
+                    'providerHandles' => $this->_getProviderHandlesByUserId($account->id),
+                ];
+
+                $html = craft()->templates->render('social/users/_edit-pane', $variables, true);
+
+                return $html;
+            }
+        });
+    }
+
+    /**
+     * Returns the provider handles for a given user id
+     *
+     * @param int $userId
+     *
+     * @return array|null
+     */
+    private function _getProviderHandlesByUserId($userId)
+    {
+        BusinessLogicPlugin::log($userId);
+
+        $loginAccounts = craft()->social_loginAccounts->getLoginAccountsByUserId($userId);
+
+        BusinessLogicPlugin::log(print_r($loginAccounts, true));
+
+        if (!is_array($loginAccounts))
+        {
+            return null;
+        }
+
+        $providerHandles = [];
+
+        foreach ($loginAccounts as $loginAccount)
+        {
+            $providerHandles[] = $loginAccount->providerHandle;
+        }
+
+        return $providerHandles;
     }
 }
