@@ -22,7 +22,11 @@ class SocialPlugin extends BasePlugin
 
         $this->initEventListeners();
 
-        parent::init();
+	    // If this is a CP request, register the social.prepCpTemplate hook
+	    if(craft()->request->isCpRequest())
+	    {
+		    craft()->templates->hook('social.prepCpTemplate', array($this, 'prepCpTemplate'));
+	    }
     }
 
     /**
@@ -184,7 +188,23 @@ class SocialPlugin extends BasePlugin
         }
     }
 
-    // Protected Methods
+	/**
+	 * Prepares a CP template.
+	 *
+	 * @param &$context The current template context
+	 */
+	public function prepCpTemplate(&$context)
+	{
+		$context['subnav'] = [
+			'loginAccounts' => ['label' => Craft::t("Login Accounts"), 'url' => 'social'],
+			'loginAccounts_bkp' => ['label' => Craft::t("Login Accounts (old)"), 'url' => 'social/loginaccounts_bkp'],
+			'loginProviders' => ['label' => Craft::t("Login Providers"), 'url' => 'social/loginproviders'],
+			'settings' => ['label' => Craft::t("Settings"), 'url' => 'social/settings'],
+		];
+	}
+
+
+	// Protected Methods
     // =========================================================================
 
     /**

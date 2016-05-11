@@ -1,25 +1,4 @@
 {% extends elementType is defined ? "_layouts/elementindex" : "_layouts/cp" %}
+{% hook 'social.prepCpTemplate' %}
 
 {% includeCssResource "social/css/social.css" %}
-
-{% set title = "Social Login"|t %}
-
-{% if CraftEdition == CraftPro %}
-
-    {% set tabs = {
-        loginAccounts: { label: "Login Accounts"|t, url: url('social/loginaccounts') },
-        loginAccounts_bkp: { label: "Login Accounts (old)"|t, url: url('social/loginaccounts_bkp') },
-        loginProviders: { label: "Login Providers"|t, url: url('social/loginproviders') },
-        settings: { label: "Settings"|t, url: url('social/settings') },
-    } %}
-
-{% else %}
-
-    {% set content %}
-
-        <h2>{{ "Craft Pro required"|t }}</h2>
-        <p>{{ 'Social Login plugin requires {link} unlimited user accounts feature.'|t({link:'<a href="http://buildwithcraft.com/pricing">Craft Pro</a>'})|raw }}</p>
-
-    {% endset %}
-
-{% endif %}
