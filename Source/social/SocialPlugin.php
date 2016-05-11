@@ -17,12 +17,12 @@ class SocialPlugin extends BasePlugin
      */
     public function init()
     {
-	    require_once(CRAFT_PLUGINS_PATH.'social/etc/providers/ISocial_Provider.php');
-	    require_once(CRAFT_PLUGINS_PATH.'social/providers/login/BaseProvider.php');
+        require_once(CRAFT_PLUGINS_PATH.'social/etc/providers/ISocial_Provider.php');
+        require_once(CRAFT_PLUGINS_PATH.'social/providers/login/BaseProvider.php');
 
         $this->initEventListeners();
 
-	    parent::init();
+        parent::init();
     }
 
     /**

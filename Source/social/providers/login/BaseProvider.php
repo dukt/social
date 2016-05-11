@@ -138,14 +138,14 @@ abstract class BaseProvider implements ISocial_Provider
         return false;
     }
 
-	/**
-	 * Returns the remote profile
-	 *
-	 * @param $token
-	 *
-	 * @return mixed
-	 */
-	public function getRemoteProfile(Oauth_TokenModel $token)
+    /**
+     * Returns the remote profile
+     *
+     * @param $token
+     *
+     * @return mixed
+     */
+    public function getRemoteProfile(Oauth_TokenModel $token)
     {
         return $this->getOauthProvider()->getRemoteResourceOwner($token);
     }

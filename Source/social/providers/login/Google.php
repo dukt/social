@@ -43,7 +43,7 @@ class Google extends BaseProvider
         ];
     }
 
-	public function getProfile(Oauth_TokenModel $token)
+    public function getProfile(Oauth_TokenModel $token)
     {
         $remoteProfile = $this->getRemoteProfile($token);
 

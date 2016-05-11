@@ -28,23 +28,23 @@ return [
      * User Mapping
      */
     'userMapping' => [
-	    'username' => '{{ email }}',
-	    'email' => '{{ email }}',
-	    'firstName' => '{{ firstName }}',
-	    'lastName' => '{{ lastName }}',
+        'username' => '{{ email }}',
+        'email' => '{{ email }}',
+        'firstName' => '{{ firstName }}',
+        'lastName' => '{{ lastName }}',
     ],
 
-	/**
-	 * Twitter User Mapping
-	 */
-	//	'twitterUserMapping' => [
-	//	    'username' => '{{ nickname }}',
-	//	],
+    /**
+     * Twitter User Mapping
+     */
+    //    'twitterUserMapping' => [
+    //        'username' => '{{ nickname }}',
+    //    ],
 
-	/**
-	 * Facebook User Content Mapping
-	 */
-	// 'facebookUserContentMapping' => [
-	//      'gender' => '{{ gender }}',
-	// ],
+    /**
+     * Facebook User Content Mapping
+     */
+    // 'facebookUserContentMapping' => [
+    //      'gender' => '{{ gender }}',
+    // ],
 ];

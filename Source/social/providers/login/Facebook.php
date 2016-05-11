@@ -40,32 +40,32 @@ class Facebook extends BaseProvider
     {
         return [
             'email',
-	        'user_location',
+            'user_location',
         ];
     }
 
-	public function getRemoteProfile($token)
-	{
-		$oauthProvider = $this->getOauthProvider();
+    public function getRemoteProfile($token)
+    {
+        $oauthProvider = $this->getOauthProvider();
 
-		$client = new Client('https://graph.facebook.com/v2.6');
-		$client->addSubscriber($oauthProvider->getSubscriber($token));
-		
-		$fields = implode(',', [
-			'id', 'name', 'first_name', 'last_name',
-			'email', 'hometown', 'bio', 'picture.type(large){url,is_silhouette}',
-			'cover{source}', 'gender', 'locale', 'link',
-			'location',
-		]);
+        $client = new Client('https://graph.facebook.com/v2.6');
+        $client->addSubscriber($oauthProvider->getSubscriber($token));
+        
+        $fields = implode(',', [
+            'id', 'name', 'first_name', 'last_name',
+            'email', 'hometown', 'bio', 'picture.type(large){url,is_silhouette}',
+            'cover{source}', 'gender', 'locale', 'link',
+            'location',
+        ]);
 
-		$request = $client->get('/me?fields='.$fields);
+        $request = $client->get('/me?fields='.$fields);
 
-		$response = $request->send();
-		$json = $response->json();
+        $response = $request->send();
+        $json = $response->json();
 
-		return $json;
-	}
-	
+        return $json;
+    }
+    
     public function getProfile(Oauth_TokenModel $token)
     {
         $remoteProfile = $this->getRemoteProfile($token);
