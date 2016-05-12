@@ -27,7 +27,7 @@ class Social_PluginController extends BaseController
         }
         else
         {
-            $this->redirect('social/settings');
+            $this->redirect('settings/plugins/social/settings/loginproviders');
         }
     }
 }

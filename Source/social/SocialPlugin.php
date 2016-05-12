@@ -21,12 +21,6 @@ class SocialPlugin extends BasePlugin
         require_once(CRAFT_PLUGINS_PATH.'social/providers/login/BaseProvider.php');
 
         $this->initEventListeners();
-
-	    // If this is a CP request, register the social.prepCpTemplate hook
-	    if(craft()->request->isCpRequest())
-	    {
-		    craft()->templates->hook('social.prepCpTemplate', array($this, 'prepCpTemplate'));
-	    }
     }
 
     /**
@@ -140,7 +134,7 @@ class SocialPlugin extends BasePlugin
      */
     public function getSettingsUrl()
     {
-        return 'social/settings';
+        return 'settings/plugins/social/settings/loginproviders';
     }
 
     /**
@@ -170,10 +164,10 @@ class SocialPlugin extends BasePlugin
             "social/loginaccounts" => ['action' => "social/loginAccounts/index"],
             "social/loginaccounts/(?P<userId>\d+)" => ['action' => "social/loginAccounts/edit"],
 
-            'social/loginproviders' => ['action' => "social/loginProviders/index"],
-            'social/loginproviders/(?P<handle>.*)' => ['action' => "social/loginProviders/edit"],
+            'settings/plugins/social/settings/loginproviders' => ['action' => "social/loginProviders/index"],
+            'settings/plugins/social/settings/loginproviders/(?P<handle>.*)' => ['action' => "social/loginProviders/edit"],
 
-            'social/settings' => ['action' => "social/settings/index"],
+            'settings/plugins/social/settings/settings' => ['action' => "social/settings/index"],
         ];
     }
 
@@ -188,23 +182,7 @@ class SocialPlugin extends BasePlugin
         }
     }
 
-	/**
-	 * Prepares a CP template.
-	 *
-	 * @param &$context The current template context
-	 */
-	public function prepCpTemplate(&$context)
-	{
-		$context['subnav'] = [
-			'loginAccounts' => ['label' => Craft::t("Login Accounts"), 'url' => 'social'],
-			'loginAccounts_bkp' => ['label' => Craft::t("Login Accounts (old)"), 'url' => 'social/loginaccounts_bkp'],
-			'loginProviders' => ['label' => Craft::t("Login Providers"), 'url' => 'social/loginproviders'],
-			'settings' => ['label' => Craft::t("Settings"), 'url' => 'social/settings'],
-		];
-	}
-
-
-	// Protected Methods
+    // Protected Methods
     // =========================================================================
 
     /**

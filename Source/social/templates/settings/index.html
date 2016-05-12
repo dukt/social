@@ -1,9 +1,7 @@
-{% extends "social/_layouts/cp" %}
+{% extends "social/_layouts/settings" %}
 {% import "_includes/forms" as forms %}
 
-{% set selectedSubnavItem = 'settings' %}
-
-{% set title = "Settings"|t %}
+{% set selectedTab = 'settings' %}
 
 {% set content %}
 
@@ -13,7 +11,7 @@
 
         <input type="hidden" name="action" value="plugins/savePluginSettings">
         <input type="hidden" name="pluginClass" value="Social">
-        <input type="hidden" name="redirect" value="social/settings">
+        <input type="hidden" name="redirect" value="settings/plugins/social/settings/settings">
 
         {{ forms.lightswitchField({
             first: true,
