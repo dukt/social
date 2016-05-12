@@ -23,7 +23,34 @@ class Social_LoginAccountModel extends BaseElementModel
      */
     public function __toString()
     {
-        return $this->getUser()->username;
+        if (craft()->config->get('useEmailAsUsername'))
+        {
+            return $this->email;
+        }
+        else
+        {
+            return $this->username;
+        }
+    }
+
+    /**
+     * Returns whether the current user can edit the element.
+     *
+     * @return bool
+     */
+    public function isEditable()
+    {
+        return true;
+    }
+
+    /**
+     * Returns the element's CP edit URL.
+     *
+     * @return string|false
+     */
+    public function getCpEditUrl()
+    {
+        return UrlHelper::getCpUrl('social/loginaccounts/'.$this->userId);
     }
 
     /**
@@ -57,6 +84,12 @@ class Social_LoginAccountModel extends BaseElementModel
 
             'providerHandle' => array(AttributeType::String, 'required' => true),
             'socialUid' => array(AttributeType::String, 'required' => true),
+
+            'username' => AttributeType::String,
+            'email' => AttributeType::String,
+            'firstName' => AttributeType::String,
+            'lastName' => AttributeType::String,
+            'lastLoginDate' => AttributeType::DateTime,
         ));
     }
 
@@ -95,5 +128,18 @@ class Social_LoginAccountModel extends BaseElementModel
         $token = craft()->oauth->getTokenById($this->tokenId);
 
         return $token;
+    }
+
+    /**
+     * Gets the user's full name.
+     *
+     * @return string|null
+     */
+    public function getFullName()
+    {
+        $firstName = trim($this->firstName);
+        $lastName = trim($this->lastName);
+
+        return $firstName.($firstName && $lastName ? ' ' : '').$lastName;
     }
 }

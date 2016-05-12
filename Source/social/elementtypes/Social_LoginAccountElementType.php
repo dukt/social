@@ -88,16 +88,42 @@ class Social_LoginAccountElementType extends BaseElementType
      */
     public function defineAvailableTableAttributes()
     {
-        return array(
-            'username'          => Craft::t('Username'),
-            'fullName'          => Craft::t('Full Name'),
-            'oauthProviderName' => Craft::t('OAuth Provider'),
-            'socialUid'         => Craft::t('Social User ID'),
-            'lastLoginDate'     => Craft::t('Last login'),
+        if (craft()->config->get('useEmailAsUsername'))
+        {
+            // Start with Email and don't even give Username as an option
+            $attributes = array(
+                'email' => array('label' => Craft::t('Email')),
+            );
+        }
+        else
+        {
+            $attributes = array(
+                'username' => array('label' => Craft::t('Username')),
+                'email'    => array('label' => Craft::t('Email')),
+            );
+        }
 
-            'userId'            => Craft::t('User ID'),
-            'tokenId'           => Craft::t('Token ID'),
-        );
+        $attributes['fullName'] = array('label' => Craft::t('Full Name'));
+        $attributes['firstName'] = array('label' => Craft::t('First Name'));
+        $attributes['lastName'] = array('label' => Craft::t('Last Name'));
+
+        $attributes['oauthProvider'] = array('label' => Craft::t('OAuth Provider'));
+        $attributes['socialUid']     = array('label' => Craft::t('Social User ID'));
+
+        $attributes['userId']        = array('label' => Craft::t('User ID'));
+        $attributes['lastLoginDate'] = array('label' => Craft::t('Last Login'));
+        $attributes['dateCreated']   = array('label' => Craft::t('Date Created'));
+        $attributes['dateUpdated']   = array('label' => Craft::t('Date Updated'));
+
+        // Allow plugins to modify the attributes
+        $pluginAttributes = craft()->plugins->call('defineAdditionalLoginAccountTableAttributes', array(), true);
+
+        foreach ($pluginAttributes as $thisPluginAttributes)
+        {
+            $attributes = array_merge($attributes, $thisPluginAttributes);
+        }
+
+        return $attributes;
     }
 
     /**
@@ -109,7 +135,7 @@ class Social_LoginAccountElementType extends BaseElementType
      */
     public function getDefaultTableAttributes($source = null)
     {
-        return array('username', 'fullName', 'oauthProviderName', 'socialUid', 'lastLoginDate');
+        return array('username', 'fullName', 'oauthProvider', 'socialUid', 'lastLoginDate');
     }
 
     /**
@@ -124,15 +150,9 @@ class Social_LoginAccountElementType extends BaseElementType
     {
         switch ($attribute)
         {
-            case 'username':
-            case 'fullName':
-            case 'lastLoginDate':
+            case 'oauthProvider':
             {
-                return $element->getUser()->{$attribute};
-            }
-
-            case 'oauthProviderName':
-            {
+                // TODO:consider eager loading the provider
                 $provider = craft()->oauth->getProvider($element->providerHandle);
 
                 return $provider->getName();
@@ -173,10 +193,17 @@ class Social_LoginAccountElementType extends BaseElementType
             login_accounts.userId,
             login_accounts.tokenId,
             login_accounts.providerHandle,
-            login_accounts.socialUid'
-        );
+            login_accounts.socialUid,
+
+            users.username,
+            users.firstName,
+            users.lastName,
+            users.email,
+            users.lastLoginDate,
+        ');
 
         $query->join('social_login_accounts login_accounts', 'login_accounts.id = elements.id');
+        $query->leftJoin('users users', 'login_accounts.userId = users.id');
     }
 
     /**
