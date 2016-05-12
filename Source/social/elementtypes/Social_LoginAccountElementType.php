@@ -80,6 +80,33 @@ class Social_LoginAccountElementType extends BaseElementType
     }
 
     /**
+     * Returns the available element actions for a given source (if one is provided).
+     *
+     * @param string|null $source
+     *
+     * @return array|null
+     */
+    public function getAvailableActions($source = null)
+    {
+        $actions = array();
+
+        $editAction = craft()->elements->getAction('Edit');
+        $editAction->setParams(array(
+            'label' => Craft::t('Edit login account'),
+        ));
+        $actions[] = $editAction;
+
+        $deleteAction = craft()->elements->getAction('Delete');
+        $deleteAction->setParams(array(
+            'confirmationMessage' => Craft::t('Are you sure you want to delete the selected login accounts?'),
+            'successMessage'      => Craft::t('Login accounts deleted.'),
+        ));
+        $actions[] = $deleteAction;
+
+        return $actions;
+    }
+
+    /**
      * Defines which element model attributes should be searchable.
      *
      * @return array
