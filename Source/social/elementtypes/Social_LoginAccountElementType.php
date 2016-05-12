@@ -155,7 +155,19 @@ class Social_LoginAccountElementType extends BaseElementType
                 // TODO:consider eager loading the provider
                 $provider = craft()->oauth->getProvider($element->providerHandle);
 
-                return $provider->getName();
+                if ($provider)
+                {
+                    $html = '<div class="provider">' .
+                        '<div class="thumb"><img src="'.$provider->getIconUrl().'" width="32" height="32" /></div>' .
+                        '<div class="label">'.$provider->getName().'</div>' .
+                        '</div>';
+
+                    return $html;
+                }
+                else
+                {
+                    return '';
+                }
             }
 
             default:
