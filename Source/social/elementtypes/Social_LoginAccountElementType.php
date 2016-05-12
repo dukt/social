@@ -75,10 +75,36 @@ class Social_LoginAccountElementType extends BaseElementType
      */
     public function defineSortableAttributes()
     {
-        return array(
-            'userId' => Craft::t('User ID'),
-            'tokenId' => Craft::t('Token ID')
-        );
+        if (craft()->config->get('useEmailAsUsername'))
+        {
+            // Start with Email and don't even give Username as an option
+            $attributes = array(
+                'email' => Craft::t('Email'),
+            );
+        }
+        else
+        {
+            $attributes = array(
+                'username' => Craft::t('Username'),
+                'email'    => Craft::t('Email'),
+            );
+        }
+
+        $attributes['firstName']     = Craft::t('First Name');
+        $attributes['lastName']      = Craft::t('Last Name');
+
+        $attributes['providerHandle'] = Craft::t('OAuth Provider');
+        $attributes['socialUid']     = Craft::t('Social User ID');
+
+        $attributes['userId']        = Craft::t('User ID');
+        $attributes['lastLoginDate'] = Craft::t('Last Login');
+        $attributes['dateCreated']   = Craft::t('Date Created');
+        $attributes['dateUpdated']   = Craft::t('Date Updated');
+
+        // Allow plugins to modify the attributes
+        craft()->plugins->call('modifyLoginAccountSortableAttributes', array(&$attributes));
+
+        return $attributes;
     }
 
     /**
@@ -107,7 +133,7 @@ class Social_LoginAccountElementType extends BaseElementType
         $attributes['firstName'] = array('label' => Craft::t('First Name'));
         $attributes['lastName'] = array('label' => Craft::t('Last Name'));
 
-        $attributes['oauthProvider'] = array('label' => Craft::t('OAuth Provider'));
+        $attributes['providerHandle'] = array('label' => Craft::t('OAuth Provider'));
         $attributes['socialUid']     = array('label' => Craft::t('Social User ID'));
 
         $attributes['userId']        = array('label' => Craft::t('User ID'));
@@ -135,7 +161,7 @@ class Social_LoginAccountElementType extends BaseElementType
      */
     public function getDefaultTableAttributes($source = null)
     {
-        return array('username', 'fullName', 'oauthProvider', 'socialUid', 'lastLoginDate');
+        return array('username', 'fullName', 'providerHandle', 'socialUid', 'lastLoginDate');
     }
 
     /**
@@ -150,7 +176,7 @@ class Social_LoginAccountElementType extends BaseElementType
     {
         switch ($attribute)
         {
-            case 'oauthProvider':
+            case 'providerHandle':
             {
                 // TODO:consider eager loading the provider
                 $provider = craft()->oauth->getProvider($element->providerHandle);
