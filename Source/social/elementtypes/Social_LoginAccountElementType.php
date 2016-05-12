@@ -79,18 +79,15 @@ class Social_LoginAccountElementType extends BaseElementType
         return $sources;
     }
 
-    // /**
-    //  * Defines which element model attributes should be searchable.
-    //  *
-    //  * @return array
-    //  */
-    // public function defineSearchableAttributes()
-    // {
-    //     return array(
-    //         'userId',
-    //         'tokenId'
-    //     );
-    // }
+    /**
+     * Defines which element model attributes should be searchable.
+     *
+     * @return array
+     */
+    public function defineSearchableAttributes()
+    {
+        return array('username', 'email', 'firstName', 'lastName', 'fullName', 'providerHandle', 'socialUid', 'userId');
+    }
 
     /**
      * Defines the attributes that elements can be sorted by.
