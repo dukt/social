@@ -117,7 +117,7 @@ class Social_LoginAccountElementType extends BaseElementType
         $attributes['firstName']     = Craft::t('First Name');
         $attributes['lastName']      = Craft::t('Last Name');
 
-        $attributes['providerHandle'] = Craft::t('OAuth Provider');
+        $attributes['providerHandle'] = Craft::t('Login Provider');
         $attributes['socialUid']     = Craft::t('Social User ID');
 
         $attributes['userId']        = Craft::t('User ID');
@@ -157,7 +157,7 @@ class Social_LoginAccountElementType extends BaseElementType
         $attributes['firstName'] = array('label' => Craft::t('First Name'));
         $attributes['lastName'] = array('label' => Craft::t('Last Name'));
 
-        $attributes['providerHandle'] = array('label' => Craft::t('OAuth Provider'));
+        $attributes['providerHandle'] = array('label' => Craft::t('Login Provider'));
         $attributes['socialUid']     = array('label' => Craft::t('Social User ID'));
 
         $attributes['userId']        = array('label' => Craft::t('User ID'));
