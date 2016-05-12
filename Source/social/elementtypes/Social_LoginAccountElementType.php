@@ -177,18 +177,26 @@ class Social_LoginAccountElementType extends BaseElementType
         }
     }
 
-    // /**
-    //  * Defines any custom element criteria attributes for this element type.
-    //  *
-    //  * @return array
-    //  */
-    // public function defineCriteriaAttributes()
-    // {
-    //     return array(
-    //         'userId' => AttributeType::Number,
-    //         'tokenId' => AttributeType::Number,
-    //     );
-    // }
+    /**
+     * Defines any custom element criteria attributes for this element type.
+     *
+     * @return array
+     */
+    public function defineCriteriaAttributes()
+    {
+        return array(
+            'userId' => AttributeType::Number,
+            'tokenId' => AttributeType::Number,
+            'providerHandle' => AttributeType::String,
+            'socialUid' => AttributeType::String,
+
+            'username' => AttributeType::String,
+            'email' => AttributeType::String,
+            'firstName' => AttributeType::String,
+            'lastName' => AttributeType::String,
+            'lastLoginDate' => AttributeType::DateTime,
+        );
+    }
 
     /**
      * Modifies an element query targeting elements of this type.
@@ -216,6 +224,51 @@ class Social_LoginAccountElementType extends BaseElementType
 
         $query->join('social_login_accounts login_accounts', 'login_accounts.id = elements.id');
         $query->leftJoin('users users', 'login_accounts.userId = users.id');
+
+        if ($criteria->userId)
+        {
+            $query->andWhere(DbHelper::parseParam('login_accounts.userId', $criteria->userId, $query->params));
+        }
+
+        if ($criteria->tokenId)
+        {
+            $query->andWhere(DbHelper::parseParam('login_accounts.tokenId', $criteria->tokenId, $query->params));
+        }
+
+        if ($criteria->providerHandle)
+        {
+            $query->andWhere(DbHelper::parseParam('login_accounts.providerHandle', $criteria->providerHandle, $query->params));
+        }
+
+        if ($criteria->socialUid)
+        {
+            $query->andWhere(DbHelper::parseParam('login_accounts.socialUid', $criteria->socialUid, $query->params));
+        }
+
+        if ($criteria->username)
+        {
+            $query->andWhere(DbHelper::parseParam('users.username', $criteria->username, $query->params));
+        }
+
+        if ($criteria->firstName)
+        {
+            $query->andWhere(DbHelper::parseParam('users.firstName', $criteria->firstName, $query->params));
+        }
+
+        if ($criteria->lastName)
+        {
+            $query->andWhere(DbHelper::parseParam('users.lastName', $criteria->lastName, $query->params));
+        }
+
+        if ($criteria->email)
+        {
+            $query->andWhere(DbHelper::parseParam('users.email', $criteria->email, $query->params));
+        }
+
+        if ($criteria->lastLoginDate)
+        {
+            $query->andWhere(DbHelper::parseDateParam('users.lastLoginDate', $criteria->lastLoginDate, $query->params));
+        }
     }
 
     /**
