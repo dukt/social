@@ -50,8 +50,32 @@ class Social_LoginAccountElementType extends BaseElementType
         $sources = array(
             '*' => array(
                 'label' => Craft::t('All login providers'),
+                'hasThumbs' => false
             )
         );
+
+        $loginProviders = craft()->social_loginProviders->getLoginProviders();
+
+        if ($loginProviders)
+        {
+            $sources[] = array('heading' => Craft::t('Login Providers'));
+
+            foreach ($loginProviders as $loginProvider)
+            {
+                $providerHandle = $loginProvider->getHandle();
+                $key = 'group:'.$providerHandle;
+
+                $sources[$key] = array(
+                    'label'     => Craft::t($loginProvider->getName()),
+                    'criteria'  => array('providerHandle' => $providerHandle),
+                    'hasThumbs' => false
+                );
+            }
+        }
+
+        // Allow plugins to modify the sources
+        craft()->plugins->call('modifyLoginAccountSources', array(&$sources, $context));
+
         return $sources;
     }
 
