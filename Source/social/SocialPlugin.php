@@ -22,8 +22,6 @@ class SocialPlugin extends BasePlugin
 
         $this->initEventListeners();
         $this->initTemplateHooks();
-
-        parent::init();
     }
 
     /**
@@ -137,7 +135,7 @@ class SocialPlugin extends BasePlugin
      */
     public function getSettingsUrl()
     {
-        return 'social/settings';
+        return 'settings/plugins/social/settings/loginproviders';
     }
 
     /**
@@ -167,10 +165,10 @@ class SocialPlugin extends BasePlugin
             "social/loginaccounts" => ['action' => "social/loginAccounts/index"],
             "social/loginaccounts/(?P<userId>\d+)" => ['action' => "social/loginAccounts/edit"],
 
-            'social/loginproviders' => ['action' => "social/loginProviders/index"],
-            'social/loginproviders/(?P<handle>.*)' => ['action' => "social/loginProviders/edit"],
+            'settings/plugins/social/settings/loginproviders' => ['action' => "social/loginProviders/index"],
+            'settings/plugins/social/settings/loginproviders/(?P<handle>.*)' => ['action' => "social/loginProviders/edit"],
 
-            'social/settings' => ['action' => "social/settings/index"],
+            'settings/plugins/social/settings/settings' => ['action' => "social/settings/index"],
         ];
     }
 
