@@ -8,11 +8,6 @@ return [
     'advancedMode' => true,
 
     /**
-     * Show CP Section
-     */
-    'showCpSection' => true,
-
-    /**
      * Allow Email Match
      */
     'allowEmailMatch' => false,
