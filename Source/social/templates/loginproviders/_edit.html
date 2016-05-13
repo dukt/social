@@ -1,15 +1,13 @@
 {% extends "_layouts/cp" %}
 {% import "_includes/forms" as forms %}
 
-{% set selectedSubnavItem = 'loginProviders' %}
-
 {% set title = loginProvider.name %}
 
 {% set crumbs = [
     { label: "Settings"|t, url: url('settings') },
-    { label: "Plugin"|t, url: url('settings/plugins') },
-    { label: "Social Login"|t, url: url('social') },
-    { label: "Login Providers"|t, url: url('social/loginproviders') },
+    { label: "Plugins"|t, url: url('settings/plugins') },
+    { label: "Social Login"|t, url: url('settings/plugins/social/settings/loginproviders') },
+    { label: "Login Providers"|t, url: url('settings/plugins/social/settings/loginproviders') },
 ] %}
 
 {% macro configWarning(setting, file) -%}

@@ -19,15 +19,10 @@ class Social_LoginAccountsService extends BaseApplicationComponent
      */
     public function getLoginAccounts()
     {
-        $conditions = '';
-        $params = [];
+        $criteria = craft()->elements->getCriteria('Social_LoginAccount');
+        $loginAccounts = $criteria->find();
 
-        $records = Social_LoginAccountRecord::model()->findAll($conditions, $params);
-
-        if ($records)
-        {
-            return Social_LoginAccountModel::populateModels($records);
-        }
+        return $loginAccounts;
     }
 
     /**
@@ -37,15 +32,11 @@ class Social_LoginAccountsService extends BaseApplicationComponent
      */
     public function getLoginAccountsByUserId($userId)
     {
-        $conditions = 'userId=:userId';
-        $params = [':userId' => $userId];
+        $criteria = craft()->elements->getCriteria('Social_LoginAccount');
+        $criteria->userId = $userId;
+        $loginAccounts = $criteria->find();
 
-        $records = Social_LoginAccountRecord::model()->findAll($conditions, $params);
-
-        if ($records)
-        {
-            return Social_LoginAccountModel::populateModels($records);
-        }
+        return $loginAccounts;
     }
 
     /**
@@ -57,12 +48,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
      */
     public function getLoginAccountById($id)
     {
-        $record = Social_LoginAccountRecord::model()->findByPk($id);
-
-        if ($record)
-        {
-            return Social_LoginAccountModel::populateModel($record);
-        }
+        return craft()->elements->getElementById($id, 'Social_LoginAccount');
     }
 
     /**
@@ -82,17 +68,12 @@ class Social_LoginAccountsService extends BaseApplicationComponent
             return false;
         }
 
-        $userId = $currentUser->id;
+        $criteria = craft()->elements->getCriteria('Social_LoginAccount');
+        $criteria->userId = $currentUser->id;
+        $criteria->providerHandle = $providerHandle;
+        $loginAccount = $criteria->first();
 
-        $conditions = 'providerHandle=:providerHandle and userId=:userId';
-        $params = [':providerHandle' => $providerHandle, ':userId' => $userId];
-
-        $record = Social_LoginAccountRecord::model()->find($conditions, $params);
-
-        if ($record)
-        {
-            return Social_LoginAccountModel::populateModel($record);
-        }
+        return $loginAccount;
     }
 
     /**
@@ -105,18 +86,12 @@ class Social_LoginAccountsService extends BaseApplicationComponent
      */
     public function getLoginAccountByUid($providerHandle, $socialUid)
     {
-        $conditions = 'providerHandle=:providerHandle';
-        $params = [':providerHandle' => $providerHandle];
+        $criteria = craft()->elements->getCriteria('Social_LoginAccount');
+        $criteria->providerHandle = $providerHandle;
+        $criteria->socialUid = $socialUid;
+        $loginAccount = $criteria->first();
 
-        $conditions .= ' AND socialUid=:socialUid';
-        $params[':socialUid'] = $socialUid;
-
-        $record = Social_LoginAccountRecord::model()->find($conditions, $params);
-
-        if ($record)
-        {
-            return Social_LoginAccountModel::populateModel($record);
-        }
+        return $loginAccount;
     }
 
     /**
@@ -235,32 +210,9 @@ class Social_LoginAccountsService extends BaseApplicationComponent
      */
     public function deleteLoginAccountByProvider($providerHandle)
     {
-        $currentUser = craft()->userSession->getUser();
-        $userId = $currentUser->id;
+        $loginAccount = $this->getLoginAccountByLoginProvider($providerHandle);
 
-        $conditions = 'providerHandle=:providerHandle and userId=:userId';
-        $params = [':providerHandle' => $providerHandle, ':userId' => $userId];
-
-        $record = Social_LoginAccountRecord::model()->find($conditions, $params);
-
-        $tokenId = $record->tokenId;
-
-        if ($tokenId)
-        {
-            $tokenRecord = Oauth_TokenRecord::model()->findByPk($tokenId);
-
-            if ($tokenRecord)
-            {
-                $tokenRecord->delete();
-            }
-        }
-
-        if ($record)
-        {
-            return $record->delete();
-        }
-
-        return false;
+        return $this->deleteLoginAccounts($loginAccount);
     }
 
     /**
@@ -272,27 +224,9 @@ class Social_LoginAccountsService extends BaseApplicationComponent
      */
     public function deleteLoginAccountByUserId($userId)
     {
-        $conditions = 'userId=:userId';
-        $params = array(':userId' => $userId);
+        $loginAccounts = $this->getLoginAccountById($userId);
 
-        $accountRecords = Social_LoginAccountRecord::model()->findAll($conditions, $params);
-
-        foreach($accountRecords as $accountRecord)
-        {
-            if($accountRecord->tokenId)
-            {
-                $tokenRecord = Oauth_TokenRecord::model()->findByPk($accountRecord->tokenId);
-
-                if($tokenRecord)
-                {
-                    $tokenRecord->delete();
-                }
-            }
-
-            $accountRecord->delete();
-        }
-
-        return true;
+        return $this->deleteLoginAccounts($loginAccounts);
     }
 
     /**
@@ -304,13 +238,35 @@ class Social_LoginAccountsService extends BaseApplicationComponent
      */
     public function deleteLoginAccountById($id)
     {
-        $record = Social_LoginAccountRecord::model()->findByPk($id);
+        $loginAccount = $this->getLoginAccountById($id);
 
-        if($record)
+        return $this->deleteLoginAccounts($loginAccount);
+    }
+
+    /**
+     * Deletes login accounts and the corresponding OAuth tokens
+     *
+     * @param Social_LoginAccount|array $loginAccounts
+     *
+     * @return bool
+     */
+    public function deleteLoginAccounts($loginAccounts)
+    {
+        if (!$loginAccounts)
         {
-            $tokenId = $record->tokenId;
+            return false;
+        }
 
-            if ($tokenId)
+        if (!is_array($loginAccounts))
+        {
+            $loginAccounts = [$loginAccounts];
+        }
+
+        $loginAccountIds = [];
+
+        foreach ($loginAccounts as $loginAccount)
+        {
+            if ($tokenId = $loginAccount->tokenId)
             {
                 $tokenRecord = Oauth_TokenRecord::model()->findByPk($tokenId);
 
@@ -320,12 +276,10 @@ class Social_LoginAccountsService extends BaseApplicationComponent
                 }
             }
 
-            return $record->delete();
+            $loginAccountIds[] = $loginAccount->id;
         }
-        else
-        {
-            return false;
-        }
+
+        return craft()->elements->deleteElementById($loginAccountIds);
     }
 
     /**

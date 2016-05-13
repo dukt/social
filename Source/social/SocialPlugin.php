@@ -143,7 +143,10 @@ class SocialPlugin extends BasePlugin
      */
     public function hasCpSection()
     {
-        if(craft()->config->get('showCpSection', 'social') === true)
+        $socialPlugin = craft()->plugins->getPlugin('social');
+        $settings = $socialPlugin->getSettings();
+
+        if ($settings['showCpSection'])
         {
             return true;
         }
@@ -161,7 +164,6 @@ class SocialPlugin extends BasePlugin
 
             'social/install' => ['action' => "social/plugin/install"],
 
-            "social/loginaccounts_bkp" => ['action' => "social/loginAccounts/index_bkp"],
             "social/loginaccounts" => ['action' => "social/loginAccounts/index"],
             "social/loginaccounts/(?P<userId>\d+)" => ['action' => "social/loginAccounts/edit"],
 
@@ -221,6 +223,7 @@ class SocialPlugin extends BasePlugin
             'loginProviders' => [AttributeType::Mixed],
             'defaultGroup' => [AttributeType::Number, 'default' => null],
             'autoFillProfile' => [AttributeType::Bool, 'default' => true],
+            'showCpSection' => [AttributeType::Bool, 'default' => true],
         ];
     }
 

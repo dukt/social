@@ -1,23 +1,11 @@
 <?php
 
-/**
- * General Configuration
- *
- * All of your system's general configuration settings go in here.
- * You can see a list of the default settings in craft/app/etc/config/defaults/general.php
- */
-
 return [
 
     /**
-     * Allow Email Match
+     * Advanced Mode
      */
-    'advancedMode' => false,
-
-    /**
-     * Show CP section
-     */
-    'showCpSection' => true,
+    'advancedMode' => true,
 
     /**
      * Allow Email Match
@@ -37,14 +25,23 @@ return [
     /**
      * Twitter User Mapping
      */
-    //    'twitterUserMapping' => [
-    //        'username' => '{{ nickname }}',
-    //    ],
+    // 'twitterUserMapping' => [
+    //     'username' => '{{ nickname }}',
+    // ],
 
     /**
      * Facebook User Content Mapping
      */
     // 'facebookUserContentMapping' => [
-    //      'gender' => '{{ gender }}',
+    //     'gender' => '{{ gender }}',
+    // ],
+
+    /**
+     * Google Login Provider
+     */
+    // 'googleLoginProvider' => [
+    //     'authorizationOptions' => [
+    //         'hd' => 'mycompany.com'
+    //     ],
     // ],
 ];

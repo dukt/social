@@ -34,20 +34,6 @@ class Social_LoginAccountsController extends BaseController
      *
      * @return null
      */
-    public function actionIndex_bkp()
-    {
-        $loginAccounts = craft()->social_loginAccounts->getLoginAccounts();
-
-        $this->renderTemplate('social/loginaccounts/_index_bkp', [
-            'loginAccounts' => $loginAccounts
-        ]);
-    }
-
-    /**
-     * Login Accounts Index
-     *
-     * @return null
-     */
     public function actionIndex()
     {
         $this->renderTemplate('social/loginaccounts/_index');
