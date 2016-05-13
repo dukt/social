@@ -224,7 +224,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
      */
     public function deleteLoginAccountByUserId($userId)
     {
-        $loginAccounts = $this->getLoginAccountById($id);
+        $loginAccounts = $this->getLoginAccountById($userId);
 
         return $this->deleteLoginAccounts($loginAccounts);
     }
