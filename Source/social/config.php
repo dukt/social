@@ -37,14 +37,23 @@ return [
     /**
      * Twitter User Mapping
      */
-    //    'twitterUserMapping' => [
-    //        'username' => '{{ nickname }}',
-    //    ],
+    // 'twitterUserMapping' => [
+    //     'username' => '{{ nickname }}',
+    // ],
 
     /**
      * Facebook User Content Mapping
      */
     // 'facebookUserContentMapping' => [
-    //      'gender' => '{{ gender }}',
+    //     'gender' => '{{ gender }}',
+    // ],
+
+    /**
+     * Google Login Provider
+     */
+    // 'googleLoginProvider' => [
+    //     'authorizationOptions' => [
+    //         'hd' => 'mycompany.com'
+    //     ],
     // ],
 ];
