@@ -23,16 +23,6 @@ class Social_LoginAccountsService extends BaseApplicationComponent
         $loginAccounts = $criteria->find();
 
         return $loginAccounts;
-
-        // $conditions = '';
-        // $params = [];
-        //
-        // $records = Social_LoginAccountRecord::model()->findAll($conditions, $params);
-        //
-        // if ($records)
-        // {
-        //     return Social_LoginAccountModel::populateModels($records);
-        // }
     }
 
     /**
@@ -47,16 +37,6 @@ class Social_LoginAccountsService extends BaseApplicationComponent
         $loginAccounts = $criteria->find();
 
         return $loginAccounts;
-
-        // $conditions = 'userId=:userId';
-        // $params = [':userId' => $userId];
-        //
-        // $records = Social_LoginAccountRecord::model()->findAll($conditions, $params);
-        //
-        // if ($records)
-        // {
-        //     return Social_LoginAccountModel::populateModels($records);
-        // }
     }
 
     /**
@@ -69,13 +49,6 @@ class Social_LoginAccountsService extends BaseApplicationComponent
     public function getLoginAccountById($id)
     {
         return craft()->elements->getElementById($id, 'Social_LoginAccount');
-
-        // $record = Social_LoginAccountRecord::model()->findByPk($id);
-        //
-        // if ($record)
-        // {
-        //     return Social_LoginAccountModel::populateModel($record);
-        // }
     }
 
     /**
@@ -101,18 +74,6 @@ class Social_LoginAccountsService extends BaseApplicationComponent
         $loginAccount = $criteria->first();
 
         return $loginAccount;
-
-        // $userId = $currentUser->id;
-        //
-        // $conditions = 'providerHandle=:providerHandle and userId=:userId';
-        // $params = [':providerHandle' => $providerHandle, ':userId' => $userId];
-        //
-        // $record = Social_LoginAccountRecord::model()->find($conditions, $params);
-        //
-        // if ($record)
-        // {
-        //     return Social_LoginAccountModel::populateModel($record);
-        // }
     }
 
     /**
@@ -131,19 +92,6 @@ class Social_LoginAccountsService extends BaseApplicationComponent
         $loginAccount = $criteria->first();
 
         return $loginAccount;
-
-        // $conditions = 'providerHandle=:providerHandle';
-        // $params = [':providerHandle' => $providerHandle];
-        //
-        // $conditions .= ' AND socialUid=:socialUid';
-        // $params[':socialUid'] = $socialUid;
-        //
-        // $record = Social_LoginAccountRecord::model()->find($conditions, $params);
-        //
-        // if ($record)
-        // {
-        //     return Social_LoginAccountModel::populateModel($record);
-        // }
     }
 
     /**
@@ -265,33 +213,6 @@ class Social_LoginAccountsService extends BaseApplicationComponent
         $loginAccount = $this->getLoginAccountByLoginProvider($providerHandle);
 
         return $this->deleteLoginAccounts($loginAccount);
-
-        // $currentUser = craft()->userSession->getUser();
-        // $userId = $currentUser->id;
-        //
-        // $conditions = 'providerHandle=:providerHandle and userId=:userId';
-        // $params = [':providerHandle' => $providerHandle, ':userId' => $userId];
-        //
-        // $record = Social_LoginAccountRecord::model()->find($conditions, $params);
-        //
-        // $tokenId = $record->tokenId;
-        //
-        // if ($tokenId)
-        // {
-        //     $tokenRecord = Oauth_TokenRecord::model()->findByPk($tokenId);
-        //
-        //     if ($tokenRecord)
-        //     {
-        //         $tokenRecord->delete();
-        //     }
-        // }
-        //
-        // if ($record)
-        // {
-        //     return $record->delete();
-        // }
-        //
-        // return false;
     }
 
     /**
@@ -306,28 +227,6 @@ class Social_LoginAccountsService extends BaseApplicationComponent
         $loginAccounts = $this->getLoginAccountById($id);
 
         return $this->deleteLoginAccounts($loginAccounts);
-
-        // $conditions = 'userId=:userId';
-        // $params = array(':userId' => $userId);
-        //
-        // $accountRecords = Social_LoginAccountRecord::model()->findAll($conditions, $params);
-        //
-        // foreach($accountRecords as $accountRecord)
-        // {
-        //     if($accountRecord->tokenId)
-        //     {
-        //         $tokenRecord = Oauth_TokenRecord::model()->findByPk($accountRecord->tokenId);
-        //
-        //         if($tokenRecord)
-        //         {
-        //             $tokenRecord->delete();
-        //         }
-        //     }
-        //
-        //     $accountRecord->delete();
-        // }
-        //
-        // return true;
     }
 
     /**
@@ -342,29 +241,6 @@ class Social_LoginAccountsService extends BaseApplicationComponent
         $loginAccount = $this->getLoginAccountById($id);
 
         return $this->deleteLoginAccounts($loginAccount);
-
-        // $record = Social_LoginAccountRecord::model()->findByPk($id);
-        //
-        // if($record)
-        // {
-        //     $tokenId = $record->tokenId;
-        //
-        //     if ($tokenId)
-        //     {
-        //         $tokenRecord = Oauth_TokenRecord::model()->findByPk($tokenId);
-        //
-        //         if ($tokenRecord)
-        //         {
-        //             $tokenRecord->delete();
-        //         }
-        //     }
-        //
-        //     return $record->delete();
-        // }
-        // else
-        // {
-        //     return false;
-        // }
     }
 
     /**
