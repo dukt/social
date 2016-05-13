@@ -32,7 +32,7 @@
                             </div>
                             <div class="label">
                                 {% if craft.config.get('advancedMode', 'social') %}
-                                    <a href="{{ url('social/loginproviders/'~loginProvider.handle) }}">{{ loginProvider.name }}</a>
+                                    <a href="{{ url('settings/plugins/social/settings/loginproviders/'~loginProvider.handle) }}">{{ loginProvider.name }}</a>
                                 {% else %}
                                     {{ loginProvider.name }}
                                 {% endif %}
