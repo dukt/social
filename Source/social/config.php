@@ -5,7 +5,7 @@ return [
     /**
      * Advanced Mode
      */
-    'advancedMode' => false,
+    'advancedMode' => true,
 
     /**
      * Show CP Section
