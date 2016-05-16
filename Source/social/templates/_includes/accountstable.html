@@ -1,0 +1,56 @@
+{% set isEditPane = context is defined and context == 'editPane' %}
+
+<div id="nologinaccounts"{% if loginAccounts|length == 0 %} class="hidden"{% endif %}>
+    <p>{{ "No login accounts exist yet."|t }}</p>
+</div>
+
+{% if loginAccounts|length %}
+
+    <table id="loginAccounts" class="{{ not isEditPane ? 'data' }} fullwidth">
+        {% if not isEditPane %}
+            <thead>
+                <tr>
+                    <th>{{ "OAuth Provider"|t }}</th>
+                    <th>{{ "Social User ID"|t }}</th>
+                </tr>
+            </thead>
+        {% endif %}
+
+        {% for account in loginAccounts %}
+
+            {% set user = account.user %}
+            {% set oauthProvider = craft.oauth.getProvider(account.providerHandle) %}
+
+            {% if oauthProvider %}
+                <tr data-id="{{ account.id }}" data-name="{{ oauthProvider.name|t }}">
+                    <td class="provider">
+                        <div class="thumb">
+                            <img width="20" src="{{ oauthProvider.getIconUrl() }}" class="social-icon social-{{ oauthProvider.handle }}" />
+                        </div>
+
+                        <div class="label">{{ oauthProvider.name }}</div>
+                    </td>
+
+                    {% if not isEditPane %}
+                        <td>
+                            {{ account.socialUid }}
+                        </td>
+                    {% endif %}
+
+                    <td class="thin"><a class="delete icon" title="{{ 'Delete'|t }}" role="button"></a></td>
+                </tr>
+            {% endif %}
+
+        {% endfor %}
+    </table>
+
+{% endif %}
+
+{% includejs %}
+    var adminTable = new Craft.AdminTable({
+        tableSelector: '#loginAccounts',
+        noObjectsSelector: '#nologinaccounts',
+        deleteAction: 'social/loginAccounts/deleteLoginAccount',
+        confirmDeleteMessage: '{{ "Are you sure you want to unlink “{name}” login account?"|t }}',
+    });
+{% endincludejs %}

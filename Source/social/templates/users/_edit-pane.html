@@ -1,10 +1,15 @@
-{% if providerHandles|length %}
-    <div class="pane lightpane meta">
-        {% for providerHandle in providerHandles %}
-            <div class="data">
-                <h5 class="heading">{{ "Login Account"|t }}</h5>
-                <div class="value">{{ providerHandle|ucwords }}</div>
-            </div>
-        {% endfor %}
+<div class="pane meta">
+    <div class="data">
+
+        <h5 class="heading">{{ "Login Accounts"|t }}</h5>
+
+        <div class="value">
+            {% include 'social/_includes/accountstable' with {
+                'context': 'editPane'
+            } %}
+        </div>
+
     </div>
-{% endif %}
+</div>
+
+{% includeCssResource "social/css/social.css" %}

@@ -262,7 +262,7 @@ class SocialPlugin extends BasePlugin
             {
                 $variables = [
                     'user' => $account,
-                    'providerHandles' => $this->_getProviderHandlesByUserId($account->id),
+                    'loginAccounts' => craft()->social_loginAccounts->getLoginAccountsByUserId($account->id),
                 ];
 
                 $html = craft()->templates->render('social/users/_edit-pane', $variables, true);
@@ -270,35 +270,5 @@ class SocialPlugin extends BasePlugin
                 return $html;
             }
         });
-    }
-
-    /**
-     * Returns the provider handles for a given user id
-     *
-     * @param int $userId
-     *
-     * @return array|null
-     */
-    private function _getProviderHandlesByUserId($userId)
-    {
-        BusinessLogicPlugin::log($userId);
-
-        $loginAccounts = craft()->social_loginAccounts->getLoginAccountsByUserId($userId);
-
-        BusinessLogicPlugin::log(print_r($loginAccounts, true));
-
-        if (!is_array($loginAccounts))
-        {
-            return null;
-        }
-
-        $providerHandles = [];
-
-        foreach ($loginAccounts as $loginAccount)
-        {
-            $providerHandles[] = $loginAccount->providerHandle;
-        }
-
-        return $providerHandles;
     }
 }
