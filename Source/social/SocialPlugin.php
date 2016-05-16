@@ -185,14 +185,18 @@ class SocialPlugin extends BasePlugin
     {
         if ($attribute == 'loginAccounts')
         {
-            $providerHandles = $this->_getProviderHandlesByUserId($user->id);
+            $loginAccounts = craft()->social_loginAccounts->getLoginAccountsByUserId($user->id);
 
-            if (!$providerHandles)
+            if (!$loginAccounts)
             {
                 return '';
             }
 
-            $html = implode(', ', $providerHandles);
+            $variables = [
+                'loginAccounts' => $loginAccounts,
+            ];
+
+            $html = craft()->templates->render('social/users/_login-accounts-column', $variables, true);
 
             return $html;
         }

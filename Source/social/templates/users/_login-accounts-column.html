@@ -1,0 +1,15 @@
+{% for account in loginAccounts %}
+
+    {% set oauthProvider = craft.oauth.getProvider(account.providerHandle) %}
+
+    {% if oauthProvider %}
+        <span class="provider">
+            <div class="thumb">
+                <img width="20" src="{{ oauthProvider.getIconUrl() }}" class="social-icon social-{{ oauthProvider.handle }}" />
+            </div>
+        </span>
+    {% endif %}
+
+{% endfor %}
+
+{% includeCssResource "social/css/social.css" %}
