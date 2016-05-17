@@ -90,12 +90,6 @@ class Social_LoginAccountElementType extends BaseElementType
     {
         $actions = array();
 
-        $editAction = craft()->elements->getAction('Edit');
-        $editAction->setParams(array(
-            'label' => Craft::t('Edit login account'),
-        ));
-        $actions[] = $editAction;
-
         $deleteAction = craft()->elements->getAction('Delete');
         $deleteAction->setParams(array(
             'confirmationMessage' => Craft::t('Are you sure you want to delete the selected login accounts?'),
