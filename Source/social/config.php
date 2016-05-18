@@ -12,8 +12,8 @@ return [
      */
     // 'twitter' => [
     //     'userContentMapping' => [
-    //         'address' => '{{ location }}',
-    //         'twitter' => '{{ nickname }}',
+    //         'address' => '{{ location is defined and location ? location : null }}',
+    //         'twitter' => '{{ nickname is defined and nickname ? nickname : null }}',
     //     ],
     // ],
 
@@ -22,13 +22,13 @@ return [
      */
     // 'facebook' => [
     //     'userMapping' => [
-    //         'firstName' => '{{ firstName }}',
-    //         'lastName' => '{{ lastName }}',
+    //         'first_name' => '{{ firstName ?? null }}',
+    //         'last_name' => '{{ lastName ?? null }}',
     //     ],
     //     'userContentMapping' => [
-    //         'address' => '{{ location }}',
-    //         'gender' => '{{ gender }}',
-    //         'facebook' => '{{ link }}',
+    //         'address' => '{{ location.name ?? null }}',
+    //         'gender' => '{{ gender ?? null }}',
+    //         'facebook' => '{{ link ?? null }}',
     //     ],
     // ],
 

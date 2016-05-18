@@ -53,11 +53,9 @@ class Google extends BaseProvider
         return [
             'id' => $remoteProfile->getId(),
             'email' => $remoteProfile->getEmail(),
-            'firstName' => $remoteProfile->getFirstName(),
-            'lastName' => $remoteProfile->getLastName(),
             'photoUrl' => $photoUrl,
 
-            'name' => $remoteProfile->getName(),
+            'remoteProfile' => $remoteProfile,
         ];
     }
 }

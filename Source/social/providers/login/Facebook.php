@@ -50,7 +50,7 @@ class Facebook extends BaseProvider
 
         $client = new Client('https://graph.facebook.com/v2.6');
         $client->addSubscriber($oauthProvider->getSubscriber($token));
-        
+
         $fields = implode(',', [
             'id', 'name', 'first_name', 'last_name',
             'email', 'hometown', 'bio', 'picture.type(large){url,is_silhouette}',
@@ -65,7 +65,7 @@ class Facebook extends BaseProvider
 
         return $json;
     }
-    
+
     public function getProfile(Oauth_TokenModel $token)
     {
         $remoteProfile = $this->getRemoteProfile($token);
@@ -73,20 +73,9 @@ class Facebook extends BaseProvider
         return [
             'id' => (isset($remoteProfile['id']) ? $remoteProfile['id'] : null ),
             'email' => (isset($remoteProfile['email']) ? $remoteProfile['email'] : null ),
-            'firstName' => (isset($remoteProfile['first_name']) ? $remoteProfile['first_name'] : null ),
-            'lastName' => (isset($remoteProfile['last_name']) ? $remoteProfile['last_name'] : null ),
             'photoUrl' => (isset($remoteProfile['picture']['data']['url']) ? $remoteProfile['picture']['data']['url'] : null ),
 
-            'name' => (isset($remoteProfile['name']) ? $remoteProfile['name'] : null ),
-            'hometown' => (isset($remoteProfile['hometown']) ? $remoteProfile['hometown'] : null ),
-            'bio' => (isset($remoteProfile['bio']) ? $remoteProfile['bio'] : null ),
-            'isDefaultPicture' => (isset($remoteProfile['picture']['data']['is_silhouette']) ? $remoteProfile['picture']['data']['is_silhouette'] : null ),
-            'coverPhotoUrl' => (isset($remoteProfile['cover']['source']) ? $remoteProfile['cover']['source'] : null ),
-            'gender' => (isset($remoteProfile['gender']) ? $remoteProfile['gender'] : null ),
-            'locale' => (isset($remoteProfile['locale']) ? $remoteProfile['locale'] : null ),
-            'link' => (isset($remoteProfile['link']) ? $remoteProfile['link'] : null ),
-            'locationId' => (isset($remoteProfile['location']['id']) ? $remoteProfile['location']['id'] : null ),
-            'location' => (isset($remoteProfile['location']['name']) ? $remoteProfile['location']['name'] : null ),
+            'remoteProfile' => $remoteProfile,
         ];
     }
 }
