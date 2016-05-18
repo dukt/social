@@ -13,31 +13,6 @@ class Social_LoginAccountElementType extends BaseElementType
         return Craft::t('Login Accounts');
     }
 
-    // /**
-    //  * Returns whether this element type can have statuses.
-    //  *
-    //  * @return bool
-    //  */
-    // public function hasStatuses()
-    // {
-    //     return true;
-    // }
-
-    // /**
-    //  * Returns all of the possible statuses that elements of this type may have.
-    //  *
-    //  * @return array|null
-    //  */
-    // public function getStatuses()
-    // {
-    //     return array(
-    //         UserStatus::Active    => Craft::t('Active'),
-    //         UserStatus::Pending   => Craft::t('Pending'),
-    //         UserStatus::Locked    => Craft::t('Locked'),
-    //         UserStatus::Suspended => Craft::t('Suspended'),
-    //     );
-    // }
-
     /**
      * Returns the element index HTML.
      *
