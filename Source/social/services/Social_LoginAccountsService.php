@@ -327,20 +327,25 @@ class Social_LoginAccountsService extends BaseApplicationComponent
             $variables = $attributes['remoteProfile'];
 
             $providerConfig = craft()->config->get($providerHandle, 'social');
-
             $userMapping = isset($providerConfig['userMapping']) ? $providerConfig['userMapping'] : null;
-            $userContentMapping = isset($providerConfig['userContentMapping']) ? $providerConfig['userContentMapping'] : null;
+
+            $userModelAttributes = ['email', 'username', 'firstName', 'lastName'];
+
+            BusinessLogicPlugin::log(print_r($userModelAttributes, true));
 
             $newUser = new UserModel();
 
-            if ($settings['autoFillProfile'])
+            if ($settings['autoFillProfile'] && is_array($userMapping))
             {
-                // fill user from attributes
+                $userContent = [];
 
-                if (is_array($userMapping))
+                foreach ($userMapping as $key => $template)
                 {
-                    foreach ($userMapping as $attribute => $template)
+                    // Check whether they try to set an attribute or a custom field
+                    if (in_array($key, $userModelAttributes))
                     {
+                        $attribute = $key;
+
                         if (array_key_exists($attribute, $newUser->getAttributes()))
                         {
                             try
@@ -353,23 +358,16 @@ class Social_LoginAccountsService extends BaseApplicationComponent
                             }
                         }
                     }
-                }
-
-
-                // fill user fields from attributes
-
-                if (is_array($userContentMapping))
-                {
-                    $userContent = [];
-
-                    foreach ($userContentMapping as $field => $template)
+                    else
                     {
+                        $fieldHandle = $key;
+
                         // Check to make sure custom field exists for user profile
-                        if (isset($newUser->getContent()[$field]))
+                        if (isset($newUser->getContent()[$fieldHandle]))
                         {
                             try
                             {
-                                $userContent[$field] = craft()->templates->renderString($template, $variables);
+                                $userContent[$fieldHandle] = craft()->templates->renderString($template, $variables);
                             }
                             catch(\Exception $e)
                             {
@@ -377,9 +375,9 @@ class Social_LoginAccountsService extends BaseApplicationComponent
                             }
                         }
                     }
-
-                    $newUser->setContentFromPost($userContent);
                 }
+
+                $newUser->setContentFromPost($userContent);
             }
 
 
