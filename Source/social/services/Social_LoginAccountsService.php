@@ -349,7 +349,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
                             }
                             catch(\Exception $e)
                             {
-                                SocialPlugin::log('Could not map:'.print_r([$attribute, $template, $variables, $e->getMessage()], true), LogLevel::Error);
+                                SocialPlugin::log('Could not map:'.print_r([$attribute, $template, $variables, $e->getMessage()], true), LogLevel::Warning);
                             }
                         }
                     }
@@ -373,7 +373,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
                             }
                             catch(\Exception $e)
                             {
-                                SocialPlugin::log('Could not map:'.print_r([$template, $variables, $e->getMessage()], true), LogLevel::Error);
+                                SocialPlugin::log('Could not map:'.print_r([$template, $variables, $e->getMessage()], true), LogLevel::Warning);
                             }
                         }
                     }
