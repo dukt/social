@@ -3,11 +3,6 @@
 return [
 
     /**
-     * Advanced Mode
-     */
-    'advancedMode' => true,
-
-    /**
      * Allow Email Match
      */
     'allowEmailMatch' => false,
