@@ -219,6 +219,14 @@ class Social_LoginAccountElementType extends BaseElementType
      */
     public function getTableAttributeHtml(BaseElementModel $element, $attribute)
     {
+        // First give plugins a chance to set this
+        $pluginAttributeHtml = craft()->plugins->callFirst('getLoginAccountTableAttributeHtml', array($element, $attribute), true);
+
+        if ($pluginAttributeHtml !== null)
+        {
+            return $pluginAttributeHtml;
+        }
+
         switch ($attribute)
         {
             case 'providerHandle':
