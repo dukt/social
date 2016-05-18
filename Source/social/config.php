@@ -8,35 +8,28 @@ return [
     'allowEmailMatch' => false,
 
     /**
-     * User Mapping
+     * Twitter Configuration
      */
-    'userMapping' => [
-        'username' => '{{ email }}',
-        'email' => '{{ email }}',
-        'firstName' => '{{ firstName }}',
-        'lastName' => '{{ lastName }}',
-    ],
-
-    /**
-     * Twitter User Mapping
-     */
-    // 'twitterUserMapping' => [
-    //     'username' => '{{ nickname }}',
-    // ],
-
-    /**
-     * Facebook User Content Mapping
-     */
-    // 'facebookUserContentMapping' => [
-    //     'gender' => '{{ gender }}',
-    // ],
-
-    /**
-     * Google Login Provider
-     */
-    // 'googleLoginProvider' => [
-    //     'authorizationOptions' => [
-    //         'hd' => 'mycompany.com'
+    // 'twitter' => [
+    //     'userContentMapping' => [
+    //         'address' => '{{ location }}',
+    //         'twitter' => '{{ nickname }}',
     //     ],
     // ],
+
+    /**
+     * Facebook Configuration
+     */
+    // 'facebook' => [
+    //     'userMapping' => [
+    //         'firstName' => '{{ firstName }}',
+    //         'lastName' => '{{ lastName }}',
+    //     ],
+    //     'userContentMapping' => [
+    //         'address' => '{{ location }}',
+    //         'gender' => '{{ gender }}',
+    //         'facebook' => '{{ link }}',
+    //     ],
+    // ],
+
 ];

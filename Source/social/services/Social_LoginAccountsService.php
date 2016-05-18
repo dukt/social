@@ -326,17 +326,10 @@ class Social_LoginAccountsService extends BaseApplicationComponent
         {
             $variables = $attributes;
 
-            $defaultUserMapping = craft()->config->get('userMapping', 'social');
-            $providerUserMapping = craft()->config->get($providerHandle.'UserMapping', 'social');
+            $providerConfig = craft()->config->get($providerHandle, 'social');
 
-            if (is_array($providerUserMapping))
-            {
-                $userMapping = array_merge($defaultUserMapping, $providerUserMapping);
-            }
-            else
-            {
-                $userMapping = $defaultUserMapping;
-            }
+            $userMapping = isset($providerConfig['userMapping']) ? $providerConfig['userMapping'] : null;
+            $userContentMapping = isset($providerConfig['userContentMapping']) ? $providerConfig['userContentMapping'] : null;
 
             $newUser = new UserModel();
 
@@ -365,8 +358,6 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 
                 // fill user fields from attributes
 
-                $userContentMapping = craft()->config->get($providerHandle.'UserContentMapping', 'social');
-
                 if (is_array($userContentMapping))
                 {
                     $userContent = [];
@@ -390,10 +381,18 @@ class Social_LoginAccountsService extends BaseApplicationComponent
                     $newUser->setContentFromPost($userContent);
                 }
             }
-            else
+
+
+            // fill default email and username if not already done
+
+            if (!$newUser->email)
             {
-                $newUser->username = craft()->templates->renderString($userMapping['username'], $variables);
-                $newUser->email = craft()->templates->renderString($userMapping['email'], $variables);
+                $newUser->email = $attributes['email'];
+            }
+
+            if (!$newUser->username)
+            {
+                $newUser->username = $attributes['email'];
             }
 
 
