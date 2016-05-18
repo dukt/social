@@ -64,9 +64,9 @@ class Social_LoginProvidersService extends BaseApplicationComponent
     {
         $loginProviders = $this->getLoginProviders($enabledOnly);
 
-        foreach($loginProviders as $loginProvider)
+        foreach ($loginProviders as $loginProvider)
         {
-            if($loginProvider->getHandle() == $handle)
+            if ($loginProvider->getHandle() == $handle)
             {
                 return $loginProvider;
             }
@@ -97,7 +97,7 @@ class Social_LoginProvidersService extends BaseApplicationComponent
         // fetch all OAuth provider types
         $socialLoginProviderTypes = array();
 
-        foreach(craft()->plugins->call('getSocialLoginProviders', [], true) as $pluginSocialLoginProviderTypes)
+        foreach (craft()->plugins->call('getSocialLoginProviders', [], true) as $pluginSocialLoginProviderTypes)
         {
             $socialLoginProviderTypes = array_merge($socialLoginProviderTypes, $pluginSocialLoginProviderTypes);
         }
@@ -105,11 +105,11 @@ class Social_LoginProvidersService extends BaseApplicationComponent
         // instantiate providers
         $loginProviders = [];
 
-        foreach($socialLoginProviderTypes as $socialLoginProviderType)
+        foreach ($socialLoginProviderTypes as $socialLoginProviderType)
         {
             $loginProvider = $this->_createLoginProvider($socialLoginProviderType);
 
-            if(!$enabledOnly || $enabledOnly && $loginProvider->getIsEnabled())
+            if (!$enabledOnly || $enabledOnly && $loginProvider->getIsEnabled())
             {
                 $loginProviders[$socialLoginProviderType] = $loginProvider;
             }

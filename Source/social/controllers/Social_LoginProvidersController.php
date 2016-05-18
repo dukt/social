@@ -51,18 +51,18 @@ class Social_LoginProvidersController extends BaseController
      */
     public function actionEdit(array $variables = array())
     {
-        if(!empty($variables['handle']))
+        if (!empty($variables['handle']))
         {
             $loginProvider = craft()->social_loginProviders->getLoginProvider($variables['handle'], false, true);
 
-            if($loginProvider)
+            if ($loginProvider)
             {
                 $variables['infos'] = craft()->oauth->getProviderInfos($variables['handle']);;
                 $variables['loginProvider'] = $loginProvider;
 
                 $configInfos = craft()->config->get('providerInfos', 'oauth');
 
-                if(!empty($configInfos[$variables['handle']]))
+                if (!empty($configInfos[$variables['handle']]))
                 {
                     $variables['configInfos'] = $configInfos[$variables['handle']];
                 }

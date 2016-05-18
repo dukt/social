@@ -138,7 +138,7 @@ class SocialController extends BaseController
         // try to connect
         try
         {
-            if(!$oauthProvider || $oauthProvider && !$oauthProvider->isConfigured())
+            if (!$oauthProvider || $oauthProvider && !$oauthProvider->isConfigured())
             {
                 throw new Exception("OAuth provider is not configured");
             }
@@ -344,9 +344,9 @@ class SocialController extends BaseController
             $this->redirect = $this->referer;
         }
 
-        if(craft()->social_userSession->login($account->id))
+        if (craft()->social_userSession->login($account->id))
         {
-            if($registrationMode)
+            if ($registrationMode)
             {
                 craft()->userSession->setNotice(Craft::t('Account created.'));
             }

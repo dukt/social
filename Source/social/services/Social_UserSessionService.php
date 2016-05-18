@@ -54,7 +54,7 @@ class Social_UserSessionService extends UserSessionService
         $this->_identity = new SocialUserIdentity($accountId);
 
         // Did we authenticate?
-        if($this->_identity->authenticate())
+        if ($this->_identity->authenticate())
         {
             return $this->loginByUserId($this->_identity->getUserModel()->id, $rememberMe, true);
         }

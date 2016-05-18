@@ -90,7 +90,7 @@ abstract class BaseProvider implements ISocial_Provider
     {
         $loginProvidersConfig = Craft::app()->config->get($this->getHandle().'LoginProvider', 'social');
 
-        if(isset($loginProvidersConfig['scope']))
+        if (isset($loginProvidersConfig['scope']))
         {
             return $loginProvidersConfig['scope'];
         }
@@ -109,7 +109,7 @@ abstract class BaseProvider implements ISocial_Provider
     {
         $loginProvidersConfig = Craft::app()->config->get($this->getHandle().'LoginProvider', 'social');
 
-        if(isset($loginProvidersConfig['authorizationOptions']))
+        if (isset($loginProvidersConfig['authorizationOptions']))
         {
             return $loginProvidersConfig['authorizationOptions'];
         }
@@ -130,7 +130,7 @@ abstract class BaseProvider implements ISocial_Provider
         $pluginSettings = \Craft\Craft::app()->plugins->getPlugin('social')->getSettings();
         $loginProviders = $pluginSettings->loginProviders;
 
-        if(isset($loginProviders[$this->getHandle()]['enabled']) && $loginProviders[$this->getHandle()]['enabled'])
+        if (isset($loginProviders[$this->getHandle()]['enabled']) && $loginProviders[$this->getHandle()]['enabled'])
         {
             return true;
         }

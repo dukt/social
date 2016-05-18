@@ -46,7 +46,7 @@ class SocialUserIdentity extends \Craft\UserIdentity
     {
         $this->account = \Craft\craft()->social_loginAccounts->getLoginAccountById($accountId);
 
-        if($this->account)
+        if ($this->account)
         {
             $this->_userModel = $this->account->getUser();
         }
@@ -59,11 +59,11 @@ class SocialUserIdentity extends \Craft\UserIdentity
      */
     public function authenticate()
     {
-        if($this->account)
+        if ($this->account)
         {
             $user = $this->account->getUser();
 
-            if($user)
+            if ($user)
             {
                 return $this->_processUserStatus($user);
             }

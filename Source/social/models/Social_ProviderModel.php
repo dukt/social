@@ -32,7 +32,7 @@ class Social_ProviderModel extends BaseModel
     {
         $authorizationOptions = craft()->config->get('authorizationOptions', 'social');
 
-        if(isset($authorizationOptions[$this->oauthProviderHandle]))
+        if (isset($authorizationOptions[$this->oauthProviderHandle]))
         {
             return $authorizationOptions[$this->oauthProviderHandle];
         }
@@ -48,12 +48,12 @@ class Social_ProviderModel extends BaseModel
         $scope = [];
         $defaultScope = $this->getDefaultScope();
 
-        if(is_array($defaultScope))
+        if (is_array($defaultScope))
         {
             $scope = array_merge($scope, $defaultScope);
         }
 
-        if(is_array($this->customScope))
+        if (is_array($this->customScope))
         {
             $scope = array_merge($scope, $this->customScope);
         }

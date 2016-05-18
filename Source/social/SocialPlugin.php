@@ -78,7 +78,7 @@ class SocialPlugin extends BasePlugin
     {
         $path = CRAFT_PLUGINS_PATH.'social/Info.php';
 
-        if(IOHelper::fileExists($path))
+        if (IOHelper::fileExists($path))
         {
             require_once($path);
 

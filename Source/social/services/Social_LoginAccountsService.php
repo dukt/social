@@ -329,7 +329,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
             $defaultUserMapping = craft()->config->get('userMapping', 'social');
             $providerUserMapping = craft()->config->get($providerHandle.'UserMapping', 'social');
 
-            if(is_array($providerUserMapping))
+            if (is_array($providerUserMapping))
             {
                 $userMapping = array_merge($defaultUserMapping, $providerUserMapping);
             }
@@ -340,13 +340,13 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 
             $newUser = new UserModel();
 
-            if($settings['autoFillProfile'])
+            if ($settings['autoFillProfile'])
             {
                 // fill user from attributes
 
-                if(is_array($userMapping))
+                if (is_array($userMapping))
                 {
-                    foreach($userMapping as $attribute => $template)
+                    foreach ($userMapping as $attribute => $template)
                     {
                         if (array_key_exists($attribute, $newUser->getAttributes()))
                         {
@@ -367,11 +367,11 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 
                 $userContentMapping = craft()->config->get($providerHandle.'UserContentMapping', 'social');
 
-                if(is_array($userContentMapping))
+                if (is_array($userContentMapping))
                 {
                     $userContent = [];
 
-                    foreach($userContentMapping as $field => $template)
+                    foreach ($userContentMapping as $field => $template)
                     {
                         // Check to make sure custom field exists for user profile
                         if (isset($newUser->getContent()[$field]))
@@ -406,7 +406,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
             }
 
             // save remote photo
-            if($settings['autoFillProfile'])
+            if ($settings['autoFillProfile'])
             {
                 if (!empty($attributes['photoUrl']))
                 {

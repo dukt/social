@@ -49,11 +49,11 @@ class Social_LoginAccountsController extends BaseController
      */
     public function actionEdit(array $variables = array())
     {
-        if(!empty($variables['userId']))
+        if (!empty($variables['userId']))
         {
             $user = craft()->users->getUserById($variables['userId']);
 
-            if($user)
+            if ($user)
             {
                 $variables['user'] = $user;
 
