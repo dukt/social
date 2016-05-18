@@ -80,8 +80,6 @@ class Social_LoginAccountModel extends BaseElementModel
         return array_merge(parent::defineAttributes(), array(
             'id' => AttributeType::Number,
             'userId' => AttributeType::Number,
-            'tokenId' => AttributeType::Number,
-
             'providerHandle' => array(AttributeType::String, 'required' => true),
             'socialUid' => array(AttributeType::String, 'required' => true),
 
@@ -118,16 +116,6 @@ class Social_LoginAccountModel extends BaseElementModel
         }
 
         return $this->_user;
-    }
-
-    /**
-     * Get the OAuth token for the social account.
-     */
-    public function getToken()
-    {
-        $token = craft()->oauth->getTokenById($this->tokenId);
-
-        return $token;
     }
 
     /**

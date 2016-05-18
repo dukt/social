@@ -32,7 +32,6 @@ class Social_LoginAccountRecord extends BaseRecord
         return array(
             'providerHandle' => array(AttributeType::String, 'required' => true),
             'socialUid' => array(AttributeType::String, 'required' => true),
-            'tokenId' => array(AttributeType::Number, 'required' => false),
         );
     }
 

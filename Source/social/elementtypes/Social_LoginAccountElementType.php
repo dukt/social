@@ -249,7 +249,6 @@ class Social_LoginAccountElementType extends BaseElementType
     {
         return array(
             'userId' => AttributeType::Number,
-            'tokenId' => AttributeType::Number,
             'providerHandle' => AttributeType::String,
             'socialUid' => AttributeType::String,
 
@@ -274,7 +273,6 @@ class Social_LoginAccountElementType extends BaseElementType
         $query->addSelect('
             login_accounts.id,
             login_accounts.userId,
-            login_accounts.tokenId,
             login_accounts.providerHandle,
             login_accounts.socialUid,
 
@@ -291,11 +289,6 @@ class Social_LoginAccountElementType extends BaseElementType
         if ($criteria->userId)
         {
             $query->andWhere(DbHelper::parseParam('login_accounts.userId', $criteria->userId, $query->params));
-        }
-
-        if ($criteria->tokenId)
-        {
-            $query->andWhere(DbHelper::parseParam('login_accounts.tokenId', $criteria->tokenId, $query->params));
         }
 
         if ($criteria->providerHandle)

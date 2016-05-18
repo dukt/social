@@ -122,7 +122,6 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 
         // populate
         $accountRecord->userId = $account->userId;
-        $accountRecord->tokenId = $account->tokenId;
         $accountRecord->providerHandle = $account->providerHandle;
         $accountRecord->socialUid = $account->socialUid;
 
@@ -174,34 +173,6 @@ class Social_LoginAccountsService extends BaseApplicationComponent
     }
 
     /**
-     * Save Token
-     *
-     * @param Oauth_TokenModel $token
-     *
-     * @return null
-     */
-    public function saveToken(Oauth_TokenModel $token)
-    {
-        $existingToken = null;
-
-        if ($token->id)
-        {
-            $existingToken = craft()->oauth->getTokenById($token->id);
-
-            if (!$existingToken)
-            {
-                $existingToken = null;
-                $token->id = null;
-            }
-        }
-
-        // onBeforeSaveToken
-
-        // save token
-        craft()->oauth->saveToken($token);
-    }
-
-    /**
      * Delete a social account by provider
      *
      * @param $providerHandle
@@ -244,7 +215,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
     }
 
     /**
-     * Deletes login accounts and the corresponding OAuth tokens
+     * Deletes login accounts
      *
      * @param Social_LoginAccount|array $loginAccounts
      *
@@ -266,16 +237,6 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 
         foreach ($loginAccounts as $loginAccount)
         {
-            if ($tokenId = $loginAccount->tokenId)
-            {
-                $tokenRecord = Oauth_TokenRecord::model()->findByPk($tokenId);
-
-                if ($tokenRecord)
-                {
-                    $tokenRecord->delete();
-                }
-            }
-
             $loginAccountIds[] = $loginAccount->id;
         }
 
@@ -287,12 +248,11 @@ class Social_LoginAccountsService extends BaseApplicationComponent
      *
      * @param array $attributes Attributes of the user we want to register
      * @param string $providerHandle
-     * @param Oauth_TokenModel $token
      *
      * @throws Exception
      * @return UserModel|null
      */
-    public function registerUser($attributes, $providerHandle, $token)
+    public function registerUser($attributes, $providerHandle)
     {
         if (!empty($attributes['email']))
         {
@@ -301,7 +261,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 
             if (!$user)
             {
-                $user = $this->_registerUser($attributes, $providerHandle, $token);
+                $user = $this->_registerUser($attributes, $providerHandle);
             }
             else
             {
@@ -339,7 +299,6 @@ class Social_LoginAccountsService extends BaseApplicationComponent
      *
      * @param array $attributes Attributes of the user we want to register
      * @param string $providerHandle
-     * @param $token
      *
      * @throws Exception
      * @return UserModel|null

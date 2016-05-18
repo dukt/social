@@ -173,17 +173,6 @@ class SocialPlugin extends BasePlugin
         ];
     }
 
-    /**
-     * On Before Uninstall
-     */
-    public function onBeforeUninstall()
-    {
-        if (isset(craft()->oauth))
-        {
-            craft()->oauth->deleteTokensByPlugin('social');
-        }
-    }
-
     // Protected Methods
     // =========================================================================
 
