@@ -22,8 +22,8 @@ return [
      */
     // 'facebook' => [
     //     'userMapping' => [
-    //         'first_name' => '{{ firstName ?? null }}',
-    //         'last_name' => '{{ lastName ?? null }}',
+    //         'firstName' => '{{ first_name ?? null }}',
+    //         'lastName' => '{{ last_name ?? null }}',
     //     ],
     //     'userContentMapping' => [
     //         'address' => '{{ location.name ?? null }}',
