@@ -39,6 +39,26 @@ class Social_LoginAccountElementType extends BaseElementType
     // }
 
     /**
+     * Returns the element index HTML.
+     *
+     * @param ElementCriteriaModel $criteria
+     * @param array                $disabledElementIds
+     * @param array                $viewState
+     * @param string|null          $sourceKey
+     * @param string|null          $context
+     * @param bool                 $includeContainer
+     * @param bool                 $showCheckboxes
+     *
+     * @return string
+     */
+    public function getIndexHtml($criteria, $disabledElementIds, $viewState, $sourceKey, $context, $includeContainer, $showCheckboxes)
+    {
+        craft()->templates->includeJsResource('social/js/social.js');
+
+        return parent::getIndexHtml($criteria, $disabledElementIds, $viewState, $sourceKey, $context, $includeContainer, $showCheckboxes);
+    }
+
+    /**
      * Returns this element type's sources.
      *
      * @param string|null $context
