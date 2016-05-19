@@ -324,7 +324,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 
         if ($event->performAction)
         {
-            $variables = $attributes['remoteProfile'];
+            $variables = (array) $attributes['remoteProfile'];
 
             $providerConfig = craft()->config->get($providerHandle, 'social');
             $userMapping = isset($providerConfig['userMapping']) ? $providerConfig['userMapping'] : null;
