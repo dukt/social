@@ -24,7 +24,7 @@ return [
         'userMapping' => [
             'firstName' => '{{ first_name ?? null }}',
             'lastName' => '{{ last_name ?? null }}',
-            'address2' => '{{ location.name ?? null }}',
+            'address' => '{{ location.name ?? null }}',
             'gender' => '{{ gender ?? null }}',
             'facebook' => '{{ link ?? null }}',
         ],
