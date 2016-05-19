@@ -329,9 +329,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
             $providerConfig = craft()->config->get($providerHandle, 'social');
             $userMapping = isset($providerConfig['userMapping']) ? $providerConfig['userMapping'] : null;
 
-            $userModelAttributes = ['email', 'username', 'firstName', 'lastName'];
-
-            BusinessLogicPlugin::log(print_r($userModelAttributes, true));
+            $userModelAttributes = ['email', 'username', 'firstName', 'lastName', 'preferredLocale', 'weekStartDay'];
 
             $newUser = new UserModel();
 
