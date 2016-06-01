@@ -66,7 +66,7 @@
 
     <p class="light">{{ "Scope expresses the permissions that users will get when they login with {provider}."|t({ provider: loginProvider.name }) }}</p>
 
-    <p class="light">{{ "Default scope can be overridden by adding a <strong><code>{providerHandle}LoginProvider.scope</code></strong> variable containing an array of permissions in: {path}."|t({
+    <p class="light">{{ "Default scope can be overridden by adding a <strong><code>{providerHandle}.scope</code></strong> variable containing an array of permissions in: {path}."|t({
         provider: oauthProvider.name,
         providerHandle: oauthProvider.handle,
         path: '<code>craft/config/social.php</code>'
@@ -96,7 +96,7 @@
 
     <p class="light">{{ "Authorization options are extra parameters which are passed when logging in with {provider}."|t({ provider: loginProvider.name }) }}</p>
 
-    <p class="light">{{ "Default authorization options can be overriden by adding a <strong><code>{providerHandle}LoginProvider.authorizationOptions</code></strong> variable containing a key/value array of authorization options in: {path}."|t({
+    <p class="light">{{ "Default authorization options can be overriden by adding a <strong><code>{providerHandle}.authorizationOptions</code></strong> variable containing a key/value array of authorization options in: {path}."|t({
         provider: oauthProvider.name,
         providerHandle: oauthProvider.handle,
         path: '<code>craft/config/social.php</code>'

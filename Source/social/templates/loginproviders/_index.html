@@ -11,8 +11,12 @@
                 <th scope="col">{{ "Name"|t }}</th>
                 <th scope="col">{{ "Handle"|t }}</th>
                 <th scope="col">{{ "Login Provider Status"|t }}</th>
-                <th scope="col">{{ "Scope"|t }}</th>
-                <th scope="col">{{ "Authorization Options"|t }}</th>
+
+                {% if craft.config.get('advancedMode', 'social') %}
+                    <th scope="col">{{ "Scope"|t }}</th>
+                    <th scope="col">{{ "Authorization Options"|t }}</th>
+                {% endif %}
+
                 <th scope="col">{{ "OAuth Provider Settings"|t }}</th>
             </tr>
         </thead>
@@ -27,7 +31,11 @@
                                 <img src="{{ loginProvider.getIconUrl() }}" width="32" height="32" />
                             </div>
                             <div class="label">
-                                <a href="{{ url('settings/plugins/social/settings/loginproviders/'~loginProvider.handle) }}">{{ loginProvider.name }}</a>
+                                {% if craft.config.get('advancedMode', 'social') %}
+                                    <a href="{{ url('settings/plugins/social/settings/loginproviders/'~loginProvider.handle) }}">{{ loginProvider.name }}</a>
+                                {% else %}
+                                    {{ loginProvider.name }}
+                                {% endif %}
                             </div>
                         </div>
                     </td>
@@ -52,8 +60,10 @@
 
                     </td>
 
-                    <td class="light">{{ "{count} permission(s)"|t({ count: loginProvider.getScope()|length }) }}</td>
-                    <td class="light">{{ "{count} authorization option(s)"|t({ count: loginProvider.getAuthorizationOptions()|length }) }}</td>
+                    {% if craft.config.get('advancedMode', 'social') %}
+                        <td class="light">{{ "{count} permission(s)"|t({ count: loginProvider.getScope()|length }) }}</td>
+                        <td class="light">{{ "{count} authorization option(s)"|t({ count: loginProvider.getAuthorizationOptions()|length }) }}</td>
+                    {% endif %}
 
                     <td class="thin"><a href="{{ url('oauth/providers/'~loginProvider.handle) }}" title="{{ '{provider} OAuth Settings'|t({ provider: loginProvider.name }) }}" data-icon="settings"></a></td>
                 </tr>

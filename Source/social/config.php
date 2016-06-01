@@ -7,27 +7,30 @@ return [
      */
     'allowEmailMatch' => false,
 
+
     /**
      * Twitter Configuration
      */
-    'twitter' => [
-        'userMapping' => [
-            'address' => '{{ location is defined and location ? location : null }}',
-            'twitter' => '{{ nickname is defined and nickname ? nickname : null }}',
-        ],
-    ],
+
+    //'twitter' => [
+    //    'userMapping' => [
+    //        'location' => '{{ location }}',
+    //        'profileUrl' => '{{ nickname }}',
+    //    ],
+    //],
+
 
     /**
      * Facebook Configuration
      */
-    'facebook' => [
-        'userMapping' => [
-            'firstName' => '{{ first_name ?? null }}',
-            'lastName' => '{{ last_name ?? null }}',
-            'address' => '{{ location.name ?? null }}',
-            'gender' => '{{ gender ?? null }}',
-            'facebook' => '{{ link ?? null }}',
-        ],
-    ],
-
+    
+    //'facebook' => [
+    //    'userMapping' => [
+    //        'firstName' => '{{ firstName }}',
+    //        'lastName' => '{{ lastName }}',
+    //        'location' => '{{ locationName }}',
+    //        'gender' => '{{ gender }}',
+    //        'profileUrl' => '{{ link }}',
+    //    ],
+    //],
 ];

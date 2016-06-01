@@ -44,7 +44,10 @@ class Twitter extends BaseProvider
             'email' => $remoteProfile->email,
             'photoUrl' => $photoUrl,
 
-            'remoteProfile' => $remoteProfile,
+            'nickname' => $remoteProfile->nickname,
+            'name' => $remoteProfile->name,
+            'location' => $remoteProfile->location,
+            'description' => $remoteProfile->description,
         ];
     }
 }

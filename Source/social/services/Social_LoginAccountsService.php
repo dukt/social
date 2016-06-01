@@ -324,7 +324,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 
         if ($event->performAction)
         {
-            $variables = (array) $attributes['remoteProfile'];
+            $variables = $attributes;
 
             $providerConfig = craft()->config->get($providerHandle, 'social');
             $userMapping = isset($providerConfig['userMapping']) ? $providerConfig['userMapping'] : null;
@@ -403,9 +403,31 @@ class Social_LoginAccountsService extends BaseApplicationComponent
             // save remote photo
             if ($settings['autoFillProfile'])
             {
-                if (!empty($attributes['photoUrl']))
+                $photoUrl = false;
+
+                if(isset($userMapping['photoUrl']))
                 {
-                    craft()->social->saveRemotePhoto($attributes['photoUrl'], $newUser);
+                    try
+                    {
+                        $photoUrl = craft()->templates->renderString($userMapping['photoUrl'], $variables);
+                        $photoUrl = html_entity_decode($photoUrl);
+                    }
+                    catch(\Exception $e)
+                    {
+                        SocialPlugin::log('Could not map:'.print_r(['photoUrl', $userMapping['photoUrl'], $variables, $e->getMessage()], true), LogLevel::Warning);
+                    }
+                }
+                else
+                {
+                    if (!empty($attributes['photoUrl']))
+                    {
+                        $photoUrl = $attributes['photoUrl'];
+                    }
+                }
+
+                if($photoUrl)
+                {
+                    craft()->social->saveRemotePhoto($photoUrl, $newUser);
                 }
             }
 
