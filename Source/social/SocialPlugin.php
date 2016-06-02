@@ -76,16 +76,7 @@ class SocialPlugin extends BasePlugin
      */
     public function getVersion()
     {
-        $path = CRAFT_PLUGINS_PATH.'social/Info.php';
-
-        if (IOHelper::fileExists($path))
-        {
-            require_once($path);
-
-            return SOCIAL_VERSION;
-        }
-
-        return '1.0.0';
+        return '1.1.0';
     }
 
 
