@@ -256,6 +256,28 @@ class Social_LoginAccountsService extends BaseApplicationComponent
     {
         if (!empty($attributes['email']))
         {
+            // check domain locking
+
+            $lockDomains = craft()->config->get('lockDomains', 'social');
+
+            if(count($lockDomains) > 0)
+            {
+                $domainRejected = true;
+
+                foreach($lockDomains as $lockDomain)
+                {
+                    if(strpos($attributes['email'], '@'.$lockDomain) !== false)
+                    {
+                        $domainRejected = false;
+                    }
+                }
+
+                if($domainRejected)
+                {
+                    throw new Exception("Couldn’t register with this email (domain is not allowed): ".$attributes['email']);
+                }
+            }
+
             // find user from email
             $user = craft()->users->getUserByUsernameOrEmail($attributes['email']);
 

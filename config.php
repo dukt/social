@@ -9,6 +9,12 @@ return [
 
 
     /**
+     * Lock social registration to specific domains
+     */
+    'lockDomains' => [],
+
+
+    /**
      * Twitter Configuration
      */
 
