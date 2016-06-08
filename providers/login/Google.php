@@ -48,7 +48,11 @@ class Google extends BaseProvider
         $remoteProfile = $this->getRemoteProfile($token);
 
         $photoUrl = $remoteProfile->getAvatar();
-        $photoUrl = substr($photoUrl, 0, strpos($photoUrl, "?"));
+
+        if(strpos($photoUrl, '?') !== false)
+        {
+            $photoUrl = substr($photoUrl, 0, strpos($photoUrl, "?"));
+        }
 
         return [
             'id' => $remoteProfile->getId(),
