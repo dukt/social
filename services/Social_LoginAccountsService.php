@@ -339,7 +339,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 
         // Fire an 'onBeforeRegister' event
         $event = new Event($this, [
-            'account' => $attributes,
+            'account' => &$attributes,
         ]);
 
         $this->onBeforeRegister($event);
