@@ -344,7 +344,7 @@ class SocialController extends BaseController
             $this->redirect = $this->referer;
         }
 
-        if (craft()->social_userSession->login($account->id))
+        if (craft()->social_userSession->login($this->token))
         {
             if ($registrationMode)
             {

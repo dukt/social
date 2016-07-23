@@ -9,6 +9,7 @@ namespace Dukt\Social\Etc\Users;
 
 use Craft\UserModel;
 use Craft\UserStatus;
+use Craft\Oauth_TokenModel;
 
 /**
  * SocialUserIdentity represents the data needed to identify a user with a token and an email
@@ -42,9 +43,15 @@ class SocialUserIdentity extends \Craft\UserIdentity
      *
      * @return null
      */
-    public function __construct($accountId)
+    public function __construct(Oauth_TokenModel $token)
     {
-        $this->account = \Craft\craft()->social_loginAccounts->getLoginAccountById($accountId);
+	    $socialLoginProvider = \Craft\craft()->social_loginProviders->getLoginProvider($token->providerHandle);
+	    $attributes = $socialLoginProvider->getProfile($token);
+	    $socialUid = $attributes['id'];
+
+	    $account = \Craft\craft()->social_loginAccounts->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
+
+        $this->account = \Craft\craft()->social_loginAccounts->getLoginAccountById($account->id);
 
         if ($this->account)
         {
