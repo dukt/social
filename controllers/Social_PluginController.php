@@ -9,25 +9,25 @@ namespace Craft;
 
 class Social_PluginController extends BaseController
 {
-    // Public Methods
-    // =========================================================================
+	// Public Methods
+	// =========================================================================
 
-    /**
-     * Install
-     *
-     * @return null
-     */
-    public function actionInstall()
-    {
-        $variables['pluginDependencies'] = craft()->social_plugin->getPluginDependencies();
+	/**
+	 * Install
+	 *
+	 * @return null
+	 */
+	public function actionInstall()
+	{
+		$variables['pluginDependencies'] = craft()->social_plugin->getPluginDependencies();
 
-        if (count($variables['pluginDependencies']) > 0)
-        {
-            $this->renderTemplate('social/install/_index', $variables);
-        }
-        else
-        {
-            $this->redirect('settings/plugins/social/settings/loginproviders');
-        }
-    }
+		if (count($variables['pluginDependencies']) > 0)
+		{
+			$this->renderTemplate('social/install/_index', $variables);
+		}
+		else
+		{
+			$this->redirect('settings/plugins/social/settings/loginproviders');
+		}
+	}
 }

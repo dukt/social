@@ -3,17 +3,17 @@ namespace Craft;
 
 interface ISocial_Provider
 {
-    // Public Methods
-    // =========================================================================
+	// Public Methods
+	// =========================================================================
 
-    /**
-     * Get Name
-     *
-     * @return string
-     */
-    public function getName();
+	/**
+	 * Get Name
+	 *
+	 * @return string
+	 */
+	public function getName();
 
-    public function getOauthProviderHandle();
+	public function getOauthProviderHandle();
 
-    public function getProfile(Oauth_TokenModel $token);
+	public function getProfile(Oauth_TokenModel $token);
 }

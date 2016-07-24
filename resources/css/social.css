@@ -13,14 +13,14 @@
 /* Empty screens */
 
 .empty {
-    text-align: center;
-    padding: 15em 0;
+	text-align: center;
+	padding: 15em 0;
 }
 
 @media (max-width: 768px)
 {
-    .empty {
-        text-align: center;
-        padding: 8em 0;
-    }
+	.empty {
+		text-align: center;
+		padding: 8em 0;
+	}
 }

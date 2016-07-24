@@ -6,15 +6,15 @@ namespace Craft;
  */
 class m151123_000001_delete_social_users_table extends BaseMigration
 {
-    /**
-     * Any migration code in here is wrapped inside of a transaction.
-     *
-     * @return bool
-     */
-    public function safeUp()
-    {
-        $this->dropTableIfExists('social_users');
+	/**
+	 * Any migration code in here is wrapped inside of a transaction.
+	 *
+	 * @return bool
+	 */
+	public function safeUp()
+	{
+		$this->dropTableIfExists('social_users');
 
-        return true;
-    }
+		return true;
+	}
 }
