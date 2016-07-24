@@ -7,6 +7,7 @@
 
 namespace Dukt\Social\Etc\Users;
 
+use Craft\UserIdentity;
 use Craft\UserModel;
 use Craft\UserStatus;
 
@@ -15,7 +16,7 @@ use Craft\UserStatus;
  * It contains the authentication method that checks if the provided data can identity the user.
  */
 
-class SocialUserIdentity extends \Craft\UserIdentity
+class SocialUserIdentity extends UserIdentity
 {
 	// Properties
 	// =========================================================================
