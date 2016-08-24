@@ -190,7 +190,33 @@ class SocialPlugin extends BasePlugin
 	 */
 	private function initEventListeners()
 	{
-		// delete social user when craft user is deleted
+		parent::init();
+
+
+		// social login for CP
+
+		if (craft()->request->isCpRequest() && craft()->request->getSegment(1))
+		{
+			$loginProviders = craft()->social_loginProviders->getLoginProviders();
+			$jsLoginProviders = [];
+
+			foreach($loginProviders as $loginProvider)
+			{
+				$jsLoginProvider = [
+					'name' => $loginProvider->getName(),
+					'handle' => $loginProvider->getHandle(),
+					'url' => craft()->social->getLoginUrl($loginProvider->getHandle()),
+				];
+
+				array_push($jsLoginProviders, $jsLoginProvider);
+			}
+
+			craft()->templates->includeJsResource("social/js/login.js", true);
+			craft()->templates->includeJs("var socialLoginForm = new Craft.SocialLoginForm(".json_encode($jsLoginProviders).");");
+		}
+
+
+		// Delete social user when craft user is deleted
 
 		craft()->on('users.onBeforeDeleteUser', function (Event $event)
 		{
