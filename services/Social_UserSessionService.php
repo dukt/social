@@ -51,7 +51,6 @@ class Social_UserSessionService extends UserSessionService
     {
         $rememberMe = true;
 
-        // $this->_identity = new SocialUserIdentity($account->id);
 	    $this->_identity = new SocialUserIdentity($token);
 
         // Did we authenticate?
