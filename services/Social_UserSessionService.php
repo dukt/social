@@ -11,68 +11,68 @@ use Dukt\Social\Etc\Users\SocialUserIdentity;
 
 class Social_UserSessionService extends UserSessionService
 {
-    // Properties
-    // =========================================================================
+	// Properties
+	// =========================================================================
 
-    /**
-     * Allow auto login
-     *
-     * @var bool
-     */
-    public $allowAutoLogin = true;
+	/**
+	 * Allow auto login
+	 *
+	 * @var bool
+	 */
+	public $allowAutoLogin = true;
 
-    /**
-     * Stores the user identity.
-     *
-     * @var UserIdentity
-     */
-    private $_identity;
+	/**
+	 * Stores the user identity.
+	 *
+	 * @var UserIdentity
+	 */
+	private $_identity;
 
-    // Public Methods
-    // =========================================================================
+	// Public Methods
+	// =========================================================================
 
-    public function init()
-    {
-        $this->setStateKeyPrefix(md5('Yii.Craft\UserSessionService.'.craft()->getId()));
+	public function init()
+	{
+		$this->setStateKeyPrefix(md5('Yii.Craft\UserSessionService.'.craft()->getId()));
 
-        parent::init();
+		parent::init();
 
-        require_once(CRAFT_PLUGINS_PATH.'social/etc/Users/SocialUserIdentity.php');
-    }
+		require_once(CRAFT_PLUGINS_PATH.'social/etc/Users/SocialUserIdentity.php');
+	}
 
-    /**
-     * Login a user by social account ID.
-     *
-     * @param $accountId
-     *
-     * @return bool
-     */
-    public function login(\Craft\Oauth_TokenModel $token)
-    {
-        $rememberMe = true;
+	/**
+	 * Login a user by social account ID.
+	 *
+	 * @param $token
+	 *
+	 * @return bool
+	 */
+	public function login(\Craft\Oauth_TokenModel $token)
+	{
+		$rememberMe = true;
 
-	    $this->_identity = new SocialUserIdentity($token);
+		$this->_identity = new SocialUserIdentity($token);
 
-        // Did we authenticate?
-        if ($this->_identity->authenticate())
-        {
-            return $this->loginByUserId($this->_identity->getUserModel()->id, $rememberMe, true);
-        }
+		// Did we authenticate?
+		if ($this->_identity->authenticate())
+		{
+			return $this->loginByUserId($this->_identity->getUserModel()->id, $rememberMe, true);
+		}
 
-        SocialPlugin::log('Tried to log in unsuccessfully:'.print_r($this->_identity->getUserModel(), true), LogLevel::Error);
-        return false;
-    }
+		SocialPlugin::log('Tried to log in unsuccessfully:'.print_r($this->_identity->getUserModel(), true), LogLevel::Error);
+		return false;
+	}
 
-    /**
-     * Returns the login error code from the user identity.
-     *
-     * @return int|null The login error code, or `null` if there isn’t one.
-     */
-    public function getLoginErrorCode()
-    {
-        if (isset($this->_identity))
-        {
-            return $this->_identity->errorCode;
-        }
-    }
+	/**
+	 * Returns the login error code from the user identity.
+	 *
+	 * @return int|null The login error code, or `null` if there isn’t one.
+	 */
+	public function getLoginErrorCode()
+	{
+		if (isset($this->_identity))
+		{
+			return $this->_identity->errorCode;
+		}
+	}
 }

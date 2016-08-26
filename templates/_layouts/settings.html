@@ -6,23 +6,23 @@
 
 {% if CraftEdition == CraftPro %}
 
-    {% set crumbs = [
-        { label: "Settings"|t, url: url('settings') },
-        { label: "Plugins"|t, url: url('settings/plugins') },
-    ] %}
+	{% set crumbs = [
+		{ label: "Settings"|t, url: url('settings') },
+		{ label: "Plugins"|t, url: url('settings/plugins') },
+	] %}
 
-    {% set tabs = {
-        loginProviders: { label: "Login Providers"|t, url: url('settings/plugins/social/settings/loginproviders') },
-        settings: { label: "Settings"|t, url: url('settings/plugins/social/settings/settings') },
-    } %}
+	{% set tabs = {
+		loginProviders: { label: "Login Providers"|t, url: url('settings/plugins/social/settings/loginproviders') },
+		settings: { label: "Settings"|t, url: url('settings/plugins/social/settings/settings') },
+	} %}
 
 {% else %}
 
-    {% set content %}
+	{% set content %}
 
-        <h2>{{ "Craft Pro required"|t }}</h2>
-        <p>{{ 'Social Login plugin requires {link} unlimited user accounts feature.'|t({link:'<a href="http://buildwithcraft.com/pricing">Craft Pro</a>'})|raw }}</p>
+		<h2>{{ "Craft Pro required"|t }}</h2>
+		<p>{{ 'Social Login plugin requires {link} unlimited user accounts feature.'|t({link:'<a href="http://buildwithcraft.com/pricing">Craft Pro</a>'})|raw }}</p>
 
-    {% endset %}
+	{% endset %}
 
 {% endif %}

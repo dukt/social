@@ -4,103 +4,103 @@
 {% set title = loginProvider.name %}
 
 {% set crumbs = [
-    { label: "Settings"|t, url: url('settings') },
-    { label: "Plugins"|t, url: url('settings/plugins') },
-    { label: "Social Login"|t, url: url('settings/plugins/social/settings/loginproviders') },
-    { label: "Login Providers"|t, url: url('settings/plugins/social/settings/loginproviders') },
+	{ label: "Settings"|t, url: url('settings') },
+	{ label: "Plugins"|t, url: url('settings/plugins') },
+	{ label: "Social Login"|t, url: url('settings/plugins/social/settings/loginproviders') },
+	{ label: "Login Providers"|t, url: url('settings/plugins/social/settings/loginproviders') },
 ] %}
 
 {% macro configWarning(setting, file) -%}
-    {{ "This is being overridden by the {setting} config setting."|t({
-    setting: '<strong>'~setting~'</strong>'
-    })|raw }}
+	{{ "This is being overridden by the {setting} config setting."|t({
+	setting: '<strong>'~setting~'</strong>'
+	})|raw }}
 {%- endmacro %}
 
 {% from _self import configWarning %}
 
 {% set content %}
 
-    {% set providerScope = loginProvider.getScope() %}
-    {% set providerAuthorizationOptions = loginProvider.getAuthorizationOptions() %}
-    {% set oauthProvider = loginProvider.getOauthProvider() %}
+	{% set providerScope = loginProvider.getScope() %}
+	{% set providerAuthorizationOptions = loginProvider.getAuthorizationOptions() %}
+	{% set oauthProvider = loginProvider.getOauthProvider() %}
 
-    <h2 class="first">{{ "Login Provider"|t }}</h2>
+	<h2 class="first">{{ "Login Provider"|t }}</h2>
 
-    {% if oauthProvider.iconUrl %}
-        <img src="{{ oauthProvider.iconUrl }}" height="48" />
-    {% endif %}
+	{% if oauthProvider.iconUrl %}
+		<img src="{{ oauthProvider.iconUrl }}" height="48" />
+	{% endif %}
 
-    {% if oauthProvider.isConfigured %}
-        {% if loginProvider.isEnabled %}
-            <p><span class="status on"></span> {{ "Social Login with {provider} is enabled"|t({ provider: oauthProvider.name }) }}</p>
-            <p class="light">{{ "Having trouble logging in with {provider} ? Check {oauthProviderLink}."|t({ provider: oauthProvider.name, oauthProviderLink: '<a href="'~url('oauth/providers/'~loginProvider.handle)~'">{provider} OAuth provider settings</a>'|t({provider: oauthProvider.name}) })|raw }}</p>
-        {% else %}
-            <p><span class="status"></span> {{ "Social Login with {provider} is disabled"|t({ provider: oauthProvider.name }) }}</p>
-            <p class="light">{{ "This login provider can be enabled by setting <strong><code>{providerHandle}LoginProvider.enabled</code></strong> to <strong><code>true</code></strong> in {path}"|t({
-                providerHandle: loginProvider.handle,
-                path: '<code>craft/config/social.php</code>'
-            })|raw }}</p>
-        {% endif %}
+	{% if oauthProvider.isConfigured %}
+		{% if loginProvider.isEnabled %}
+			<p><span class="status on"></span> {{ "Social Login with {provider} is enabled"|t({ provider: oauthProvider.name }) }}</p>
+			<p class="light">{{ "Having trouble logging in with {provider} ? Check {oauthProviderLink}."|t({ provider: oauthProvider.name, oauthProviderLink: '<a href="'~url('oauth/providers/'~loginProvider.handle)~'">{provider} OAuth provider settings</a>'|t({provider: oauthProvider.name}) })|raw }}</p>
+		{% else %}
+			<p><span class="status"></span> {{ "Social Login with {provider} is disabled"|t({ provider: oauthProvider.name }) }}</p>
+			<p class="light">{{ "This login provider can be enabled by setting <strong><code>{providerHandle}LoginProvider.enabled</code></strong> to <strong><code>true</code></strong> in {path}"|t({
+				providerHandle: loginProvider.handle,
+				path: '<code>craft/config/social.php</code>'
+			})|raw }}</p>
+		{% endif %}
 
-    {% else %}
-        <p><span class="status"></span> {{ "Social Login with {provider} is disabled"|t({ provider: oauthProvider.name }) }}</p>
-        <p class="light">{{ "Social Login with {provider} is disabled because {oauthProviderLink} is not configured."|t({ provider: oauthProvider.name, oauthProviderLink: '<a href="'~url('oauth/providers/'~loginProvider.handle)~'">{provider} OAuth provider</a>'|t({provider: oauthProvider.name}) })|raw }}</p>
-    {% endif %}
+	{% else %}
+		<p><span class="status"></span> {{ "Social Login with {provider} is disabled"|t({ provider: oauthProvider.name }) }}</p>
+		<p class="light">{{ "Social Login with {provider} is disabled because {oauthProviderLink} is not configured."|t({ provider: oauthProvider.name, oauthProviderLink: '<a href="'~url('oauth/providers/'~loginProvider.handle)~'">{provider} OAuth provider</a>'|t({provider: oauthProvider.name}) })|raw }}</p>
+	{% endif %}
 
-    <hr>
+	<hr>
 
-    <h2>{{ "Scope"|t }}</h2>
+	<h2>{{ "Scope"|t }}</h2>
 
-    {% if providerScope %}
+	{% if providerScope %}
 
-        <p>{{ "{total} permission(s) defined:"|t({ total: providerScope|length }) }}</p>
+		<p>{{ "{total} permission(s) defined:"|t({ total: providerScope|length }) }}</p>
 
-        <ul class="bullets">
-            {% for scope in providerScope %}
-                <li>{{ scope }}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>{{ "No scope defined." }}</p>
-    {% endif %}
+		<ul class="bullets">
+			{% for scope in providerScope %}
+				<li>{{ scope }}</li>
+			{% endfor %}
+		</ul>
+	{% else %}
+		<p>{{ "No scope defined." }}</p>
+	{% endif %}
 
-    <p class="light">{{ "Scope expresses the permissions that users will get when they login with {provider}."|t({ provider: loginProvider.name }) }}</p>
+	<p class="light">{{ "Scope expresses the permissions that users will get when they login with {provider}."|t({ provider: loginProvider.name }) }}</p>
 
-    <p class="light">{{ "Default scope can be overridden by adding a <strong><code>{providerHandle}.scope</code></strong> variable containing an array of permissions in: {path}."|t({
-        provider: oauthProvider.name,
-        providerHandle: oauthProvider.handle,
-        path: '<code>craft/config/social.php</code>'
-    })|raw }}</p>
+	<p class="light">{{ "Default scope can be overridden by adding a <strong><code>{providerHandle}.scope</code></strong> variable containing an array of permissions in: {path}."|t({
+		provider: oauthProvider.name,
+		providerHandle: oauthProvider.handle,
+		path: '<code>craft/config/social.php</code>'
+	})|raw }}</p>
 
-    {% if loginProvider.getOauthProvider().scopeDocsUrl %}
-        <p class="light">
-            <a href="{{ loginProvider.getOauthProvider().scopeDocsUrl }}" target="_blank">{{ "See available scopes for {provider}"|t({ provider: loginProvider.name }) }}</a>
-        </p>
-    {% endif %}
+	{% if loginProvider.getOauthProvider().scopeDocsUrl %}
+		<p class="light">
+			<a href="{{ loginProvider.getOauthProvider().scopeDocsUrl }}" target="_blank">{{ "See available scopes for {provider}"|t({ provider: loginProvider.name }) }}</a>
+		</p>
+	{% endif %}
 
 
-    <hr>
+	<hr>
 
-    <h2>{{ "Authorization Options"|t }}</h2>
+	<h2>{{ "Authorization Options"|t }}</h2>
 
-    {% if providerAuthorizationOptions %}
-        <p>{{ "{total} authorization option(s) defined:"|t({ total: providerAuthorizationOptions|length }) }}</p>
-        <ul class="bullets">
-            {% for optionKey, optionValue in providerAuthorizationOptions %}
-                <li><strong>{{ optionKey }}:</strong> {{ optionValue }} </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>{{ "No authorization options defined."|t }}</p>
-    {% endif %}
+	{% if providerAuthorizationOptions %}
+		<p>{{ "{total} authorization option(s) defined:"|t({ total: providerAuthorizationOptions|length }) }}</p>
+		<ul class="bullets">
+			{% for optionKey, optionValue in providerAuthorizationOptions %}
+				<li><strong>{{ optionKey }}:</strong> {{ optionValue }} </li>
+			{% endfor %}
+		</ul>
+	{% else %}
+		<p>{{ "No authorization options defined."|t }}</p>
+	{% endif %}
 
-    <p class="light">{{ "Authorization options are extra parameters which are passed when logging in with {provider}."|t({ provider: loginProvider.name }) }}</p>
+	<p class="light">{{ "Authorization options are extra parameters which are passed when logging in with {provider}."|t({ provider: loginProvider.name }) }}</p>
 
-    <p class="light">{{ "Default authorization options can be overriden by adding a <strong><code>{providerHandle}.authorizationOptions</code></strong> variable containing a key/value array of authorization options in: {path}."|t({
-        provider: oauthProvider.name,
-        providerHandle: oauthProvider.handle,
-        path: '<code>craft/config/social.php</code>'
-    })|raw }}</p>
+	<p class="light">{{ "Default authorization options can be overriden by adding a <strong><code>{providerHandle}.authorizationOptions</code></strong> variable containing a key/value array of authorization options in: {path}."|t({
+		provider: oauthProvider.name,
+		providerHandle: oauthProvider.handle,
+		path: '<code>craft/config/social.php</code>'
+	})|raw }}</p>
 
 
 {% endset %}
