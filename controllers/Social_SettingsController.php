@@ -9,39 +9,39 @@ namespace Craft;
 
 class Social_SettingsController extends BaseController
 {
-    // Public Methods
-    // =========================================================================
+	// Public Methods
+	// =========================================================================
 
-    /**
-     * Init
-     *
-     * @return null
-     */
-    public function init()
-    {
-        parent::init();
+	/**
+	 * Init
+	 *
+	 * @return null
+	 */
+	public function init()
+	{
+		parent::init();
 
-        $pluginDependencies = craft()->social_plugin->getPluginDependencies();
+		$pluginDependencies = craft()->social_plugin->getPluginDependencies();
 
-        if (count($pluginDependencies) > 0)
-        {
-            $this->redirect('social/install');
-        }
-    }
+		if (count($pluginDependencies) > 0)
+		{
+			$this->redirect('social/install');
+		}
+	}
 
-    /**
-     * Settings Index
-     *
-     * @return null
-     */
-    public function actionIndex()
-    {
-        $plugin = craft()->plugins->getPlugin('social');
-        $variables['settings'] = $plugin->getSettings();
+	/**
+	 * Settings Index
+	 *
+	 * @return null
+	 */
+	public function actionIndex()
+	{
+		$plugin = craft()->plugins->getPlugin('social');
+		$variables['settings'] = $plugin->getSettings();
 
-        $accounts = craft()->social_loginAccounts->getLoginAccounts();
-        $variables['totalAccounts'] = count($accounts);
+		$accounts = craft()->social_loginAccounts->getLoginAccounts();
+		$variables['totalAccounts'] = count($accounts);
 
-        $this->renderTemplate('social/settings', $variables);
-    }
+		$this->renderTemplate('social/settings', $variables);
+	}
 }
