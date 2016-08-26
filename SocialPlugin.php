@@ -187,6 +187,8 @@ class SocialPlugin extends BasePlugin
                 'loginAccounts' => $loginAccounts,
             ];
 
+	        craft()->templates->includeCssResource('social/css/social.css');
+
             $html = craft()->templates->render('social/users/_login-accounts-column', $variables, true);
 
             return $html;

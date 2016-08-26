@@ -1,6 +1,6 @@
 {% for account in loginAccounts %}
 
-    {% set oauthProvider = craft.oauth.getProvider(account.providerHandle) %}
+    {% set oauthProvider = account.getOauthProvider() %}
 
     {% if oauthProvider %}
         <span class="provider">
@@ -11,5 +11,3 @@
     {% endif %}
 
 {% endfor %}
-
-{% includeCssResource "social/css/social.css" %}
