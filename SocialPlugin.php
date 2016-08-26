@@ -235,16 +235,14 @@ class SocialPlugin extends BasePlugin
     {
         craft()->templates->hook('cp.users.edit.right-pane', function(&$context)
         {
-            $account = $context['account'];
-
-            if ($account)
+            if ($context['account'])
             {
-                $variables = [
-                    'user' => $account,
-                    'loginAccounts' => craft()->social_loginAccounts->getLoginAccountsByUserId($account->id),
-                ];
+	            $context['user'] = $context['account'];
+	            $context['loginAccounts'] = craft()->social_loginAccounts->getLoginAccountsByUserId($context['account']->id);
 
-                $html = craft()->templates->render('social/users/_edit-pane', $variables, true);
+	            craft()->templates->includeCssResource('social/css/social.css');
+
+                $html = craft()->templates->render('social/users/_edit-pane', $context, true);
 
                 return $html;
             }
