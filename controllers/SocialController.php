@@ -39,7 +39,94 @@ class SocialController extends BaseController
 
 		$this->redirect = craft()->request->getParam('redirect');
 
-		$this->_connect();
+
+		// Connect
+
+		// request params
+		$providerHandle = craft()->request->getParam('provider');
+		$oauthProvider = craft()->oauth->getProvider($providerHandle);
+		$requestUri = craft()->request->requestUri;
+		craft()->httpSession->add('social.requestUri', $requestUri);
+
+		// settings
+		$plugin = craft()->plugins->getPlugin('social');
+		$pluginSettings = $plugin->getSettings();
+
+		// try to connect
+		try
+		{
+			if (!$oauthProvider || $oauthProvider && !$oauthProvider->isConfigured())
+			{
+				throw new Exception("OAuth provider is not configured");
+			}
+
+			if (!$pluginSettings['enableSocialLogin'])
+			{
+				throw new Exception("Social login is disabled");
+			}
+
+			if (craft()->getEdition() != Craft::Pro)
+			{
+				throw new Exception("Craft Pro is required");
+			}
+
+			// provider scope & authorizationOptions
+			$socialProvider = craft()->social_loginProviders->getLoginProvider($providerHandle);
+
+			if (!$socialProvider)
+			{
+				throw new Exception("Login provider is not configured");
+			}
+
+			$scope = $socialProvider->getScope();
+			$authorizationOptions = $socialProvider->getAuthorizationOptions();
+
+			if ($response = craft()->oauth->connect([
+				'plugin'   => 'social',
+				'provider' => $providerHandle,
+				'scope'   => $scope,
+				'authorizationOptions'   => $authorizationOptions
+			]))
+			{
+				if($response['success'])
+				{
+					$this->_connectUserFromToken($response['token']);
+				}
+				else
+				{
+					throw new \Exception($response['errorMsg']);
+				}
+			}
+		}
+		catch(\Guzzle\Http\Exception\BadResponseException $e)
+		{
+			$response = $e->getResponse();
+
+			SocialPlugin::log((string) $response, LogLevel::Error);
+
+			$body = $response->getBody();
+			$json = json_decode($body, true);
+
+			if($json)
+			{
+				$errorMsg = $json['error']['message'];
+			}
+			else
+			{
+				$errorMsg = "Couldn’t login.";
+			}
+
+			craft()->userSession->setFlash('error', $errorMsg);
+			$this->_cleanSession();
+			$this->redirect($this->referer);
+		}
+		catch (\Exception $e)
+		{
+			$errorMsg = $e->getMessage();
+			craft()->userSession->setFlash('error', $errorMsg);
+			$this->_cleanSession();
+			$this->redirect($this->referer);
+		}
 	}
 
 	/**
@@ -113,79 +200,6 @@ class SocialController extends BaseController
 
 	// Private Methods
 	// =========================================================================
-
-	/**
-	 * Connect
-	 *
-	 * @return null
-	 */
-	private function _connect()
-	{
-		// request params
-		$providerHandle = craft()->request->getParam('provider');
-		$oauthProvider = craft()->oauth->getProvider($providerHandle);
-		$requestUri = craft()->request->requestUri;
-		craft()->httpSession->add('social.requestUri', $requestUri);
-
-		// settings
-		$plugin = craft()->plugins->getPlugin('social');
-		$pluginSettings = $plugin->getSettings();
-
-		// try to connect
-		try
-		{
-			if (!$oauthProvider || $oauthProvider && !$oauthProvider->isConfigured())
-			{
-				throw new Exception("OAuth provider is not configured");
-			}
-
-			if (!$pluginSettings['enableSocialLogin'])
-			{
-				throw new Exception("Social login is disabled");
-			}
-
-			if (craft()->getEdition() != Craft::Pro)
-			{
-				throw new Exception("Craft Pro is required");
-			}
-
-			// provider scope & authorizationOptions
-			$socialProvider = craft()->social_loginProviders->getLoginProvider($providerHandle);
-
-			if (!$socialProvider)
-			{
-				throw new Exception("Login provider is not configured");
-			}
-
-			$scope = $socialProvider->getScope();
-			$authorizationOptions = $socialProvider->getAuthorizationOptions();
-
-			if ($response = craft()->oauth->connect([
-				'plugin'   => 'social',
-				'provider' => $providerHandle,
-				'scope'   => $scope,
-				'authorizationOptions'   => $authorizationOptions
-			]))
-			{
-				if($response['success'])
-				{
-					$this->_connectUserFromToken($response['token']);
-				}
-				else
-				{
-					throw new \Exception($response['errorMsg']);
-				}
-			}
-		}
-		catch (\Exception $e)
-		{
-			craft()->userSession->setFlash('error', $e->getMessage());
-
-			$this->_cleanSession();
-
-			$this->redirect($this->referer);
-		}
-	}
 
 	/**
 	 * Connect (register, login, link) a user from token
