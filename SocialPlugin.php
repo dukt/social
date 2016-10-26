@@ -244,7 +244,7 @@ class SocialPlugin extends BasePlugin
 
 	            craft()->templates->includeCssResource('social/css/social.css');
 
-                $html = craft()->templates->render('social/users/_edit-pane', $context, true);
+                $html = craft()->templates->render('social/users/_edit-pane', $context);
 
                 return $html;
             }
