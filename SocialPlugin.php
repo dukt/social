@@ -206,11 +206,13 @@ class SocialPlugin extends BasePlugin
 					'name' => $loginProvider->getName(),
 					'handle' => $loginProvider->getHandle(),
 					'url' => craft()->social->getLoginUrl($loginProvider->getHandle()),
+					'iconUrl' => $loginProvider->getIconUrl(),
 				];
 
 				array_push($jsLoginProviders, $jsLoginProvider);
 			}
 
+			craft()->templates->includeCssResource("social/css/login.css", true);
 			craft()->templates->includeJsResource("social/js/login.js", true);
 			craft()->templates->includeJs("var socialLoginForm = new Craft.SocialLoginForm(".json_encode($jsLoginProviders).");");
 		}
