@@ -22,6 +22,59 @@
 
     <h2>{{ "Login Accounts"|t }}</h2>
 
-    {% include 'social/_includes/accounts-table' %}
+    <div id="nologinaccounts"{% if loginAccounts|length == 0 %} class="hidden"{% endif %}>
+        <p>{{ "No login accounts exist yet."|t }}</p>
+    </div>
+
+    {% if loginAccounts|length %}
+
+        <table id="loginAccounts" class="data fullwidth">
+            <thead>
+                <tr>
+                    <th>{{ "OAuth Provider"|t }}</th>
+                    <th>{{ "Social User ID"|t }}</th>
+                </tr>
+            </thead>
+
+            {% for account in loginAccounts %}
+
+                {% set user = account.user %}
+                {% set oauthProvider = craft.oauth.getProvider(account.providerHandle) %}
+
+                {% if oauthProvider %}
+                    <tr data-id="{{ account.id }}" data-name="{{ oauthProvider.name|t }}">
+                        <td class="provider">
+                            <div class="thumb">
+                                <img width="20" src="{{ oauthProvider.getIconUrl() }}" class="social-icon social-{{ oauthProvider.handle }}" />
+                            </div>
+
+                            <div class="label">{{ oauthProvider.name }}</div>
+                        </td>
+
+                        <td>
+                            {{ account.socialUid }}
+                        </td>
+
+                        <td class="thin">
+                            <a class="icon delete" title="{{ 'Disconnect'|t }}"></a>
+                        </td>
+                    </tr>
+                {% endif %}
+
+            {% endfor %}
+
+        </table>
+
+    {% endif %}
+
+
+    {% includejs %}
+    var adminTable = new Craft.AdminTable({
+        tableSelector: '#loginAccounts',
+        noObjectsSelector: '#nologinaccounts',
+        deleteAction: 'social/loginAccounts/deleteLoginAccount',
+        confirmDeleteMessage: '{{ "Are you sure you want to unlink “{name}” login account?"|t }}',
+    });
+    {% endincludejs %}
 
 {% endset %}
