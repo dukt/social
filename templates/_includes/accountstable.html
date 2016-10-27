@@ -37,14 +37,33 @@
                         </td>
                     {% endif %}
 
-                    <td class="thin"><a class="delete icon" title="{{ 'Delete'|t }}" role="button"></a></td>
+                    <td class="thin">
+                        <a class="btn small delete" title="{{ 'Disconnect'|t }}">Disconnect</a>
+                    </td>
                 </tr>
             {% endif %}
 
         {% endfor %}
+
+        {% for loginProvider in loginProviders %}
+            <tr>
+                <td class="provider">
+                    <div class="thumb">
+                        <img width="20" src="{{ loginProvider.getIconUrl() }}" class="social-icon social-{{ loginProvider.handle }}" />
+                    </div>
+
+                    <div class="label">{{ loginProvider.name }}</div>
+                </td>
+                <td class="thin">
+                    <a class="btn small submit" href="{{ craft.social.loginUrl(loginProvider.handle) }}" data-provider="{{ loginProvider.handle }}">Connect</a>
+                </td>
+            </tr>
+        {% endfor %}
+
     </table>
 
 {% endif %}
+
 
 {% includejs %}
     var adminTable = new Craft.AdminTable({

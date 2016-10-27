@@ -242,6 +242,27 @@ class SocialPlugin extends BasePlugin
 	            $context['user'] = $context['account'];
 	            $context['loginAccounts'] = craft()->social_loginAccounts->getLoginAccountsByUserId($context['account']->id);
 
+                $loginProviders = craft()->social_loginProviders->getLoginProviders();
+                $context['loginProviders'] = [];
+
+                foreach($loginProviders as $loginProvider)
+                {
+                    $providerAvailable = true;
+
+                    foreach($context['loginAccounts'] as $loginAccount)
+                    {
+                        if($loginProvider->getHandle() == $loginAccount->providerHandle)
+                        {
+                            $providerAvailable = false;
+                        }
+                    }
+
+                    if($providerAvailable)
+                    {
+                        $context['loginProviders'][] = $loginProvider;
+                    }
+                }
+
 	            craft()->templates->includeCssResource('social/css/social.css');
 
                 $html = craft()->templates->render('social/users/_edit-pane', $context);
