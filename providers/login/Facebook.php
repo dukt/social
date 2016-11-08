@@ -48,7 +48,7 @@ class Facebook extends BaseProvider
 	{
 		$oauthProvider = $this->getOauthProvider();
 
-		$client = new Client('https://graph.facebook.com/v2.6');
+		$client = new Client('https://graph.facebook.com/v2.8');
 		$client->addSubscriber($oauthProvider->getSubscriber($token));
 
 		$fields = implode(',', [
