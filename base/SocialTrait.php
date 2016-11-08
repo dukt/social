@@ -26,41 +26,6 @@ trait SocialTrait
     }
 
     /**
-     * Get plugin dependencies
-     *
-     * @param bool|true $missingOnly
-     *
-     * @return array
-     */
-    public function getPluginDependencies($missingOnly = true)
-    {
-        $dependencies = [];
-
-        $socialPlugin = craft()->plugins->getPlugin('social');
-
-        $plugins = $socialPlugin->getRequiredPlugins();
-
-        foreach ($plugins as $key => $plugin)
-        {
-            $dependency = $this->getPluginDependency($plugin);
-
-            if ($missingOnly)
-            {
-                if ($dependency['isMissing'])
-                {
-                    $dependencies[] = $dependency;
-                }
-            }
-            else
-            {
-                $dependencies[] = $dependency;
-            }
-        }
-
-        return $dependencies;
-    }
-
-    /**
      * Checks dependencies and redirects to install if one or more are missing
      *
      * @return bool
