@@ -39,7 +39,6 @@ class SocialPlugin extends BasePlugin
 		];
 	}
 
-
 	/**
 	 * Get Required Dependencies
 	 */
