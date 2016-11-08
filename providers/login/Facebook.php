@@ -79,7 +79,6 @@ class Facebook extends BaseProvider
 
 			'name' => (isset($remoteProfile['name']) ? $remoteProfile['name'] : null ),
 			'hometown' => (isset($remoteProfile['hometown']) ? $remoteProfile['hometown'] : null ),
-			'bio' => (isset($remoteProfile['bio']) ? $remoteProfile['bio'] : null ),
 			'isDefaultPicture' => (isset($remoteProfile['picture']['data']['is_silhouette']) ? $remoteProfile['picture']['data']['is_silhouette'] : null ),
 			'coverPhotoUrl' => (isset($remoteProfile['cover']['source']) ? $remoteProfile['cover']['source'] : null ),
 			'gender' => (isset($remoteProfile['gender']) ? $remoteProfile['gender'] : null ),
