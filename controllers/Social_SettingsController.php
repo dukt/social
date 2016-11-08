@@ -21,12 +21,7 @@ class Social_SettingsController extends BaseController
 	{
 		parent::init();
 
-		$pluginDependencies = craft()->social_plugin->getPluginDependencies();
-
-		if (count($pluginDependencies) > 0)
-		{
-			$this->redirect('social/install');
-		}
+        craft()->social->requireDependencies();
 	}
 
 	/**
@@ -42,6 +37,6 @@ class Social_SettingsController extends BaseController
 		$accounts = craft()->social_loginAccounts->getLoginAccounts();
 		$variables['totalAccounts'] = count($accounts);
 
-		$this->renderTemplate('social/settings', $variables);
+		$this->renderTemplate('social/settings/_index', $variables);
 	}
 }
