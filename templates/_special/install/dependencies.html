@@ -1,5 +1,6 @@
-{% extends "social/_layouts/settings" %}
+{% extends "social/_layouts/cp" %}
 
+{% set title = "Social Login Install"|t %}
 {% set content %}
 
 	{% for dependency in pluginDependencies %}
@@ -27,7 +28,7 @@
 					{% if dependency.plugin %}
 						<li>{{ "Current: {name} {version}"|t({ name: dependency.name, version: dependency.plugin.version  }) }}</li>
 					{% endif %}
-					<li>{{ "Required: {name} {version} or above required"|t({ name: dependency.name, version: dependency.version  }) }}</li>
+					<li>{{ "Required: {name} {version} or above"|t({ name: dependency.name, version: dependency.version  }) }}</li>
 				</ul>
 
 
