@@ -48,12 +48,12 @@ class Facebook extends BaseProvider
 	{
 		$oauthProvider = $this->getOauthProvider();
 
-		$client = new Client('https://graph.facebook.com/v2.6');
+		$client = new Client('https://graph.facebook.com/v2.8');
 		$client->addSubscriber($oauthProvider->getSubscriber($token));
 
 		$fields = implode(',', [
 			'id', 'name', 'first_name', 'last_name',
-			'email', 'hometown', 'bio', 'picture.type(large){url,is_silhouette}',
+			'email', 'hometown', 'picture.type(large){url,is_silhouette}',
 			'cover{source}', 'gender', 'locale', 'link',
 			'location',
 		]);
@@ -79,7 +79,6 @@ class Facebook extends BaseProvider
 
 			'name' => (isset($remoteProfile['name']) ? $remoteProfile['name'] : null ),
 			'hometown' => (isset($remoteProfile['hometown']) ? $remoteProfile['hometown'] : null ),
-			'bio' => (isset($remoteProfile['bio']) ? $remoteProfile['bio'] : null ),
 			'isDefaultPicture' => (isset($remoteProfile['picture']['data']['is_silhouette']) ? $remoteProfile['picture']['data']['is_silhouette'] : null ),
 			'coverPhotoUrl' => (isset($remoteProfile['cover']['source']) ? $remoteProfile['cover']['source'] : null ),
 			'gender' => (isset($remoteProfile['gender']) ? $remoteProfile['gender'] : null ),
