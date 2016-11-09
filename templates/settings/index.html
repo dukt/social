@@ -58,6 +58,13 @@
 
 			</div>
 
+			{{ forms.lightswitchField({
+				label: 'Enable CP Social Login'|t,
+				instructions: "Toggles the visibility of Social Login buttons on the Control Panel's login screen."|t,
+				name: 'settings[enableCpLogin]',
+				on:   settings.enableCpLogin
+			}) }}
+
 		</div>
 
 		{{ forms.lightswitchField({

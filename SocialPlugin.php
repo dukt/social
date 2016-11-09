@@ -179,6 +179,7 @@ class SocialPlugin extends BasePlugin
 			'defaultGroup' => [AttributeType::Number, 'default' => null],
 			'autoFillProfile' => [AttributeType::Bool, 'default' => true],
 			'showCpSection' => [AttributeType::Bool, 'default' => true],
+			'enableCpLogin' => [AttributeType::Bool, 'default' => false],
 		];
 	}
 
@@ -195,27 +196,30 @@ class SocialPlugin extends BasePlugin
 
 		// social login for CP
 
-		if (craft()->request->isCpRequest() && craft()->request->getSegment(1))
-		{
-			$loginProviders = craft()->social_loginProviders->getLoginProviders();
-			$jsLoginProviders = [];
+        if($this->settings->enableCpLogin)
+        {
+            if (craft()->request->isCpRequest() && craft()->request->getSegment(1))
+            {
+                $loginProviders = craft()->social_loginProviders->getLoginProviders();
+                $jsLoginProviders = [];
 
-			foreach($loginProviders as $loginProvider)
-			{
-				$jsLoginProvider = [
-					'name' => $loginProvider->getName(),
-					'handle' => $loginProvider->getHandle(),
-					'url' => craft()->social->getLoginUrl($loginProvider->getHandle()),
-					'iconUrl' => $loginProvider->getIconUrl(),
-				];
+                foreach($loginProviders as $loginProvider)
+                {
+                    $jsLoginProvider = [
+                        'name' => $loginProvider->getName(),
+                        'handle' => $loginProvider->getHandle(),
+                        'url' => craft()->social->getLoginUrl($loginProvider->getHandle()),
+                        'iconUrl' => $loginProvider->getIconUrl(),
+                    ];
 
-				array_push($jsLoginProviders, $jsLoginProvider);
-			}
+                    array_push($jsLoginProviders, $jsLoginProvider);
+                }
 
-			craft()->templates->includeCssResource("social/css/login.css", true);
-			craft()->templates->includeJsResource("social/js/login.js", true);
-			craft()->templates->includeJs("var socialLoginForm = new Craft.SocialLoginForm(".json_encode($jsLoginProviders).");");
-		}
+                craft()->templates->includeCssResource("social/css/login.css", true);
+                craft()->templates->includeJsResource("social/js/login.js", true);
+                craft()->templates->includeJs("var socialLoginForm = new Craft.SocialLoginForm(".json_encode($jsLoginProviders).");");
+            }
+        }
 
 
 		// Delete social user when craft user is deleted
