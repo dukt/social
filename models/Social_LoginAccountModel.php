@@ -98,6 +98,7 @@ class Social_LoginAccountModel extends BaseElementModel
 	{
 		if ($this->providerHandle)
 		{
+            Craft::app()->social->checkPluginRequirements();
 			return craft()->oauth->getProvider($this->providerHandle);
 		}
 	}

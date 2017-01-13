@@ -21,12 +21,7 @@ class Social_LoginAccountsController extends BaseController
 	{
 		parent::init();
 
-		$pluginDependencies = craft()->social_plugin->getPluginDependencies();
-
-		if (count($pluginDependencies) > 0)
-		{
-			$this->redirect('social/install');
-		}
+        craft()->social->requireDependencies();
 	}
 
 	/**
