@@ -60,6 +60,8 @@ abstract class BaseProvider implements ISocial_Provider
 	 */
 	public function getOauthProvider()
 	{
+        Craft::app()->social->checkPluginRequirements();
+
 		return Craft::app()->oauth->getProvider($this->getHandle(), false);
 	}
 
