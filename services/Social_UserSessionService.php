@@ -47,7 +47,7 @@ class Social_UserSessionService extends UserSessionService
 	 *
 	 * @return bool
 	 */
-	public function login(\Craft\Oauth_TokenModel $token)
+	public function login(Oauth_TokenModel $token)
 	{
 		$rememberMe = true;
 
