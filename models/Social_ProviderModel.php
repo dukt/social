@@ -97,6 +97,8 @@ class Social_ProviderModel extends BaseModel
 	 */
 	public function getOauthProvider()
 	{
+        Craft::app()->social->checkPluginRequirements();
+
 		return craft()->oauth->getProvider($this->oauthProviderHandle, false);
 	}
 

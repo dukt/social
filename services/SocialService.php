@@ -7,8 +7,16 @@
 
 namespace Craft;
 
+require_once(CRAFT_PLUGINS_PATH.'social/base/SocialTrait.php');
+
 class SocialService extends BaseApplicationComponent
 {
+
+    // Traits
+    // =========================================================================
+
+    use SocialTrait;
+
 	// Public Methods
 	// =========================================================================
 
