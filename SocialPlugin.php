@@ -39,7 +39,6 @@ class SocialPlugin extends BasePlugin
 		];
 	}
 
-
 	/**
 	 * Get Required Dependencies
 	 */
@@ -152,7 +151,8 @@ class SocialPlugin extends BasePlugin
 		return [
 			"social" => ['action' => "social/loginAccounts/index"],
 
-			'social/install' => ['action' => "social/plugin/install"],
+			'social/install' => ['action' => "social/install/index"],
+			'social/settings' => ['action' => "social/settings/index"],
 
 			"social/loginaccounts" => ['action' => "social/loginAccounts/index"],
 			"social/loginaccounts/(?P<userId>\d+)" => ['action' => "social/loginAccounts/edit"],
