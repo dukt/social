@@ -1,7 +1,7 @@
 <?php
 /**
  * @link      https://dukt.net/craft/oauth/
- * @copyright Copyright (c) 2016, Dukt
+ * @copyright Copyright (c) 2017, Dukt
  * @license   https://dukt.net/craft/oauth/docs/license
  */
 
@@ -60,6 +60,8 @@ abstract class BaseProvider implements ISocial_Provider
 	 */
 	public function getOauthProvider()
 	{
+        Craft::app()->social->checkPluginRequirements();
+
 		return Craft::app()->oauth->getProvider($this->getHandle(), false);
 	}
 

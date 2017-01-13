@@ -1,7 +1,7 @@
 <?php
 /**
  * @link      https://dukt.net/craft/social/
- * @copyright Copyright (c) 2016, Dukt
+ * @copyright Copyright (c) 2017, Dukt
  * @license   https://dukt.net/craft/social/docs/license
  */
 
@@ -39,7 +39,6 @@ class SocialPlugin extends BasePlugin
 		];
 	}
 
-
 	/**
 	 * Get Required Dependencies
 	 */
@@ -76,7 +75,7 @@ class SocialPlugin extends BasePlugin
 	 */
 	public function getVersion()
 	{
-		return '1.2.3';
+		return '1.2.4';
 	}
 
 
@@ -152,7 +151,8 @@ class SocialPlugin extends BasePlugin
 		return [
 			"social" => ['action' => "social/loginAccounts/index"],
 
-			'social/install' => ['action' => "social/plugin/install"],
+			'social/install' => ['action' => "social/install/index"],
+			'social/settings' => ['action' => "social/settings/index"],
 
 			"social/loginaccounts" => ['action' => "social/loginAccounts/index"],
 			"social/loginaccounts/(?P<userId>\d+)" => ['action' => "social/loginAccounts/edit"],

@@ -1,7 +1,7 @@
 <?php
 /**
  * @link      https://dukt.net/craft/social/
- * @copyright Copyright (c) 2016, Dukt
+ * @copyright Copyright (c) 2017, Dukt
  * @license   https://dukt.net/craft/social/docs/license
  */
 
@@ -27,7 +27,7 @@ class SocialController extends BaseController
 	 */
 	public function actionLogin()
 	{
-		craft()->social_plugin->checkRequirements();
+		craft()->social->checkPluginRequirements();
 
 		$this->referer = craft()->httpSession->get('social.referer');
 
@@ -165,7 +165,7 @@ class SocialController extends BaseController
 	 */
 	public function actionDisconnectLoginAccount()
 	{
-		craft()->social_plugin->checkRequirements();
+		craft()->social->checkPluginRequirements();
 
 		$handle = craft()->request->getParam('provider');
 

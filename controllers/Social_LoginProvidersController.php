@@ -1,7 +1,7 @@
 <?php
 /**
  * @link      https://dukt.net/craft/social/
- * @copyright Copyright (c) 2016, Dukt
+ * @copyright Copyright (c) 2017, Dukt
  * @license   https://dukt.net/craft/social/docs/license
  */
 
@@ -21,12 +21,7 @@ class Social_LoginProvidersController extends BaseController
 	{
 		parent::init();
 
-		$pluginDependencies = craft()->social_plugin->getPluginDependencies();
-
-		if (count($pluginDependencies) > 0)
-		{
-			$this->redirect('social/install');
-		}
+        craft()->social->requireDependencies();
 	}
 
 	/**

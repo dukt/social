@@ -1,14 +1,22 @@
 <?php
 /**
  * @link      https://dukt.net/craft/social/
- * @copyright Copyright (c) 2016, Dukt
+ * @copyright Copyright (c) 2017, Dukt
  * @license   https://dukt.net/craft/social/docs/license
  */
 
 namespace Craft;
 
+require_once(CRAFT_PLUGINS_PATH.'social/base/SocialTrait.php');
+
 class SocialService extends BaseApplicationComponent
 {
+
+    // Traits
+    // =========================================================================
+
+    use SocialTrait;
+
 	// Public Methods
 	// =========================================================================
 
