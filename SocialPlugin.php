@@ -215,9 +215,11 @@ class SocialPlugin extends BasePlugin
                     array_push($jsLoginProviders, $jsLoginProvider);
                 }
 
+                $error = craft()->userSession->getFlash('error');
+
                 craft()->templates->includeCssResource("social/css/login.css", true);
                 craft()->templates->includeJsResource("social/js/login.js", true);
-                craft()->templates->includeJs("var socialLoginForm = new Craft.SocialLoginForm(".json_encode($jsLoginProviders).");");
+                craft()->templates->includeJs("var socialLoginForm = new Craft.SocialLoginForm(".json_encode($jsLoginProviders).", ".json_encode($error).");");
             }
         }
 
