@@ -7,7 +7,7 @@
             <p class="light">{{ "No login accounts."|t }}</p>
         </div>
 
-        {% if loginAccounts|length %}
+        {% if loginAccounts|length or user.id == currentUser.id %}
 
             <table id="loginAccounts" class="fullwidth">
 
