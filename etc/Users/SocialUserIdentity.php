@@ -24,11 +24,6 @@ class SocialUserIdentity extends UserIdentity
 	// =========================================================================
 
 	/**
-	 * @var Social_LoginAccountModel|null
-	 */
-	public $account;
-
-	/**
 	 * @var Oauth_TokenModel|null
 	 */
 	public $token;
@@ -72,16 +67,14 @@ class SocialUserIdentity extends UserIdentity
 
         $account = Craft::app()->social_loginAccounts->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
 
-        $this->account = Craft::app()->social_loginAccounts->getLoginAccountById($account->id);
-
-        if ($this->account)
+        if ($account)
         {
-            $this->_userModel = $this->account->getUser();
+            $this->_userModel = $account->getUser();
         }
 
-		if ($this->account)
+		if ($account)
 		{
-			$user = $this->account->getUser();
+			$user = $account->getUser();
 
 			if ($user)
 			{
