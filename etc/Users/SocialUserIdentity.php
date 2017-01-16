@@ -7,6 +7,7 @@
 
 namespace Dukt\Social\Etc\Users;
 
+use Craft\Craft;
 use Craft\UserIdentity;
 use Craft\UserModel;
 use Craft\UserStatus;
@@ -23,9 +24,14 @@ class SocialUserIdentity extends UserIdentity
 	// =========================================================================
 
 	/**
-	 * @var Social_LoginAccountModel
+	 * @var Social_LoginAccountModel|null
 	 */
 	public $account;
+
+	/**
+	 * @var Oauth_TokenModel|null
+	 */
+	public $token;
 
 	/**
 	 * @var int
@@ -46,18 +52,7 @@ class SocialUserIdentity extends UserIdentity
 	 */
 	public function __construct(Oauth_TokenModel $token)
 	{
-		$socialLoginProvider = \Craft\craft()->social_loginProviders->getLoginProvider($token->providerHandle);
-		$attributes = $socialLoginProvider->getProfile($token);
-		$socialUid = $attributes['id'];
-
-		$account = \Craft\craft()->social_loginAccounts->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
-
-		$this->account = \Craft\craft()->social_loginAccounts->getLoginAccountById($account->id);
-
-		if ($this->account)
-		{
-			$this->_userModel = $this->account->getUser();
-		}
+	    $this->token = $token;
 	}
 
 	/**
@@ -67,6 +62,23 @@ class SocialUserIdentity extends UserIdentity
 	 */
 	public function authenticate()
 	{
+	    $token = $this->token;
+
+        $socialLoginProvider = Craft::app()->social_loginProviders->getLoginProvider($token->providerHandle);
+
+        $data = $socialLoginProvider->getProfile($token);
+
+        $socialUid = $data['id'];
+
+        $account = Craft::app()->social_loginAccounts->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
+
+        $this->account = Craft::app()->social_loginAccounts->getLoginAccountById($account->id);
+
+        if ($this->account)
+        {
+            $this->_userModel = $this->account->getUser();
+        }
+
 		if ($this->account)
 		{
 			$user = $this->account->getUser();
