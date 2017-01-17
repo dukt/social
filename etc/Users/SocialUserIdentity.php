@@ -48,6 +48,15 @@ class SocialUserIdentity extends UserIdentity
 	public function __construct(Oauth_TokenModel $token)
 	{
 	    $this->token = $token;
+
+        $socialLoginProvider = Craft::app()->social_loginProviders->getLoginProvider($this->token->providerHandle);
+        $data = $socialLoginProvider->getProfile($this->token);
+        $account = Craft::app()->social_loginAccounts->getLoginAccountByUid($socialLoginProvider->getHandle(), $data['id']);
+
+        if ($account)
+        {
+            $this->_userModel = $account->getUser();
+        }
 	}
 
 	/**
@@ -57,38 +66,14 @@ class SocialUserIdentity extends UserIdentity
 	 */
 	public function authenticate()
 	{
-	    $token = $this->token;
-
-        $socialLoginProvider = Craft::app()->social_loginProviders->getLoginProvider($token->providerHandle);
-
-        $data = $socialLoginProvider->getProfile($token);
-
-        $socialUid = $data['id'];
-
-        $account = Craft::app()->social_loginAccounts->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
-
-        if ($account)
+        if ($this->_userModel)
         {
-            $this->_userModel = $account->getUser();
+            return $this->_processUserStatus($this->_userModel);
         }
-
-		if ($account)
-		{
-			$user = $account->getUser();
-
-			if ($user)
-			{
-				return $this->_processUserStatus($user);
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else
-		{
-			return false;
-		}
+        else
+        {
+            return false;
+        }
 	}
 
 	/**
