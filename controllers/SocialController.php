@@ -39,11 +39,6 @@ class SocialController extends BaseController
 
 		$this->redirect = craft()->request->getParam('redirect');
 
-		if(craft()->request->getParam('isCpLogin'))
-        {
-            craft()->httpSession->add('social.isCpLogin', true);
-        }
-
 
 		// Connect
 
@@ -316,34 +311,25 @@ class SocialController extends BaseController
 		}
 		else
 		{
-            $isCpLogin = craft()->httpSession->get('social.isCpLogin');
+			// register user
+			$craftUser = craft()->social_loginAccounts->registerUser($attributes, $socialLoginProvider->getHandle());
 
-            if(!$isCpLogin)
-            {
-                // register user
-                $craftUser = craft()->social_loginAccounts->registerUser($attributes, $socialLoginProvider->getHandle());
+			if ($craftUser)
+			{
+				// save social user
+				$account = new Social_LoginAccountModel;
+				$account->userId = $craftUser->id;
+				$account->providerHandle = $socialLoginProvider->getHandle();
+				$account->socialUid = $socialUid;
+				craft()->social_loginAccounts->saveLoginAccount($account);
 
-                if ($craftUser)
-                {
-                    // save social user
-                    $account = new Social_LoginAccountModel;
-                    $account->userId = $craftUser->id;
-                    $account->providerHandle = $socialLoginProvider->getHandle();
-                    $account->socialUid = $socialUid;
-                    craft()->social_loginAccounts->saveLoginAccount($account);
-
-                    // login
-                    $this->_login($token, true);
-                }
-                else
-                {
-                    throw new Exception("Craft user couldn’t be created.");
-                }
-            }
-            else
-            {
-                throw new Exception("Can’t register a new user from the CP.");
-            }
+				// login
+				$this->_login($token, true);
+			}
+			else
+			{
+				throw new Exception("Craft user couldn’t be created.");
+			}
 		}
 	}
 
@@ -395,6 +381,5 @@ class SocialController extends BaseController
 	{
 		craft()->httpSession->remove('social.referer');
 		craft()->httpSession->remove('social.requestUri');
-		craft()->httpSession->remove('social.isCpLogin');
 	}
 }

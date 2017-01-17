@@ -208,7 +208,7 @@ class SocialPlugin extends BasePlugin
                     $jsLoginProvider = [
                         'name' => $loginProvider->getName(),
                         'handle' => $loginProvider->getHandle(),
-                        'url' => craft()->social->getLoginUrl($loginProvider->getHandle(), ['isCpLogin' => true]),
+                        'url' => craft()->social->getLoginUrl($loginProvider->getHandle()),
                         'iconUrl' => $loginProvider->getIconUrl(),
                     ];
 
