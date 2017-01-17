@@ -3,8 +3,8 @@ Social Changelog
 
 ## Unreleased
 
-- SocialController:_login() is now taking a token instead of an account as a parameter
-- SocialUserIdentity::_construct() is now taking an Oauth_TokenModel as a parameter instead of an account ID
+- `SocialController:_login()` is now taking a token instead of an account as a parameter
+- `SocialUserIdentity::_construct()` is now taking an `Oauth_TokenModel` as a parameter instead of an account ID
 - Users can now social login from the CP's login page
 - Added an “Enable CP Login” plugin setting
 - Fixed namespaces for `SocialUserIdentity`
