@@ -44,7 +44,7 @@ class Social_LoginAccountElementType extends BaseElementType
 	{
 		$sources = array(
 			'*' => array(
-				'label' => Craft::t('All login providers'),
+				'label' => Craft::t('All login accounts'),
 				'hasThumbs' => false
 			)
 		);

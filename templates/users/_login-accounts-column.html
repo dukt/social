@@ -1,0 +1,13 @@
+{% for account in loginAccounts %}
+
+    {% set oauthProvider = account.getOauthProvider() %}
+
+    {% if oauthProvider %}
+        <span class="provider">
+            <div class="thumb">
+                <img width="20" src="{{ oauthProvider.getIconUrl() }}" class="social-icon social-{{ oauthProvider.handle }}" />
+            </div>
+        </span>
+    {% endif %}
+
+{% endfor %}

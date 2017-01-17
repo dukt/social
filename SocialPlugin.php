@@ -20,8 +20,9 @@ class SocialPlugin extends BasePlugin
 		require_once(CRAFT_PLUGINS_PATH.'social/etc/providers/ISocial_Provider.php');
 		require_once(CRAFT_PLUGINS_PATH.'social/providers/login/BaseProvider.php');
 
-		$this->initEventListeners();
-	}
+        $this->initEventListeners();
+        $this->initTemplateHooks();
+    }
 
 	/**
 	 * Get Social Login Providers
@@ -164,8 +165,37 @@ class SocialPlugin extends BasePlugin
 		];
 	}
 
-	// Protected Methods
-	// =========================================================================
+    public function defineAdditionalUserTableAttributes()
+    {
+        return [
+            'loginAccounts' => Craft::t('Login Accounts')
+        ];
+    }
+
+    public function getUserTableAttributeHtml(UserModel $user, $attribute)
+    {
+        if ($attribute == 'loginAccounts')
+        {
+            $loginAccounts = craft()->social_loginAccounts->getLoginAccountsByUserId($user->id);
+
+            if (!$loginAccounts)
+            {
+                return '';
+            }
+
+            $variables = [
+                'loginAccounts' => $loginAccounts,
+            ];
+
+	        craft()->templates->includeCssResource('social/css/social.css');
+
+            $html = craft()->templates->render('social/users/_login-accounts-column', $variables, true);
+
+            return $html;
+        }
+    }
+    // Protected Methods
+    // =========================================================================
 
 	/**
 	 * Define Settings
@@ -230,7 +260,49 @@ class SocialPlugin extends BasePlugin
 		{
 			$user = $event->params['user'];
 
-			craft()->social_loginAccounts->deleteLoginAccountByUserId($user->id);
-		});
-	}
+            craft()->social_loginAccounts->deleteLoginAccountByUserId($user->id);
+        });
+    }
+
+    /**
+     * Initialize template hooks
+     */
+    private function initTemplateHooks()
+    {
+        craft()->templates->hook('cp.users.edit.right-pane', function(&$context)
+        {
+            if ($context['account'])
+            {
+	            $context['user'] = $context['account'];
+	            $context['loginAccounts'] = craft()->social_loginAccounts->getLoginAccountsByUserId($context['account']->id);
+
+                $loginProviders = craft()->social_loginProviders->getLoginProviders();
+                $context['loginProviders'] = [];
+
+                foreach($loginProviders as $loginProvider)
+                {
+                    $providerAvailable = true;
+
+                    foreach($context['loginAccounts'] as $loginAccount)
+                    {
+                        if($loginProvider->getHandle() == $loginAccount->providerHandle)
+                        {
+                            $providerAvailable = false;
+                        }
+                    }
+
+                    if($providerAvailable)
+                    {
+                        $context['loginProviders'][] = $loginProvider;
+                    }
+                }
+
+	            craft()->templates->includeCssResource('social/css/social.css');
+
+                $html = craft()->templates->render('social/users/_edit-pane', $context);
+
+                return $html;
+            }
+        });
+    }
 }

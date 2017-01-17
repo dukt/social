@@ -251,7 +251,7 @@ class SocialController extends BaseController
 			{
 				craft()->social_loginAccounts->saveLoginAccount($account);
 
-				craft()->userSession->setNotice(Craft::t('Social account linked.'));
+				craft()->userSession->setNotice(Craft::t('Login account added.'));
 
 				$this->redirect($this->redirect);
 			}
@@ -270,7 +270,7 @@ class SocialController extends BaseController
 
 			craft()->social_loginAccounts->saveLoginAccount($account);
 
-			craft()->userSession->setNotice(Craft::t('Social account linked.'));
+			craft()->userSession->setNotice(Craft::t('Login account added.'));
 
 			$this->redirect($this->redirect);
 		}
