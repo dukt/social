@@ -5,6 +5,10 @@ Social Changelog
 
 - SocialController:_login() is now taking a token instead of an account as a parameter
 - SocialUserIdentity::_construct() is now taking an Oauth_TokenModel as a parameter instead of an account ID
+- Admins can now remove Login Accounts from the CP user edit screen
+- Users with access to the CP can now connect and disconnect login accounts from their account page
+- Added a login accounts user table attribute
+- Renamed `All login providers` to `All login accounts`
 
 ## 1.2.4 - 2017-01-13
 
