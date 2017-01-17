@@ -38,10 +38,13 @@ class SocialUserIdentity extends UserIdentity
 	 */
 	private $_userModel;
 
-	/**
+    // Public Methods
+    // =========================================================================
+
+    /**
 	 * Constructor
 	 *
-	 * @param int $accountId
+	 * @param Oauth_TokenModel $token
 	 *
 	 * @return null
 	 */
