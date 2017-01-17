@@ -9,15 +9,24 @@ namespace Craft;
 
 class Social_LoginAccountModel extends BaseElementModel
 {
+    // Properties
+    // =========================================================================
+
+    /**
+     * @var string
+     */
 	protected $elementType = 'Social_LoginAccount';
 
+    /**
+     * @var UserModel|null
+     */
 	private $_user;
 
 	// Public Methods
 	// =========================================================================
 
 	/**
-	 * Use the login account's email as its string representation.
+	 * Use the login account's email or username as its string representation.
 	 *
 	 * @return string
 	 */
@@ -25,11 +34,11 @@ class Social_LoginAccountModel extends BaseElementModel
 	{
 		if (craft()->config->get('useEmailAsUsername'))
 		{
-			return $this->email;
+			return (string) $this->email;
 		}
 		else
 		{
-			return $this->username;
+			return (string) $this->username;
 		}
 	}
 
@@ -73,26 +82,9 @@ class Social_LoginAccountModel extends BaseElementModel
 	}
 
 	/**
-	 * Define Attributes
-	 */
-	public function defineAttributes()
-	{
-		return array_merge(parent::defineAttributes(), array(
-			'id' => AttributeType::Number,
-			'userId' => AttributeType::Number,
-			'providerHandle' => array(AttributeType::String, 'required' => true),
-			'socialUid' => array(AttributeType::String, 'required' => true),
-
-			'username' => AttributeType::String,
-			'email' => AttributeType::String,
-			'firstName' => AttributeType::String,
-			'lastName' => AttributeType::String,
-			'lastLoginDate' => AttributeType::DateTime,
-		));
-	}
-
-	/**
-	 * Get the OAuth provider for the social account.
+	 * Returns the OAuth provider for this login account.
+     *
+     * @return IOauth_Provider|null
 	 */
 	public function getOauthProvider()
 	{
@@ -104,7 +96,9 @@ class Social_LoginAccountModel extends BaseElementModel
 	}
 
 	/**
-	 * Get the associated Craft user for this social account.
+	 * Returns the associated Craft user for this login account.
+     *
+     * @return UserModel
 	 */
 	public function getUser()
 	{
@@ -120,7 +114,7 @@ class Social_LoginAccountModel extends BaseElementModel
 	}
 
 	/**
-	 * Gets the user's full name.
+	 * Returns the user's full name.
 	 *
 	 * @return string|null
 	 */
@@ -131,4 +125,26 @@ class Social_LoginAccountModel extends BaseElementModel
 
 		return $firstName.($firstName && $lastName ? ' ' : '').$lastName;
 	}
+
+    // Protected Methods
+    // =========================================================================
+
+    /**
+     * @return array
+     */
+    protected function defineAttributes()
+    {
+        return array_merge(parent::defineAttributes(), array(
+            'id' => AttributeType::Number,
+            'userId' => AttributeType::Number,
+            'providerHandle' => array(AttributeType::String, 'required' => true),
+            'socialUid' => array(AttributeType::String, 'required' => true),
+
+            'username' => AttributeType::String,
+            'email' => AttributeType::String,
+            'firstName' => AttributeType::String,
+            'lastName' => AttributeType::String,
+            'lastLoginDate' => AttributeType::DateTime,
+        ));
+    }
 }

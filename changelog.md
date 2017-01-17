@@ -16,7 +16,7 @@ Social Changelog
 ## 1.2.4 - 2017-01-13
 
 ### Added
-- Added `SocialTrait`
+- Added `RequirementsTrait`
 - Added `Social_InstallController`
 - Added `docsUrl` to settings pages
 

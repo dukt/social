@@ -14,18 +14,24 @@ class SocialPlugin extends BasePlugin
 
 	/**
 	 * Initialization
+     *
+     * @return null
 	 */
 	public function init()
 	{
-		require_once(CRAFT_PLUGINS_PATH.'social/etc/providers/ISocial_Provider.php');
+		require_once(CRAFT_PLUGINS_PATH.'social/base/LoginProviderInterface.php');
 		require_once(CRAFT_PLUGINS_PATH.'social/providers/login/BaseProvider.php');
 
         $this->initEventListeners();
         $this->initTemplateHooks();
+
+        parent::init();
     }
 
 	/**
 	 * Get Social Login Providers
+     *
+     * @return array
 	 */
 	public function getSocialLoginProviders()
 	{
@@ -42,6 +48,8 @@ class SocialPlugin extends BasePlugin
 
 	/**
 	 * Get Required Dependencies
+     *
+     * @return array
 	 */
 	public function getRequiredPlugins()
 	{
@@ -57,6 +65,8 @@ class SocialPlugin extends BasePlugin
 
 	/**
 	 * Get Name
+     *
+     * @return string
 	 */
 	public function getName()
 	{
@@ -65,6 +75,8 @@ class SocialPlugin extends BasePlugin
 
 	/**
 	 * Get Description
+     *
+     * @return string
 	 */
 	public function getDescription()
 	{
@@ -73,6 +85,8 @@ class SocialPlugin extends BasePlugin
 
 	/**
 	 * Get Version
+     *
+     * @return string
 	 */
 	public function getVersion()
 	{
@@ -81,7 +95,9 @@ class SocialPlugin extends BasePlugin
 
 
 	/**
-	 * Get SchemaVersion
+	 * Schema Version
+     *
+     * @return string
 	 */
 	public function getSchemaVersion()
 	{
@@ -90,6 +106,8 @@ class SocialPlugin extends BasePlugin
 
 	/**
 	 * Get Developer
+     *
+     * @return string
 	 */
 	public function getDeveloper()
 	{
@@ -98,6 +116,8 @@ class SocialPlugin extends BasePlugin
 
 	/**
 	 * Get Developer URL
+     *
+     * @return string
 	 */
 	public function getDeveloperUrl()
 	{
@@ -106,6 +126,8 @@ class SocialPlugin extends BasePlugin
 
 	/**
 	 * Get Documentation URL
+     *
+     * @return string
 	 */
 	public function getDocumentationUrl()
 	{
@@ -114,24 +136,30 @@ class SocialPlugin extends BasePlugin
 
 	/**
 	 * Get Release Feed URL
+     *
+     * @return string
 	 */
 	public function getReleaseFeedUrl()
 	{
 		return 'https://dukt.net/craft/social/updates.json';
 	}
 
-	/**
-	 * Get Settings URL
-	 */
-	public function getSettingsUrl()
+    /**
+     * Get Settings URL
+     *
+     * @return string
+     */
+    public function getSettingsUrl()
 	{
 		return 'settings/plugins/social/settings/loginproviders';
 	}
 
-	/**
-	 * Has CP Section
-	 */
-	public function hasCpSection()
+    /**
+     * Has CP Section
+     *
+     * @return bool
+     */
+    public function hasCpSection()
 	{
 		$socialPlugin = craft()->plugins->getPlugin('social');
 		$settings = $socialPlugin->getSettings();
@@ -144,9 +172,11 @@ class SocialPlugin extends BasePlugin
 		return false;
 	}
 
-	/**
-	 * Hook Register CP Routes
-	 */
+    /**
+     * Control Panel routes.
+     *
+     * @return mixed
+     */
 	public function registerCpRoutes()
 	{
 		return [
@@ -165,6 +195,11 @@ class SocialPlugin extends BasePlugin
 		];
 	}
 
+    /**
+     * Defines additional user table attributes.
+     *
+     * @return array
+     */
     public function defineAdditionalUserTableAttributes()
     {
         return [
@@ -172,6 +207,14 @@ class SocialPlugin extends BasePlugin
         ];
     }
 
+    /**
+     * Returns the HTML of the user table attribute.
+     *
+     * @param UserModel $user
+     * @param           $attribute
+     *
+     * @return string
+     */
     public function getUserTableAttributeHtml(UserModel $user, $attribute)
     {
         if ($attribute == 'loginAccounts')
@@ -197,9 +240,11 @@ class SocialPlugin extends BasePlugin
     // Protected Methods
     // =========================================================================
 
-	/**
-	 * Define Settings
-	 */
+    /**
+     * Define Social Settings.
+     *
+     * @return array
+     */
 	protected function defineSettings()
 	{
 		return [
@@ -216,14 +261,13 @@ class SocialPlugin extends BasePlugin
 	// Private Methods
 	// =========================================================================
 
-	/**
-	 * Initialize event listeners
-	 */
-	private function initEventListeners()
+    /**
+     * Initialize event listeners
+     *
+     * @return null
+     */
+    private function initEventListeners()
 	{
-		parent::init();
-
-
 		// social login for CP
 
         if($this->settings->enableCpLogin)
@@ -266,6 +310,8 @@ class SocialPlugin extends BasePlugin
 
     /**
      * Initialize template hooks
+     *
+     * @return null
      */
     private function initTemplateHooks()
     {

@@ -1,7 +1,15 @@
 <?php
-namespace Craft;
+/**
+ * @link      https://dukt.net/craft/social/
+ * @copyright Copyright (c) 2017, Dukt
+ * @license   https://dukt.net/craft/social/docs/license
+ */
 
-interface ISocial_Provider
+namespace Dukt\Social\Base;
+
+use Craft\Oauth_TokenModel;
+
+interface LoginProviderInterface
 {
 	// Public Methods
 	// =========================================================================
@@ -25,7 +33,7 @@ interface ISocial_Provider
 	 *
 	 * @param Oauth_TokenModel $token
 	 *
-	 * @return mixed
+	 * @return array|null
 	 */
 	public function getProfile(Oauth_TokenModel $token);
 }

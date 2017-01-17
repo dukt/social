@@ -13,17 +13,6 @@ class Social_ProviderModel extends BaseModel
 	// =========================================================================
 
 	/**
-	 * Define Attributes
-	 */
-	public function defineAttributes()
-	{
-		return array(
-			'oauthProviderHandle' => AttributeType::Number,
-			'customScope' => AttributeType::Mixed,
-		);
-	}
-
-	/**
 	 * Get authorization options for the provider.
 	 *
 	 * @return mixed
@@ -63,7 +52,7 @@ class Social_ProviderModel extends BaseModel
 	/**
 	 * Return the default scope for the provider.
 	 *
-	 * @return mixed
+	 * @return array|null
 	 */
 	public function getDefaultScope()
 	{
@@ -73,7 +62,7 @@ class Social_ProviderModel extends BaseModel
 	/**
 	 * Get the provider's name.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	public function getName()
 	{
@@ -83,7 +72,7 @@ class Social_ProviderModel extends BaseModel
 	/**
 	 * Get the provider's handle.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	public function getHandle()
 	{
@@ -105,7 +94,7 @@ class Social_ProviderModel extends BaseModel
 	/**
 	 * Get the URL to the icon.
 	 *
-	 * @return mixed
+	 * @return string|null
 	 */
 	public function getIconUrl()
 	{
@@ -115,10 +104,24 @@ class Social_ProviderModel extends BaseModel
 	/**
 	 * Get the documentation URL for provider scopes.
 	 *
-	 * @return mixed
+	 * @return string|null
 	 */
 	public function getScopeDocsUrl()
 	{
 		return $this->getOauthProvider()->getScopeDocsUrl();
 	}
+
+    // Protected Methods
+    // =========================================================================
+
+    /**
+     * @return array
+     */
+    protected function defineAttributes()
+    {
+        return array(
+            'oauthProviderHandle' => AttributeType::Number,
+            'customScope' => AttributeType::Mixed,
+        );
+    }
 }

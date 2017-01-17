@@ -1,17 +1,17 @@
 <?php
 /**
- * @link      https://dukt.net/craft/oauth/
+ * @link      https://dukt.net/craft/social/
  * @copyright Copyright (c) 2017, Dukt
- * @license   https://dukt.net/craft/oauth/docs/license
+ * @license   https://dukt.net/craft/social/docs/license
  */
 
 namespace Dukt\Social\LoginProviders;
 
 use Craft\Craft;
-use Craft\ISocial_Provider;
+use Dukt\Social\Base\LoginProviderInterface;
 use Craft\Oauth_TokenModel;
 
-abstract class BaseProvider implements ISocial_Provider
+abstract class BaseProvider implements LoginProviderInterface
 {
 	/**
 	 * Get the provider handle.
@@ -68,14 +68,14 @@ abstract class BaseProvider implements ISocial_Provider
 	/**
 	 * Get the default scope.
 	 *
-	 * @return mixed
+	 * @return array|null
 	 */
 	public function getDefaultScope()
 	{
 	}
 
 	/**
-	 * Get the defaul authorization options.
+	 * Get the default authorization options.
 	 *
 	 * @return mixed
 	 */
@@ -141,11 +141,11 @@ abstract class BaseProvider implements ISocial_Provider
 	}
 
 	/**
-	 * Returns the remote profile
+	 * Returns the remote profile.
 	 *
 	 * @param $token
 	 *
-	 * @return mixed
+	 * @return array|null
 	 */
 	public function getRemoteProfile(Oauth_TokenModel $token)
 	{

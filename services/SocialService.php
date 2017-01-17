@@ -7,15 +7,16 @@
 
 namespace Craft;
 
-require_once(CRAFT_PLUGINS_PATH.'social/base/SocialTrait.php');
+require_once(CRAFT_PLUGINS_PATH.'social/base/RequirementsTrait.php');
+
+use Dukt\Social\Base\RequirementsTrait;
 
 class SocialService extends BaseApplicationComponent
 {
-
     // Traits
     // =========================================================================
 
-    use SocialTrait;
+    use RequirementsTrait;
 
 	// Public Methods
 	// =========================================================================

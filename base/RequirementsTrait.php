@@ -5,9 +5,11 @@
  * @license   https://dukt.net/craft/social/docs/license
  */
 
-namespace Craft;
+namespace Dukt\Social\Base;
 
-trait SocialTrait
+use Craft\Craft;
+
+trait RequirementsTrait
 {
     // Public Methods
     // =========================================================================
@@ -35,7 +37,7 @@ trait SocialTrait
         if ($this->areDependenciesMissing())
         {
             $url = UrlHelper::getUrl('social/install');
-            craft()->request->redirect($url);
+            Craft::app()->request->redirect($url);
             return false;
         }
         else
@@ -83,7 +85,7 @@ trait SocialTrait
     {
         $dependencies = array();
 
-        $plugin = craft()->plugins->getPlugin('social');
+        $plugin = Craft::app()->plugins->getPlugin('social');
         $plugins = $plugin->getRequiredPlugins();
 
         foreach($plugins as $key => $plugin)
@@ -116,7 +118,7 @@ trait SocialTrait
         $isMissing = true;
         $isInstalled = true;
 
-        $plugin = craft()->plugins->getPlugin($dependency['handle'], false);
+        $plugin = Craft::app()->plugins->getPlugin($dependency['handle'], false);
 
         if($plugin)
         {

@@ -12,9 +12,25 @@ class SocialController extends BaseController
 	// Properties
 	// =========================================================================
 
+    /**
+     * @inheritdoc
+     *
+     * @var array
+     */
 	protected $allowAnonymous = ['actionLogin'];
 
+    /**
+     * Redirect URL
+     *
+     * @var string
+     */
 	private $redirect;
+
+    /**
+     * Referer URL
+     *
+     * @var string
+     */
 	private $referer;
 
 	// Public Methods
@@ -42,20 +58,20 @@ class SocialController extends BaseController
 
 		// Connect
 
-		// request params
+		// Request params
 		$providerHandle = craft()->request->getParam('provider');
 		$oauthProvider = craft()->oauth->getProvider($providerHandle);
 		$requestUri = craft()->request->requestUri;
 		craft()->httpSession->add('social.requestUri', $requestUri);
 
-		// settings
+		// Settings
 		$plugin = craft()->plugins->getPlugin('social');
 		$pluginSettings = $plugin->getSettings();
 
-		// try to connect
+		// Try to connect
 		try
 		{
-			if (!$oauthProvider || $oauthProvider && !$oauthProvider->isConfigured())
+			if (!$oauthProvider || ($oauthProvider && !$oauthProvider->isConfigured()))
 			{
 				throw new Exception("OAuth provider is not configured");
 			}
@@ -70,7 +86,7 @@ class SocialController extends BaseController
 				throw new Exception("Craft Pro is required");
 			}
 
-			// provider scope & authorizationOptions
+			// Provider scope & authorizationOptions
 			$socialProvider = craft()->social_loginProviders->getLoginProvider($providerHandle);
 
 			if (!$socialProvider)
@@ -149,7 +165,7 @@ class SocialController extends BaseController
 	}
 
 	/**
-	 * Link Account
+	 * Connect a login account (link)
 	 *
 	 * @return null
 	 */
@@ -159,7 +175,7 @@ class SocialController extends BaseController
 	}
 
 	/**
-	 * Unlink Account
+	 * Disconnect a login account (unlink)
 	 *
 	 * @return null
 	 */
@@ -311,19 +327,19 @@ class SocialController extends BaseController
 		}
 		else
 		{
-			// register user
+			// Register user
 			$craftUser = craft()->social_loginAccounts->registerUser($attributes, $socialLoginProvider->getHandle());
 
 			if ($craftUser)
 			{
-				// save social user
+				// Save social user
 				$account = new Social_LoginAccountModel;
 				$account->userId = $craftUser->id;
 				$account->providerHandle = $socialLoginProvider->getHandle();
 				$account->socialUid = $socialUid;
 				craft()->social_loginAccounts->saveLoginAccount($account);
 
-				// login
+				// Login
 				$this->_login($token, true);
 			}
 			else

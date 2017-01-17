@@ -31,6 +31,11 @@ class Social_UserSessionService extends UserSessionService
 	// Public Methods
 	// =========================================================================
 
+    /**
+     * @inheritdoc
+     *
+     * @return null
+     */
 	public function init()
 	{
 		$this->setStateKeyPrefix(md5('Yii.Craft\UserSessionService.'.craft()->getId()));
@@ -60,6 +65,7 @@ class Social_UserSessionService extends UserSessionService
 		}
 
 		SocialPlugin::log('Tried to log in unsuccessfully:'.print_r($this->_identity->getUserModel(), true), LogLevel::Error);
+
 		return false;
 	}
 

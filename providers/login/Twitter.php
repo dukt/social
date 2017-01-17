@@ -1,8 +1,8 @@
 <?php
 /**
- * @link      https://dukt.net/craft/oauth/
+ * @link      https://dukt.net/craft/social/
  * @copyright Copyright (c) 2017, Dukt
- * @license   https://dukt.net/craft/oauth/docs/license
+ * @license   https://dukt.net/craft/social/docs/license
  */
 
 namespace Dukt\Social\LoginProviders;
@@ -13,7 +13,7 @@ use Craft\Oauth_TokenModel;
 class Twitter extends BaseProvider
 {
 	/**
-	 * Get the provider name.
+	 * @inheritdoc
 	 *
 	 * @return string
 	 */
@@ -23,7 +23,7 @@ class Twitter extends BaseProvider
 	}
 
 	/**
-	 * Get the provider handle.
+	 * @inheritdoc
 	 *
 	 * @return string
 	 */
@@ -32,6 +32,13 @@ class Twitter extends BaseProvider
 		return 'twitter';
 	}
 
+    /**
+     * @inheritdoc
+     *
+     * @param Oauth_TokenModel $token
+     *
+     * @return array|null
+     */
 	public function getProfile(Oauth_TokenModel $token)
 	{
 		$remoteProfile = $this->getRemoteProfile($token);

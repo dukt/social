@@ -23,19 +23,6 @@ class Social_LoginAccountRecord extends BaseRecord
 	}
 
 	/**
-	 * Defines this model's attributes.
-	 *
-	 * @return array
-	 */
-	public function defineAttributes()
-	{
-		return array(
-			'providerHandle' => array(AttributeType::String, 'required' => true),
-			'socialUid' => array(AttributeType::String, 'required' => true),
-		);
-	}
-
-	/**
 	 * Defines this model's relations to other models.
 	 *
 	 * @return array
@@ -59,4 +46,20 @@ class Social_LoginAccountRecord extends BaseRecord
 			array('columns' => array('providerHandle', 'socialUid'), 'unique' => true)
 		);
 	}
+
+    // Protected Methods
+    // =========================================================================
+
+    /**
+     * Defines this model's attributes.
+     *
+     * @return array
+     */
+    public function defineAttributes()
+    {
+        return array(
+            'providerHandle' => array(AttributeType::String, 'required' => true),
+            'socialUid' => array(AttributeType::String, 'required' => true),
+        );
+    }
 }

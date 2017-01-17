@@ -7,6 +7,8 @@
 
 namespace Craft;
 
+use Dukt\Social\Base\LoginProviderInterface;
+
 class Social_LoginProvidersService extends BaseApplicationComponent
 {
 	// Public Methods
@@ -109,7 +111,7 @@ class Social_LoginProvidersService extends BaseApplicationComponent
 		{
 			$loginProvider = $this->_createLoginProvider($socialLoginProviderType);
 
-			if (!$enabledOnly || $enabledOnly && $loginProvider->getIsEnabled())
+			if (!$enabledOnly || ($enabledOnly && $loginProvider->getIsEnabled()))
 			{
 				$loginProviders[$socialLoginProviderType] = $loginProvider;
 			}
@@ -120,9 +122,10 @@ class Social_LoginProvidersService extends BaseApplicationComponent
 		return $loginProviders;
 	}
 
-
 	/**
 	 * Create OAuth provider
+     *
+     * @return LoginProviderInterface
 	 */
 	private function _createLoginProvider($socialLoginProviderType)
 	{
