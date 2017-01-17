@@ -272,7 +272,7 @@ class SocialPlugin extends BasePlugin
 
         if($this->settings->enableCpLogin)
         {
-            if (craft()->request->isCpRequest() && craft()->request->getSegment(1))
+            if (craft()->request->isCpRequest() && craft()->request->getSegment(1) == 'login')
             {
                 $loginProviders = craft()->social_loginProviders->getLoginProviders();
                 $jsLoginProviders = [];
