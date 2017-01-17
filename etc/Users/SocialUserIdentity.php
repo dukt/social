@@ -1,15 +1,17 @@
 <?php
 /**
  * @link      https://dukt.net/craft/social/
- * @copyright Copyright (c) 2016, Dukt
+ * @copyright Copyright (c) 2017, Dukt
  * @license   https://dukt.net/craft/social/docs/license
  */
 
 namespace Dukt\Social\Etc\Users;
 
+use Craft\Craft;
 use Craft\UserIdentity;
 use Craft\UserModel;
 use Craft\UserStatus;
+use Craft\Oauth_TokenModel;
 
 /**
  * SocialUserIdentity represents the data needed to identify a user with a token and an email
@@ -22,9 +24,9 @@ class SocialUserIdentity extends UserIdentity
 	// =========================================================================
 
 	/**
-	 * @var Social_LoginAccountModel
+	 * @var Oauth_TokenModel|null
 	 */
-	public $account;
+	public $token;
 
 	/**
 	 * @var int
@@ -36,21 +38,28 @@ class SocialUserIdentity extends UserIdentity
 	 */
 	private $_userModel;
 
-	/**
+    // Public Methods
+    // =========================================================================
+
+    /**
 	 * Constructor
 	 *
-	 * @param int $accountId
+	 * @param Oauth_TokenModel $token
 	 *
 	 * @return null
 	 */
-	public function __construct($accountId)
+	public function __construct(Oauth_TokenModel $token)
 	{
-		$this->account = \Craft\craft()->social_loginAccounts->getLoginAccountById($accountId);
+	    $this->token = $token;
 
-		if ($this->account)
-		{
-			$this->_userModel = $this->account->getUser();
-		}
+        $socialLoginProvider = Craft::app()->social_loginProviders->getLoginProvider($this->token->providerHandle);
+        $data = $socialLoginProvider->getProfile($this->token);
+        $account = Craft::app()->social_loginAccounts->getLoginAccountByUid($socialLoginProvider->getHandle(), $data['id']);
+
+        if ($account)
+        {
+            $this->_userModel = $account->getUser();
+        }
 	}
 
 	/**
@@ -60,23 +69,14 @@ class SocialUserIdentity extends UserIdentity
 	 */
 	public function authenticate()
 	{
-		if ($this->account)
-		{
-			$user = $this->account->getUser();
-
-			if ($user)
-			{
-				return $this->_processUserStatus($user);
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else
-		{
-			return false;
-		}
+        if ($this->_userModel)
+        {
+            return $this->_processUserStatus($this->_userModel);
+        }
+        else
+        {
+            return false;
+        }
 	}
 
 	/**

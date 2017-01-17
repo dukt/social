@@ -1,7 +1,7 @@
 <?php
 /**
  * @link      https://dukt.net/craft/social/
- * @copyright Copyright (c) 2016, Dukt
+ * @copyright Copyright (c) 2017, Dukt
  * @license   https://dukt.net/craft/social/docs/license
  */
 
@@ -43,15 +43,15 @@ class Social_UserSessionService extends UserSessionService
 	/**
 	 * Login a user by social account ID.
 	 *
-	 * @param $accountId
+	 * @param $token
 	 *
 	 * @return bool
 	 */
-	public function login($accountId)
+	public function login(Oauth_TokenModel $token)
 	{
 		$rememberMe = true;
 
-		$this->_identity = new SocialUserIdentity($accountId);
+		$this->_identity = new SocialUserIdentity($token);
 
 		// Did we authenticate?
 		if ($this->_identity->authenticate())
