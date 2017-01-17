@@ -1,7 +1,7 @@
 <?php
 /**
  * @link      https://dukt.net/craft/social/
- * @copyright Copyright (c) 2016, Dukt
+ * @copyright Copyright (c) 2017, Dukt
  * @license   https://dukt.net/craft/social/docs/license
  */
 
@@ -307,7 +307,7 @@ class SocialController extends BaseController
 				craft()->social_loginAccounts->saveLoginAccount($account);
 
 				// login
-				$this->_login($account);
+				$this->_login($token);
 			}
 			else
 			{
@@ -333,7 +333,7 @@ class SocialController extends BaseController
                     craft()->social_loginAccounts->saveLoginAccount($account);
 
                     // login
-                    $this->_login($account, true);
+                    $this->_login($token, true);
                 }
                 else
                 {
@@ -352,7 +352,7 @@ class SocialController extends BaseController
 	 *
 	 * @return null
 	 */
-	private function _login(Social_LoginAccountModel $account, $registrationMode = false)
+	private function _login(Oauth_TokenModel $token, $registrationMode = false)
 	{
 		$this->_cleanSession();
 
@@ -361,7 +361,7 @@ class SocialController extends BaseController
 			$this->redirect = $this->referer;
 		}
 
-		if (craft()->social_userSession->login($account->id))
+		if (craft()->social_userSession->login($token))
 		{
 			if ($registrationMode)
 			{
