@@ -12,11 +12,13 @@ Social Changelog
 - Users with access to the CP can now connect and disconnect login accounts from their account page
 - Added a login accounts user table attribute
 - Renamed `All login providers` to `All login accounts`
+- Renamed `SocialTrait` to `RequirementsTrait`
+- Renamed `ISocial_Provider` to `LoginProviderInterface`
 
 ## 1.2.4 - 2017-01-13
 
 ### Added
-- Added `RequirementsTrait`
+- Added `SocialTrait`
 - Added `Social_InstallController`
 - Added `docsUrl` to settings pages
 
