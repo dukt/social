@@ -5,10 +5,12 @@
  * @license   https://dukt.net/craft/social/docs/license
  */
 
-namespace Craft;
+namespace dukt\social;
 
-class SocialPlugin extends BasePlugin
+class Plugin extends \craft\base\Plugin
 {
+    public $hasSettings = true;
+
 	// Public Methods
 	// =========================================================================
 
@@ -19,11 +21,11 @@ class SocialPlugin extends BasePlugin
 	 */
 	public function init()
 	{
-		require_once(CRAFT_PLUGINS_PATH.'social/base/LoginProviderInterface.php');
+/*		require_once(CRAFT_PLUGINS_PATH.'social/base/LoginProviderInterface.php');
 		require_once(CRAFT_PLUGINS_PATH.'social/providers/login/BaseProvider.php');
 
         $this->initEventListeners();
-        $this->initTemplateHooks();
+        $this->initTemplateHooks();*/
 
         parent::init();
     }
@@ -35,9 +37,9 @@ class SocialPlugin extends BasePlugin
 	 */
 	public function getSocialLoginProviders()
 	{
-		require_once(CRAFT_PLUGINS_PATH.'social/providers/login/Facebook.php');
+/*		require_once(CRAFT_PLUGINS_PATH.'social/providers/login/Facebook.php');
 		require_once(CRAFT_PLUGINS_PATH.'social/providers/login/Google.php');
-		require_once(CRAFT_PLUGINS_PATH.'social/providers/login/Twitter.php');
+		require_once(CRAFT_PLUGINS_PATH.'social/providers/login/Twitter.php');*/
 
 		return [
 			'Dukt\Social\LoginProviders\Facebook',
@@ -45,6 +47,15 @@ class SocialPlugin extends BasePlugin
 			'Dukt\Social\LoginProviders\Twitter',
 		];
 	}
+
+    public function getSettingsResponse()
+    {
+        $url = \craft\helpers\UrlHelper::cpUrl('settings/plugins/social/settings/loginproviders');
+
+        \Craft::$app->controller->redirect($url);
+
+        return '';
+    }
 
 	/**
 	 * Get Required Dependencies

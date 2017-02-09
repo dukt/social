@@ -1,0 +1,25 @@
+{
+  "name": "dukt/craft-social",
+  "description": "Let your visitors log into Craft with web services like Facebook, Google, Twitter…",
+  "type": "craft-plugin",
+  "extra": {
+    "name": "Social",
+    "handle": "social",
+    "developer": "Dukt",
+    "developerUrl": "https://dukt.net/",
+    "documentationUrl": "https://dukt.net/craft/social/docs",
+    "class": "dukt\\social\\Plugin",
+    "version": "2.0.0",
+    "schemaVersion": "1.0.2",
+    "changelogUrl": "https://dukt.net/craft/social/updates.json"
+  },
+  "require": {
+    "composer/installers": "~1.0",
+    "dukt/craft-oauth": "3.x-dev"
+  },
+  "autoload": {
+    "psr-4": {
+      "dukt\\social\\": "src/"
+    }
+  }
+}
