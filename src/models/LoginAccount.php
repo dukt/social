@@ -73,14 +73,19 @@ class LoginAccount extends Model
 	 */
 	public function getThumbUrl($size = 100)
 	{
-		$url = $this->getUser()->getPhotoUrl($size);
+	    $asset = $this->getUser()->getPhoto();
 
-		if (!$url)
-		{
-			$url = UrlHelper::getResourceUrl('defaultuserphoto');
-		}
+	    if($asset)
+        {
+            $url = $asset->getThumbUrl($size);
 
-		return $url;
+            if (!$url)
+            {
+                $url = UrlHelper::getResourceUrl('defaultuserphoto');
+            }
+
+            return $url;
+        }
 	}
 
 	/**

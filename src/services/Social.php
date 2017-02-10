@@ -11,6 +11,7 @@ use Craft;
 use yii\base\Component;
 use dukt\social\base\RequirementsTrait;
 use craft\helpers\UrlHelper;
+use craft\elements\User;
 
 class Social extends Component
 {
@@ -90,11 +91,11 @@ class Social extends Component
 	 * Save remote photo
 	 *
 	 * @param string $photoUrl
-	 * @param UserModel $user
+	 * @param User $user
 	 *
 	 * @return bool
 	 */
-	public function saveRemotePhoto($photoUrl, UserModel $user)
+	public function saveRemotePhoto($photoUrl, User $user)
 	{
 		$filename = 'photo';
 

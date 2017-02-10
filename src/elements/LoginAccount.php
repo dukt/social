@@ -45,6 +45,23 @@ class LoginAccount extends Element implements IdentityInterface
         }
     }
 
+    public function getThumbUrl(int $size = 100)
+    {
+        $asset = $this->getUser()->getPhoto();
+
+        if($asset)
+        {
+            $url = $asset->getThumbUrl($size);
+
+            if (!$url)
+            {
+                $url = UrlHelper::getResourceUrl('defaultuserphoto');
+            }
+
+            return $url;
+        }
+    }
+
     /**
      * Returns the element's CP edit URL.
      *
