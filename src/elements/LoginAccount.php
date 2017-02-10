@@ -95,6 +95,7 @@ class LoginAccount extends Element implements IdentityInterface
 			array(
 			    'key' => '*',
 				'label' => Craft::t('app', 'All login accounts'),
+                'criteria' => [],
 				'hasThumbs' => false
 			)
 		);
@@ -510,4 +511,18 @@ class LoginAccount extends Element implements IdentityInterface
     public function validateAuthKey($authKey)
     {
         // TODO: Implement validateAuthKey() method.
-}}
+    }
+
+    public function __toString()
+    {
+        return $this->providerHandle.":".$this->socialUid;
+    }
+
+    protected static function defineTableAttributes(): array
+    {
+        return [
+            'providerHandle' => Craft::t('social', 'Provider Handle'),
+            'socialUid' => Craft::t('social', 'Social UID'),
+        ];
+    }
+}
