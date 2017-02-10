@@ -402,6 +402,8 @@ class Plugin extends \craft\base\Plugin
 
                     foreach($context['loginAccounts'] as $loginAccount)
                     {
+                        $handle = $loginProvider->getHandle();
+
                         if($loginProvider->getHandle() == $loginAccount->providerHandle)
                         {
                             $providerAvailable = false;

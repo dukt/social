@@ -67,7 +67,7 @@ class LoginAccounts extends Component
      */
     public function getLoginAccountByLoginProvider($providerHandle)
     {
-        $currentUser = Craft::$app->getSession()->getUser();
+        $currentUser = Craft::$app->getUser()->getIdentity();
 
         // Check if there is a current user or not
         if (!$currentUser)
@@ -244,14 +244,12 @@ class LoginAccounts extends Component
             $loginAccounts = [$loginAccounts];
         }
 
-        $loginAccountIds = [];
-
         foreach ($loginAccounts as $loginAccount)
         {
-            $loginAccountIds[] = $loginAccount->id;
+            Craft::$app->elements->deleteElementById($loginAccount->id);
         }
 
-        return Craft::$app->elements->deleteElementById($loginAccountIds);
+        return true;
     }
 
     /**

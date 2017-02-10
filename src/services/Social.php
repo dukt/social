@@ -67,7 +67,7 @@ class Social extends Component
 	 */
 	public function getLoginAccountConnectUrl($handle)
 	{
-		return UrlHelper::actionUrl('social/social/connectLoginAccount', [
+		return UrlHelper::actionUrl('social/social/connect-login-account', [
 			'provider' => $handle
 		]);
 	}
@@ -81,7 +81,7 @@ class Social extends Component
 	 */
 	public function getLoginAccountDisconnectUrl($handle)
 	{
-		return UrlHelper::actionUrl('social/social/disconnectLoginAccount', [
+		return UrlHelper::actionUrl('social/social/disconnect-login-account', [
 			'provider' => $handle
 		]);
 	}

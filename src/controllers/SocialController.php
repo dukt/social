@@ -116,7 +116,7 @@ class SocialController extends Controller
 
 				if($response['success'])
 				{
-					$this->_connectUserFromToken($response['token']);
+					return $this->_connectUserFromToken($response['token']);
 				}
 				else
 				{
@@ -238,11 +238,11 @@ class SocialController extends Controller
 
 		if ($craftUser)
 		{
-			$this->_linkAccountFromToken($token, $craftUser);
+			return $this->_linkAccountFromToken($token, $craftUser);
 		}
 		else
 		{
-			$this->_registerOrLoginFromToken($token);
+			return $this->_registerOrLoginFromToken($token);
 		}
 	}
 
@@ -330,7 +330,7 @@ class SocialController extends Controller
 				\dukt\social\Plugin::getInstance()->social_loginAccounts->saveLoginAccount($account);
 
 				// login
-				$this->_login($token);
+				return $this->_login($token);
 			}
 			else
 			{
@@ -352,7 +352,7 @@ class SocialController extends Controller
 				\dukt\social\Plugin::getInstance()->social_loginAccounts->saveLoginAccount($account);
 
 				// Login
-				$this->_login($token, true);
+				return $this->_login($token, true);
 			}
 			else
 			{
@@ -397,7 +397,6 @@ class SocialController extends Controller
 
 			return $this->redirect($this->referer);
 		}
-
 	}
 
 	/**

@@ -14,6 +14,8 @@ use dukt\social\elements\db\LoginAccountQuery;
 
 class LoginAccount extends Element
 {
+    private $_user;
+
     public $userId;
     public $providerHandle;
     public $socialUid;
@@ -34,6 +36,19 @@ class LoginAccount extends Element
         $lastName = trim($this->lastName);
 
         return $firstName.($firstName && $lastName ? ' ' : '').$lastName;
+    }
+
+    public function getUser()
+    {
+        if (!isset($this->_user))
+        {
+            if ($this->userId)
+            {
+                $this->_user = Craft::$app->users->getUserById($this->userId);
+            }
+        }
+
+        return $this->_user;
     }
 
 	/**
@@ -396,31 +411,6 @@ class LoginAccount extends Element
      */
     public function afterSave(bool $isNew)
     {
-        // Get the login account record
-        if (!$isNew) {
-            $record = LoginAccountRecord::findOne($this->id);
-
-            if (!$record) {
-                throw new Exception('Invalid login account ID: '.$this->id);
-            }
-        } else {
-            $record = new LoginAccountRecord();
-            $record->id = $this->id;
-        }
-
-        $record->userId = $this->userId;
-        $record->providerHandle = $this->providerHandle;
-        $record->socialUid = $this->socialUid;
-        $record->username = $this->username;
-        $record->email = $this->email;
-        $record->firstName = $this->firstName;
-        $record->lastName = $this->lastName;
-        $record->lastLoginDate = $this->lastLoginDate;
-        $record->save(false);
-
-        parent::afterSave($isNew);
-
-
         if ($isNew) {
             Craft::$app->db->createCommand()
                 ->insert('{{%social_login_accounts}}', [
@@ -428,11 +418,11 @@ class LoginAccount extends Element
                     'userId' => $this->userId,
                     'providerHandle' => $this->providerHandle,
                     'socialUid' => $this->socialUid,
-                    'username' => $this->username,
+                    /*'username' => $this->username,
                     'email' => $this->email,
                     'firstName' => $this->firstName,
                     'lastName' => $this->lastName,
-                    'lastLoginDate' => $this->lastLoginDate,
+                    'lastLoginDate' => $this->lastLoginDate,*/
                 ])
                 ->execute();
         } else {
@@ -441,11 +431,11 @@ class LoginAccount extends Element
                     'userId' => $this->userId,
                     'providerHandle' => $this->providerHandle,
                     'socialUid' => $this->socialUid,
-                    'username' => $this->username,
+                    /*'username' => $this->username,
                     'email' => $this->email,
                     'firstName' => $this->firstName,
                     'lastName' => $this->lastName,
-                    'lastLoginDate' => $this->lastLoginDate,
+                    'lastLoginDate' => $this->lastLoginDate,*/
                 ], ['id' => $this->id])
                 ->execute();
         }

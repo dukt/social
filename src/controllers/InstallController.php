@@ -25,13 +25,13 @@ class InstallController extends Controller
 
         if (count($missingDependencies) > 0)
         {
-            $this->renderTemplate('social/_special/install/dependencies', [
+            return $this->renderTemplate('social/_special/install/dependencies', [
                 'pluginDependencies' => $missingDependencies
             ]);
         }
         else
         {
-            $this->redirect('social/settings');
+            return $this->redirect('social/settings');
         }
     }
 }

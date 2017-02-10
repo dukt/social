@@ -3,7 +3,7 @@
 
         <h2>{{ "Login Accounts"|t('app') }}</h2>
 
-        <div id="nologinaccounts"{% if loginAccounts|length == 0 %} class="hidden"{% endif %}>
+        <div id="nologinaccounts"{% if loginAccounts|length > 0 or loginProviders|length > 0 %} class="hidden"{% endif %}>
             <p class="light">{{ "No login accounts."|t('app') }}</p>
         </div>
 
