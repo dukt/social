@@ -162,7 +162,8 @@ class SocialController extends Controller
 	 */
 	public function actionLogout()
 	{
-		Craft::$app->getSession()->logout(false);
+		// Craft::$app->getSession()->logout(false);
+        Craft::$app->getUser()->logout(false);
 
 		$redirect = Craft::$app->request->getParam('redirect');
 
@@ -275,7 +276,8 @@ class SocialController extends Controller
 		{
 			if ($craftUser->id == $account->userId)
 			{
-				\dukt\social\Plugin::getInstance()->social_loginAccounts->saveLoginAccount($account);
+				// \dukt\social\Plugin::getInstance()->social_loginAccounts->saveLoginAccount($account);
+                Craft::$app->elements->saveElement($account);
 
 				Craft::$app->getSession()->setNotice(Craft::t('app', 'Login account added.'));
 
@@ -327,10 +329,11 @@ class SocialController extends Controller
 			if ($craftUser)
 			{
 				// save user
-				\dukt\social\Plugin::getInstance()->social_loginAccounts->saveLoginAccount($account);
+				// \dukt\social\Plugin::getInstance()->social_loginAccounts->saveLoginAccount($account);
+                Craft::$app->elements->saveElement($account);
 
 				// login
-				return $this->_login($token);
+				return $this->_login($craftUser, $account, $token);
 			}
 			else
 			{
@@ -349,10 +352,12 @@ class SocialController extends Controller
 				$account->userId = $craftUser->id;
 				$account->providerHandle = $socialLoginProvider->getHandle();
 				$account->socialUid = $socialUid;
-				\dukt\social\Plugin::getInstance()->social_loginAccounts->saveLoginAccount($account);
+				// \dukt\social\Plugin::getInstance()->social_loginAccounts->saveLoginAccount($account);
+
+                Craft::$app->elements->saveElement($account);
 
 				// Login
-				return $this->_login($token, true);
+				return $this->_login($craftUser, $account, $token, true);
 			}
 			else
 			{
@@ -366,7 +371,7 @@ class SocialController extends Controller
 	 *
 	 * @return null
 	 */
-	private function _login(Token $token, $registrationMode = false)
+	private function _login(\craft\elements\User $craftUser, LoginAccount $account, Token $token, $registrationMode = false)
 	{
 		$this->_cleanSession();
 
@@ -375,7 +380,12 @@ class SocialController extends Controller
 			$this->redirect = $this->referer;
 		}
 
-		if (\dukt\social\Plugin::getInstance()->social_userSession->login($token))
+		if(!$account->authenticate($token))
+        {
+            throw new Exception("Coudln’t authenticate account.");
+        }
+
+		if (Craft::$app->getUser()->login($craftUser))
 		{
 			if ($registrationMode)
 			{

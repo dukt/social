@@ -9,6 +9,9 @@ namespace dukt\social\services;
 
 use Craft;
 use yii\base\Component;
+use craft\events\ElementEvent;
+use craft\elements\User as UserModel;
+use dukt\social\elements\LoginAccount;
 
 class LoginAccounts extends Component
 {
@@ -51,7 +54,7 @@ class LoginAccounts extends Component
      *
      * @param int $id
      *
-     * @return Social_LoginAccountModel|null
+     * @return LoginAccount|null
      */
     public function getLoginAccountById($id)
     {
@@ -63,7 +66,7 @@ class LoginAccounts extends Component
      *
      * @param string $providerHandle
      *
-     * @return Social_LoginAccountModel|null
+     * @return LoginAccount|null
      */
     public function getLoginAccountByLoginProvider($providerHandle)
     {
@@ -91,7 +94,7 @@ class LoginAccounts extends Component
      * @param string $providerHandle
      * @param string $socialUid
      *
-     * @return Social_LoginAccountModel
+     * @return LoginAccount
      */
     public function getLoginAccountByUid($providerHandle, $socialUid)
     {
@@ -108,12 +111,12 @@ class LoginAccounts extends Component
     /**
      * Save Account
      *
-     * @param Social_LoginAccountModel $account
+     * @param LoginAccount $account
      *
      * @throws Exception
      * @return bool
      */
-    public function saveLoginAccount(Social_LoginAccountModel $account)
+    public function saveLoginAccount(LoginAccount $account)
     {
         $isNewAccount = !$account->id;
 
@@ -346,15 +349,20 @@ class LoginAccounts extends Component
             throw new Exception("Social registration is disabled.");
         }
 
+
         // Fire an 'onBeforeRegister' event
-        $event = new Event($this, [
+/*        $event = new Event($this, [
             'account' => &$attributes,
         ]);
 
-        $this->onBeforeRegister($event);
+        $this->onBeforeRegister($event);*/
 
+/*        $this->trigger('beforeRegister', new ElementEvent([
+            'account' => &$attributes,
+        ]));*/
+/*
         if ($event->performAction)
-        {
+        {*/
             $variables = $attributes;
 
             $providerConfig = Craft::$app->config->get($providerHandle, 'social');
@@ -383,7 +391,7 @@ class LoginAccounts extends Component
                             }
                             catch(\Exception $e)
                             {
-                                SocialPlugin::log('Could not map:'.print_r([$attribute, $template, $variables, $e->getMessage()], true), LogLevel::Warning);
+                                // SocialPlugin::log('Could not map:'.print_r([$attribute, $template, $variables, $e->getMessage()], true), LogLevel::Warning);
                             }
                         }
                     }
@@ -400,7 +408,7 @@ class LoginAccounts extends Component
                             }
                             catch(\Exception $e)
                             {
-                                SocialPlugin::log('Could not map:'.print_r([$template, $variables, $e->getMessage()], true), LogLevel::Warning);
+                                // SocialPlugin::log('Could not map:'.print_r([$template, $variables, $e->getMessage()], true), LogLevel::Warning);
                             }
                         }
                     }
@@ -425,9 +433,9 @@ class LoginAccounts extends Component
 
             // save user
 
-            if (!Craft::$app->users->saveUser($newUser))
+            if (!Craft::$app->elements->saveElement($newUser))
             {
-                SocialPlugin::log('There was a problem creating the user:'.print_r($newUser->getErrors(), true), LogLevel::Error);
+                // SocialPlugin::log('There was a problem creating the user:'.print_r($newUser->getErrors(), true), LogLevel::Error);
                 throw new Exception("Craft user couldn’t be created.");
             }
 
@@ -445,7 +453,7 @@ class LoginAccounts extends Component
                     }
                     catch(\Exception $e)
                     {
-                        SocialPlugin::log('Could not map:'.print_r(['photoUrl', $userMapping['photoUrl'], $variables, $e->getMessage()], true), LogLevel::Warning);
+                        // SocialPlugin::log('Could not map:'.print_r(['photoUrl', $userMapping['photoUrl'], $variables, $e->getMessage()], true), LogLevel::Warning);
                     }
                 }
                 else
@@ -468,11 +476,11 @@ class LoginAccounts extends Component
                 Craft::$app->userGroups->assignUserToGroups($newUser->id, [$settings['defaultGroup']]);
             }
 
-            Craft::$app->users->saveUser($newUser);
+            Craft::$app->elements->saveElement($newUser);
 
             return $newUser;
-        }
+/*        }
 
-        return null;
+        return null;*/
     }
 }

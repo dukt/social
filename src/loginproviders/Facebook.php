@@ -7,8 +7,9 @@
 
 namespace dukt\social\loginproviders;
 
-use Guzzle\Http\Client;
+use GuzzleHttp\Client;
 use dukt\oauth\models\Token;
+use GuzzleHttp\HandlerStack;
 
 class Facebook extends BaseProvider
 {
@@ -84,7 +85,7 @@ class Facebook extends BaseProvider
      */
 	public function getRemoteProfile(Token $token)
 	{
-		$oauthProvider = $this->getOauthProvider();
+/*		$oauthProvider = $this->getOauthProvider();
 
 		$client = new Client('https://graph.facebook.com/v2.8');
 		$client->addSubscriber($oauthProvider->getSubscriber($token));
@@ -101,6 +102,50 @@ class Facebook extends BaseProvider
 		$response = $request->send();
 		$json = $response->json();
 
-		return $json;
+		return $json;*/
+
+        $client = $this->getClient($token);
+
+        $fields = implode(',', [
+            'id', 'name', 'first_name', 'last_name',
+            'email', 'hometown', 'picture.type(large){url,is_silhouette}',
+            'cover{source}', 'gender', 'locale', 'link',
+            'location',
+        ]);
+
+        $options = [
+            'query' => [
+                'fields' => $fields
+            ]
+        ];
+
+        $response = $client->request('GET', '/me', $options);
+
+        $jsonResponse = json_decode($response->getBody(), true);
+
+        return $jsonResponse;
 	}
+
+    /**
+     * Get the authenticated client
+     *
+     * @return Client
+     */
+    private function getClient(Token $token)
+    {
+        $options = [
+            'base_uri' => 'https://graph.facebook.com/v2.8',
+        ];
+
+        if($token)
+        {
+            $provider = \dukt\oauth\Plugin::getInstance()->oauth->getProvider('facebook');
+
+            $stack = $provider->getSubscriber($token);
+
+            $options['handler'] = $stack;
+        }
+
+        return new Client($options);
+    }
 }
