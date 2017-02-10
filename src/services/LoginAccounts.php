@@ -12,6 +12,7 @@ use yii\base\Component;
 use craft\events\ElementEvent;
 use craft\elements\User as UserModel;
 use dukt\social\elements\LoginAccount;
+use Exception;
 
 class LoginAccounts extends Component
 {
@@ -25,12 +26,7 @@ class LoginAccounts extends Component
      */
     public function getLoginAccounts()
     {
-        /*$criteria = Craft::$app->elements->getCriteria('Social_LoginAccount');
-        $loginAccounts = $criteria->find();
-        */
-        $loginAccounts = \dukt\social\elements\LoginAccount::find()->all();
-
-        return $loginAccounts;
+        return LoginAccount::find()->all();
     }
 
     /**
@@ -40,13 +36,7 @@ class LoginAccounts extends Component
      */
     public function getLoginAccountsByUserId($userId)
     {
-/*        $criteria = Craft::$app->elements->getCriteria('Social_LoginAccount');
-        $criteria->userId = $userId;
-        $loginAccounts = $criteria->find();*/
-
-        $loginAccounts = \dukt\social\elements\LoginAccount::find()->userId($userId)->all();
-
-        return $loginAccounts;
+        return LoginAccount::find()->userId($userId)->all();
     }
 
     /**
@@ -78,14 +68,7 @@ class LoginAccounts extends Component
             return false;
         }
 
-/*        $criteria = Craft::$app->elements->getCriteria('Social_LoginAccount');
-        $criteria->userId = $currentUser->id;
-        $criteria->providerHandle = $providerHandle;
-        $loginAccount = $criteria->first();*/
-
-        $loginAccount = \dukt\social\elements\LoginAccount::find()->userId($currentUser->id)->providerHandle($providerHandle)->first();
-
-        return $loginAccount;
+        return LoginAccount::find()->userId($currentUser->id)->providerHandle($providerHandle)->first();
     }
 
     /**
@@ -98,14 +81,7 @@ class LoginAccounts extends Component
      */
     public function getLoginAccountByUid($providerHandle, $socialUid)
     {
-/*        $criteria = Craft::$app->elements->getCriteria('Social_LoginAccount');
-        $criteria->providerHandle = $providerHandle;
-        $criteria->socialUid = $socialUid;
-        $loginAccount = $criteria->first();*/
-
-        $loginAccount = \dukt\social\elements\LoginAccount::find()->providerHandle($providerHandle)->socialUid($socialUid)->first();
-
-        return $loginAccount;
+        return LoginAccount::find()->providerHandle($providerHandle)->socialUid($socialUid)->first();
     }
 
     /**
