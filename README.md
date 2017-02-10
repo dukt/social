@@ -5,8 +5,8 @@ Let your visitors log into Craft CMS with web services like Facebook, Google, Tw
 
 ## Requirements
 
-- [Craft 2.6+](https://craftcms.com/)
-- [Craft OAuth 2.0+](https://dukt.net/craft/oauth)
+- [Craft 3.0+](https://craftcms.com/)
+- [OAuth 3.0+ plugin](https://dukt.net/craft/oauth)
 
 ## Installation
 
