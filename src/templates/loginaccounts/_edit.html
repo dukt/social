@@ -1,8 +1,6 @@
 {% extends "_layouts/cp" %}
 {% import "_includes/forms" as forms %}
 
-{% registerCssFile "social/css/social.css" %}
-
 {% set title = user.email  %}
 
 {% set crumbs = [
@@ -72,7 +70,7 @@
     var adminTable = new Craft.AdminTable({
         tableSelector: '#loginAccounts',
         noObjectsSelector: '#nologinaccounts',
-        deleteAction: 'social/loginAccounts/deleteLoginAccount',
+        deleteAction: 'social/login-accounts/delete-login-account',
         confirmDeleteMessage: '{{ "Are you sure you want to unlink “{name}” login account?"|t('app') }}',
     });
     {% endincludejs %}

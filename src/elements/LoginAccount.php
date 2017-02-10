@@ -12,6 +12,7 @@ use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
 use dukt\social\elements\db\LoginAccountQuery;
 use yii\web\IdentityInterface;
+use craft\helpers\UrlHelper;
 
 class LoginAccount extends Element implements IdentityInterface
 {
@@ -25,6 +26,33 @@ class LoginAccount extends Element implements IdentityInterface
     public $firstName;
     public $lastName;
     public $lastLoginDate;
+
+    /**
+     * Use the login account's email or username as its string representation.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        if (Craft::$app->config->get('useEmailAsUsername'))
+        {
+            return (string) $this->email;
+        }
+        else
+        {
+            return (string) $this->username;
+        }
+    }
+
+    /**
+     * Returns the element's CP edit URL.
+     *
+     * @return string|false
+     */
+    public function getCpEditUrl()
+    {
+        return UrlHelper::cpUrl('social/loginaccounts/'.$this->userId);
+    }
 
     public static function find(): ElementQueryInterface
     {
@@ -77,7 +105,7 @@ class LoginAccount extends Element implements IdentityInterface
 	 */
 	public function getIndexHtml($criteria, $disabledElementIds, $viewState, $sourceKey, $context, $includeContainer, $showCheckboxes)
 	{
-		craft()->templates->includeJsResource('social/js/social.js');
+		Craft::$app->templates->includeJsResource('social/js/social.js');
 
 		return parent::getIndexHtml($criteria, $disabledElementIds, $viewState, $sourceKey, $context, $includeContainer, $showCheckboxes);
 	}
@@ -121,7 +149,7 @@ class LoginAccount extends Element implements IdentityInterface
 		}
 
 		// Allow plugins to modify the sources
-		/*craft()->plugins->call('modifyLoginAccountSources', array(&$sources, $context));*/
+		/*Craft::$app->plugins->call('modifyLoginAccountSources', array(&$sources, $context));*/
 
 		return $sources;
 	}
@@ -137,7 +165,7 @@ class LoginAccount extends Element implements IdentityInterface
 	{
 		$actions = array();
 
-		$deleteAction = craft()->elements->getAction('Delete');
+		$deleteAction = Craft::$app->elements->getAction('Delete');
 		$deleteAction->setParams(array(
 			'confirmationMessage' => Craft::t('app', 'Are you sure you want to delete the selected login accounts?'),
 			'successMessage'      => Craft::t('app', 'Login accounts deleted.'),
@@ -145,7 +173,7 @@ class LoginAccount extends Element implements IdentityInterface
 		$actions[] = $deleteAction;
 
 		// Allow plugins to add additional actions
-		$allPluginActions = craft()->plugins->call('addLoginAccountActions', array($source), true);
+		$allPluginActions = Craft::$app->plugins->call('addLoginAccountActions', array($source), true);
 
 		foreach ($allPluginActions as $pluginActions)
 		{
@@ -172,7 +200,7 @@ class LoginAccount extends Element implements IdentityInterface
 	 */
 	public function defineSortableAttributes()
 	{
-		if (craft()->config->get('useEmailAsUsername'))
+		if (Craft::$app->config->get('useEmailAsUsername'))
 		{
 			// Start with Email and don't even give Username as an option
 			$attributes = array(
@@ -199,7 +227,7 @@ class LoginAccount extends Element implements IdentityInterface
 		$attributes['dateUpdated']   = Craft::t('app', 'Date Updated');
 
 		// Allow plugins to modify the attributes
-		craft()->plugins->call('modifyLoginAccountSortableAttributes', array(&$attributes));
+		Craft::$app->plugins->call('modifyLoginAccountSortableAttributes', array(&$attributes));
 
 		return $attributes;
 	}
@@ -209,9 +237,9 @@ class LoginAccount extends Element implements IdentityInterface
 	 *
 	 * @return array
 	 */
-	public function defineAvailableTableAttributes()
+	/*public function defineAvailableTableAttributes()
 	{
-		if (craft()->config->get('useEmailAsUsername'))
+		if (Craft::$app->config->get('useEmailAsUsername'))
 		{
 			// Start with Email and don't even give Username as an option
 			$attributes = array(
@@ -239,7 +267,7 @@ class LoginAccount extends Element implements IdentityInterface
 		$attributes['dateUpdated']   = array('label' => Craft::t('app', 'Date Updated'));
 
 		// Allow plugins to modify the attributes
-		$pluginAttributes = craft()->plugins->call('defineAdditionalLoginAccountTableAttributes', array(), true);
+		$pluginAttributes = Craft::$app->plugins->call('defineAdditionalLoginAccountTableAttributes', array(), true);
 
 		foreach ($pluginAttributes as $thisPluginAttributes)
 		{
@@ -247,19 +275,12 @@ class LoginAccount extends Element implements IdentityInterface
 		}
 
 		return $attributes;
-	}
+	}*/
 
-	/**
-	 * Returns the list of table attribute keys that should be shown by default.
-	 *
-	 * @param string|null $source
-	 *
-	 * @return array
-	 */
-	public function getDefaultTableAttributes($source = null)
-	{
-		return array('username', 'fullName', 'providerHandle', 'socialUid', 'lastLoginDate');
-	}
+/*    protected static function defineDefaultTableAttributes(string $source): array
+    {
+        return ['username', 'fullName', 'providerHandle', 'socialUid', 'lastLoginDate'];
+    }*/
 
 	/**
 	 * Returns the HTML that should be shown for a given element’s attribute in Table View.
@@ -272,7 +293,7 @@ class LoginAccount extends Element implements IdentityInterface
 	public function tableAttributeHtml(string $attribute): string
 	{
 		// First give plugins a chance to set this
-/*		$pluginAttributeHtml = craft()->plugins->callFirst('getLoginAccountTableAttributeHtml', array($element, $attribute), true);
+/*		$pluginAttributeHtml = Craft::$app->plugins->callFirst('getLoginAccountTableAttributeHtml', array($element, $attribute), true);
 
 		if ($pluginAttributeHtml !== null)
 		{
@@ -513,16 +534,58 @@ class LoginAccount extends Element implements IdentityInterface
         // TODO: Implement validateAuthKey() method.
     }
 
-    public function __toString()
-    {
-        return $this->providerHandle.":".$this->socialUid;
-    }
-
     protected static function defineTableAttributes(): array
     {
-        return [
-            'providerHandle' => Craft::t('social', 'Provider Handle'),
-            'socialUid' => Craft::t('social', 'Social UID'),
-        ];
+        if (Craft::$app->config->get('useEmailAsUsername'))
+        {
+            // Start with Email and don't even give Username as an option
+            $attributes = array(
+                'email' => array('label' => Craft::t('app', 'Email')),
+            );
+        }
+        else
+        {
+            $attributes = array(
+                'username' => array('label' => Craft::t('app', 'Username')),
+                'email'    => array('label' => Craft::t('app', 'Email')),
+            );
+        }
+
+        $attributes['fullName'] = array('label' => Craft::t('app', 'Full Name'));
+        $attributes['firstName'] = array('label' => Craft::t('app', 'First Name'));
+        $attributes['lastName'] = array('label' => Craft::t('app', 'Last Name'));
+
+        $attributes['providerHandle'] = array('label' => Craft::t('app', 'Login Provider'));
+        $attributes['socialUid']     = array('label' => Craft::t('app', 'Social User ID'));
+
+        $attributes['userId']        = array('label' => Craft::t('app', 'User ID'));
+        $attributes['lastLoginDate'] = array('label' => Craft::t('app', 'Last Login'));
+        $attributes['dateCreated']   = array('label' => Craft::t('app', 'Date Created'));
+        $attributes['dateUpdated']   = array('label' => Craft::t('app', 'Date Updated'));
+
+
+        // Allow plugins to modify the attributes
+/*        $pluginAttributes = Craft::$app->plugins->call('defineAdditionalLoginAccountTableAttributes', array(), true);
+
+        foreach ($pluginAttributes as $thisPluginAttributes)
+        {
+            $attributes = array_merge($attributes, $thisPluginAttributes);
+        }*/
+
+        return $attributes;
+    }
+
+    /**
+     * Returns the list of table attribute keys that should be shown by default.
+     *
+     * @param string $source The selected source’s key
+     *
+     * @return string[] The table attributes.
+     * @see defaultTableAttributes()
+     * @see tableAttributes()
+     */
+    protected static function defineDefaultTableAttributes(string $source): array
+    {
+        return ['username', 'fullName', 'providerHandle', 'socialUid', 'lastLoginDate'];
     }
 }

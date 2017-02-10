@@ -48,7 +48,7 @@ class LoginAccounts extends Component
      */
     public function getLoginAccountById($id)
     {
-        return Craft::$app->elements->getElementById($id, 'Social_LoginAccount');
+        return Craft::$app->elements->getElementById($id);
     }
 
     /**
@@ -225,7 +225,7 @@ class LoginAccounts extends Component
 
         foreach ($loginAccounts as $loginAccount)
         {
-            Craft::$app->elements->deleteElementById($loginAccount->id);
+            Craft::$app->elements->deleteElement($loginAccount);
         }
 
         return true;

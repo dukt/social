@@ -48,31 +48,26 @@ class LoginAccountsController extends Controller
 	 * @throws HttpException
 	 * @return null
 	 */
-	public function actionEdit(array $variables = array())
+	public function actionEdit($userId)
 	{
-		if (!empty($variables['userId']))
-		{
-			$user = craft()->users->getUserById($variables['userId']);
+        $user = Craft::$app->users->getUserById($userId);
 
-			if ($user)
-			{
-				$variables['user'] = $user;
+        if ($user)
+        {
+            $loginAccounts = \dukt\social\Plugin::getInstance()->social_loginAccounts->getLoginAccountsByUserId($user->id);
 
-				$loginAccounts = \dukt\social\Plugin::getInstance()->social_loginAccounts->getLoginAccountsByUserId($user->id);
+            Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
 
-				$variables['loginAccounts'] = $loginAccounts;
-
-				return $this->renderTemplate('social/loginaccounts/_edit', $variables);
-			}
-			else
-			{
-				throw new HttpException(404);
-			}
-		}
-		else
-		{
-			throw new HttpException(404);
-		}
+            return $this->renderTemplate('social/loginaccounts/_edit', [
+                'userId' => $userId,
+                'user' => $user,
+                'loginAccounts' => $loginAccounts
+            ]);
+        }
+        else
+        {
+            throw new HttpException(404);
+        }
 	}
 
 	/**
@@ -83,11 +78,12 @@ class LoginAccountsController extends Controller
 	public function actionDeleteLoginAccount()
 	{
 		$this->requirePostRequest();
-		$this->requireAjaxRequest();
+		$this->requireAcceptsJson();
 
-		$loginAccountId = craft()->request->getRequiredPost('id');
+		$loginAccountId = Craft::$app->request->getRequiredBodyParam('id');
 
 		\dukt\social\Plugin::getInstance()->social_loginAccounts->deleteLoginAccountById($loginAccountId);
+
 		return $this->asJson(array('success' => true));
 	}
 }

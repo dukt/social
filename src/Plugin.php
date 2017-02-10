@@ -70,7 +70,7 @@ class Plugin extends \craft\base\Plugin
             'social/install' => 'social/install/index',
 
             'social/loginaccounts' => 'social/loginAccounts/index',
-            'social/loginaccounts/<userId:\d+>' => 'social/loginAccounts/edit',
+            'social/loginaccounts/<userId:\d+>' => 'social/login-accounts/edit',
 
             'settings/plugins/social/settings/loginproviders' => 'social/login-providers/index',
             'settings/plugins/social/settings/loginproviders/<handle:{handle}>' => 'social/loginProviders/edit',
@@ -95,7 +95,7 @@ class Plugin extends \craft\base\Plugin
             'social/settings' => ['action' => "social/settings/index"],
 
             "social/loginaccounts" => ['action' => "social/loginAccounts/index"],
-            "social/loginaccounts/(?P<userId>\d+)" => ['action' => "social/loginAccounts/edit"],
+            "social/loginaccounts/(?P<userId>\d+)" => ['action' => "social/login-Accounts/edit"],
 
             'settings/plugins/social/settings/loginproviders' => ['action' => "social/loginProviders/index"],
             'settings/plugins/social/settings/loginproviders/(?P<handle>.*)' => ['action' => "social/loginProviders/edit"],
