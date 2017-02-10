@@ -47,7 +47,7 @@
 
 							<input type="hidden" name="loginProvider" value="{{ loginProvider.handle }}">
 
-							{{ getCsrfInput() }}
+							{{ csrfInput() }}
 
 							{% if loginProvider.isEnabled %}
 								<span class="status on"></span> {{ "Enabled"|t('app') }} 
