@@ -26,7 +26,7 @@ class LoginProvidersController extends Controller
 	{
 		parent::init();
 
-        \dukt\social\Plugin::$plugin->social->requireDependencies();
+        \dukt\social\Social::$plugin->social->requireDependencies();
 	}
 
 	/**
@@ -38,7 +38,7 @@ class LoginProvidersController extends Controller
 	{
         Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
 
-		$variables['loginProviders'] = \dukt\social\Plugin::$plugin->social_loginProviders->getLoginProviders(false);
+		$variables['loginProviders'] = \dukt\social\Social::$plugin->social_loginProviders->getLoginProviders(false);
 
 		return $this->renderTemplate('social/loginproviders/_index', $variables);
 	}
@@ -55,7 +55,7 @@ class LoginProvidersController extends Controller
 	{
 		if (!empty($variables['handle']))
 		{
-			$loginProvider = \dukt\social\Plugin::$plugin->social_loginProviders->getLoginProvider($variables['handle'], false, true);
+			$loginProvider = \dukt\social\Social::$plugin->social_loginProviders->getLoginProvider($variables['handle'], false, true);
 
 			if ($loginProvider)
 			{
@@ -92,7 +92,7 @@ class LoginProvidersController extends Controller
 		$this->requirePostRequest();
 		$loginProvider = Craft::$app->request->getRequiredBodyParam('loginProvider');
 
-		if (\dukt\social\Plugin::$plugin->social_loginProviders->enableLoginProvider($loginProvider))
+		if (\dukt\social\Social::$plugin->social_loginProviders->enableLoginProvider($loginProvider))
 		{
 			Craft::$app->getSession()->setNotice(Craft::t('app', 'Login provider enabled.'));
 		}
@@ -114,7 +114,7 @@ class LoginProvidersController extends Controller
 		$this->requirePostRequest();
 		$loginProvider = Craft::$app->request->getRequiredBodyParam('loginProvider');
 
-		if (\dukt\social\Plugin::$plugin->social_loginProviders->disableLoginProvider($loginProvider))
+		if (\dukt\social\Social::$plugin->social_loginProviders->disableLoginProvider($loginProvider))
 		{
 			Craft::$app->getSession()->setNotice(Craft::t('app', 'Login provider disabled.'));
 		}

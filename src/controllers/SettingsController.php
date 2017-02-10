@@ -9,6 +9,7 @@ namespace dukt\social\controllers;
 
 use Craft;
 use craft\web\Controller;
+use dukt\social\Social;
 
 class SettingsController extends Controller
 {
@@ -24,7 +25,7 @@ class SettingsController extends Controller
 	{
 		parent::init();
 
-        \dukt\social\Plugin::getInstance()->social->requireDependencies();
+        Social::$plugin->social->requireDependencies();
 	}
 
 	/**
@@ -37,7 +38,7 @@ class SettingsController extends Controller
 		$plugin = Craft::$app->plugins->getPlugin('social');
 		$variables['settings'] = $plugin->getSettings();
 
-		$accounts = \dukt\social\Plugin::getInstance()->social_loginAccounts->getLoginAccounts();
+		$accounts = Social::$plugin->social_loginAccounts->getLoginAccounts();
 		$variables['totalAccounts'] = count($accounts);
 
 		return $this->renderTemplate('social/settings/_index', $variables);

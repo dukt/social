@@ -13,6 +13,7 @@ use craft\elements\db\ElementQueryInterface;
 use dukt\social\elements\db\LoginAccountQuery;
 use yii\web\IdentityInterface;
 use craft\helpers\UrlHelper;
+use dukt\social\Social;
 
 class LoginAccount extends Element implements IdentityInterface
 {
@@ -128,7 +129,7 @@ class LoginAccount extends Element implements IdentityInterface
 			)
 		);
 
-		$loginProviders = \dukt\social\Plugin::getInstance()->social_loginProviders->getLoginProviders();
+		$loginProviders = Social::$plugin->social_loginProviders->getLoginProviders();
 
 		if ($loginProviders)
 		{

@@ -10,6 +10,7 @@ namespace dukt\social\controllers;
 use Craft;
 use craft\web\Controller;
 use dukt\social\web\assets\social\SocialAsset;
+use dukt\social\Social;
 
 class LoginAccountsController extends Controller
 {
@@ -25,7 +26,7 @@ class LoginAccountsController extends Controller
 	{
 		parent::init();
 
-        \dukt\social\Plugin::getInstance()->social->requireDependencies();
+        Social::$plugin->social->requireDependencies();
 	}
 
 	/**
@@ -54,7 +55,7 @@ class LoginAccountsController extends Controller
 
         if ($user)
         {
-            $loginAccounts = \dukt\social\Plugin::getInstance()->social_loginAccounts->getLoginAccountsByUserId($user->id);
+            $loginAccounts = Social::$plugin->social_loginAccounts->getLoginAccountsByUserId($user->id);
 
             Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
 
@@ -82,7 +83,7 @@ class LoginAccountsController extends Controller
 
 		$loginAccountId = Craft::$app->request->getRequiredBodyParam('id');
 
-		\dukt\social\Plugin::getInstance()->social_loginAccounts->deleteLoginAccountById($loginAccountId);
+		Social::$plugin->social_loginAccounts->deleteLoginAccountById($loginAccountId);
 
 		return $this->asJson(array('success' => true));
 	}

@@ -10,6 +10,7 @@ namespace dukt\social\loginproviders;
 use Craft;
 use dukt\social\base\LoginProviderInterface;
 use dukt\oauth\models\Token;
+use dukt\social\Social;
 
 abstract class BaseProvider implements LoginProviderInterface
 {
@@ -60,7 +61,7 @@ abstract class BaseProvider implements LoginProviderInterface
 	 */
 	public function getOauthProvider()
 	{
-        \dukt\social\Plugin::getInstance()->social->checkPluginRequirements();
+        Social::$plugin->social->checkPluginRequirements();
 
 		return \dukt\oauth\Plugin::getInstance()->oauth->getProvider($this->getHandle(), false);
 	}

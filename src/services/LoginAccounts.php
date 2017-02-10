@@ -367,7 +367,7 @@ class LoginAccounts extends Component
                             }
                             catch(\Exception $e)
                             {
-                                // SocialPlugin::log('Could not map:'.print_r([$attribute, $template, $variables, $e->getMessage()], true), LogLevel::Warning);
+                                // Social::log('Could not map:'.print_r([$attribute, $template, $variables, $e->getMessage()], true), LogLevel::Warning);
                             }
                         }
                     }
@@ -384,7 +384,7 @@ class LoginAccounts extends Component
                             }
                             catch(\Exception $e)
                             {
-                                // SocialPlugin::log('Could not map:'.print_r([$template, $variables, $e->getMessage()], true), LogLevel::Warning);
+                                // Social::log('Could not map:'.print_r([$template, $variables, $e->getMessage()], true), LogLevel::Warning);
                             }
                         }
                     }
@@ -411,7 +411,7 @@ class LoginAccounts extends Component
 
             if (!Craft::$app->elements->saveElement($newUser))
             {
-                // SocialPlugin::log('There was a problem creating the user:'.print_r($newUser->getErrors(), true), LogLevel::Error);
+                // Social::log('There was a problem creating the user:'.print_r($newUser->getErrors(), true), LogLevel::Error);
                 throw new Exception("Craft user couldn’t be created.");
             }
 
@@ -429,7 +429,7 @@ class LoginAccounts extends Component
                     }
                     catch(\Exception $e)
                     {
-                        // SocialPlugin::log('Could not map:'.print_r(['photoUrl', $userMapping['photoUrl'], $variables, $e->getMessage()], true), LogLevel::Warning);
+                        // Social::log('Could not map:'.print_r(['photoUrl', $userMapping['photoUrl'], $variables, $e->getMessage()], true), LogLevel::Warning);
                     }
                 }
                 else

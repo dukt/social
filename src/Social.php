@@ -15,7 +15,7 @@ use dukt\social\models\Settings;
 use dukt\social\variables\SocialVariable;
 use dukt\social\web\assets\social\SocialAsset;
 
-class Plugin extends \craft\base\Plugin
+class Social extends \craft\base\Plugin
 {
     public $hasSettings = true;
     public $hasCpSection = false;
@@ -33,7 +33,6 @@ class Plugin extends \craft\base\Plugin
 	public function init()
 	{
         parent::init();
-
         self::$plugin = $this;
 
         $this->hasCpSection = $this->hasCpSection();
@@ -290,7 +289,7 @@ class Plugin extends \craft\base\Plugin
     {
         if ($attribute == 'loginAccounts')
         {
-            $loginAccounts = \dukt\social\Plugin::getInstance()->social_loginAccounts->getLoginAccountsByUserId($user->id);
+            $loginAccounts = $this->social_loginAccounts->getLoginAccountsByUserId($user->id);
 
             if (!$loginAccounts)
             {
@@ -345,7 +344,7 @@ class Plugin extends \craft\base\Plugin
         {
             if (Craft::$app->request->isCpRequest() && Craft::$app->request->getSegment(1) == 'login')
             {
-                $loginProviders = \dukt\social\Plugin::getInstance()->social_loginProviders->getLoginProviders();
+                $loginProviders = $this->social_loginProviders->getLoginProviders();
                 $jsLoginProviders = [];
 
                 foreach($loginProviders as $loginProvider)
@@ -353,7 +352,7 @@ class Plugin extends \craft\base\Plugin
                     $jsLoginProvider = [
                         'name' => $loginProvider->getName(),
                         'handle' => $loginProvider->getHandle(),
-                        'url' => \dukt\social\Plugin::getInstance()->social->getLoginUrl($loginProvider->getHandle()),
+                        'url' => $this->social->getLoginUrl($loginProvider->getHandle()),
                         'iconUrl' => $loginProvider->getIconUrl(),
                     ];
 
@@ -375,7 +374,7 @@ class Plugin extends \craft\base\Plugin
 		{
 			$user = $event->params['user'];
 
-            \dukt\social\Plugin::getInstance()->social_loginAccounts->deleteLoginAccountByUserId($user->id);
+            $this->social_loginAccounts->deleteLoginAccountByUserId($user->id);
         });
     }
 
@@ -391,9 +390,9 @@ class Plugin extends \craft\base\Plugin
             if ($context['account'])
             {
 	            $context['user'] = $context['account'];
-	            $context['loginAccounts'] = \dukt\social\Plugin::getInstance()->social_loginAccounts->getLoginAccountsByUserId($context['account']->id);
+	            $context['loginAccounts'] = $this->social_loginAccounts->getLoginAccountsByUserId($context['account']->id);
 
-                $loginProviders = \dukt\social\Plugin::getInstance()->social_loginProviders->getLoginProviders();
+                $loginProviders = $this->social_loginProviders->getLoginProviders();
                 $context['loginProviders'] = [];
 
                 foreach($loginProviders as $loginProvider)

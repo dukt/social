@@ -8,6 +8,7 @@
 namespace dukt\social\controllers;
 
 use craft\web\Controller;
+use dukt\social\Social;
 
 class InstallController extends Controller
 {
@@ -21,7 +22,7 @@ class InstallController extends Controller
 	 */
     public function actionIndex()
     {
-        $missingDependencies = \dukt\social\Plugin::getInstance()->social->getMissingDependencies();
+        $missingDependencies = Social::$plugin->social->getMissingDependencies();
 
         if (count($missingDependencies) > 0)
         {

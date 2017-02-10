@@ -11,6 +11,7 @@ use Craft;
 use craft\web\Controller;
 use dukt\oauth\models\Token;
 use dukt\social\elements\LoginAccount;
+use dukt\social\Social;
 
 class SocialController extends Controller
 {
@@ -48,7 +49,7 @@ class SocialController extends Controller
 	 */
 	public function actionLogin()
 	{
-		\dukt\social\Plugin::getInstance()->social->checkPluginRequirements();
+		Social::$plugin->social->checkPluginRequirements();
 
 		$this->referer = Craft::$app->getSession()->get('social.referer');
 
@@ -92,7 +93,7 @@ class SocialController extends Controller
 			}
 
 			// Provider scope & authorizationOptions
-			$socialProvider = \dukt\social\Plugin::getInstance()->social_loginProviders->getLoginProvider($providerHandle);
+			$socialProvider = Social::$plugin->social_loginProviders->getLoginProvider($providerHandle);
 
 			if (!$socialProvider)
 			{
@@ -128,7 +129,7 @@ class SocialController extends Controller
 		{
 			$response = $e->getResponse();
 
-			// SocialPlugin::log((string) $response, LogLevel::Error);
+			// Social::log((string) $response, LogLevel::Error);
 
 			$body = $response->getBody();
 			$json = json_decode($body, true);
@@ -192,12 +193,12 @@ class SocialController extends Controller
 	 */
 	public function actionDisconnectLoginAccount()
 	{
-		\dukt\social\Plugin::getInstance()->social->checkPluginRequirements();
+		Social::$plugin->social->checkPluginRequirements();
 
 		$handle = Craft::$app->request->getParam('provider');
 
 		// delete social user
-		\dukt\social\Plugin::getInstance()->social_loginAccounts->deleteLoginAccountByProvider($handle);
+		Social::$plugin->social_loginAccounts->deleteLoginAccountByProvider($handle);
 
 		Craft::$app->getSession()->setNotice(Craft::t('app', 'Login account disconnected.'));
 
@@ -218,7 +219,7 @@ class SocialController extends Controller
 
 		$user = Craft::$app->users->getUserById($userId);
 
-		\dukt\social\Plugin::getInstance()->social->saveRemotePhoto($photoUrl, $user);
+		Social::$plugin->social->saveRemotePhoto($photoUrl, $user);
 
 		// redirect
 		$referrer = Craft::$app->request->referrer;
@@ -264,19 +265,19 @@ class SocialController extends Controller
 			$this->redirect = $this->referer;
 		}
 
-		$socialLoginProvider = \dukt\social\Plugin::getInstance()->social_loginProviders->getLoginProvider($token->providerHandle);
+		$socialLoginProvider = Social::$plugin->social_loginProviders->getLoginProvider($token->providerHandle);
 
 		$attributes = $socialLoginProvider->getProfile($token);
 
 		$socialUid = $attributes['id'];
 
-		$account = \dukt\social\Plugin::getInstance()->social_loginAccounts->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
+		$account = Social::$plugin->social_loginAccounts->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
 
 		if ($account)
 		{
 			if ($craftUser->id == $account->userId)
 			{
-				// \dukt\social\Plugin::getInstance()->social_loginAccounts->saveLoginAccount($account);
+				// Social::$plugin->social_loginAccounts->saveLoginAccount($account);
                 Craft::$app->elements->saveElement($account);
 
 				Craft::$app->getSession()->setNotice(Craft::t('app', 'Login account added.'));
@@ -296,7 +297,7 @@ class SocialController extends Controller
 			$account->providerHandle = $socialLoginProvider->getHandle();
 			$account->socialUid = $socialUid;
 
-			// \dukt\social\Plugin::getInstance()->social_loginAccounts->saveLoginAccount($account);
+			// Social::$plugin->social_loginAccounts->saveLoginAccount($account);
 
             Craft::$app->getElements()->saveElement($account);
 
@@ -314,13 +315,13 @@ class SocialController extends Controller
 	 */
 	private function _registerOrLoginFromToken(Token $token)
 	{
-		$socialLoginProvider = \dukt\social\Plugin::getInstance()->social_loginProviders->getLoginProvider($token->providerHandle);
+		$socialLoginProvider = Social::$plugin->social_loginProviders->getLoginProvider($token->providerHandle);
 
 		$attributes = $socialLoginProvider->getProfile($token);
 
 		$socialUid = $attributes['id'];
 
-		$account = \dukt\social\Plugin::getInstance()->social_loginAccounts->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
+		$account = Social::$plugin->social_loginAccounts->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
 
 		if ($account)
 		{
@@ -329,7 +330,7 @@ class SocialController extends Controller
 			if ($craftUser)
 			{
 				// save user
-				// \dukt\social\Plugin::getInstance()->social_loginAccounts->saveLoginAccount($account);
+				// Social::$plugin->social_loginAccounts->saveLoginAccount($account);
                 Craft::$app->elements->saveElement($account);
 
 				// login
@@ -343,7 +344,7 @@ class SocialController extends Controller
 		else
 		{
 			// Register user
-			$craftUser = \dukt\social\Plugin::getInstance()->social_loginAccounts->registerUser($attributes, $socialLoginProvider->getHandle());
+			$craftUser = Social::$plugin->social_loginAccounts->registerUser($attributes, $socialLoginProvider->getHandle());
 
 			if ($craftUser)
 			{
@@ -352,7 +353,7 @@ class SocialController extends Controller
 				$account->userId = $craftUser->id;
 				$account->providerHandle = $socialLoginProvider->getHandle();
 				$account->socialUid = $socialUid;
-				// \dukt\social\Plugin::getInstance()->social_loginAccounts->saveLoginAccount($account);
+				// Social::$plugin->social_loginAccounts->saveLoginAccount($account);
 
                 Craft::$app->elements->saveElement($account);
 
@@ -400,8 +401,8 @@ class SocialController extends Controller
 		}
 		else
 		{
-			$errorCode = \dukt\social\Plugin::getInstance()->social_userSession->getLoginErrorCode();
-			$errorMessage = \dukt\social\Plugin::getInstance()->social_userSession->getLoginErrorMessage($errorCode, $account->user->username);
+			$errorCode = Social::$plugin->social_userSession->getLoginErrorCode();
+			$errorMessage = Social::$plugin->social_userSession->getLoginErrorMessage($errorCode, $account->user->username);
 
 			Craft::$app->getSession()->setError($errorMessage);
 

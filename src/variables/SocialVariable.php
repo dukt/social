@@ -7,6 +7,8 @@
 
 namespace dukt\social\variables;
 
+use dukt\social\Social;
+
 class SocialVariable
 {
 	// Public Methods
@@ -34,7 +36,7 @@ class SocialVariable
 	 */
 	public function getLoginUrl($providerHandle, $params = array())
 	{
-		return \dukt\social\Plugin::getInstance()->social->getLoginUrl($providerHandle, $params);
+		return Social::$plugin->social->getLoginUrl($providerHandle, $params);
 	}
 
 	/**
@@ -46,7 +48,7 @@ class SocialVariable
 	 */
 	public function getLogoutUrl($redirect = null)
 	{
-		return \dukt\social\Plugin::getInstance()->social->getLogoutUrl($redirect);
+		return Social::$plugin->social->getLogoutUrl($redirect);
 	}
 
 	/**
@@ -58,7 +60,7 @@ class SocialVariable
 	 */
 	public function getLoginAccountByLoginProvider($loginProviderHandle)
 	{
-		return \dukt\social\Plugin::getInstance()->social_loginAccounts->getLoginAccountByLoginProvider($loginProviderHandle);
+		return Social::$plugin->social_loginAccounts->getLoginAccountByLoginProvider($loginProviderHandle);
 	}
 
 	/**
@@ -70,7 +72,7 @@ class SocialVariable
 	 */
 	public function getLoginAccountConnectUrl($providerHandle)
 	{
-		return \dukt\social\Plugin::getInstance()->social->getLoginAccountConnectUrl($providerHandle);
+		return Social::$plugin->social->getLoginAccountConnectUrl($providerHandle);
 	}
 
 	/**
@@ -82,7 +84,7 @@ class SocialVariable
 	 */
 	public function getLoginAccountDisconnectUrl($providerHandle)
 	{
-		return \dukt\social\Plugin::getInstance()->social->getLoginAccountDisconnectUrl($providerHandle);
+		return Social::$plugin->social->getLoginAccountDisconnectUrl($providerHandle);
 	}
 
 	/**
@@ -94,6 +96,6 @@ class SocialVariable
 	 */
 	public function getLoginProviders($enabledOnly = true)
 	{
-		return \dukt\social\Plugin::getInstance()->social_loginProviders->getLoginProviders($enabledOnly);
+		return Social::$plugin->social_loginProviders->getLoginProviders($enabledOnly);
 	}
 }
