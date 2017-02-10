@@ -5,9 +5,11 @@
  * @license   https://dukt.net/craft/social/docs/license
  */
 
-namespace Craft;
+namespace dukt\social\models;
 
-class Social_ProviderModel extends BaseModel
+use craft\base\Model;
+
+class Provider extends Model
 {
 	// Public Methods
 	// =========================================================================

@@ -12,6 +12,8 @@ use yii\base\Event;
 use craft\web\UrlManager;
 use craft\events\RegisterUrlRulesEvent;
 use dukt\social\models\Settings;
+use dukt\social\variables\SocialVariable;
+use dukt\social\web\assets\social\SocialAsset;
 
 class Plugin extends \craft\base\Plugin
 {
@@ -39,9 +41,6 @@ class Plugin extends \craft\base\Plugin
         /*
         require_once(CRAFT_PLUGINS_PATH.'social/base/LoginProviderInterface.php');
         require_once(CRAFT_PLUGINS_PATH.'social/providers/login/BaseProvider.php');
-
-        $this->initEventListeners();
-        $this->initTemplateHooks();
         */
 
         $this->setComponents([
@@ -53,6 +52,13 @@ class Plugin extends \craft\base\Plugin
 
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, [$this, 'registerCpUrlRules']);
 
+        // $this->initEventListeners();
+        $this->initTemplateHooks();
+    }
+
+    public function defineTemplateComponent()
+    {
+        return SocialVariable::class;
     }
 
     public function registerCpUrlRules(RegisterUrlRulesEvent $event)
@@ -295,9 +301,9 @@ class Plugin extends \craft\base\Plugin
                 'loginAccounts' => $loginAccounts,
             ];
 
-	        craft()->templates->registerCssFile('social/css/social.css');
+	        Craft::$app->getView()->registerCssFile('social/css/social.css');
 
-            $html = craft()->templates->render('social/users/_login-accounts-column', $variables, true);
+            $html = Craft::$app->getView()->renderTemplate('social/users/_login-accounts-column', $variables, true);
 
             return $html;
         }
@@ -337,7 +343,7 @@ class Plugin extends \craft\base\Plugin
 
         if($this->settings->enableCpLogin)
         {
-            if (craft()->request->isCpRequest() && craft()->request->getSegment(1) == 'login')
+            if (Craft::$app->request->isCpRequest() && Craft::$app->request->getSegment(1) == 'login')
             {
                 $loginProviders = \dukt\social\Plugin::getInstance()->social_loginProviders->getLoginProviders();
                 $jsLoginProviders = [];
@@ -354,18 +360,18 @@ class Plugin extends \craft\base\Plugin
                     array_push($jsLoginProviders, $jsLoginProvider);
                 }
 
-                $error = craft()->userSession->getFlash('error');
+                $error = Craft::$app->getSession()->getFlash('error');
 
-                craft()->templates->registerCssFile("social/css/login.css", true);
-                craft()->templates->includeJsResource("social/js/login.js", true);
-                craft()->templates->includeJs("var socialLoginForm = new Craft.SocialLoginForm(".json_encode($jsLoginProviders).", ".json_encode($error).");");
+                Craft::$app->getView()->registerCssFile("social/css/login.css", true);
+                Craft::$app->getView()->includeJsResource("social/js/login.js", true);
+                Craft::$app->getView()->includeJs("var socialLoginForm = new Craft.SocialLoginForm(".json_encode($jsLoginProviders).", ".json_encode($error).");");
             }
         }
 
 
 		// Delete social user when craft user is deleted
 
-		craft()->on('users.onBeforeDeleteUser', function (Event $event)
+		Craft::$app->on('users.onBeforeDeleteUser', function (Event $event)
 		{
 			$user = $event->params['user'];
 
@@ -380,7 +386,7 @@ class Plugin extends \craft\base\Plugin
      */
     private function initTemplateHooks()
     {
-        craft()->templates->hook('cp.users.edit.right-pane', function(&$context)
+        Craft::$app->getView()->hook('cp.users.edit.right-pane', function(&$context)
         {
             if ($context['account'])
             {
@@ -408,11 +414,9 @@ class Plugin extends \craft\base\Plugin
                     }
                 }
 
-	            craft()->templates->registerCssFile('social/css/social.css');
+                Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
 
-                $html = craft()->templates->render('social/users/_edit-pane', $context);
-
-                return $html;
+                return Craft::$app->getView()->renderTemplate('social/users/_edit-pane', $context);
             }
         });
     }

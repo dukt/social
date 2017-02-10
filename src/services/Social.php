@@ -7,10 +7,10 @@
 
 namespace dukt\social\services;
 
-// require_once(CRAFT_PLUGINS_PATH.'social/base/RequirementsTrait.php');
-
+use Craft;
 use yii\base\Component;
 use dukt\social\base\RequirementsTrait;
+use craft\helpers\UrlHelper;
 
 class Social extends Component
 {
@@ -39,7 +39,7 @@ class Social extends Component
 			$params['scope'] = urlencode(base64_encode(serialize($params['scope'])));
 		}
 
-		$url = UrlHelper::getSiteUrl(craft()->config->get('actionTrigger').'/social/login', $params);
+		$url = UrlHelper::siteUrl(Craft::$app->config->get('actionTrigger').'/social/social/login', $params);
 
 		return $url;
 	}
@@ -55,7 +55,7 @@ class Social extends Component
 	{
 		$params = ['redirect' => $redirect];
 
-		return UrlHelper::getActionUrl('social/logout', $params);
+		return UrlHelper::actionUrl('social/social/logout', $params);
 	}
 
 	/**
@@ -67,7 +67,7 @@ class Social extends Component
 	 */
 	public function getLoginAccountConnectUrl($handle)
 	{
-		return UrlHelper::getActionUrl('social/connectLoginAccount', [
+		return UrlHelper::actionUrl('social/social/connectLoginAccount', [
 			'provider' => $handle
 		]);
 	}
@@ -81,7 +81,7 @@ class Social extends Component
 	 */
 	public function getLoginAccountDisconnectUrl($handle)
 	{
-		return UrlHelper::getActionUrl('social/disconnectLoginAccount', [
+		return UrlHelper::actionUrl('social/social/disconnectLoginAccount', [
 			'provider' => $handle
 		]);
 	}
@@ -98,7 +98,7 @@ class Social extends Component
 	{
 		$filename = 'photo';
 
-		$tempPath = craft()->path->getTempPath().'social/userphotos/'.$user->email.'/';
+		$tempPath = Craft::$app->path->getTempPath().'social/userphotos/'.$user->email.'/';
 		IOHelper::createFolder($tempPath);
 		$tempFilepath = $tempPath.$filename;
 		$client = new \Guzzle\Http\Client();
@@ -110,9 +110,9 @@ class Social extends Component
 
 		IOHelper::rename($tempPath.$filename, $tempPath.$filename.'.'.$extension);
 
-		craft()->users->deleteUserPhoto($user);
+		Craft::$app->users->deleteUserPhoto($user);
 
-		$image = craft()->images->loadImage($tempPath.$filename.'.'.$extension);
+		$image = Craft::$app->images->loadImage($tempPath.$filename.'.'.$extension);
 		$imageWidth = $image->getWidth();
 		$imageHeight = $image->getHeight();
 
@@ -121,7 +121,7 @@ class Social extends Component
 		$verticalMargin = ($imageHeight - $dimension) / 2;
 		$image->crop($horizontalMargin, $imageWidth - $horizontalMargin, $verticalMargin, $imageHeight - $verticalMargin);
 
-		craft()->users->saveUserPhoto($filename.'.'.$extension, $image, $user);
+		Craft::$app->users->saveUserPhoto($filename.'.'.$extension, $image, $user);
 
 		IOHelper::deleteFile($tempPath.$filename.'.'.$extension);
 

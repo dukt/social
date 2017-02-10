@@ -37,9 +37,11 @@ class LoginAccounts extends Component
      */
     public function getLoginAccountsByUserId($userId)
     {
-        $criteria = Craft::$app->elements->getCriteria('Social_LoginAccount');
+/*        $criteria = Craft::$app->elements->getCriteria('Social_LoginAccount');
         $criteria->userId = $userId;
-        $loginAccounts = $criteria->find();
+        $loginAccounts = $criteria->find();*/
+
+        $loginAccounts = \dukt\social\elements\LoginAccount::find()->userId($userId)->all();
 
         return $loginAccounts;
     }
@@ -65,7 +67,7 @@ class LoginAccounts extends Component
      */
     public function getLoginAccountByLoginProvider($providerHandle)
     {
-        $currentUser = Craft::$app->userSession->getUser();
+        $currentUser = Craft::$app->getSession()->getUser();
 
         // Check if there is a current user or not
         if (!$currentUser)
@@ -73,10 +75,12 @@ class LoginAccounts extends Component
             return false;
         }
 
-        $criteria = Craft::$app->elements->getCriteria('Social_LoginAccount');
+/*        $criteria = Craft::$app->elements->getCriteria('Social_LoginAccount');
         $criteria->userId = $currentUser->id;
         $criteria->providerHandle = $providerHandle;
-        $loginAccount = $criteria->first();
+        $loginAccount = $criteria->first();*/
+
+        $loginAccount = \dukt\social\elements\LoginAccount::find()->userId($currentUser->id)->providerHandle($providerHandle)->first();
 
         return $loginAccount;
     }
@@ -91,10 +95,12 @@ class LoginAccounts extends Component
      */
     public function getLoginAccountByUid($providerHandle, $socialUid)
     {
-        $criteria = Craft::$app->elements->getCriteria('Social_LoginAccount');
+/*        $criteria = Craft::$app->elements->getCriteria('Social_LoginAccount');
         $criteria->providerHandle = $providerHandle;
         $criteria->socialUid = $socialUid;
-        $loginAccount = $criteria->first();
+        $loginAccount = $criteria->first();*/
+
+        $loginAccount = \dukt\social\elements\LoginAccount::find()->providerHandle($providerHandle)->socialUid($socialUid)->first();
 
         return $loginAccount;
     }

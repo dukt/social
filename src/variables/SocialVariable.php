@@ -5,7 +5,7 @@
  * @license   https://dukt.net/craft/social/docs/license
  */
 
-namespace Craft;
+namespace dukt\social\variables;
 
 class SocialVariable
 {

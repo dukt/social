@@ -5,9 +5,11 @@
  * @license   https://dukt.net/craft/social/docs/license
  */
 
-namespace Craft;
+namespace dukt\social\models;
 
-class Social_LoginAccountModel extends BaseElementModel
+use craft\base\Model;
+
+class LoginAccount extends Model
 {
     // Properties
     // =========================================================================

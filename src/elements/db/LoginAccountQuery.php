@@ -10,6 +10,7 @@ class LoginAccountQuery extends ElementQuery
 {
     public $userId;
     public $providerHandle;
+    public $socialUid;
 
     public function userId($value)
     {
@@ -25,6 +26,13 @@ class LoginAccountQuery extends ElementQuery
         return $this;
     }
 
+    public function socialUid($value)
+    {
+        $this->socialUid = $value;
+
+        return $this;
+    }
+
     protected function beforePrepare(): bool
     {
         // join in the products table
@@ -34,6 +42,7 @@ class LoginAccountQuery extends ElementQuery
         $this->query->select([
             'social_login_accounts.userId',
             'social_login_accounts.providerHandle',
+            'social_login_accounts.socialUid',
         ]);
 
         if ($this->userId) {
@@ -42,6 +51,10 @@ class LoginAccountQuery extends ElementQuery
 
         if ($this->providerHandle) {
             $this->subQuery->andWhere(Db::parseParam('social_login_accounts.providerHandle', $this->providerHandle));
+        }
+
+        if ($this->socialUid) {
+            $this->subQuery->andWhere(Db::parseParam('social_login_accounts.socialUid', $this->socialUid));
         }
 
         return parent::beforePrepare();

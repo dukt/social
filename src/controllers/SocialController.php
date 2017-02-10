@@ -7,7 +7,10 @@
 
 namespace dukt\social\controllers;
 
+use Craft;
 use craft\web\Controller;
+use dukt\oauth\models\Token;
+use dukt\social\elements\LoginAccount;
 
 class SocialController extends Controller
 {
@@ -47,32 +50,32 @@ class SocialController extends Controller
 	{
 		\dukt\social\Plugin::getInstance()->social->checkPluginRequirements();
 
-		$this->referer = craft()->httpSession->get('social.referer');
+		$this->referer = Craft::$app->getSession()->get('social.referer');
 
 		if (!$this->referer)
 		{
-			$this->referer = craft()->request->getUrlReferrer();
-			craft()->httpSession->add('social.referer', $this->referer);
+			$this->referer = Craft::$app->request->referrer;
+			Craft::$app->getSession()->set('social.referer', $this->referer);
 		}
 
-		$this->redirect = craft()->request->getParam('redirect');
+		$this->redirect = Craft::$app->request->getParam('redirect');
 
 
 		// Connect
 
 		// Request params
-		$providerHandle = craft()->request->getParam('provider');
+		$providerHandle = Craft::$app->request->getParam('provider');
 		$oauthProvider = \dukt\oauth\Plugin::getInstance()->oauth->getProvider($providerHandle);
-		$requestUri = craft()->request->requestUri;
-		craft()->httpSession->add('social.requestUri', $requestUri);
+/*		$requestUri = Craft::$app->request->resolveRequestUri();
+		Craft::$app->getSession()->set('social.requestUri', $requestUri);*/
 
 		// Settings
-		$plugin = craft()->plugins->getPlugin('social');
+		$plugin = Craft::$app->plugins->getPlugin('social');
 		$pluginSettings = $plugin->getSettings();
 
 		// Try to connect
-		try
-		{
+/*		try
+		{*/
 			if (!$oauthProvider || ($oauthProvider && !$oauthProvider->isConfigured()))
 			{
 				throw new Exception("OAuth provider is not configured");
@@ -83,7 +86,7 @@ class SocialController extends Controller
 				throw new Exception("Social login is disabled");
 			}
 
-			if (craft()->getEdition() != Craft::Pro)
+			if (Craft::$app->getEdition() != Craft::Pro)
 			{
 				throw new Exception("Craft Pro is required");
 			}
@@ -106,6 +109,11 @@ class SocialController extends Controller
 				'authorizationOptions'   => $authorizationOptions
 			]))
 			{
+                if($response && is_object($response) && !$response->data)
+                {
+                    return $response;
+                }
+
 				if($response['success'])
 				{
 					$this->_connectUserFromToken($response['token']);
@@ -115,12 +123,12 @@ class SocialController extends Controller
 					throw new \Exception($response['errorMsg']);
 				}
 			}
-		}
+		/*}
 		catch(\Guzzle\Http\Exception\BadResponseException $e)
 		{
 			$response = $e->getResponse();
 
-			SocialPlugin::log((string) $response, LogLevel::Error);
+			// SocialPlugin::log((string) $response, LogLevel::Error);
 
 			$body = $response->getBody();
 			$json = json_decode($body, true);
@@ -134,17 +142,17 @@ class SocialController extends Controller
 				$errorMsg = "Couldn’t login.";
 			}
 
-			craft()->userSession->setFlash('error', $errorMsg);
+			Craft::$app->getSession()->setFlash('error', $errorMsg);
 			$this->_cleanSession();
-			$this->redirect($this->referer);
+			return $this->redirect($this->referer);
 		}
 		catch (\Exception $e)
 		{
 			$errorMsg = $e->getMessage();
-			craft()->userSession->setFlash('error', $errorMsg);
+			Craft::$app->getSession()->setFlash('error', $errorMsg);
 			$this->_cleanSession();
-			$this->redirect($this->referer);
-		}
+			return $this->redirect($this->referer);
+		}*/
 	}
 
 	/**
@@ -154,16 +162,16 @@ class SocialController extends Controller
 	 */
 	public function actionLogout()
 	{
-		craft()->userSession->logout(false);
+		Craft::$app->getSession()->logout(false);
 
-		$redirect = craft()->request->getParam('redirect');
+		$redirect = Craft::$app->request->getParam('redirect');
 
 		if (!$redirect)
 		{
-			$redirect = craft()->request->getUrlReferrer();
+			$redirect = Craft::$app->request->referrer;
 		}
 
-		$this->redirect($redirect);
+		return $this->redirect($redirect);
 	}
 
 	/**
@@ -185,16 +193,16 @@ class SocialController extends Controller
 	{
 		\dukt\social\Plugin::getInstance()->social->checkPluginRequirements();
 
-		$handle = craft()->request->getParam('provider');
+		$handle = Craft::$app->request->getParam('provider');
 
 		// delete social user
 		\dukt\social\Plugin::getInstance()->social_loginAccounts->deleteLoginAccountByProvider($handle);
 
-		craft()->userSession->setNotice(Craft::t('app', 'Login account disconnected.'));
+		Craft::$app->getSession()->setNotice(Craft::t('app', 'Login account disconnected.'));
 
 		// redirect
-		$redirect = craft()->request->getUrlReferrer();
-		$this->redirect($redirect);
+		$redirect = Craft::$app->request->referrer;
+		return $this->redirect($redirect);
 	}
 
 	/**
@@ -204,16 +212,16 @@ class SocialController extends Controller
 	 */
 	public function actionChangePhoto()
 	{
-		$userId = craft()->request->getParam('userId');
-		$photoUrl = craft()->request->getParam('photoUrl');
+		$userId = Craft::$app->request->getParam('userId');
+		$photoUrl = Craft::$app->request->getParam('photoUrl');
 
-		$user = craft()->users->getUserById($userId);
+		$user = Craft::$app->users->getUserById($userId);
 
 		\dukt\social\Plugin::getInstance()->social->saveRemotePhoto($photoUrl, $user);
 
 		// redirect
-		$referrer = craft()->request->getUrlReferrer();
-		$this->redirect($referrer);
+		$referrer = Craft::$app->request->referrer;
+		return $this->redirect($referrer);
 	}
 
 	// Private Methods
@@ -222,11 +230,11 @@ class SocialController extends Controller
 	/**
 	 * Connect (register, login, link) a user from token
 	 *
-	 * @param Oauth_TokenModel $token
+	 * @param Token $token
 	 */
-	private function _connectUserFromToken(Oauth_TokenModel $token)
+	private function _connectUserFromToken(Token $token)
 	{
-		$craftUser = craft()->userSession->getUser();
+		$craftUser = Craft::$app->getUser()->getIdentity();
 
 		if ($craftUser)
 		{
@@ -246,7 +254,7 @@ class SocialController extends Controller
 	 * @throws Exception
 	 * @return null
 	 */
-	private function _linkAccountFromToken(Oauth_TokenModel $token, $craftUser)
+	private function _linkAccountFromToken(Token $token, $craftUser)
 	{
 		$this->_cleanSession();
 
@@ -269,9 +277,9 @@ class SocialController extends Controller
 			{
 				\dukt\social\Plugin::getInstance()->social_loginAccounts->saveLoginAccount($account);
 
-				craft()->userSession->setNotice(Craft::t('app', 'Login account added.'));
+				Craft::$app->getSession()->setNotice(Craft::t('app', 'Login account added.'));
 
-				$this->redirect($this->redirect);
+				return $this->redirect($this->redirect);
 			}
 			else
 			{
@@ -281,16 +289,18 @@ class SocialController extends Controller
 		else
 		{
 			// save social user
-			$account = new Social_LoginAccountModel;
+			$account = new LoginAccount;
 			$account->userId = $craftUser->id;
 			$account->providerHandle = $socialLoginProvider->getHandle();
 			$account->socialUid = $socialUid;
 
-			\dukt\social\Plugin::getInstance()->social_loginAccounts->saveLoginAccount($account);
+			// \dukt\social\Plugin::getInstance()->social_loginAccounts->saveLoginAccount($account);
 
-			craft()->userSession->setNotice(Craft::t('app', 'Login account added.'));
+            Craft::$app->getElements()->saveElement($account);
 
-			$this->redirect($this->redirect);
+			Craft::$app->getSession()->setNotice(Craft::t('app', 'Login account added.'));
+
+			return $this->redirect($this->redirect);
 		}
 	}
 
@@ -300,7 +310,7 @@ class SocialController extends Controller
 	 * @throws Exception
 	 * @return null
 	 */
-	private function _registerOrLoginFromToken(Oauth_TokenModel $token)
+	private function _registerOrLoginFromToken(Token $token)
 	{
 		$socialLoginProvider = \dukt\social\Plugin::getInstance()->social_loginProviders->getLoginProvider($token->providerHandle);
 
@@ -312,7 +322,7 @@ class SocialController extends Controller
 
 		if ($account)
 		{
-			$craftUser = craft()->users->getUserById($account->userId);
+			$craftUser = Craft::$app->users->getUserById($account->userId);
 
 			if ($craftUser)
 			{
@@ -335,7 +345,7 @@ class SocialController extends Controller
 			if ($craftUser)
 			{
 				// Save social user
-				$account = new Social_LoginAccountModel;
+				$account = new LoginAccount;
 				$account->userId = $craftUser->id;
 				$account->providerHandle = $socialLoginProvider->getHandle();
 				$account->socialUid = $socialUid;
@@ -356,7 +366,7 @@ class SocialController extends Controller
 	 *
 	 * @return null
 	 */
-	private function _login(Oauth_TokenModel $token, $registrationMode = false)
+	private function _login(Token $token, $registrationMode = false)
 	{
 		$this->_cleanSession();
 
@@ -369,23 +379,23 @@ class SocialController extends Controller
 		{
 			if ($registrationMode)
 			{
-				craft()->userSession->setNotice(Craft::t('app', 'Account created.'));
+				Craft::$app->getSession()->setNotice(Craft::t('app', 'Account created.'));
 			}
 			else
 			{
-				craft()->userSession->setNotice(Craft::t('app', 'Logged in.'));
+				Craft::$app->getSession()->setNotice(Craft::t('app', 'Logged in.'));
 			}
 
-			$this->redirect($this->redirect);
+			return $this->redirect($this->redirect);
 		}
 		else
 		{
 			$errorCode = \dukt\social\Plugin::getInstance()->social_userSession->getLoginErrorCode();
 			$errorMessage = \dukt\social\Plugin::getInstance()->social_userSession->getLoginErrorMessage($errorCode, $account->user->username);
 
-			craft()->userSession->setError($errorMessage);
+			Craft::$app->getSession()->setError($errorMessage);
 
-			$this->redirect($this->referer);
+			return $this->redirect($this->referer);
 		}
 
 	}
@@ -397,7 +407,7 @@ class SocialController extends Controller
 	 */
 	private function _cleanSession()
 	{
-		craft()->httpSession->remove('social.referer');
-		craft()->httpSession->remove('social.requestUri');
+		Craft::$app->getSession()->remove('social.referer');
+		// Craft::$app->getSession()->remove('social.requestUri');
 	}
 }

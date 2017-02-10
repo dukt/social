@@ -28,6 +28,14 @@ class LoginAccount extends Element
         return new LoginAccountQuery(get_called_class());
     }
 
+    public function getFullName()
+    {
+        $firstName = trim($this->firstName);
+        $lastName = trim($this->lastName);
+
+        return $firstName.($firstName && $lastName ? ' ' : '').$lastName;
+    }
+
 	/**
 	 * Returns the element type name.
 	 *
@@ -409,6 +417,38 @@ class LoginAccount extends Element
         $record->lastName = $this->lastName;
         $record->lastLoginDate = $this->lastLoginDate;
         $record->save(false);
+
+        parent::afterSave($isNew);
+
+
+        if ($isNew) {
+            Craft::$app->db->createCommand()
+                ->insert('{{%social_login_accounts}}', [
+                    'id' => $this->id,
+                    'userId' => $this->userId,
+                    'providerHandle' => $this->providerHandle,
+                    'socialUid' => $this->socialUid,
+                    'username' => $this->username,
+                    'email' => $this->email,
+                    'firstName' => $this->firstName,
+                    'lastName' => $this->lastName,
+                    'lastLoginDate' => $this->lastLoginDate,
+                ])
+                ->execute();
+        } else {
+            Craft::$app->db->createCommand()
+                ->update('{{%social_login_accounts}}', [
+                    'userId' => $this->userId,
+                    'providerHandle' => $this->providerHandle,
+                    'socialUid' => $this->socialUid,
+                    'username' => $this->username,
+                    'email' => $this->email,
+                    'firstName' => $this->firstName,
+                    'lastName' => $this->lastName,
+                    'lastLoginDate' => $this->lastLoginDate,
+                ], ['id' => $this->id])
+                ->execute();
+        }
 
         parent::afterSave($isNew);
     }
