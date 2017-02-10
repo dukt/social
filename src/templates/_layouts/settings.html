@@ -1,8 +1,6 @@
 {% extends "_layouts/cp" %}
 
-{% includeCssResource "social/css/social.css" %}
-
-{% set title = "Social Login"|t %}
+{% set title = "Social Login"|t('app') %}
 
 {% set docsUrl = 'https://dukt.net/craft/social/docs' %}
 
@@ -22,7 +20,7 @@
 
 	{% set content %}
 
-		<h2>{{ "Craft Pro required"|t }}</h2>
+		<h2>{{ "Craft Pro required"|t('app') }}</h2>
 		<p>{{ 'Social Login plugin requires {link} unlimited user accounts feature.'|t({link:'<a href="http://buildwithcraft.com/pricing">Craft Pro</a>'})|raw }}</p>
 
 	{% endset %}

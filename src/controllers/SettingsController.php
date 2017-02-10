@@ -5,9 +5,12 @@
  * @license   https://dukt.net/craft/social/docs/license
  */
 
-namespace Craft;
+namespace dukt\social\controllers;
 
-class Social_SettingsController extends BaseController
+use Craft;
+use craft\web\Controller;
+
+class SettingsController extends Controller
 {
 	// Public Methods
 	// =========================================================================
@@ -21,7 +24,7 @@ class Social_SettingsController extends BaseController
 	{
 		parent::init();
 
-        craft()->social->requireDependencies();
+        \dukt\social\Plugin::getInstance()->social->requireDependencies();
 	}
 
 	/**
@@ -31,12 +34,12 @@ class Social_SettingsController extends BaseController
 	 */
 	public function actionIndex()
 	{
-		$plugin = craft()->plugins->getPlugin('social');
+		$plugin = Craft::$app->plugins->getPlugin('social');
 		$variables['settings'] = $plugin->getSettings();
 
-		$accounts = craft()->social_loginAccounts->getLoginAccounts();
+		$accounts = \dukt\social\Plugin::getInstance()->social_loginAccounts->getLoginAccounts();
 		$variables['totalAccounts'] = count($accounts);
 
-		$this->renderTemplate('social/settings/_index', $variables);
+		return $this->renderTemplate('social/settings/_index', $variables);
 	}
 }

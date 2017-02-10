@@ -5,11 +5,13 @@
  * @license   https://dukt.net/craft/social/docs/license
  */
 
-namespace Craft;
+namespace dukt\social\services;
 
+use Craft;
+use yii\base\Component;
 use Dukt\Social\Base\LoginProviderInterface;
 
-class Social_LoginProvidersService extends BaseApplicationComponent
+class LoginProviders extends Component
 {
 	// Public Methods
 	// =========================================================================
@@ -23,7 +25,7 @@ class Social_LoginProvidersService extends BaseApplicationComponent
 	 */
 	public function disableLoginProvider($handle)
 	{
-		$plugin = craft()->plugins->getPlugin('social');
+		$plugin = Craft::$app->plugins->getPlugin('social');
 		$settings = $plugin->getSettings();
 
 		$loginProviders = $settings->loginProviders;
@@ -31,7 +33,7 @@ class Social_LoginProvidersService extends BaseApplicationComponent
 
 		$settings->loginProviders = $loginProviders;
 
-		return craft()->plugins->savePluginSettings($plugin, $settings);
+		return Craft::$app->plugins->savePluginSettings($plugin, $settings->getAttributes());
 	}
 
 	/**
@@ -43,7 +45,7 @@ class Social_LoginProvidersService extends BaseApplicationComponent
 	 */
 	public function enableLoginProvider($handle)
 	{
-		$plugin = craft()->plugins->getPlugin('social');
+		$plugin = Craft::$app->plugins->getPlugin('social');
 		$settings = $plugin->getSettings();
 
 		$loginProviders = $settings->loginProviders;
@@ -51,7 +53,7 @@ class Social_LoginProvidersService extends BaseApplicationComponent
 
 		$settings->loginProviders = $loginProviders;
 
-		return craft()->plugins->savePluginSettings($plugin, $settings);
+		return Craft::$app->plugins->savePluginSettings($plugin, $settings->getAttributes());
 	}
 
 	/**
@@ -99,10 +101,18 @@ class Social_LoginProvidersService extends BaseApplicationComponent
 		// fetch all OAuth provider types
 		$socialLoginProviderTypes = array();
 
-		foreach (craft()->plugins->call('getSocialLoginProviders', [], true) as $pluginSocialLoginProviderTypes)
+/*		foreach (Craft::$app->plugins->call('getSocialLoginProviders', [], true) as $pluginSocialLoginProviderTypes)
 		{
 			$socialLoginProviderTypes = array_merge($socialLoginProviderTypes, $pluginSocialLoginProviderTypes);
-		}
+		}*/
+
+        foreach(Craft::$app->plugins->getAllPlugins() as $plugin)
+        {
+            if(method_exists($plugin, 'getSocialLoginProviders'))
+            {
+                $socialLoginProviderTypes = array_merge($socialLoginProviderTypes, $plugin->getSocialLoginProviders());
+            }
+        }
 
 		// instantiate providers
 		$loginProviders = [];

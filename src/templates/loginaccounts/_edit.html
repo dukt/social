@@ -1,7 +1,7 @@
 {% extends "_layouts/cp" %}
 {% import "_includes/forms" as forms %}
 
-{% includeCssResource "social/css/social.css" %}
+{% registerCssFile "social/css/social.css" %}
 
 {% set title = user.email  %}
 
@@ -14,16 +14,16 @@
     <a href="{{ user.cpEditUrl }}"><img width="80" src="{{ user.getThumbUrl(80) }}" /></a>
 
     <ul>
-        <li><strong>{{ "Username:"|t }}</strong> <a href="{{ user.cpEditUrl }}">{{ user.username }}</a></li>
-        <li><strong>{{ "Email:"|t }}</strong> {{ user.email }}</li>
+        <li><strong>{{ "Username:"|t('app') }}</strong> <a href="{{ user.cpEditUrl }}">{{ user.username }}</a></li>
+        <li><strong>{{ "Email:"|t('app') }}</strong> {{ user.email }}</li>
     </ul>
 
     <hr>
 
-    <h2>{{ "Login Accounts"|t }}</h2>
+    <h2>{{ "Login Accounts"|t('app') }}</h2>
 
     <div id="nologinaccounts"{% if loginAccounts|length == 0 %} class="hidden"{% endif %}>
-        <p>{{ "No login accounts exist yet."|t }}</p>
+        <p>{{ "No login accounts exist yet."|t('app') }}</p>
     </div>
 
     {% if loginAccounts|length %}
@@ -31,8 +31,8 @@
         <table id="loginAccounts" class="data fullwidth">
             <thead>
                 <tr>
-                    <th>{{ "OAuth Provider"|t }}</th>
-                    <th>{{ "Social User ID"|t }}</th>
+                    <th>{{ "OAuth Provider"|t('app') }}</th>
+                    <th>{{ "Social User ID"|t('app') }}</th>
                 </tr>
             </thead>
 
@@ -42,7 +42,7 @@
                 {% set oauthProvider = craft.oauth.getProvider(account.providerHandle) %}
 
                 {% if oauthProvider %}
-                    <tr data-id="{{ account.id }}" data-name="{{ oauthProvider.name|t }}">
+                    <tr data-id="{{ account.id }}" data-name="{{ oauthProvider.name|t('app') }}">
                         <td class="provider">
                             <div class="thumb">
                                 <img width="20" src="{{ oauthProvider.getIconUrl() }}" class="social-icon social-{{ oauthProvider.handle }}" />
@@ -56,7 +56,7 @@
                         </td>
 
                         <td class="thin">
-                            <a class="icon delete" title="{{ 'Disconnect'|t }}"></a>
+                            <a class="icon delete" title="{{ 'Disconnect'|t('app') }}"></a>
                         </td>
                     </tr>
                 {% endif %}
@@ -73,7 +73,7 @@
         tableSelector: '#loginAccounts',
         noObjectsSelector: '#nologinaccounts',
         deleteAction: 'social/loginAccounts/deleteLoginAccount',
-        confirmDeleteMessage: '{{ "Are you sure you want to unlink “{name}” login account?"|t }}',
+        confirmDeleteMessage: '{{ "Are you sure you want to unlink “{name}” login account?"|t('app') }}',
     });
     {% endincludejs %}
 

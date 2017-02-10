@@ -34,7 +34,7 @@ class SocialVariable
 	 */
 	public function getLoginUrl($providerHandle, $params = array())
 	{
-		return craft()->social->getLoginUrl($providerHandle, $params);
+		return \dukt\social\Plugin::getInstance()->social->getLoginUrl($providerHandle, $params);
 	}
 
 	/**
@@ -46,7 +46,7 @@ class SocialVariable
 	 */
 	public function getLogoutUrl($redirect = null)
 	{
-		return craft()->social->getLogoutUrl($redirect);
+		return \dukt\social\Plugin::getInstance()->social->getLogoutUrl($redirect);
 	}
 
 	/**
@@ -58,7 +58,7 @@ class SocialVariable
 	 */
 	public function getLoginAccountByLoginProvider($loginProviderHandle)
 	{
-		return craft()->social_loginAccounts->getLoginAccountByLoginProvider($loginProviderHandle);
+		return \dukt\social\Plugin::getInstance()->social_loginAccounts->getLoginAccountByLoginProvider($loginProviderHandle);
 	}
 
 	/**
@@ -70,7 +70,7 @@ class SocialVariable
 	 */
 	public function getLoginAccountConnectUrl($providerHandle)
 	{
-		return craft()->social->getLoginAccountConnectUrl($providerHandle);
+		return \dukt\social\Plugin::getInstance()->social->getLoginAccountConnectUrl($providerHandle);
 	}
 
 	/**
@@ -82,7 +82,7 @@ class SocialVariable
 	 */
 	public function getLoginAccountDisconnectUrl($providerHandle)
 	{
-		return craft()->social->getLoginAccountDisconnectUrl($providerHandle);
+		return \dukt\social\Plugin::getInstance()->social->getLoginAccountDisconnectUrl($providerHandle);
 	}
 
 	/**
@@ -94,6 +94,6 @@ class SocialVariable
 	 */
 	public function getLoginProviders($enabledOnly = true)
 	{
-		return craft()->social_loginProviders->getLoginProviders($enabledOnly);
+		return \dukt\social\Plugin::getInstance()->social_loginProviders->getLoginProviders($enabledOnly);
 	}
 }

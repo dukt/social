@@ -5,9 +5,13 @@
  * @license   https://dukt.net/craft/social/docs/license
  */
 
-namespace Craft;
+namespace dukt\social\controllers;
 
-class Social_LoginAccountsController extends BaseController
+use Craft;
+use craft\web\Controller;
+use dukt\social\web\assets\social\SocialAsset;
+
+class LoginAccountsController extends Controller
 {
 	// Public Methods
 	// =========================================================================
@@ -21,7 +25,7 @@ class Social_LoginAccountsController extends BaseController
 	{
 		parent::init();
 
-        craft()->social->requireDependencies();
+        \dukt\social\Plugin::getInstance()->social->requireDependencies();
 	}
 
 	/**
@@ -31,7 +35,9 @@ class Social_LoginAccountsController extends BaseController
 	 */
 	public function actionIndex()
 	{
-		$this->renderTemplate('social/loginaccounts/_index');
+        Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
+
+		return $this->renderTemplate('social/loginaccounts/_index');
 	}
 
 	/**
@@ -52,11 +58,11 @@ class Social_LoginAccountsController extends BaseController
 			{
 				$variables['user'] = $user;
 
-				$loginAccounts = craft()->social_loginAccounts->getLoginAccountsByUserId($user->id);
+				$loginAccounts = \dukt\social\Plugin::getInstance()->social_loginAccounts->getLoginAccountsByUserId($user->id);
 
 				$variables['loginAccounts'] = $loginAccounts;
 
-				$this->renderTemplate('social/loginaccounts/_edit', $variables);
+				return $this->renderTemplate('social/loginaccounts/_edit', $variables);
 			}
 			else
 			{
@@ -81,7 +87,7 @@ class Social_LoginAccountsController extends BaseController
 
 		$loginAccountId = craft()->request->getRequiredPost('id');
 
-		craft()->social_loginAccounts->deleteLoginAccountById($loginAccountId);
-		$this->returnJson(array('success' => true));
+		\dukt\social\Plugin::getInstance()->social_loginAccounts->deleteLoginAccountById($loginAccountId);
+		return $this->asJson(array('success' => true));
 	}
 }

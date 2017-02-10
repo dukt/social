@@ -5,10 +5,29 @@
  * @license   https://dukt.net/craft/social/docs/license
  */
 
-namespace Craft;
+namespace dukt\social\elements;
 
-class Social_LoginAccountElementType extends BaseElementType
+use Craft;
+use craft\base\Element;
+use craft\elements\db\ElementQueryInterface;
+use dukt\social\elements\db\LoginAccountQuery;
+
+class LoginAccount extends Element
 {
+    public $userId;
+    public $providerHandle;
+    public $socialUid;
+    public $username;
+    public $email;
+    public $firstName;
+    public $lastName;
+    public $lastLoginDate;
+
+    public static function find(): ElementQueryInterface
+    {
+        return new LoginAccountQuery(get_called_class());
+    }
+
 	/**
 	 * Returns the element type name.
 	 *
@@ -16,7 +35,7 @@ class Social_LoginAccountElementType extends BaseElementType
 	 */
 	public function getName()
 	{
-		return Craft::t('Login Accounts');
+		return Craft::t('app', 'Login Accounts');
 	}
 
 	/**
@@ -46,28 +65,30 @@ class Social_LoginAccountElementType extends BaseElementType
 	 *
 	 * @return array|false
 	 */
-	public function getSources($context = null)
+    protected static function defineSources(string $context = null): array
 	{
 		$sources = array(
-			'*' => array(
-				'label' => Craft::t('All login accounts'),
+			array(
+			    'key' => '*',
+				'label' => Craft::t('app', 'All login accounts'),
 				'hasThumbs' => false
 			)
 		);
 
-		$loginProviders = craft()->social_loginProviders->getLoginProviders();
+		$loginProviders = \dukt\social\Plugin::getInstance()->social_loginProviders->getLoginProviders();
 
 		if ($loginProviders)
 		{
-			$sources[] = array('heading' => Craft::t('Login Providers'));
+			$sources[] = array('heading' => Craft::t('app', 'Login Providers'));
 
 			foreach ($loginProviders as $loginProvider)
 			{
 				$providerHandle = $loginProvider->getHandle();
 				$key = 'group:'.$providerHandle;
 
-				$sources[$key] = array(
-					'label'     => Craft::t($loginProvider->getName()),
+				$sources[] = array(
+				    'key' => $key,
+					'label'     => Craft::t('app', $loginProvider->getName()),
 					'criteria'  => array('providerHandle' => $providerHandle),
 					'hasThumbs' => false
 				);
@@ -75,7 +96,7 @@ class Social_LoginAccountElementType extends BaseElementType
 		}
 
 		// Allow plugins to modify the sources
-		craft()->plugins->call('modifyLoginAccountSources', array(&$sources, $context));
+		/*craft()->plugins->call('modifyLoginAccountSources', array(&$sources, $context));*/
 
 		return $sources;
 	}
@@ -93,8 +114,8 @@ class Social_LoginAccountElementType extends BaseElementType
 
 		$deleteAction = craft()->elements->getAction('Delete');
 		$deleteAction->setParams(array(
-			'confirmationMessage' => Craft::t('Are you sure you want to delete the selected login accounts?'),
-			'successMessage'      => Craft::t('Login accounts deleted.'),
+			'confirmationMessage' => Craft::t('app', 'Are you sure you want to delete the selected login accounts?'),
+			'successMessage'      => Craft::t('app', 'Login accounts deleted.'),
 		));
 		$actions[] = $deleteAction;
 
@@ -114,7 +135,7 @@ class Social_LoginAccountElementType extends BaseElementType
 	 *
 	 * @return array
 	 */
-	public function defineSearchableAttributes()
+    protected static function defineSearchableAttributes(): array
 	{
 		return array('username', 'email', 'firstName', 'lastName', 'fullName', 'providerHandle', 'socialUid', 'userId');
 	}
@@ -130,27 +151,27 @@ class Social_LoginAccountElementType extends BaseElementType
 		{
 			// Start with Email and don't even give Username as an option
 			$attributes = array(
-				'email' => Craft::t('Email'),
+				'email' => Craft::t('app', 'Email'),
 			);
 		}
 		else
 		{
 			$attributes = array(
-				'username' => Craft::t('Username'),
-				'email'    => Craft::t('Email'),
+				'username' => Craft::t('app', 'Username'),
+				'email'    => Craft::t('app', 'Email'),
 			);
 		}
 
-		$attributes['firstName']     = Craft::t('First Name');
-		$attributes['lastName']      = Craft::t('Last Name');
+		$attributes['firstName']     = Craft::t('app', 'First Name');
+		$attributes['lastName']      = Craft::t('app', 'Last Name');
 
-		$attributes['providerHandle'] = Craft::t('Login Provider');
-		$attributes['socialUid']     = Craft::t('Social User ID');
+		$attributes['providerHandle'] = Craft::t('app', 'Login Provider');
+		$attributes['socialUid']     = Craft::t('app', 'Social User ID');
 
-		$attributes['userId']        = Craft::t('User ID');
-		$attributes['lastLoginDate'] = Craft::t('Last Login');
-		$attributes['dateCreated']   = Craft::t('Date Created');
-		$attributes['dateUpdated']   = Craft::t('Date Updated');
+		$attributes['userId']        = Craft::t('app', 'User ID');
+		$attributes['lastLoginDate'] = Craft::t('app', 'Last Login');
+		$attributes['dateCreated']   = Craft::t('app', 'Date Created');
+		$attributes['dateUpdated']   = Craft::t('app', 'Date Updated');
 
 		// Allow plugins to modify the attributes
 		craft()->plugins->call('modifyLoginAccountSortableAttributes', array(&$attributes));
@@ -169,28 +190,28 @@ class Social_LoginAccountElementType extends BaseElementType
 		{
 			// Start with Email and don't even give Username as an option
 			$attributes = array(
-				'email' => array('label' => Craft::t('Email')),
+				'email' => array('label' => Craft::t('app', 'Email')),
 			);
 		}
 		else
 		{
 			$attributes = array(
-				'username' => array('label' => Craft::t('Username')),
-				'email'    => array('label' => Craft::t('Email')),
+				'username' => array('label' => Craft::t('app', 'Username')),
+				'email'    => array('label' => Craft::t('app', 'Email')),
 			);
 		}
 
-		$attributes['fullName'] = array('label' => Craft::t('Full Name'));
-		$attributes['firstName'] = array('label' => Craft::t('First Name'));
-		$attributes['lastName'] = array('label' => Craft::t('Last Name'));
+		$attributes['fullName'] = array('label' => Craft::t('app', 'Full Name'));
+		$attributes['firstName'] = array('label' => Craft::t('app', 'First Name'));
+		$attributes['lastName'] = array('label' => Craft::t('app', 'Last Name'));
 
-		$attributes['providerHandle'] = array('label' => Craft::t('Login Provider'));
-		$attributes['socialUid']     = array('label' => Craft::t('Social User ID'));
+		$attributes['providerHandle'] = array('label' => Craft::t('app', 'Login Provider'));
+		$attributes['socialUid']     = array('label' => Craft::t('app', 'Social User ID'));
 
-		$attributes['userId']        = array('label' => Craft::t('User ID'));
-		$attributes['lastLoginDate'] = array('label' => Craft::t('Last Login'));
-		$attributes['dateCreated']   = array('label' => Craft::t('Date Created'));
-		$attributes['dateUpdated']   = array('label' => Craft::t('Date Updated'));
+		$attributes['userId']        = array('label' => Craft::t('app', 'User ID'));
+		$attributes['lastLoginDate'] = array('label' => Craft::t('app', 'Last Login'));
+		$attributes['dateCreated']   = array('label' => Craft::t('app', 'Date Created'));
+		$attributes['dateUpdated']   = array('label' => Craft::t('app', 'Date Updated'));
 
 		// Allow plugins to modify the attributes
 		$pluginAttributes = craft()->plugins->call('defineAdditionalLoginAccountTableAttributes', array(), true);
@@ -223,22 +244,22 @@ class Social_LoginAccountElementType extends BaseElementType
 	 *
 	 * @return string
 	 */
-	public function getTableAttributeHtml(BaseElementModel $element, $attribute)
+	public function tableAttributeHtml(string $attribute): string
 	{
 		// First give plugins a chance to set this
-		$pluginAttributeHtml = craft()->plugins->callFirst('getLoginAccountTableAttributeHtml', array($element, $attribute), true);
+/*		$pluginAttributeHtml = craft()->plugins->callFirst('getLoginAccountTableAttributeHtml', array($element, $attribute), true);
 
 		if ($pluginAttributeHtml !== null)
 		{
 			return $pluginAttributeHtml;
-		}
+		}*/
 
 		switch ($attribute)
 		{
 			case 'providerHandle':
 			{
 				// TODO:consider eager loading the provider
-				$provider = craft()->oauth->getProvider($element->providerHandle);
+				$provider = \dukt\oauth\Plugin::getInstance()->oauth->getProvider($this->providerHandle);
 
 				if ($provider)
 				{
@@ -257,7 +278,7 @@ class Social_LoginAccountElementType extends BaseElementType
 
 			default:
 			{
-				return parent::getTableAttributeHtml($element, $attribute);
+				return parent::tableAttributeHtml($attribute);
 			}
 		}
 	}
@@ -267,7 +288,7 @@ class Social_LoginAccountElementType extends BaseElementType
 	 *
 	 * @return array
 	 */
-	public function defineCriteriaAttributes()
+/*	public function defineCriteriaAttributes()
 	{
 		return array(
 			'userId' => AttributeType::Number,
@@ -280,7 +301,7 @@ class Social_LoginAccountElementType extends BaseElementType
 			'lastName' => AttributeType::String,
 			'lastLoginDate' => AttributeType::DateTime,
 		);
-	}
+	}*/
 
 	/**
 	 * Modifies an element query targeting elements of this type.
@@ -360,4 +381,35 @@ class Social_LoginAccountElementType extends BaseElementType
 	{
 		return Social_LoginAccountModel::populateModel($row);
 	}
+
+    /**
+     * @inheritdoc
+     * @throws Exception if reasons
+     */
+    public function afterSave(bool $isNew)
+    {
+        // Get the login account record
+        if (!$isNew) {
+            $record = LoginAccountRecord::findOne($this->id);
+
+            if (!$record) {
+                throw new Exception('Invalid login account ID: '.$this->id);
+            }
+        } else {
+            $record = new LoginAccountRecord();
+            $record->id = $this->id;
+        }
+
+        $record->userId = $this->userId;
+        $record->providerHandle = $this->providerHandle;
+        $record->socialUid = $this->socialUid;
+        $record->username = $this->username;
+        $record->email = $this->email;
+        $record->firstName = $this->firstName;
+        $record->lastName = $this->lastName;
+        $record->lastLoginDate = $this->lastLoginDate;
+        $record->save(false);
+
+        parent::afterSave($isNew);
+    }
 }

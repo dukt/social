@@ -9,9 +9,9 @@
 
 		{{ getCsrfInput() }}
 
-		<input type="hidden" name="action" value="plugins/savePluginSettings">
-		<input type="hidden" name="pluginClass" value="Social">
-		<input type="hidden" name="redirect" value="settings/plugins/social/settings/settings">
+		<input type="hidden" name="action" value="plugins/save-plugin-settings">
+		<input type="hidden" name="pluginHandle" value="social">
+		<input type="hidden" name="redirect" value="{{ 'settings/plugins/social/settings/settings'|hash }}">
 
 		{{ forms.lightswitchField({
 			first: true,

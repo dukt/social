@@ -146,7 +146,7 @@ class SocialUserIdentity extends UserIdentity
 
 			default:
 			{
-				throw new Exception(Craft::t('User has unknown status “{status}”', array($user->status)));
+				throw new Exception(Craft::t('app', 'User has unknown status “{status}”', array($user->status)));
 			}
 		}
 

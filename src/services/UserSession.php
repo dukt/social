@@ -5,11 +5,12 @@
  * @license   https://dukt.net/craft/social/docs/license
  */
 
-namespace Craft;
+namespace dukt\social\services;
 
+use yii\base\Component;
 use Dukt\Social\Etc\Users\SocialUserIdentity;
 
-class Social_UserSessionService extends UserSessionService
+class UserSession extends UserSessionService
 {
 	// Properties
 	// =========================================================================

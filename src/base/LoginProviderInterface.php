@@ -5,9 +5,9 @@
  * @license   https://dukt.net/craft/social/docs/license
  */
 
-namespace Dukt\Social\Base;
+namespace dukt\social\base;
 
-use Craft\Oauth_TokenModel;
+use dukt\oauth\models\Token;
 
 interface LoginProviderInterface
 {
@@ -31,9 +31,9 @@ interface LoginProviderInterface
 	/**
 	 * Returns a profile from an OAuth token
 	 *
-	 * @param Oauth_TokenModel $token
+	 * @param Token $token
 	 *
 	 * @return array|null
 	 */
-	public function getProfile(Oauth_TokenModel $token);
+	public function getProfile(Token $token);
 }

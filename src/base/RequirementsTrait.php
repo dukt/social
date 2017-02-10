@@ -5,9 +5,9 @@
  * @license   https://dukt.net/craft/social/docs/license
  */
 
-namespace Dukt\Social\Base;
+namespace dukt\social\base;
 
-use Craft\Craft;
+use Craft;
 
 trait RequirementsTrait
 {
@@ -37,7 +37,7 @@ trait RequirementsTrait
         if ($this->areDependenciesMissing())
         {
             $url = UrlHelper::getUrl('social/install');
-            Craft::app()->request->redirect($url);
+            Craft::$app->request->redirect($url);
             return false;
         }
         else
@@ -85,7 +85,7 @@ trait RequirementsTrait
     {
         $dependencies = array();
 
-        $plugin = Craft::app()->plugins->getPlugin('social');
+        $plugin = Craft::$app->plugins->getPlugin('social');
         $plugins = $plugin->getRequiredPlugins();
 
         foreach($plugins as $key => $plugin)
@@ -116,22 +116,25 @@ trait RequirementsTrait
     private function getPluginDependency($dependency)
     {
         $isMissing = true;
-        $isInstalled = true;
 
-        $plugin = Craft::app()->plugins->getPlugin($dependency['handle'], false);
+        $plugin = Craft::$app->plugins->getPlugin($dependency['handle'], false);
 
         if($plugin)
         {
             $currentVersion = $plugin->version;
 
-
-            // requires update ?
-
             if(version_compare($currentVersion, $dependency['version']) >= 0)
             {
-                if($plugin->isInstalled && $plugin->isEnabled)
+                $allPluginInfo = Craft::$app->plugins->getAllPluginInfo();
+
+                if(isset($allPluginInfo[$dependency['handle']]))
                 {
-                    $isMissing = false;
+                    $pluginInfos = $allPluginInfo[$dependency['handle']];
+
+                    if($pluginInfos['isInstalled'] && $pluginInfos['isEnabled'])
+                    {
+                        $isMissing = false;
+                    }
                 }
             }
         }

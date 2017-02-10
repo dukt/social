@@ -5,13 +5,14 @@
  * @license   https://dukt.net/craft/social/docs/license
  */
 
-namespace Craft;
+namespace dukt\social\services;
 
-require_once(CRAFT_PLUGINS_PATH.'social/base/RequirementsTrait.php');
+// require_once(CRAFT_PLUGINS_PATH.'social/base/RequirementsTrait.php');
 
-use Dukt\Social\Base\RequirementsTrait;
+use yii\base\Component;
+use dukt\social\base\RequirementsTrait;
 
-class SocialService extends BaseApplicationComponent
+class Social extends Component
 {
     // Traits
     // =========================================================================

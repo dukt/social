@@ -5,11 +5,11 @@
  * @license   https://dukt.net/craft/social/docs/license
  */
 
-namespace Dukt\Social\LoginProviders;
+namespace dukt\social\loginproviders;
 
-use Craft\Craft;
-use Dukt\Social\Base\LoginProviderInterface;
-use Craft\Oauth_TokenModel;
+use Craft;
+use dukt\social\base\LoginProviderInterface;
+use dukt\oauth\models\Token;
 
 abstract class BaseProvider implements LoginProviderInterface
 {
@@ -60,9 +60,9 @@ abstract class BaseProvider implements LoginProviderInterface
 	 */
 	public function getOauthProvider()
 	{
-        Craft::app()->social->checkPluginRequirements();
+        \dukt\social\Plugin::getInstance()->social->checkPluginRequirements();
 
-		return Craft::app()->oauth->getProvider($this->getHandle(), false);
+		return \dukt\oauth\Plugin::getInstance()->oauth->getProvider($this->getHandle(), false);
 	}
 
 	/**
@@ -90,7 +90,7 @@ abstract class BaseProvider implements LoginProviderInterface
 	 */
 	public function getScope()
 	{
-		$providerConfig = Craft::app()->config->get($this->getHandle(), 'social');
+		$providerConfig = Craft::$app->config->get($this->getHandle(), 'social');
 
 		if ($providerConfig && isset($providerConfig['scope']))
 		{
@@ -109,7 +109,7 @@ abstract class BaseProvider implements LoginProviderInterface
 	 */
 	public function getAuthorizationOptions()
 	{
-		$providerConfig = Craft::app()->config->get($this->getHandle(), 'social');
+		$providerConfig = Craft::$app->config->get($this->getHandle(), 'social');
 
 		if ($providerConfig && isset($providerConfig['authorizationOptions']))
 		{
@@ -129,8 +129,9 @@ abstract class BaseProvider implements LoginProviderInterface
 	public function getIsEnabled()
 	{
 		// get plugin settings
-		$pluginSettings = \Craft\Craft::app()->plugins->getPlugin('social')->getSettings();
-		$loginProviders = $pluginSettings->loginProviders;
+        $plugin = Craft::$app->plugins->getPlugin('social');
+		$settings = $plugin->getSettings();
+		$loginProviders = $settings->loginProviders;
 
 		if (isset($loginProviders[$this->getHandle()]['enabled']) && $loginProviders[$this->getHandle()]['enabled'])
 		{
@@ -147,7 +148,7 @@ abstract class BaseProvider implements LoginProviderInterface
 	 *
 	 * @return array|null
 	 */
-	public function getRemoteProfile(Oauth_TokenModel $token)
+	public function getRemoteProfile(Token $token)
 	{
 		return $this->getOauthProvider()->getRemoteResourceOwner($token);
 	}

@@ -88,7 +88,7 @@ class Social_ProviderModel extends BaseModel
 	{
         Craft::app()->social->checkPluginRequirements();
 
-		return craft()->oauth->getProvider($this->oauthProviderHandle, false);
+		return \dukt\oauth\Plugin::getInstance()->oauth->getProvider($this->oauthProviderHandle, false);
 	}
 
 	/**

@@ -7,9 +7,18 @@
 
 namespace dukt\social;
 
+use Craft;
+use yii\base\Event;
+use craft\web\UrlManager;
+use craft\events\RegisterUrlRulesEvent;
+use dukt\social\models\Settings;
+
 class Plugin extends \craft\base\Plugin
 {
     public $hasSettings = true;
+    public $hasCpSection = false;
+
+    public static $plugin;
 
 	// Public Methods
 	// =========================================================================
@@ -21,13 +30,72 @@ class Plugin extends \craft\base\Plugin
 	 */
 	public function init()
 	{
-/*		require_once(CRAFT_PLUGINS_PATH.'social/base/LoginProviderInterface.php');
-		require_once(CRAFT_PLUGINS_PATH.'social/providers/login/BaseProvider.php');
+        parent::init();
+
+        self::$plugin = $this;
+
+        $this->hasCpSection = $this->hasCpSection();
+
+        /*
+        require_once(CRAFT_PLUGINS_PATH.'social/base/LoginProviderInterface.php');
+        require_once(CRAFT_PLUGINS_PATH.'social/providers/login/BaseProvider.php');
 
         $this->initEventListeners();
-        $this->initTemplateHooks();*/
+        $this->initTemplateHooks();
+        */
 
-        parent::init();
+        $this->setComponents([
+            'social' => \dukt\social\services\Social::class,
+            'social_loginAccounts' => \dukt\social\services\LoginAccounts::class,
+            'social_loginProviders' => \dukt\social\services\LoginProviders::class,
+            'social_userSession' => \dukt\social\services\UserSession::class,
+        ]);
+
+        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, [$this, 'registerCpUrlRules']);
+
+    }
+
+    public function registerCpUrlRules(RegisterUrlRulesEvent $event)
+    {
+        $rules = [
+            'social' => 'social/login-accounts/index',
+
+            'social/settings' => 'social/settings/index',
+            'social/install' => 'social/install/index',
+
+            'social/loginaccounts' => 'social/loginAccounts/index',
+            'social/loginaccounts/<userId:\d+>' => 'social/loginAccounts/edit',
+
+            'settings/plugins/social/settings/loginproviders' => 'social/login-providers/index',
+            'settings/plugins/social/settings/loginproviders/<handle:{handle}>' => 'social/loginProviders/edit',
+            
+            'settings/plugins/social/settings/settings' => 'social/settings/index',
+        ];
+
+        $event->rules = array_merge($event->rules, $rules);
+    }
+
+    /**
+     * Control Panel routes.
+     *
+     * @return mixed
+     */
+    public function registerCpRoutes()
+    {
+        return [
+            "social" => ['action' => "social/loginAccounts/index"],
+
+            'social/install' => ['action' => "social/install/index"],
+            'social/settings' => ['action' => "social/settings/index"],
+
+            "social/loginaccounts" => ['action' => "social/loginAccounts/index"],
+            "social/loginaccounts/(?P<userId>\d+)" => ['action' => "social/loginAccounts/edit"],
+
+            'settings/plugins/social/settings/loginproviders' => ['action' => "social/loginProviders/index"],
+            'settings/plugins/social/settings/loginproviders/(?P<handle>.*)' => ['action' => "social/loginProviders/edit"],
+
+            'settings/plugins/social/settings/settings' => ['action' => "social/settings/index"],
+        ];
     }
 
 	/**
@@ -42,11 +110,21 @@ class Plugin extends \craft\base\Plugin
 		require_once(CRAFT_PLUGINS_PATH.'social/providers/login/Twitter.php');*/
 
 		return [
-			'Dukt\Social\LoginProviders\Facebook',
-			'Dukt\Social\LoginProviders\Google',
-			'Dukt\Social\LoginProviders\Twitter',
+			'dukt\social\loginproviders\Facebook',
+			'dukt\social\loginproviders\Google',
+			'dukt\social\loginproviders\Twitter',
 		];
 	}
+
+    /**
+     * Creates and returns the model used to store the plugin’s settings.
+     *
+     * @return \craft\base\Model|null
+     */
+    protected function createSettingsModel()
+    {
+        return new Settings();
+    }
 
     public function getSettingsResponse()
     {
@@ -81,7 +159,7 @@ class Plugin extends \craft\base\Plugin
 	 */
 	public function getName()
 	{
-		return Craft::t('Social Login');
+		return Craft::t('app', 'Social Login');
 	}
 
 	/**
@@ -91,7 +169,7 @@ class Plugin extends \craft\base\Plugin
 	 */
 	public function getDescription()
 	{
-		return Craft::t('Let your visitors log into Craft with web services like Facebook, Google, Twitter…');
+		return Craft::t('app', 'Let your visitors log into Craft with web services like Facebook, Google, Twitter…');
 	}
 
 	/**
@@ -172,8 +250,7 @@ class Plugin extends \craft\base\Plugin
      */
     public function hasCpSection()
 	{
-		$socialPlugin = craft()->plugins->getPlugin('social');
-		$settings = $socialPlugin->getSettings();
+		$settings = $this->getSettings();
 
 		if ($settings['showCpSection'])
 		{
@@ -184,29 +261,6 @@ class Plugin extends \craft\base\Plugin
 	}
 
     /**
-     * Control Panel routes.
-     *
-     * @return mixed
-     */
-	public function registerCpRoutes()
-	{
-		return [
-			"social" => ['action' => "social/loginAccounts/index"],
-
-			'social/install' => ['action' => "social/install/index"],
-			'social/settings' => ['action' => "social/settings/index"],
-
-			"social/loginaccounts" => ['action' => "social/loginAccounts/index"],
-			"social/loginaccounts/(?P<userId>\d+)" => ['action' => "social/loginAccounts/edit"],
-
-			'settings/plugins/social/settings/loginproviders' => ['action' => "social/loginProviders/index"],
-			'settings/plugins/social/settings/loginproviders/(?P<handle>.*)' => ['action' => "social/loginProviders/edit"],
-
-			'settings/plugins/social/settings/settings' => ['action' => "social/settings/index"],
-		];
-	}
-
-    /**
      * Defines additional user table attributes.
      *
      * @return array
@@ -214,7 +268,7 @@ class Plugin extends \craft\base\Plugin
     public function defineAdditionalUserTableAttributes()
     {
         return [
-            'loginAccounts' => Craft::t('Login Accounts')
+            'loginAccounts' => Craft::t('app', 'Login Accounts')
         ];
     }
 
@@ -230,7 +284,7 @@ class Plugin extends \craft\base\Plugin
     {
         if ($attribute == 'loginAccounts')
         {
-            $loginAccounts = craft()->social_loginAccounts->getLoginAccountsByUserId($user->id);
+            $loginAccounts = \dukt\social\Plugin::getInstance()->social_loginAccounts->getLoginAccountsByUserId($user->id);
 
             if (!$loginAccounts)
             {
@@ -241,7 +295,7 @@ class Plugin extends \craft\base\Plugin
                 'loginAccounts' => $loginAccounts,
             ];
 
-	        craft()->templates->includeCssResource('social/css/social.css');
+	        craft()->templates->registerCssFile('social/css/social.css');
 
             $html = craft()->templates->render('social/users/_login-accounts-column', $variables, true);
 
@@ -285,7 +339,7 @@ class Plugin extends \craft\base\Plugin
         {
             if (craft()->request->isCpRequest() && craft()->request->getSegment(1) == 'login')
             {
-                $loginProviders = craft()->social_loginProviders->getLoginProviders();
+                $loginProviders = \dukt\social\Plugin::getInstance()->social_loginProviders->getLoginProviders();
                 $jsLoginProviders = [];
 
                 foreach($loginProviders as $loginProvider)
@@ -293,7 +347,7 @@ class Plugin extends \craft\base\Plugin
                     $jsLoginProvider = [
                         'name' => $loginProvider->getName(),
                         'handle' => $loginProvider->getHandle(),
-                        'url' => craft()->social->getLoginUrl($loginProvider->getHandle()),
+                        'url' => \dukt\social\Plugin::getInstance()->social->getLoginUrl($loginProvider->getHandle()),
                         'iconUrl' => $loginProvider->getIconUrl(),
                     ];
 
@@ -302,7 +356,7 @@ class Plugin extends \craft\base\Plugin
 
                 $error = craft()->userSession->getFlash('error');
 
-                craft()->templates->includeCssResource("social/css/login.css", true);
+                craft()->templates->registerCssFile("social/css/login.css", true);
                 craft()->templates->includeJsResource("social/js/login.js", true);
                 craft()->templates->includeJs("var socialLoginForm = new Craft.SocialLoginForm(".json_encode($jsLoginProviders).", ".json_encode($error).");");
             }
@@ -315,7 +369,7 @@ class Plugin extends \craft\base\Plugin
 		{
 			$user = $event->params['user'];
 
-            craft()->social_loginAccounts->deleteLoginAccountByUserId($user->id);
+            \dukt\social\Plugin::getInstance()->social_loginAccounts->deleteLoginAccountByUserId($user->id);
         });
     }
 
@@ -331,9 +385,9 @@ class Plugin extends \craft\base\Plugin
             if ($context['account'])
             {
 	            $context['user'] = $context['account'];
-	            $context['loginAccounts'] = craft()->social_loginAccounts->getLoginAccountsByUserId($context['account']->id);
+	            $context['loginAccounts'] = \dukt\social\Plugin::getInstance()->social_loginAccounts->getLoginAccountsByUserId($context['account']->id);
 
-                $loginProviders = craft()->social_loginProviders->getLoginProviders();
+                $loginProviders = \dukt\social\Plugin::getInstance()->social_loginProviders->getLoginProviders();
                 $context['loginProviders'] = [];
 
                 foreach($loginProviders as $loginProvider)
@@ -354,7 +408,7 @@ class Plugin extends \craft\base\Plugin
                     }
                 }
 
-	            craft()->templates->includeCssResource('social/css/social.css');
+	            craft()->templates->registerCssFile('social/css/social.css');
 
                 $html = craft()->templates->render('social/users/_edit-pane', $context);
 

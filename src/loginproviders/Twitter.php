@@ -5,10 +5,10 @@
  * @license   https://dukt.net/craft/social/docs/license
  */
 
-namespace Dukt\Social\LoginProviders;
+namespace dukt\social\loginproviders;
 
 use Craft\Craft;
-use Craft\Oauth_TokenModel;
+use dukt\oauth\models\Token;
 
 class Twitter extends BaseProvider
 {
@@ -35,11 +35,11 @@ class Twitter extends BaseProvider
     /**
      * @inheritdoc
      *
-     * @param Oauth_TokenModel $token
+     * @param Token $token
      *
      * @return array|null
      */
-	public function getProfile(Oauth_TokenModel $token)
+	public function getProfile(Token $token)
 	{
 		$remoteProfile = $this->getRemoteProfile($token);
 

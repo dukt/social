@@ -1,6 +1,4 @@
 {% extends "_layouts/elementindex" %}
 
-{% set title = "Social Login"|t %}
-{% set elementType = 'Social_LoginAccount' %}
-
-{% includeCssResource "social/css/social.css" %}
+{% set title = "Social Login"|t('app') %}
+{% set elementType = 'dukt\\social\\elements\\LoginAccount' %}

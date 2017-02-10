@@ -5,9 +5,11 @@
  * @license   https://dukt.net/craft/social/docs/license
  */
 
-namespace Craft;
+namespace dukt\social\controllers;
 
-class Social_InstallController extends BaseController
+use craft\web\Controller;
+
+class InstallController extends Controller
 {
 	// Public Methods
 	// =========================================================================
@@ -19,7 +21,7 @@ class Social_InstallController extends BaseController
 	 */
     public function actionIndex()
     {
-        $missingDependencies = craft()->social->getMissingDependencies();
+        $missingDependencies = \dukt\social\Plugin::getInstance()->social->getMissingDependencies();
 
         if (count($missingDependencies) > 0)
         {

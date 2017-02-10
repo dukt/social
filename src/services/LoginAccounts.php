@@ -5,9 +5,12 @@
  * @license   https://dukt.net/craft/social/docs/license
  */
 
-namespace Craft;
+namespace dukt\social\services;
 
-class Social_LoginAccountsService extends BaseApplicationComponent
+use Craft;
+use yii\base\Component;
+
+class LoginAccounts extends Component
 {
     // Public Methods
     // =========================================================================
@@ -19,8 +22,10 @@ class Social_LoginAccountsService extends BaseApplicationComponent
      */
     public function getLoginAccounts()
     {
-        $criteria = craft()->elements->getCriteria('Social_LoginAccount');
+        /*$criteria = Craft::$app->elements->getCriteria('Social_LoginAccount');
         $loginAccounts = $criteria->find();
+        */
+        $loginAccounts = \dukt\social\elements\LoginAccount::find()->all();
 
         return $loginAccounts;
     }
@@ -32,7 +37,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
      */
     public function getLoginAccountsByUserId($userId)
     {
-        $criteria = craft()->elements->getCriteria('Social_LoginAccount');
+        $criteria = Craft::$app->elements->getCriteria('Social_LoginAccount');
         $criteria->userId = $userId;
         $loginAccounts = $criteria->find();
 
@@ -48,7 +53,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
      */
     public function getLoginAccountById($id)
     {
-        return craft()->elements->getElementById($id, 'Social_LoginAccount');
+        return Craft::$app->elements->getElementById($id, 'Social_LoginAccount');
     }
 
     /**
@@ -60,7 +65,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
      */
     public function getLoginAccountByLoginProvider($providerHandle)
     {
-        $currentUser = craft()->userSession->getUser();
+        $currentUser = Craft::$app->userSession->getUser();
 
         // Check if there is a current user or not
         if (!$currentUser)
@@ -68,7 +73,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
             return false;
         }
 
-        $criteria = craft()->elements->getCriteria('Social_LoginAccount');
+        $criteria = Craft::$app->elements->getCriteria('Social_LoginAccount');
         $criteria->userId = $currentUser->id;
         $criteria->providerHandle = $providerHandle;
         $loginAccount = $criteria->first();
@@ -86,7 +91,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
      */
     public function getLoginAccountByUid($providerHandle, $socialUid)
     {
-        $criteria = craft()->elements->getCriteria('Social_LoginAccount');
+        $criteria = Craft::$app->elements->getCriteria('Social_LoginAccount');
         $criteria->providerHandle = $providerHandle;
         $criteria->socialUid = $socialUid;
         $loginAccount = $criteria->first();
@@ -112,7 +117,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 
             if (!$accountRecord)
             {
-                throw new Exception(Craft::t('No social user exists with the ID “{id}”', ['id' => $account->id]));
+                throw new Exception(Craft::t('app', 'No social user exists with the ID “{id}”', ['id' => $account->id]));
             }
         }
         else
@@ -132,11 +137,11 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 
         if (!$account->hasErrors())
         {
-            $transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
+            $transaction = Craft::$app->db->getCurrentTransaction() === null ? Craft::$app->db->beginTransaction() : null;
 
             try
             {
-                if (craft()->elements->saveElement($account))
+                if (Craft::$app->elements->saveElement($account))
                 {
                     // Now that we have an element ID, save it on the other stuff
                     if ($isNewAccount)
@@ -240,7 +245,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
             $loginAccountIds[] = $loginAccount->id;
         }
 
-        return craft()->elements->deleteElementById($loginAccountIds);
+        return Craft::$app->elements->deleteElementById($loginAccountIds);
     }
 
     /**
@@ -258,7 +263,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
         {
             // check domain locking
 
-            $lockDomains = craft()->config->get('lockDomains', 'social');
+            $lockDomains = Craft::$app->config->get('lockDomains', 'social');
 
             if(count($lockDomains) > 0)
             {
@@ -279,7 +284,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
             }
 
             // find user from email
-            $user = craft()->users->getUserByUsernameOrEmail($attributes['email']);
+            $user = Craft::$app->users->getUserByUsernameOrEmail($attributes['email']);
 
             if (!$user)
             {
@@ -287,7 +292,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
             }
             else
             {
-                if (craft()->config->get('allowEmailMatch', 'social') !== true)
+                if (Craft::$app->config->get('allowEmailMatch', 'social') !== true)
                 {
                     throw new Exception("An account already exists with this email: ".$attributes['email']);
                 }
@@ -329,7 +334,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
     {
         // get social plugin settings
 
-        $socialPlugin = craft()->plugins->getPlugin('social');
+        $socialPlugin = Craft::$app->plugins->getPlugin('social');
         $settings = $socialPlugin->getSettings();
 
         if (!$settings['enableSocialRegistration'])
@@ -348,7 +353,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
         {
             $variables = $attributes;
 
-            $providerConfig = craft()->config->get($providerHandle, 'social');
+            $providerConfig = Craft::$app->config->get($providerHandle, 'social');
             $userMapping = isset($providerConfig['userMapping']) ? $providerConfig['userMapping'] : null;
 
             $userModelAttributes = ['email', 'username', 'firstName', 'lastName', 'preferredLocale', 'weekStartDay'];
@@ -370,7 +375,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
                         {
                             try
                             {
-                                $newUser->{$attribute} = craft()->templates->renderString($template, $variables);
+                                $newUser->{$attribute} = Craft::$app->templates->renderString($template, $variables);
                             }
                             catch(\Exception $e)
                             {
@@ -387,7 +392,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
                         {
                             try
                             {
-                                $userContent[$fieldHandle] = craft()->templates->renderString($template, $variables);
+                                $userContent[$fieldHandle] = Craft::$app->templates->renderString($template, $variables);
                             }
                             catch(\Exception $e)
                             {
@@ -416,7 +421,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 
             // save user
 
-            if (!craft()->users->saveUser($newUser))
+            if (!Craft::$app->users->saveUser($newUser))
             {
                 SocialPlugin::log('There was a problem creating the user:'.print_r($newUser->getErrors(), true), LogLevel::Error);
                 throw new Exception("Craft user couldn’t be created.");
@@ -431,7 +436,7 @@ class Social_LoginAccountsService extends BaseApplicationComponent
                 {
                     try
                     {
-                        $photoUrl = craft()->templates->renderString($userMapping['photoUrl'], $variables);
+                        $photoUrl = Craft::$app->templates->renderString($userMapping['photoUrl'], $variables);
                         $photoUrl = html_entity_decode($photoUrl);
                     }
                     catch(\Exception $e)
@@ -449,17 +454,17 @@ class Social_LoginAccountsService extends BaseApplicationComponent
 
                 if($photoUrl)
                 {
-                    craft()->social->saveRemotePhoto($photoUrl, $newUser);
+                    Craft::$app->social->saveRemotePhoto($photoUrl, $newUser);
                 }
             }
 
             // save groups
             if (!empty($settings['defaultGroup']))
             {
-                craft()->userGroups->assignUserToGroups($newUser->id, [$settings['defaultGroup']]);
+                Craft::$app->userGroups->assignUserToGroups($newUser->id, [$settings['defaultGroup']]);
             }
 
-            craft()->users->saveUser($newUser);
+            Craft::$app->users->saveUser($newUser);
 
             return $newUser;
         }
