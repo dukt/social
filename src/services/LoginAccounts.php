@@ -62,8 +62,7 @@ class LoginAccounts extends Component
         $currentUser = Craft::$app->getUser()->getIdentity();
 
         // Check if there is a current user or not
-        if (!$currentUser)
-        {
+        if (!$currentUser) {
             return false;
         }
 
@@ -95,18 +94,14 @@ class LoginAccounts extends Component
     {
         $isNewAccount = !$account->id;
 
-        if (!$isNewAccount)
-        {
-            $accountRecord = Social_LoginAccountRecord::model()->findById($account->id);
+        if (!$isNewAccount) {
+            $accountRecord = LoginAccount::model()->findById($account->id);
 
-            if (!$accountRecord)
-            {
+            if (!$accountRecord) {
                 throw new Exception(Craft::t('app', 'No social user exists with the ID “{id}”', ['id' => $account->id]));
             }
-        }
-        else
-        {
-            $accountRecord = new Social_LoginAccountRecord;
+        } else {
+            $accountRecord = new LoginAccount;
         }
 
         // populate
@@ -119,34 +114,26 @@ class LoginAccounts extends Component
 
         $account->addErrors($accountRecord->getErrors());
 
-        if (!$account->hasErrors())
-        {
+        if (!$account->hasErrors()) {
             $transaction = Craft::$app->db->getCurrentTransaction() === null ? Craft::$app->db->beginTransaction() : null;
 
-            try
-            {
-                if (Craft::$app->elements->saveElement($account))
-                {
+            try {
+                if (Craft::$app->elements->saveElement($account)) {
                     // Now that we have an element ID, save it on the other stuff
-                    if ($isNewAccount)
-                    {
+                    if ($isNewAccount) {
                         $accountRecord->id = $account->id;
                     }
 
                     $accountRecord->save(false);
 
-                    if ($transaction !== null)
-                    {
+                    if ($transaction !== null) {
                         $transaction->commit();
                     }
 
                     return true;
                 }
-            }
-            catch (\Exception $e)
-            {
-                if ($transaction !== null)
-                {
+            } catch (\Exception $e) {
+                if ($transaction !== null) {
                     $transaction->rollback();
                 }
 
@@ -154,9 +141,7 @@ class LoginAccounts extends Component
             }
 
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
@@ -212,18 +197,15 @@ class LoginAccounts extends Component
      */
     public function deleteLoginAccounts($loginAccounts)
     {
-        if (!$loginAccounts)
-        {
+        if (!$loginAccounts) {
             return false;
         }
 
-        if (!is_array($loginAccounts))
-        {
+        if (!is_array($loginAccounts)) {
             $loginAccounts = [$loginAccounts];
         }
 
-        foreach ($loginAccounts as $loginAccount)
-        {
+        foreach ($loginAccounts as $loginAccount) {
             Craft::$app->elements->deleteElement($loginAccount);
         }
 
@@ -233,7 +215,7 @@ class LoginAccounts extends Component
     /**
      * Register a user.
      *
-     * @param array $attributes Attributes of the user we want to register
+     * @param array  $attributes Attributes of the user we want to register
      * @param string $providerHandle
      *
      * @throws Exception
@@ -241,26 +223,21 @@ class LoginAccounts extends Component
      */
     public function registerUser($attributes, $providerHandle)
     {
-        if (!empty($attributes['email']))
-        {
+        if (!empty($attributes['email'])) {
             // check domain locking
 
             $lockDomains = Craft::$app->config->get('lockDomains', 'social');
 
-            if(count($lockDomains) > 0)
-            {
+            if (count($lockDomains) > 0) {
                 $domainRejected = true;
 
-                foreach($lockDomains as $lockDomain)
-                {
-                    if(strpos($attributes['email'], '@'.$lockDomain) !== false)
-                    {
+                foreach ($lockDomains as $lockDomain) {
+                    if (strpos($attributes['email'], '@'.$lockDomain) !== false) {
                         $domainRejected = false;
                     }
                 }
 
-                if($domainRejected)
-                {
+                if ($domainRejected) {
                     throw new Exception("Couldn’t register with this email (domain is not allowed): ".$attributes['email']);
                 }
             }
@@ -268,20 +245,14 @@ class LoginAccounts extends Component
             // find user from email
             $user = Craft::$app->users->getUserByUsernameOrEmail($attributes['email']);
 
-            if (!$user)
-            {
+            if (!$user) {
                 $user = $this->_registerUser($attributes, $providerHandle);
-            }
-            else
-            {
-                if (Craft::$app->config->get('allowEmailMatch', 'social') !== true)
-                {
+            } else {
+                if (Craft::$app->config->get('allowEmailMatch', 'social') !== true) {
                     throw new Exception("An account already exists with this email: ".$attributes['email']);
                 }
             }
-        }
-        else
-        {
+        } else {
             throw new Exception("Email address not provided.");
         }
 
@@ -306,7 +277,7 @@ class LoginAccounts extends Component
     /**
      * Register a user.
      *
-     * @param array $attributes Attributes of the user we want to register
+     * @param array  $attributes Attributes of the user we want to register
      * @param string $providerHandle
      *
      * @throws Exception
@@ -319,143 +290,116 @@ class LoginAccounts extends Component
         $socialPlugin = Craft::$app->plugins->getPlugin('social');
         $settings = $socialPlugin->getSettings();
 
-        if (!$settings['enableSocialRegistration'])
-        {
+        if (!$settings['enableSocialRegistration']) {
             throw new Exception("Social registration is disabled.");
         }
 
 
         // Fire an 'onBeforeRegister' event
-/*        $event = new Event($this, [
-            'account' => &$attributes,
-        ]);
+        /*        $event = new Event($this, [
+                    'account' => &$attributes,
+                ]);
 
-        $this->onBeforeRegister($event);*/
+                $this->onBeforeRegister($event);*/
 
-/*        $this->trigger('beforeRegister', new ElementEvent([
-            'account' => &$attributes,
-        ]));*/
-/*
-        if ($event->performAction)
-        {*/
-            $variables = $attributes;
+        /*        $this->trigger('beforeRegister', new ElementEvent([
+                    'account' => &$attributes,
+                ]));*/
+        /*
+                if ($event->performAction)
+                {*/
+        $variables = $attributes;
 
-            $providerConfig = Craft::$app->config->get($providerHandle, 'social');
-            $userMapping = isset($providerConfig['userMapping']) ? $providerConfig['userMapping'] : null;
+        $providerConfig = Craft::$app->config->get($providerHandle, 'social');
+        $userMapping = isset($providerConfig['userMapping']) ? $providerConfig['userMapping'] : null;
 
-            $userModelAttributes = ['email', 'username', 'firstName', 'lastName', 'preferredLocale', 'weekStartDay'];
+        $userModelAttributes = ['email', 'username', 'firstName', 'lastName', 'preferredLocale', 'weekStartDay'];
 
-            $newUser = new UserModel();
+        $newUser = new UserModel();
 
-            if ($settings['autoFillProfile'] && is_array($userMapping))
-            {
-                $userContent = [];
+        if ($settings['autoFillProfile'] && is_array($userMapping)) {
+            $userContent = [];
 
-                foreach ($userMapping as $key => $template)
-                {
-                    // Check whether they try to set an attribute or a custom field
-                    if (in_array($key, $userModelAttributes))
-                    {
-                        $attribute = $key;
+            foreach ($userMapping as $key => $template) {
+                // Check whether they try to set an attribute or a custom field
+                if (in_array($key, $userModelAttributes)) {
+                    $attribute = $key;
 
-                        if (array_key_exists($attribute, $newUser->getAttributes()))
-                        {
-                            try
-                            {
-                                $newUser->{$attribute} = Craft::$app->templates->renderString($template, $variables);
-                            }
-                            catch(\Exception $e)
-                            {
-                                // Social::log('Could not map:'.print_r([$attribute, $template, $variables, $e->getMessage()], true), LogLevel::Warning);
-                            }
+                    if (array_key_exists($attribute, $newUser->getAttributes())) {
+                        try {
+                            $newUser->{$attribute} = Craft::$app->templates->renderString($template, $variables);
+                        } catch (\Exception $e) {
+                            // Social::log('Could not map:'.print_r([$attribute, $template, $variables, $e->getMessage()], true), LogLevel::Warning);
                         }
                     }
-                    else
-                    {
-                        $fieldHandle = $key;
+                } else {
+                    $fieldHandle = $key;
 
-                        // Check to make sure custom field exists for user profile
-                        if (isset($newUser->getContent()[$fieldHandle]))
-                        {
-                            try
-                            {
-                                $userContent[$fieldHandle] = Craft::$app->templates->renderString($template, $variables);
-                            }
-                            catch(\Exception $e)
-                            {
-                                // Social::log('Could not map:'.print_r([$template, $variables, $e->getMessage()], true), LogLevel::Warning);
-                            }
+                    // Check to make sure custom field exists for user profile
+                    if (isset($newUser->getContent()[$fieldHandle])) {
+                        try {
+                            $userContent[$fieldHandle] = Craft::$app->templates->renderString($template, $variables);
+                        } catch (\Exception $e) {
+                            // Social::log('Could not map:'.print_r([$template, $variables, $e->getMessage()], true), LogLevel::Warning);
                         }
                     }
                 }
-
-                $newUser->setContentFromPost($userContent);
             }
 
-
-            // fill default email and username if not already done
-
-            if (!$newUser->email)
-            {
-                $newUser->email = $attributes['email'];
-            }
-
-            if (!$newUser->username)
-            {
-                $newUser->username = $attributes['email'];
-            }
+            $newUser->setContentFromPost($userContent);
+        }
 
 
-            // save user
+        // fill default email and username if not already done
 
-            if (!Craft::$app->elements->saveElement($newUser))
-            {
-                // Social::log('There was a problem creating the user:'.print_r($newUser->getErrors(), true), LogLevel::Error);
-                throw new Exception("Craft user couldn’t be created.");
-            }
+        if (!$newUser->email) {
+            $newUser->email = $attributes['email'];
+        }
 
-            // save remote photo
-            if ($settings['autoFillProfile'])
-            {
-                $photoUrl = false;
+        if (!$newUser->username) {
+            $newUser->username = $attributes['email'];
+        }
 
-                if(isset($userMapping['photoUrl']))
-                {
-                    try
-                    {
-                        $photoUrl = Craft::$app->templates->renderString($userMapping['photoUrl'], $variables);
-                        $photoUrl = html_entity_decode($photoUrl);
-                    }
-                    catch(\Exception $e)
-                    {
-                        // Social::log('Could not map:'.print_r(['photoUrl', $userMapping['photoUrl'], $variables, $e->getMessage()], true), LogLevel::Warning);
-                    }
+
+        // save user
+
+        if (!Craft::$app->elements->saveElement($newUser)) {
+            // Social::log('There was a problem creating the user:'.print_r($newUser->getErrors(), true), LogLevel::Error);
+            throw new Exception("Craft user couldn’t be created.");
+        }
+
+        // save remote photo
+        if ($settings['autoFillProfile']) {
+            $photoUrl = false;
+
+            if (isset($userMapping['photoUrl'])) {
+                try {
+                    $photoUrl = Craft::$app->templates->renderString($userMapping['photoUrl'], $variables);
+                    $photoUrl = html_entity_decode($photoUrl);
+                } catch (\Exception $e) {
+                    // Social::log('Could not map:'.print_r(['photoUrl', $userMapping['photoUrl'], $variables, $e->getMessage()], true), LogLevel::Warning);
                 }
-                else
-                {
-                    if (!empty($attributes['photoUrl']))
-                    {
-                        $photoUrl = $attributes['photoUrl'];
-                    }
-                }
-
-                if($photoUrl)
-                {
-                    // Social::$plugin->social->saveRemotePhoto($photoUrl, $newUser);
+            } else {
+                if (!empty($attributes['photoUrl'])) {
+                    $photoUrl = $attributes['photoUrl'];
                 }
             }
 
-            // save groups
-            if (!empty($settings['defaultGroup']))
-            {
-                Craft::$app->userGroups->assignUserToGroups($newUser->id, [$settings['defaultGroup']]);
+            if ($photoUrl) {
+                // Social::$plugin->social->saveRemotePhoto($photoUrl, $newUser);
             }
+        }
 
-            Craft::$app->elements->saveElement($newUser);
+        // save groups
+        if (!empty($settings['defaultGroup'])) {
+            Craft::$app->userGroups->assignUserToGroups($newUser->id, [$settings['defaultGroup']]);
+        }
 
-            return $newUser;
-/*        }
+        Craft::$app->elements->saveElement($newUser);
 
-        return null;*/
+        return $newUser;
+        /*        }
+
+                return null;*/
     }
 }

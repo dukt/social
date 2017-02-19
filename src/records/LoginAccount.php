@@ -5,9 +5,11 @@
  * @license   https://dukt.net/craft/social/docs/license
  */
 
-namespace Craft;
+namespace dukt\social\records;
 
-class Social_LoginAccountRecord extends BaseRecord
+use craft\db\ActiveRecord;
+
+class LoginAccount extends ActiveRecord
 {
     // Public Methods
     // =========================================================================
@@ -17,7 +19,7 @@ class Social_LoginAccountRecord extends BaseRecord
      *
      * @return string
      */
-    public function getTableName()
+    public static function tableName(): string
     {
         return 'social_login_accounts';
     }

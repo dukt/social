@@ -323,7 +323,7 @@ class LoginAccount extends Element implements IdentityInterface
             case 'providerHandle':
             {
                 // TODO:consider eager loading the provider
-                $provider = Social::$plugin->oauth->getProvider($this->providerHandle);
+                $provider = Social::$plugin->loginProviders->getLoginProvider($this->providerHandle);
 
                 if ($provider)
                 {

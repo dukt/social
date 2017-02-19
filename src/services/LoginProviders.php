@@ -59,7 +59,7 @@ class LoginProviders extends Component
     /**
      * Get a login provider by handle.
      *
-     * @param string $handle
+     * @param string    $handle
      * @param bool|true $enabledOnly
      *
      * @return Social_ProviderModel|null
@@ -68,10 +68,8 @@ class LoginProviders extends Component
     {
         $loginProviders = $this->getLoginProviders($enabledOnly);
 
-        foreach ($loginProviders as $loginProvider)
-        {
-            if ($loginProvider->getHandle() == $handle)
-            {
+        foreach ($loginProviders as $loginProvider) {
+            if ($loginProvider->getHandle() == $handle) {
                 return $loginProvider;
             }
         }
@@ -99,17 +97,15 @@ class LoginProviders extends Component
     private function _getLoginProviders($enabledOnly)
     {
         // fetch all OAuth provider types
-        $socialLoginProviderTypes = array();
+        $socialLoginProviderTypes = [];
 
-/*		foreach (Craft::$app->plugins->call('getSocialLoginProviders', [], true) as $pluginSocialLoginProviderTypes)
-        {
-            $socialLoginProviderTypes = array_merge($socialLoginProviderTypes, $pluginSocialLoginProviderTypes);
-        }*/
+        /*		foreach (Craft::$app->plugins->call('getSocialLoginProviders', [], true) as $pluginSocialLoginProviderTypes)
+                {
+                    $socialLoginProviderTypes = array_merge($socialLoginProviderTypes, $pluginSocialLoginProviderTypes);
+                }*/
 
-        foreach(Craft::$app->plugins->getAllPlugins() as $plugin)
-        {
-            if(method_exists($plugin, 'getSocialLoginProviders'))
-            {
+        foreach (Craft::$app->plugins->getAllPlugins() as $plugin) {
+            if (method_exists($plugin, 'getSocialLoginProviders')) {
                 $socialLoginProviderTypes = array_merge($socialLoginProviderTypes, $plugin->getSocialLoginProviders());
             }
         }
@@ -117,12 +113,10 @@ class LoginProviders extends Component
         // instantiate providers
         $loginProviders = [];
 
-        foreach ($socialLoginProviderTypes as $socialLoginProviderType)
-        {
+        foreach ($socialLoginProviderTypes as $socialLoginProviderType) {
             $loginProvider = $this->_createLoginProvider($socialLoginProviderType);
 
-            if (!$enabledOnly || ($enabledOnly && $loginProvider->getIsEnabled()))
-            {
+            if (!$enabledOnly || ($enabledOnly && $loginProvider->getIsEnabled())) {
                 $loginProviders[$socialLoginProviderType] = $loginProvider;
             }
         }
