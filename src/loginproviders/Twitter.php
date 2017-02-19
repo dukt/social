@@ -9,10 +9,11 @@ namespace dukt\social\loginproviders;
 
 use Craft;
 use craft\helpers\UrlHelper;
+use dukt\social\base\LoginProvider;
 use dukt\social\models\Token;
 use dukt\social\Plugin as Social;
 
-class Twitter extends BaseProvider
+class Twitter extends LoginProvider
 {
     /**
      * OAuth Connect

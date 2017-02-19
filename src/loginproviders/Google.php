@@ -7,10 +7,11 @@
 
 namespace dukt\social\loginproviders;
 
+use dukt\social\base\LoginProvider;
 use dukt\social\models\Token;
 use dukt\social\Plugin as Social;
 
-class Google extends BaseProvider
+class Google extends LoginProvider
 {
     /**
      * @inheritdoc
