@@ -7,7 +7,7 @@
 
 namespace dukt\social\base;
 
-use dukt\oauth\models\Token;
+use dukt\social\models\Token;
 
 interface LoginProviderInterface
 {

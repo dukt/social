@@ -9,9 +9,10 @@ namespace dukt\social\controllers;
 
 use Craft;
 use craft\web\Controller;
-use dukt\oauth\models\Token;
+use dukt\social\models\Token;
 use dukt\social\elements\LoginAccount;
 use dukt\social\Plugin as Social;
+use Exception;
 
 class SocialController extends Controller
 {
@@ -51,6 +52,8 @@ class SocialController extends Controller
 	{
 		Social::$plugin->social->checkPluginRequirements();
 
+        Craft::$app->getSession()->set('social.loginReferrer', Craft::$app->getRequest()->getAbsoluteUrl());
+
 		$this->referer = Craft::$app->getSession()->get('social.referer');
 
 		if (!$this->referer)
@@ -66,7 +69,7 @@ class SocialController extends Controller
 
 		// Request params
 		$providerHandle = Craft::$app->request->getParam('provider');
-		$oauthProvider = Social::$plugin->oauth->getProvider($providerHandle);
+		// $oauthProvider = Social::$plugin->oauth->getProvider($providerHandle);
 /*		$requestUri = Craft::$app->request->resolveRequestUri();
 		Craft::$app->getSession()->set('social.requestUri', $requestUri);*/
 
@@ -77,7 +80,7 @@ class SocialController extends Controller
 		// Try to connect
 /*		try
 		{*/
-			if (!$oauthProvider || ($oauthProvider && !$oauthProvider->isConfigured()))
+			if (!Social::$plugin->oauth->isProviderConfigured($providerHandle))
 			{
 				throw new Exception("OAuth provider is not configured");
 			}
@@ -117,7 +120,11 @@ class SocialController extends Controller
 
 				if($response['success'])
 				{
-					return $this->_connectUserFromToken($response['token']);
+				    $token = new Token();
+				    $token->providerHandle = $providerHandle;
+				    $token->token = $response['token'];
+
+					return $this->_connectUserFromToken($token);
 				}
 				else
 				{

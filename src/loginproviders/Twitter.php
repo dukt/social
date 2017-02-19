@@ -8,7 +8,7 @@
 namespace dukt\social\loginproviders;
 
 use Craft\Craft;
-use dukt\oauth\models\Token;
+use dukt\social\models\Token;
 use dukt\social\Plugin as Social;
 
 class Twitter extends BaseProvider
@@ -26,7 +26,6 @@ class Twitter extends BaseProvider
         $config = [
             'identifier' => (isset($providerInfos['clientId']) ? $providerInfos['clientId'] : ''),
             'secret' => (isset($providerInfos['clientSecret']) ? $providerInfos['clientSecret'] : ''),
-            'redirectUri' => $this->getRedirectUri(),
         ];
 
         return $config;

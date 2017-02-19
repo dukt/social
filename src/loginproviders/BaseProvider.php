@@ -9,18 +9,63 @@ namespace dukt\social\loginproviders;
 
 use Craft;
 use dukt\social\base\LoginProviderInterface;
-use dukt\oauth\models\Token;
+use dukt\social\models\Token;
 use dukt\social\Plugin as Social;
+use craft\helpers\UrlHelper;
 
 abstract class BaseProvider implements LoginProviderInterface
 {
+    /**
+     * OAuth Connect
+     *
+     * @return null
+     */
+    public function oauthConnect()
+    {
+        $provider = $this->getOauthProvider();
+
+        Craft::$app->getSession()->set('social.oauthState', $provider->getState());
+
+        $scope = $this->getScope();
+        $options = $this->getAuthorizationOptions();
+
+        if(!is_array($options))
+        {
+            $options = [];
+        }
+
+        $options['scope'] = $scope;
+
+        $authorizationUrl = $provider->getAuthorizationUrl($options);
+
+        return Craft::$app->getResponse()->redirect($authorizationUrl);
+    }
+
+    /**
+     * OAuth Callback
+     *
+     * @return null
+     */
+    public function oauthCallback()
+    {
+        $provider = $this->getOauthProvider();
+
+        $code = Craft::$app->request->getParam('code');
+
+        // Try to get an access token (using the authorization code grant)
+        $token = $provider->getAccessToken('authorization_code', [
+            'code' => $code
+        ]);
+
+        return [
+            'success' => true,
+            'token' => $token
+        ];
+    }
+
     public function getOauthProviderConfig()
     {
         return [];
-    }
-    public function getRedirectUri()
-    {
-        return 'x';
     }
 
 	/**
@@ -76,7 +121,14 @@ abstract class BaseProvider implements LoginProviderInterface
 
         $providerClass = $this->getOauthProviderClass();
 
-        return new $providerClass($this->getOauthProviderConfig());
+        $config = $this->getOauthProviderConfig();
+
+        if(!isset($config['redirectUri']))
+        {
+            $config['redirectUri'] = UrlHelper::actionUrl('social/oauth/callback');
+        }
+
+        return new $providerClass($config);
 	}
 
 	/**
@@ -164,6 +216,7 @@ abstract class BaseProvider implements LoginProviderInterface
 	 */
 	public function getRemoteProfile(Token $token)
 	{
-		return $this->getOauthProvider()->getRemoteResourceOwner($token);
+		// return $this->getOauthProvider()->getRemoteResourceOwner($token);
+        return $this->getOauthProvider()->getResourceOwner($token->token);
 	}
 }

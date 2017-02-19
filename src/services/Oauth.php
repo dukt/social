@@ -8,6 +8,7 @@
 namespace dukt\social\services;
 
 use Craft;
+use dukt\social\Plugin as Social;
 use yii\base\Component;
 
 class Oauth extends Component
@@ -22,8 +23,31 @@ class Oauth extends Component
         }
     }
 
-    public function getProvider($handle, $configuredOnly)
+    public function isProviderConfigured($handle)
     {
+        if($this->getProviderInfos($handle))
+        {
+            return true;
+        }
 
+        return false;
+    }
+
+    public function connect($options)
+    {
+        $handle = $options['provider'];
+
+        $loginProvider = Social::$plugin->loginProviders->getLoginProvider($handle);
+
+        Craft::$app->getSession()->set('social.loginProvider', $handle);
+        if(Craft::$app->getSession()->get('social.callback') === true)
+        {
+            Craft::$app->getSession()->remove('social.callback');
+            return $loginProvider->oauthCallback();
+        }
+        else
+        {
+            return $loginProvider->oauthConnect($options);
+        }
     }
 }

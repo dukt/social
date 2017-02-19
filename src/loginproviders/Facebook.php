@@ -9,7 +9,7 @@ namespace dukt\social\loginproviders;
 
 use dukt\social\Plugin as Social;
 use GuzzleHttp\Client;
-use dukt\oauth\models\Token;
+use dukt\social\models\Token;
 use GuzzleHttp\HandlerStack;
 
 class Facebook extends BaseProvider
@@ -48,7 +48,6 @@ class Facebook extends BaseProvider
         $config = [
             'clientId' => $providerInfos['clientId'],
             'clientSecret' => $providerInfos['clientSecret'],
-            'redirectUri' => $this->getRedirectUri(),
             'graphApiVersion' => $graphApiVersion
         ];
 
