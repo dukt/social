@@ -23,19 +23,6 @@ class Google extends LoginProvider
         return 'Google';
     }
 
-    public function getOauthProviderConfig()
-    {
-        $providerInfos = Social::$plugin->oauth->getProviderInfos('google');
-        $oauthProviderOptions = $providerInfos['oauthProviderOptions'];
-
-        $config = [
-            'clientId' => (isset($oauthProviderOptions['clientId']) ? $oauthProviderOptions['clientId'] : ''),
-            'clientSecret' => (isset($oauthProviderOptions['clientSecret']) ? $oauthProviderOptions['clientSecret'] : ''),
-        ];
-
-        return $config;
-    }
-
     /**
      * @inheritdoc
      *
@@ -46,9 +33,23 @@ class Google extends LoginProvider
         return 'google';
     }
 
-    public function getOauthProviderClass()
+    /**
+     * Get the OAuth provider.
+     *
+     * @return mixed
+     */
+    public function getOauthProvider()
     {
-        return '\Dukt\OAuth2\Client\Provider\Google';
+        $providerInfos = Social::$plugin->oauth->getProviderInfos('google');
+        $oauthProviderOptions = $providerInfos['oauthProviderOptions'];
+
+        $config = [
+            'clientId' => (isset($oauthProviderOptions['clientId']) ? $oauthProviderOptions['clientId'] : ''),
+            'clientSecret' => (isset($oauthProviderOptions['clientSecret']) ? $oauthProviderOptions['clientSecret'] : ''),
+            'redirectUri' => UrlHelper::actionUrl('social/oauth/callback'),
+        ];
+
+        return new \Dukt\OAuth2\Client\Provider\Google($config);
     }
 
     /**

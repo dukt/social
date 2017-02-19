@@ -7,6 +7,7 @@
 
 namespace dukt\social\loginproviders;
 
+use craft\helpers\UrlHelper;
 use dukt\social\Plugin as Social;
 use dukt\social\base\LoginProvider;
 use GuzzleHttp\Client;
@@ -34,12 +35,12 @@ class Facebook extends LoginProvider
         return 'facebook';
     }
 
-    public function getOauthProviderClass()
-    {
-        return '\League\OAuth2\Client\Provider\Facebook';
-    }
-
-    public function getOauthProviderConfig()
+    /**
+     * Get the OAuth provider.
+     *
+     * @return mixed
+     */
+    public function getOauthProvider()
     {
         $graphApiVersion = 'v2.8';
 
@@ -48,10 +49,11 @@ class Facebook extends LoginProvider
         $config = [
             'clientId' => $providerInfos['clientId'],
             'clientSecret' => $providerInfos['clientSecret'],
-            'graphApiVersion' => $graphApiVersion
+            'graphApiVersion' => $graphApiVersion,
+            'redirectUri' => UrlHelper::actionUrl('social/oauth/callback'),
         ];
 
-        return $config;
+        return new \League\OAuth2\Client\Provider\Facebook($config);
     }
 
     /**

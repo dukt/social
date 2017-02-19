@@ -136,11 +136,6 @@ abstract class LoginProvider implements LoginProviderInterface
         ];
     }
 
-    public function getOauthProviderConfig()
-    {
-        return [];
-    }
-
     /**
      * Get the provider handle.
      *
@@ -181,25 +176,6 @@ abstract class LoginProvider implements LoginProviderInterface
         $url = Craft::$app->assetManager->getPublishedUrl('@dukt/social/icons/'.$this->getHandle().'.svg', true);
 
         return $url;
-    }
-
-    /**
-     * Get the OAuth provider.
-     *
-     * @return mixed
-     */
-    public function getOauthProvider()
-    {
-        $providerClass = $this->getOauthProviderClass();
-
-        $config = $this->getOauthProviderConfig();
-
-        if(!isset($config['redirectUri']))
-        {
-            $config['redirectUri'] = UrlHelper::actionUrl('social/oauth/callback');
-        }
-
-        return new $providerClass($config);
     }
 
     /**

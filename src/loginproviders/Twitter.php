@@ -15,48 +15,6 @@ use dukt\social\Plugin as Social;
 
 class Twitter extends LoginProvider
 {
-    public function oauthVersion()
-    {
-        return 1;
-    }
-
-    public function getOauthProviderClass()
-    {
-        return '\League\OAuth1\Client\Server\Twitter';
-    }
-
-    /**
-     * Get the OAuth provider.
-     *
-     * @return mixed
-     */
-    public function getOauthProvider()
-    {
-        $providerClass = $this->getOauthProviderClass();
-
-        $config = $this->getOauthProviderConfig();
-
-        if(!isset($config['callback_uri']))
-        {
-            $config['callback_uri'] = UrlHelper::actionUrl('social/oauth/callback');
-        }
-
-        return new $providerClass($config);
-    }
-
-    public function getOauthProviderConfig()
-    {
-        $providerInfos = Social::$plugin->oauth->getProviderInfos('twitter');
-        $oauthProviderOptions = $providerInfos['oauthProviderOptions'];
-
-        $config = [
-            'identifier' => (isset($oauthProviderOptions['consumerKey']) ? $oauthProviderOptions['consumerKey'] : ''),
-            'secret' => (isset($oauthProviderOptions['consumerSecret']) ? $oauthProviderOptions['consumerSecret'] : ''),
-        ];
-
-        return $config;
-    }
-
     /**
      * @inheritdoc
      *
@@ -75,6 +33,34 @@ class Twitter extends LoginProvider
     public function getOauthProviderHandle()
     {
         return 'twitter';
+    }
+
+    public function oauthVersion()
+    {
+        return 1;
+    }
+
+    /**
+     * Get the OAuth provider.
+     *
+     * @return mixed
+     */
+    public function getOauthProvider()
+    {
+        $providerInfos = Social::$plugin->oauth->getProviderInfos('twitter');
+        $oauthProviderOptions = $providerInfos['oauthProviderOptions'];
+
+        $config = [
+            'identifier' => (isset($oauthProviderOptions['consumerKey']) ? $oauthProviderOptions['consumerKey'] : ''),
+            'secret' => (isset($oauthProviderOptions['consumerSecret']) ? $oauthProviderOptions['consumerSecret'] : ''),
+        ];
+
+        if(!isset($config['callback_uri']))
+        {
+            $config['callback_uri'] = UrlHelper::actionUrl('social/oauth/callback');
+        }
+
+        return new \League\OAuth1\Client\Server\Twitter($config);
     }
 
     /**
