@@ -188,7 +188,7 @@ class SocialController extends Controller
      */
     public function actionConnectLoginAccount()
     {
-        $this->actionLogin();
+        return $this->actionLogin();
     }
 
     /**
