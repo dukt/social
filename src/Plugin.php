@@ -17,9 +17,22 @@ use dukt\social\web\assets\social\SocialAsset;
 
 class Plugin extends \craft\base\Plugin
 {
+    // Properties
+    // =========================================================================
+
+    /**
+     * @var bool
+     */
     public $hasSettings = true;
+
+    /**
+     * @var bool
+     */
     public $hasCpSection = false;
 
+    /**
+     * @var
+     */
     public static $plugin;
 
     // Public Methods
@@ -51,11 +64,17 @@ class Plugin extends \craft\base\Plugin
         $this->initTemplateHooks();
     }
 
+    /**
+     * @return mixed
+     */
     public function defineTemplateComponent()
     {
         return SocialVariable::class;
     }
 
+    /**
+     * @param RegisterUrlRulesEvent $event
+     */
     public function registerCpUrlRules(RegisterUrlRulesEvent $event)
     {
         $rules = [
@@ -99,6 +118,9 @@ class Plugin extends \craft\base\Plugin
         return new Settings();
     }
 
+    /**
+     * @return string
+     */
     public function getSettingsResponse()
     {
         $url = \craft\helpers\UrlHelper::cpUrl('settings/plugins/social/settings/loginproviders');
