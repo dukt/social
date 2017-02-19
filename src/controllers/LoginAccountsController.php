@@ -10,7 +10,7 @@ namespace dukt\social\controllers;
 use Craft;
 use craft\web\Controller;
 use dukt\social\web\assets\social\SocialAsset;
-use dukt\social\Social;
+use dukt\social\Plugin as Social;
 
 class LoginAccountsController extends Controller
 {

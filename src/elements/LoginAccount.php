@@ -13,7 +13,7 @@ use craft\elements\db\ElementQueryInterface;
 use dukt\social\elements\db\LoginAccountQuery;
 use yii\web\IdentityInterface;
 use craft\helpers\UrlHelper;
-use dukt\social\Social;
+use dukt\social\Plugin as Social;
 
 class LoginAccount extends Element implements IdentityInterface
 {

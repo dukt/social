@@ -13,7 +13,7 @@ use craft\events\ElementEvent;
 use craft\elements\User as UserModel;
 use dukt\social\elements\LoginAccount;
 use Exception;
-use dukt\social\Social;
+use dukt\social\Plugin as Social;
 
 class LoginAccounts extends Component
 {

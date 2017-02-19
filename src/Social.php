@@ -15,7 +15,7 @@ use dukt\social\models\Settings;
 use dukt\social\variables\SocialVariable;
 use dukt\social\web\assets\social\SocialAsset;
 
-class Social extends \craft\base\Plugin
+class Plugin extends \craft\base\Plugin
 {
     public $hasSettings = true;
     public $hasCpSection = false;

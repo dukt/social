@@ -11,7 +11,7 @@ use Craft;
 use craft\web\Controller;
 use dukt\oauth\models\Token;
 use dukt\social\elements\LoginAccount;
-use dukt\social\Social;
+use dukt\social\Plugin as Social;
 
 class SocialController extends Controller
 {

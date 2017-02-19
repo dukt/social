@@ -10,7 +10,7 @@ namespace dukt\social\loginproviders;
 use Craft;
 use dukt\social\base\LoginProviderInterface;
 use dukt\oauth\models\Token;
-use dukt\social\Social;
+use dukt\social\Plugin as Social;
 
 abstract class BaseProvider implements LoginProviderInterface
 {

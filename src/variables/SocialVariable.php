@@ -7,7 +7,7 @@
 
 namespace dukt\social\variables;
 
-use dukt\social\Social;
+use dukt\social\Plugin as Social;
 
 class SocialVariable
 {

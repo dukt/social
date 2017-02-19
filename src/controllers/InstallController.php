@@ -8,7 +8,7 @@
 namespace dukt\social\controllers;
 
 use craft\web\Controller;
-use dukt\social\Social;
+use dukt\social\Plugin as Social;
 
 class InstallController extends Controller
 {

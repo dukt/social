@@ -9,7 +9,7 @@ namespace dukt\social\controllers;
 
 use Craft;
 use craft\web\Controller;
-use dukt\social\Social;
+use dukt\social\Plugin as Social;
 
 class SettingsController extends Controller
 {
