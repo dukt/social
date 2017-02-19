@@ -31,7 +31,7 @@ class Google extends LoginProvider
      */
     public function getOauthProvider()
     {
-        $providerInfos = Social::$plugin->oauth->getProviderInfos('google');
+        $providerInfos = Social::$plugin->oauth->getProviderInfos($this->getHandle());
         $oauthProviderOptions = $providerInfos['oauthProviderOptions'];
 
         $config = [

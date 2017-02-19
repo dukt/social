@@ -32,14 +32,12 @@ class Facebook extends LoginProvider
      */
     public function getOauthProvider()
     {
-        $graphApiVersion = 'v2.8';
-
-        $providerInfos = Social::$plugin->oauth->getProviderInfos('facebook');
+        $providerInfos = Social::$plugin->oauth->getProviderInfos($this->getHandle());
 
         $config = [
             'clientId' => $providerInfos['clientId'],
             'clientSecret' => $providerInfos['clientSecret'],
-            'graphApiVersion' => $graphApiVersion,
+            'graphApiVersion' => 'v2.8',
             'redirectUri' => UrlHelper::actionUrl('social/oauth/callback'),
         ];
 
