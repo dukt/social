@@ -87,7 +87,7 @@ class Plugin extends \craft\base\Plugin
 
             'settings/plugins/social/settings/loginproviders' => 'social/login-providers/index',
             'settings/plugins/social/settings/loginproviders/<handle:{handle}>' => 'social/loginProviders/edit',
-            
+
             'settings/plugins/social/settings/settings' => 'social/settings/index',
         ];
 
@@ -139,8 +139,7 @@ class Plugin extends \craft\base\Plugin
     {
         $settings = $this->getSettings();
 
-        if ($settings['showCpSection'])
-        {
+        if ($settings['showCpSection']) {
             return true;
         }
 
@@ -169,12 +168,10 @@ class Plugin extends \craft\base\Plugin
      */
     public function getUserTableAttributeHtml(UserModel $user, $attribute)
     {
-        if ($attribute == 'loginAccounts')
-        {
+        if ($attribute == 'loginAccounts') {
             $loginAccounts = $this->loginAccounts->getLoginAccountsByUserId($user->id);
 
-            if (!$loginAccounts)
-            {
+            if (!$loginAccounts) {
                 return '';
             }
 
@@ -222,15 +219,12 @@ class Plugin extends \craft\base\Plugin
     {
         // social login for CP
 
-        if($this->settings->enableCpLogin)
-        {
-            if (Craft::$app->request->isCpRequest() && Craft::$app->request->getSegment(1) == 'login')
-            {
+        if ($this->settings->enableCpLogin) {
+            if (Craft::$app->request->isCpRequest() && Craft::$app->request->getSegment(1) == 'login') {
                 $loginProviders = $this->loginProviders->getLoginProviders();
                 $jsLoginProviders = [];
 
-                foreach($loginProviders as $loginProvider)
-                {
+                foreach ($loginProviders as $loginProvider) {
                     $jsLoginProvider = [
                         'name' => $loginProvider->getName(),
                         'handle' => $loginProvider->getHandle(),
@@ -252,8 +246,7 @@ class Plugin extends \craft\base\Plugin
 
         // Delete social user when craft user is deleted
 
-        Craft::$app->on('users.onBeforeDeleteUser', function (Event $event)
-        {
+        Craft::$app->on('users.onBeforeDeleteUser', function(Event $event) {
             $user = $event->params['user'];
 
             $this->loginAccounts->deleteLoginAccountByUserId($user->id);
@@ -267,32 +260,24 @@ class Plugin extends \craft\base\Plugin
      */
     private function initTemplateHooks()
     {
-        Craft::$app->getView()->hook('cp.users.edit.right-pane', function(&$context)
-        {
-            if ($context['account'])
-            {
+        Craft::$app->getView()->hook('cp.users.edit.right-pane', function(&$context) {
+            if ($context['account']) {
                 $context['user'] = $context['account'];
                 $context['loginAccounts'] = $this->loginAccounts->getLoginAccountsByUserId($context['account']->id);
 
                 $loginProviders = $this->loginProviders->getLoginProviders();
                 $context['loginProviders'] = [];
 
-                foreach($loginProviders as $loginProvider)
-                {
+                foreach ($loginProviders as $loginProvider) {
                     $providerAvailable = true;
 
-                    foreach($context['loginAccounts'] as $loginAccount)
-                    {
-                        $handle = $loginProvider->getHandle();
-
-                        if($loginProvider->getHandle() == $loginAccount->providerHandle)
-                        {
+                    foreach ($context['loginAccounts'] as $loginAccount) {
+                        if ($loginProvider->getHandle() == $loginAccount->providerHandle) {
                             $providerAvailable = false;
                         }
                     }
 
-                    if($providerAvailable)
-                    {
+                    if ($providerAvailable) {
                         $context['loginProviders'][] = $loginProvider;
                     }
                 }
