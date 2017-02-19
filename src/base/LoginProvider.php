@@ -8,10 +8,19 @@
 namespace dukt\social\base;
 
 use Craft;
+use craft\web\Response;
 use dukt\social\models\Token;
 
 abstract class LoginProvider implements LoginProviderInterface
 {
+    // Public Methods
+    // =========================================================================
+
+    /**
+     * OAuth version
+     *
+     * @return int
+     */
     public function oauthVersion()
     {
         return 2;
@@ -31,51 +40,12 @@ abstract class LoginProvider implements LoginProviderInterface
             case 2:
                 return $this->oauth2Connect();
         }
-
-    }
-
-    private function oauth1Connect()
-    {
-        // OAuth provider
-        $provider = $this->getOauthProvider();
-
-        // Obtain temporary credentials
-        $temporaryCredentials = $provider->getTemporaryCredentials();
-
-        // Store credentials in the session
-        Craft::$app->getSession()->set('oauth.temporaryCredentials', $temporaryCredentials);
-
-        // Redirect to login screen
-        $authorizationUrl = $provider->getAuthorizationUrl($temporaryCredentials);
-
-        return Craft::$app->getResponse()->redirect($authorizationUrl);
-    }
-
-    private function oauth2Connect()
-    {
-        $provider = $this->getOauthProvider();
-
-        Craft::$app->getSession()->set('social.oauthState', $provider->getState());
-
-        $scope = $this->getScope();
-        $options = $this->getAuthorizationOptions();
-
-        if(!is_array($options))
-        {
-            $options = [];
-        }
-
-        $options['scope'] = $scope;
-
-        $authorizationUrl = $provider->getAuthorizationUrl($options);
-
-        return Craft::$app->getResponse()->redirect($authorizationUrl);
     }
 
     /**
-     * OAuth Connect
+     * OAuth Callback
      *
-     * @return null
+     * @return array
      */
     public function oauthCallback()
     {
@@ -90,52 +60,6 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
-     * OAuth Callback
-     *
-     * @return null
-     */
-    private function oauth1Callback()
-    {
-        $provider = $this->getOauthProvider();
-
-        $oauthToken = Craft::$app->request->getParam('oauth_token');
-        $oauthVerifier = Craft::$app->request->getParam('oauth_verifier');
-
-        // Retrieve the temporary credentials we saved before.
-        $temporaryCredentials = Craft::$app->getSession()->get('oauth.temporaryCredentials');
-
-        // Obtain token credentials from the server.
-        $token = $provider->getTokenCredentials($temporaryCredentials, $oauthToken, $oauthVerifier);
-
-        return [
-            'success' => true,
-            'token' => $token
-        ];
-    }
-
-    /**
-     * OAuth Callback
-     *
-     * @return null
-     */
-    private function oauth2Callback()
-    {
-        $provider = $this->getOauthProvider();
-
-        $code = Craft::$app->request->getParam('code');
-
-        // Try to get an access token (using the authorization code grant)
-        $token = $provider->getAccessToken('authorization_code', [
-            'code' => $code
-        ]);
-
-        return [
-            'success' => true,
-            'token' => $token
-        ];
-    }
-
-    /**
      * Get the provider handle.
      *
      * @return string
@@ -144,9 +68,7 @@ abstract class LoginProvider implements LoginProviderInterface
     {
         $class = $this->getClass();
 
-        $handle = strtolower($class);
-
-        return $handle;
+        return strtolower($class);
     }
 
     /**
@@ -160,9 +82,7 @@ abstract class LoginProvider implements LoginProviderInterface
     {
         $nsClass = get_class($this);
 
-        $class = substr($nsClass, strrpos($nsClass, "\\") + 1);
-
-        return $class;
+        return substr($nsClass, strrpos($nsClass, "\\") + 1);
     }
 
     /**
@@ -172,9 +92,7 @@ abstract class LoginProvider implements LoginProviderInterface
      */
     public function getIconUrl()
     {
-        $url = Craft::$app->assetManager->getPublishedUrl('@dukt/social/icons/'.$this->getHandle().'.svg', true);
-
-        return $url;
+        return Craft::$app->assetManager->getPublishedUrl('@dukt/social/icons/'.$this->getHandle().'.svg', true);
     }
 
     /**
@@ -263,5 +181,102 @@ abstract class LoginProvider implements LoginProviderInterface
     public function getRemoteProfile(Token $token)
     {
         return $this->getOauthProvider()->getResourceOwner($token->token);
+    }
+
+    // Private Methods
+    // =========================================================================
+
+    /**
+     * OAuth 1 Connect
+     *
+     * @return Response
+     */
+    private function oauth1Connect()
+    {
+        // OAuth provider
+        $provider = $this->getOauthProvider();
+
+        // Obtain temporary credentials
+        $temporaryCredentials = $provider->getTemporaryCredentials();
+
+        // Store credentials in the session
+        Craft::$app->getSession()->set('oauth.temporaryCredentials', $temporaryCredentials);
+
+        // Redirect to login screen
+        $authorizationUrl = $provider->getAuthorizationUrl($temporaryCredentials);
+
+        return Craft::$app->getResponse()->redirect($authorizationUrl);
+    }
+
+    /**
+     * OAuth 2 Connect
+     *
+     * @return Response
+     */
+    private function oauth2Connect()
+    {
+        $provider = $this->getOauthProvider();
+
+        Craft::$app->getSession()->set('social.oauthState', $provider->getState());
+
+        $scope = $this->getScope();
+        $options = $this->getAuthorizationOptions();
+
+        if(!is_array($options))
+        {
+            $options = [];
+        }
+
+        $options['scope'] = $scope;
+
+        $authorizationUrl = $provider->getAuthorizationUrl($options);
+
+        return Craft::$app->getResponse()->redirect($authorizationUrl);
+    }
+
+    /**
+     * OAuth 1 Callback
+     *
+     * @return array
+     */
+    private function oauth1Callback()
+    {
+        $provider = $this->getOauthProvider();
+
+        $oauthToken = Craft::$app->request->getParam('oauth_token');
+        $oauthVerifier = Craft::$app->request->getParam('oauth_verifier');
+
+        // Retrieve the temporary credentials we saved before.
+        $temporaryCredentials = Craft::$app->getSession()->get('oauth.temporaryCredentials');
+
+        // Obtain token credentials from the server.
+        $token = $provider->getTokenCredentials($temporaryCredentials, $oauthToken, $oauthVerifier);
+
+        return [
+            'success' => true,
+            'token' => $token
+        ];
+    }
+
+    /**
+     * OAuth 2 Callback
+     *
+     * @return array
+     */
+    private function oauth2Callback()
+    {
+        $provider = $this->getOauthProvider();
+
+        $code = Craft::$app->request->getParam('code');
+
+        // Try to get an access token (using the authorization code grant)
+        $token = $provider->getAccessToken('authorization_code', [
+            'code' => $code
+        ]);
+
+        return [
+            'success' => true,
+            'token' => $token
+        ];
     }
 }

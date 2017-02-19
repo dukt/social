@@ -15,18 +15,63 @@ use yii\web\IdentityInterface;
 use craft\helpers\UrlHelper;
 use dukt\social\Plugin as Social;
 
+/**
+ * Class LoginAccount
+ *
+ * @package dukt\social\elements
+ */
 class LoginAccount extends Element implements IdentityInterface
 {
+    // Properties
+    // =========================================================================
+
+    /**
+     * @var
+     */
     private $_user;
 
+    /**
+     * @var
+     */
     public $userId;
+
+    /**
+     * @var
+     */
     public $providerHandle;
+
+    /**
+     * @var
+     */
     public $socialUid;
+
+    /**
+     * @var
+     */
     public $username;
+
+    /**
+     * @var
+     */
     public $email;
+
+    /**
+     * @var
+     */
     public $firstName;
+
+    /**
+     * @var
+     */
     public $lastName;
+
+    /**
+     * @var
+     */
     public $lastLoginDate;
+
+    // Public Methods
+    // =========================================================================
 
     /**
      * Use the login account's email or username as its string representation.
@@ -45,6 +90,11 @@ class LoginAccount extends Element implements IdentityInterface
         }
     }
 
+    /**
+     * @param int $size
+     *
+     * @return mixed
+     */
     public function getThumbUrl(int $size = 100)
     {
         $asset = $this->getUser()->getPhoto();
@@ -72,11 +122,17 @@ class LoginAccount extends Element implements IdentityInterface
         return UrlHelper::cpUrl('social/loginaccounts/'.$this->userId);
     }
 
+    /**
+     * @return ElementQueryInterface
+     */
     public static function find(): ElementQueryInterface
     {
         return new LoginAccountQuery(get_called_class());
     }
 
+    /**
+     * @return string
+     */
     public function getFullName()
     {
         $firstName = trim($this->firstName);
@@ -85,6 +141,9 @@ class LoginAccount extends Element implements IdentityInterface
         return $firstName.($firstName && $lastName ? ' ' : '').$lastName;
     }
 
+    /**
+     * @return mixed
+     */
     public function getUser()
     {
         if (!isset($this->_user))
@@ -322,7 +381,6 @@ class LoginAccount extends Element implements IdentityInterface
         {
             case 'providerHandle':
             {
-                // TODO:consider eager loading the provider
                 $provider = Social::$plugin->loginProviders->getLoginProvider($this->providerHandle);
 
                 if ($provider)
@@ -434,6 +492,11 @@ class LoginAccount extends Element implements IdentityInterface
         }
     }
 
+    /**
+     * @param $token
+     *
+     * @return bool
+     */
     public function authenticate($token): bool
     {
         return true;
@@ -552,6 +615,9 @@ class LoginAccount extends Element implements IdentityInterface
         // TODO: Implement validateAuthKey() method.
     }
 
+    /**
+     * @return array
+     */
     protected static function defineTableAttributes(): array
     {
         if (Craft::$app->config->get('useEmailAsUsername'))
