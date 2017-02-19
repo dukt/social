@@ -8,9 +8,7 @@
 namespace dukt\social\controllers;
 
 use Craft;
-use craft\helpers\UrlHelper;
 use craft\web\Controller;
-use dukt\social\Plugin as Social;
 
 class OauthController extends Controller
 {

@@ -9,7 +9,6 @@ namespace dukt\social\base;
 
 use Craft;
 use dukt\social\models\Token;
-use craft\helpers\UrlHelper;
 
 abstract class LoginProvider implements LoginProviderInterface
 {

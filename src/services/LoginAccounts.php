@@ -9,11 +9,9 @@ namespace dukt\social\services;
 
 use Craft;
 use yii\base\Component;
-use craft\events\ElementEvent;
 use craft\elements\User as UserModel;
 use dukt\social\elements\LoginAccount;
 use Exception;
-use dukt\social\Plugin as Social;
 
 class LoginAccounts extends Component
 {
