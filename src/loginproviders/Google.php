@@ -8,6 +8,7 @@
 namespace dukt\social\loginproviders;
 
 use dukt\oauth\models\Token;
+use dukt\social\Plugin as Social;
 
 class Google extends BaseProvider
 {
@@ -21,6 +22,19 @@ class Google extends BaseProvider
 		return 'Google';
 	}
 
+    public function getOauthProviderConfig()
+    {
+        $providerInfos = Social::$plugin->oauth->getProviderInfos('google');
+
+        $config = [
+            'clientId' => (isset($providerInfos['clientId']) ? $providerInfos['clientId'] : ''),
+            'clientSecret' => (isset($providerInfos['clientSecret']) ? $providerInfos['clientSecret'] : ''),
+            'redirectUri' => $this->getRedirectUri(),
+        ];
+
+        return $config;
+    }
+
 	/**
 	 * @inheritdoc
 	 *
@@ -30,6 +44,11 @@ class Google extends BaseProvider
 	{
 		return 'google';
 	}
+
+	public function getOauthProviderClass()
+    {
+        return '\Dukt\OAuth2\Client\Provider\Google';
+    }
 
 	/**
 	 * @inheritDoc

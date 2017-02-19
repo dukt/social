@@ -14,6 +14,15 @@ use dukt\social\Plugin as Social;
 
 abstract class BaseProvider implements LoginProviderInterface
 {
+    public function getOauthProviderConfig()
+    {
+        return [];
+    }
+    public function getRedirectUri()
+    {
+        return 'x';
+    }
+
 	/**
 	 * Get the provider handle.
 	 *
@@ -51,7 +60,9 @@ abstract class BaseProvider implements LoginProviderInterface
 	 */
 	public function getIconUrl()
 	{
-		return $this->getOauthProvider()->getIconUrl();
+        $url = Craft::$app->assetManager->getPublishedUrl('@dukt/social/icons/'.$this->getHandle().'.svg', true);
+
+		return $url;
 	}
 
 	/**
@@ -63,7 +74,9 @@ abstract class BaseProvider implements LoginProviderInterface
 	{
         Social::$plugin->social->checkPluginRequirements();
 
-		return \dukt\oauth\Plugin::getInstance()->oauth->getProvider($this->getHandle(), false);
+        $providerClass = $this->getOauthProviderClass();
+
+        return new $providerClass($this->getOauthProviderConfig());
 	}
 
 	/**

@@ -60,7 +60,7 @@ class SocialVariable
 	 */
 	public function getLoginAccountByLoginProvider($loginProviderHandle)
 	{
-		return Social::$plugin->social_loginAccounts->getLoginAccountByLoginProvider($loginProviderHandle);
+		return Social::$plugin->loginAccounts->getLoginAccountByLoginProvider($loginProviderHandle);
 	}
 
 	/**
@@ -96,6 +96,6 @@ class SocialVariable
 	 */
 	public function getLoginProviders($enabledOnly = true)
 	{
-		return Social::$plugin->social_loginProviders->getLoginProviders($enabledOnly);
+		return Social::$plugin->loginProviders->getLoginProviders($enabledOnly);
 	}
 }

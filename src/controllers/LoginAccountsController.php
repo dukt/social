@@ -55,7 +55,7 @@ class LoginAccountsController extends Controller
 
         if ($user)
         {
-            $loginAccounts = Social::$plugin->social_loginAccounts->getLoginAccountsByUserId($user->id);
+            $loginAccounts = Social::$plugin->loginAccounts->getLoginAccountsByUserId($user->id);
 
             Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
 
@@ -83,7 +83,7 @@ class LoginAccountsController extends Controller
 
 		$loginAccountId = Craft::$app->request->getRequiredBodyParam('id');
 
-		Social::$plugin->social_loginAccounts->deleteLoginAccountById($loginAccountId);
+		Social::$plugin->loginAccounts->deleteLoginAccountById($loginAccountId);
 
 		return $this->asJson(array('success' => true));
 	}

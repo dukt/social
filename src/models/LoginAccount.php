@@ -98,7 +98,7 @@ class LoginAccount extends Model
 		if ($this->providerHandle)
 		{
             Craft::app()->social->checkPluginRequirements();
-			return \dukt\oauth\Plugin::getInstance()->oauth->getProvider($this->providerHandle);
+			return Social::$plugin->oauth->getProvider($this->providerHandle);
 		}
 	}
 

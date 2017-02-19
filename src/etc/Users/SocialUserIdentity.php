@@ -52,9 +52,9 @@ class SocialUserIdentity extends UserIdentity
 	{
 	    $this->token = $token;
 
-        $socialLoginProvider = Craft::app()->social_loginProviders->getLoginProvider($this->token->providerHandle);
+        $socialLoginProvider = Craft::app()->loginProviders->getLoginProvider($this->token->providerHandle);
         $data = $socialLoginProvider->getProfile($this->token);
-        $account = Craft::app()->social_loginAccounts->getLoginAccountByUid($socialLoginProvider->getHandle(), $data['id']);
+        $account = Craft::app()->loginAccounts->getLoginAccountByUid($socialLoginProvider->getHandle(), $data['id']);
 
         if ($account)
         {

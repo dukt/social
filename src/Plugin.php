@@ -45,8 +45,9 @@ class Plugin extends \craft\base\Plugin
         $this->setComponents([
             'social' => \dukt\social\services\Social::class,
             'social_loginAccounts' => \dukt\social\services\LoginAccounts::class,
-            'social_loginProviders' => \dukt\social\services\LoginProviders::class,
-            'social_userSession' => \dukt\social\services\UserSession::class,
+            'loginProviders' => \dukt\social\services\LoginProviders::class,
+            'userSession' => \dukt\social\services\UserSession::class,
+            'oauth' => \dukt\social\services\Oauth::class,
         ]);
 
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, [$this, 'registerCpUrlRules']);
@@ -289,7 +290,7 @@ class Plugin extends \craft\base\Plugin
     {
         if ($attribute == 'loginAccounts')
         {
-            $loginAccounts = $this->social_loginAccounts->getLoginAccountsByUserId($user->id);
+            $loginAccounts = $this->loginAccounts->getLoginAccountsByUserId($user->id);
 
             if (!$loginAccounts)
             {
@@ -344,7 +345,7 @@ class Plugin extends \craft\base\Plugin
         {
             if (Craft::$app->request->isCpRequest() && Craft::$app->request->getSegment(1) == 'login')
             {
-                $loginProviders = $this->social_loginProviders->getLoginProviders();
+                $loginProviders = $this->loginProviders->getLoginProviders();
                 $jsLoginProviders = [];
 
                 foreach($loginProviders as $loginProvider)
@@ -374,7 +375,7 @@ class Plugin extends \craft\base\Plugin
 		{
 			$user = $event->params['user'];
 
-            $this->social_loginAccounts->deleteLoginAccountByUserId($user->id);
+            $this->loginAccounts->deleteLoginAccountByUserId($user->id);
         });
     }
 
@@ -390,9 +391,9 @@ class Plugin extends \craft\base\Plugin
             if ($context['account'])
             {
 	            $context['user'] = $context['account'];
-	            $context['loginAccounts'] = $this->social_loginAccounts->getLoginAccountsByUserId($context['account']->id);
+	            $context['loginAccounts'] = $this->loginAccounts->getLoginAccountsByUserId($context['account']->id);
 
-                $loginProviders = $this->social_loginProviders->getLoginProviders();
+                $loginProviders = $this->loginProviders->getLoginProviders();
                 $context['loginProviders'] = [];
 
                 foreach($loginProviders as $loginProvider)

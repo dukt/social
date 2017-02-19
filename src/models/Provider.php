@@ -90,7 +90,7 @@ class Provider extends Model
 	{
         Craft::app()->social->checkPluginRequirements();
 
-		return \dukt\oauth\Plugin::getInstance()->oauth->getProvider($this->oauthProviderHandle, false);
+		return Social::$plugin->oauth->getProvider($this->oauthProviderHandle, false);
 	}
 
 	/**

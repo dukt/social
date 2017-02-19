@@ -7,6 +7,7 @@
 
 namespace dukt\social\loginproviders;
 
+use dukt\social\Plugin as Social;
 use GuzzleHttp\Client;
 use dukt\oauth\models\Token;
 use GuzzleHttp\HandlerStack;
@@ -32,6 +33,27 @@ class Facebook extends BaseProvider
 	{
 		return 'facebook';
 	}
+
+    public function getOauthProviderClass()
+    {
+        return '\League\OAuth2\Client\Provider\Facebook';
+    }
+
+    public function getOauthProviderConfig()
+    {
+        $graphApiVersion = 'v2.8';
+
+        $providerInfos = Social::$plugin->oauth->getProviderInfos('facebook');
+
+        $config = [
+            'clientId' => $providerInfos['clientId'],
+            'clientSecret' => $providerInfos['clientSecret'],
+            'redirectUri' => $this->getRedirectUri(),
+            'graphApiVersion' => $graphApiVersion
+        ];
+
+        return $config;
+    }
 
 	/**
 	 * @inheritdoc
@@ -139,7 +161,7 @@ class Facebook extends BaseProvider
 
         if($token)
         {
-            $provider = \dukt\oauth\Plugin::getInstance()->oauth->getProvider('facebook');
+            $provider = Social::$plugin->oauth->getProvider('facebook');
 
             $stack = $provider->getSubscriber($token);
 

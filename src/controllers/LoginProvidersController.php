@@ -10,6 +10,7 @@ namespace dukt\social\controllers;
 use Craft;
 use craft\web\Controller;
 use dukt\social\web\assets\social\SocialAsset;
+use dukt\social\Plugin as Social;
 
 class LoginProvidersController extends Controller
 {
@@ -26,7 +27,7 @@ class LoginProvidersController extends Controller
 	{
 		parent::init();
 
-        \dukt\social\Social::$plugin->social->requireDependencies();
+        Social::$plugin->social->requireDependencies();
 	}
 
 	/**
@@ -38,7 +39,7 @@ class LoginProvidersController extends Controller
 	{
         Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
 
-		$variables['loginProviders'] = \dukt\social\Social::$plugin->social_loginProviders->getLoginProviders(false);
+		$variables['loginProviders'] = Social::$plugin->loginProviders->getLoginProviders(false);
 
 		return $this->renderTemplate('social/loginproviders/_index', $variables);
 	}
@@ -55,11 +56,11 @@ class LoginProvidersController extends Controller
 	{
 		if (!empty($variables['handle']))
 		{
-			$loginProvider = \dukt\social\Social::$plugin->social_loginProviders->getLoginProvider($variables['handle'], false, true);
+			$loginProvider = Social::$plugin->loginProviders->getLoginProvider($variables['handle'], false, true);
 
 			if ($loginProvider)
 			{
-				$variables['infos'] = \dukt\oauth\Plugin::getInstance()->oauth->getProviderInfos($variables['handle']);;
+				$variables['infos'] = Social::$plugin->oauth->getProviderInfos($variables['handle']);
 				$variables['loginProvider'] = $loginProvider;
 
 				$configInfos = Craft::$app->config->get('providerInfos', 'oauth');
@@ -92,7 +93,7 @@ class LoginProvidersController extends Controller
 		$this->requirePostRequest();
 		$loginProvider = Craft::$app->request->getRequiredBodyParam('loginProvider');
 
-		if (\dukt\social\Social::$plugin->social_loginProviders->enableLoginProvider($loginProvider))
+		if (Social::$plugin->loginProviders->enableLoginProvider($loginProvider))
 		{
 			Craft::$app->getSession()->setNotice(Craft::t('app', 'Login provider enabled.'));
 		}
@@ -114,7 +115,7 @@ class LoginProvidersController extends Controller
 		$this->requirePostRequest();
 		$loginProvider = Craft::$app->request->getRequiredBodyParam('loginProvider');
 
-		if (\dukt\social\Social::$plugin->social_loginProviders->disableLoginProvider($loginProvider))
+		if (Social::$plugin->loginProviders->disableLoginProvider($loginProvider))
 		{
 			Craft::$app->getSession()->setNotice(Craft::t('app', 'Login provider disabled.'));
 		}

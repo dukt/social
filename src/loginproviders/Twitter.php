@@ -9,10 +9,30 @@ namespace dukt\social\loginproviders;
 
 use Craft\Craft;
 use dukt\oauth\models\Token;
+use dukt\social\Plugin as Social;
 
 class Twitter extends BaseProvider
 {
-	/**
+    public function getOauthProviderClass()
+    {
+        return '\League\OAuth1\Client\Server\Twitter';
+    }
+
+
+    public function getOauthProviderConfig()
+    {
+        $providerInfos = Social::$plugin->oauth->getProviderInfos('google');
+
+        $config = [
+            'identifier' => (isset($providerInfos['clientId']) ? $providerInfos['clientId'] : ''),
+            'secret' => (isset($providerInfos['clientSecret']) ? $providerInfos['clientSecret'] : ''),
+            'redirectUri' => $this->getRedirectUri(),
+        ];
+
+        return $config;
+    }
+
+    /**
 	 * @inheritdoc
 	 *
 	 * @return string

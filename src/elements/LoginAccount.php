@@ -146,7 +146,7 @@ class LoginAccount extends Element implements IdentityInterface
 			)
 		);
 
-		$loginProviders = Social::$plugin->social_loginProviders->getLoginProviders();
+		$loginProviders = Social::$plugin->loginProviders->getLoginProviders();
 
 		if ($loginProviders)
 		{
@@ -323,7 +323,7 @@ class LoginAccount extends Element implements IdentityInterface
 			case 'providerHandle':
 			{
 				// TODO:consider eager loading the provider
-				$provider = \dukt\oauth\Plugin::getInstance()->oauth->getProvider($this->providerHandle);
+				$provider = Social::$plugin->oauth->getProvider($this->providerHandle);
 
 				if ($provider)
 				{
