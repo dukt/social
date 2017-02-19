@@ -97,7 +97,6 @@ class LoginAccount extends Model
 	{
 		if ($this->providerHandle)
 		{
-            Craft::app()->social->checkPluginRequirements();
 			return Social::$plugin->oauth->getProvider($this->providerHandle);
 		}
 	}

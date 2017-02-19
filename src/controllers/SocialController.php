@@ -50,8 +50,6 @@ class SocialController extends Controller
 	 */
 	public function actionLogin()
 	{
-		Social::$plugin->social->checkPluginRequirements();
-
         Craft::$app->getSession()->set('social.loginReferrer', Craft::$app->getRequest()->getAbsoluteUrl());
 
 		$this->referer = Craft::$app->getSession()->get('social.referer');
@@ -200,8 +198,6 @@ class SocialController extends Controller
 	 */
 	public function actionDisconnectLoginAccount()
 	{
-		Social::$plugin->social->checkPluginRequirements();
-
 		$handle = Craft::$app->request->getParam('provider');
 
 		// delete social user

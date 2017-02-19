@@ -18,18 +18,6 @@ class LoginAccountsController extends Controller
 	// =========================================================================
 
 	/**
-	 * Init
-	 *
-	 * @return null
-	 */
-	public function init()
-	{
-		parent::init();
-
-        Social::$plugin->social->requireDependencies();
-	}
-
-	/**
 	 * Login Accounts Index
 	 *
 	 * @return null

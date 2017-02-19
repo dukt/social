@@ -67,7 +67,6 @@ class Plugin extends \craft\base\Plugin
             'social' => 'social/login-accounts/index',
 
             'social/settings' => 'social/settings/index',
-            'social/install' => 'social/install/index',
 
             'social/loginaccounts' => 'social/loginAccounts/index',
             'social/loginaccounts/<userId:\d+>' => 'social/login-accounts/edit',
@@ -81,29 +80,6 @@ class Plugin extends \craft\base\Plugin
         $event->rules = array_merge($event->rules, $rules);
     }
 
-    /**
-     * Control Panel routes.
-     *
-     * @return mixed
-     */
-    public function registerCpRoutes()
-    {
-        return [
-            "social" => ['action' => "social/loginAccounts/index"],
-
-            'social/install' => ['action' => "social/install/index"],
-            'social/settings' => ['action' => "social/settings/index"],
-
-            "social/loginaccounts" => ['action' => "social/loginAccounts/index"],
-            "social/loginaccounts/(?P<userId>\d+)" => ['action' => "social/login-Accounts/edit"],
-
-            'settings/plugins/social/settings/loginproviders' => ['action' => "social/loginProviders/index"],
-            'settings/plugins/social/settings/loginproviders/(?P<handle>.*)' => ['action' => "social/loginProviders/edit"],
-
-            'settings/plugins/social/settings/settings' => ['action' => "social/settings/index"],
-        ];
-    }
-
 	/**
 	 * Get Social Login Providers
      *
@@ -111,10 +87,6 @@ class Plugin extends \craft\base\Plugin
 	 */
 	public function getSocialLoginProviders()
 	{
-/*		require_once(CRAFT_PLUGINS_PATH.'social/providers/login/Facebook.php');
-		require_once(CRAFT_PLUGINS_PATH.'social/providers/login/Google.php');
-		require_once(CRAFT_PLUGINS_PATH.'social/providers/login/Twitter.php');*/
-
 		return [
 			'dukt\social\loginproviders\Facebook',
 			'dukt\social\loginproviders\Google',

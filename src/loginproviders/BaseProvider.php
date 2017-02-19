@@ -117,8 +117,6 @@ abstract class BaseProvider implements LoginProviderInterface
 	 */
 	public function getOauthProvider()
 	{
-        Social::$plugin->social->checkPluginRequirements();
-
         $providerClass = $this->getOauthProviderClass();
 
         $config = $this->getOauthProviderConfig();

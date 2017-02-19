@@ -88,8 +88,6 @@ class Provider extends Model
 	 */
 	public function getOauthProvider()
 	{
-        Craft::app()->social->checkPluginRequirements();
-
 		return Social::$plugin->oauth->getProvider($this->oauthProviderHandle, false);
 	}
 

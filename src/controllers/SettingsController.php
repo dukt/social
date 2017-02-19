@@ -17,18 +17,6 @@ class SettingsController extends Controller
 	// =========================================================================
 
 	/**
-	 * Init
-	 *
-	 * @return null
-	 */
-	public function init()
-	{
-		parent::init();
-
-        Social::$plugin->social->requireDependencies();
-	}
-
-	/**
 	 * Settings Index
 	 *
 	 * @return null

@@ -9,17 +9,11 @@ namespace dukt\social\services;
 
 use Craft;
 use yii\base\Component;
-use dukt\social\base\RequirementsTrait;
 use craft\helpers\UrlHelper;
 use craft\elements\User;
 
 class Social extends Component
 {
-    // Traits
-    // =========================================================================
-
-    use RequirementsTrait;
-
 	// Public Methods
 	// =========================================================================
 
