@@ -37,11 +37,6 @@ class Plugin extends \craft\base\Plugin
 
         $this->hasCpSection = $this->hasCpSection();
 
-        /*
-        require_once(CRAFT_PLUGINS_PATH.'social/base/LoginProviderInterface.php');
-        require_once(CRAFT_PLUGINS_PATH.'social/providers/login/BaseProvider.php');
-        */
-
         $this->setComponents([
             'social' => \dukt\social\services\Social::class,
             'loginAccounts' => \dukt\social\services\LoginAccounts::class,
@@ -111,114 +106,6 @@ class Plugin extends \craft\base\Plugin
         \Craft::$app->controller->redirect($url);
 
         return '';
-    }
-
-    /**
-     * Get Required Dependencies
-     *
-     * @return array
-     */
-    public function getRequiredPlugins()
-    {
-        return [
-            [
-                'name'    => "OAuth",
-                'handle'  => 'oauth',
-                'url'     => 'https://dukt.net/craft/oauth',
-                'version' => '2.0.2'
-            ]
-        ];
-    }
-
-    /**
-     * Get Name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return Craft::t('app', 'Social Login');
-    }
-
-    /**
-     * Get Description
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return Craft::t('app', 'Let your visitors log into Craft with web services like Facebook, Google, Twitter…');
-    }
-
-    /**
-     * Get Version
-     *
-     * @return string
-     */
-    public function getVersion()
-    {
-        return '1.2.4';
-    }
-
-
-    /**
-     * Schema Version
-     *
-     * @return string
-     */
-    public function getSchemaVersion()
-    {
-        return '1.0.2';
-    }
-
-    /**
-     * Get Developer
-     *
-     * @return string
-     */
-    public function getDeveloper()
-    {
-        return 'Dukt';
-    }
-
-    /**
-     * Get Developer URL
-     *
-     * @return string
-     */
-    public function getDeveloperUrl()
-    {
-        return 'https://dukt.net/';
-    }
-
-    /**
-     * Get Documentation URL
-     *
-     * @return string
-     */
-    public function getDocumentationUrl()
-    {
-        return 'https://dukt.net/craft/social/docs/';
-    }
-
-    /**
-     * Get Release Feed URL
-     *
-     * @return string
-     */
-    public function getReleaseFeedUrl()
-    {
-        return 'https://dukt.net/craft/social/updates.json';
-    }
-
-    /**
-     * Get Settings URL
-     *
-     * @return string
-     */
-    public function getSettingsUrl()
-    {
-        return 'settings/plugins/social/settings/loginproviders';
     }
 
     /**
