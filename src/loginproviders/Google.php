@@ -12,15 +12,15 @@ use dukt\social\Plugin as Social;
 
 class Google extends BaseProvider
 {
-	/**
-	 * @inheritdoc
-	 *
-	 * @return string
-	 */
-	public function getName()
-	{
-		return 'Google';
-	}
+    /**
+     * @inheritdoc
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return 'Google';
+    }
 
     public function getOauthProviderConfig()
     {
@@ -35,33 +35,33 @@ class Google extends BaseProvider
         return $config;
     }
 
-	/**
-	 * @inheritdoc
-	 *
-	 * @return string
-	 */
-	public function getOauthProviderHandle()
-	{
-		return 'google';
-	}
+    /**
+     * @inheritdoc
+     *
+     * @return string
+     */
+    public function getOauthProviderHandle()
+    {
+        return 'google';
+    }
 
-	public function getOauthProviderClass()
+    public function getOauthProviderClass()
     {
         return '\Dukt\OAuth2\Client\Provider\Google';
     }
 
-	/**
-	 * @inheritDoc
+    /**
+     * @inheritDoc
      *
      * @return array|null
-	 */
-	public function getDefaultScope()
-	{
-		return [
-			'https://www.googleapis.com/auth/userinfo.profile',
-			'https://www.googleapis.com/auth/userinfo.email'
-		];
-	}
+     */
+    public function getDefaultScope()
+    {
+        return [
+            'https://www.googleapis.com/auth/userinfo.profile',
+            'https://www.googleapis.com/auth/userinfo.email'
+        ];
+    }
 
     /**
      * @inheritdoc
@@ -70,25 +70,25 @@ class Google extends BaseProvider
      *
      * @return array|null
      */
-	public function getProfile(Token $token)
-	{
-		$remoteProfile = $this->getRemoteProfile($token);
+    public function getProfile(Token $token)
+    {
+        $remoteProfile = $this->getRemoteProfile($token);
 
-		$photoUrl = $remoteProfile->getAvatar();
+        $photoUrl = $remoteProfile->getAvatar();
 
-		if(strpos($photoUrl, '?') !== false)
-		{
-			$photoUrl = substr($photoUrl, 0, strpos($photoUrl, "?"));
-		}
+        if(strpos($photoUrl, '?') !== false)
+        {
+            $photoUrl = substr($photoUrl, 0, strpos($photoUrl, "?"));
+        }
 
-		return [
-			'id' => $remoteProfile->getId(),
-			'email' => $remoteProfile->getEmail(),
-			'firstName' => $remoteProfile->getFirstName(),
-			'lastName' => $remoteProfile->getLastName(),
-			'photoUrl' => $photoUrl,
+        return [
+            'id' => $remoteProfile->getId(),
+            'email' => $remoteProfile->getEmail(),
+            'firstName' => $remoteProfile->getFirstName(),
+            'lastName' => $remoteProfile->getLastName(),
+            'photoUrl' => $photoUrl,
 
-			'name' => $remoteProfile->getName(),
-		];
-	}
+            'name' => $remoteProfile->getName(),
+        ];
+    }
 }

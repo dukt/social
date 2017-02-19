@@ -16,411 +16,411 @@ use Exception;
 
 class SocialController extends Controller
 {
-	// Properties
-	// =========================================================================
+    // Properties
+    // =========================================================================
 
     /**
      * @inheritdoc
      *
      * @var array
      */
-	protected $allowAnonymous = ['actionLogin'];
+    protected $allowAnonymous = ['actionLogin'];
 
     /**
      * Redirect URL
      *
      * @var string
      */
-	private $redirect;
+    private $redirect;
 
     /**
      * Referer URL
      *
      * @var string
      */
-	private $referer;
+    private $referer;
 
-	// Public Methods
-	// =========================================================================
+    // Public Methods
+    // =========================================================================
 
-	/**
-	 * Login
-	 *
-	 * @return null
-	 */
-	public function actionLogin()
-	{
+    /**
+     * Login
+     *
+     * @return null
+     */
+    public function actionLogin()
+    {
         Craft::$app->getSession()->set('social.loginReferrer', Craft::$app->getRequest()->getAbsoluteUrl());
 
-		$this->referer = Craft::$app->getSession()->get('social.referer');
+        $this->referer = Craft::$app->getSession()->get('social.referer');
 
-		if (!$this->referer)
-		{
-			$this->referer = Craft::$app->request->referrer;
-			Craft::$app->getSession()->set('social.referer', $this->referer);
-		}
+        if (!$this->referer)
+        {
+            $this->referer = Craft::$app->request->referrer;
+            Craft::$app->getSession()->set('social.referer', $this->referer);
+        }
 
-		$this->redirect = Craft::$app->request->getParam('redirect');
+        $this->redirect = Craft::$app->request->getParam('redirect');
 
 
-		// Connect
+        // Connect
 
-		// Request params
-		$providerHandle = Craft::$app->request->getParam('provider');
-		// $oauthProvider = Social::$plugin->oauth->getProvider($providerHandle);
+        // Request params
+        $providerHandle = Craft::$app->request->getParam('provider');
+        // $oauthProvider = Social::$plugin->oauth->getProvider($providerHandle);
 /*		$requestUri = Craft::$app->request->resolveRequestUri();
-		Craft::$app->getSession()->set('social.requestUri', $requestUri);*/
+        Craft::$app->getSession()->set('social.requestUri', $requestUri);*/
 
-		// Settings
-		$plugin = Craft::$app->plugins->getPlugin('social');
-		$pluginSettings = $plugin->getSettings();
+        // Settings
+        $plugin = Craft::$app->plugins->getPlugin('social');
+        $pluginSettings = $plugin->getSettings();
 
-		// Try to connect
+        // Try to connect
 /*		try
-		{*/
-			if (!Social::$plugin->oauth->isProviderConfigured($providerHandle))
-			{
-				throw new Exception("OAuth provider is not configured");
-			}
+        {*/
+            if (!Social::$plugin->oauth->isProviderConfigured($providerHandle))
+            {
+                throw new Exception("OAuth provider is not configured");
+            }
 
-			if (!$pluginSettings['enableSocialLogin'])
-			{
-				throw new Exception("Social login is disabled");
-			}
+            if (!$pluginSettings['enableSocialLogin'])
+            {
+                throw new Exception("Social login is disabled");
+            }
 
-			if (Craft::$app->getEdition() != Craft::Pro)
-			{
-				throw new Exception("Craft Pro is required");
-			}
+            if (Craft::$app->getEdition() != Craft::Pro)
+            {
+                throw new Exception("Craft Pro is required");
+            }
 
-			// Provider scope & authorizationOptions
-			$socialProvider = Social::$plugin->loginProviders->getLoginProvider($providerHandle);
+            // Provider scope & authorizationOptions
+            $socialProvider = Social::$plugin->loginProviders->getLoginProvider($providerHandle);
 
-			if (!$socialProvider)
-			{
-				throw new Exception("Login provider is not configured");
-			}
+            if (!$socialProvider)
+            {
+                throw new Exception("Login provider is not configured");
+            }
 
-			$scope = $socialProvider->getScope();
-			$authorizationOptions = $socialProvider->getAuthorizationOptions();
+            $scope = $socialProvider->getScope();
+            $authorizationOptions = $socialProvider->getAuthorizationOptions();
 
-			if ($response = Social::$plugin->oauth->connect([
-				'plugin'   => 'social',
-				'provider' => $providerHandle,
-				'scope'   => $scope,
-				'authorizationOptions'   => $authorizationOptions
-			]))
-			{
+            if ($response = Social::$plugin->oauth->connect([
+                'plugin'   => 'social',
+                'provider' => $providerHandle,
+                'scope'   => $scope,
+                'authorizationOptions'   => $authorizationOptions
+            ]))
+            {
                 if($response && is_object($response) && !$response->data)
                 {
                     return $response;
                 }
 
-				if($response['success'])
-				{
-				    $token = new Token();
-				    $token->providerHandle = $providerHandle;
-				    $token->token = $response['token'];
+                if($response['success'])
+                {
+                    $token = new Token();
+                    $token->providerHandle = $providerHandle;
+                    $token->token = $response['token'];
 
-					return $this->_connectUserFromToken($token);
-				}
-				else
-				{
-					throw new \Exception($response['errorMsg']);
-				}
-			}
-		/*}
-		catch(\Guzzle\Http\Exception\BadResponseException $e)
-		{
-			$response = $e->getResponse();
+                    return $this->_connectUserFromToken($token);
+                }
+                else
+                {
+                    throw new \Exception($response['errorMsg']);
+                }
+            }
+        /*}
+        catch(\Guzzle\Http\Exception\BadResponseException $e)
+        {
+            $response = $e->getResponse();
 
-			// Social::log((string) $response, LogLevel::Error);
+            // Social::log((string) $response, LogLevel::Error);
 
-			$body = $response->getBody();
-			$json = json_decode($body, true);
+            $body = $response->getBody();
+            $json = json_decode($body, true);
 
-			if($json)
-			{
-				$errorMsg = $json['error']['message'];
-			}
-			else
-			{
-				$errorMsg = "Couldn’t login.";
-			}
+            if($json)
+            {
+                $errorMsg = $json['error']['message'];
+            }
+            else
+            {
+                $errorMsg = "Couldn’t login.";
+            }
 
-			Craft::$app->getSession()->setFlash('error', $errorMsg);
-			$this->_cleanSession();
-			return $this->redirect($this->referer);
-		}
-		catch (\Exception $e)
-		{
-			$errorMsg = $e->getMessage();
-			Craft::$app->getSession()->setFlash('error', $errorMsg);
-			$this->_cleanSession();
-			return $this->redirect($this->referer);
-		}*/
-	}
+            Craft::$app->getSession()->setFlash('error', $errorMsg);
+            $this->_cleanSession();
+            return $this->redirect($this->referer);
+        }
+        catch (\Exception $e)
+        {
+            $errorMsg = $e->getMessage();
+            Craft::$app->getSession()->setFlash('error', $errorMsg);
+            $this->_cleanSession();
+            return $this->redirect($this->referer);
+        }*/
+    }
 
-	/**
-	 * Logout
-	 *
-	 * @return null
-	 */
-	public function actionLogout()
-	{
-		// Craft::$app->getSession()->logout(false);
+    /**
+     * Logout
+     *
+     * @return null
+     */
+    public function actionLogout()
+    {
+        // Craft::$app->getSession()->logout(false);
         Craft::$app->getUser()->logout(false);
 
-		$redirect = Craft::$app->request->getParam('redirect');
+        $redirect = Craft::$app->request->getParam('redirect');
 
-		if (!$redirect)
-		{
-			$redirect = Craft::$app->request->referrer;
-		}
+        if (!$redirect)
+        {
+            $redirect = Craft::$app->request->referrer;
+        }
 
-		return $this->redirect($redirect);
-	}
+        return $this->redirect($redirect);
+    }
 
-	/**
-	 * Connect a login account (link)
-	 *
-	 * @return null
-	 */
-	public function actionConnectLoginAccount()
-	{
-		$this->actionLogin();
-	}
+    /**
+     * Connect a login account (link)
+     *
+     * @return null
+     */
+    public function actionConnectLoginAccount()
+    {
+        $this->actionLogin();
+    }
 
-	/**
-	 * Disconnect a login account (unlink)
-	 *
-	 * @return null
-	 */
-	public function actionDisconnectLoginAccount()
-	{
-		$handle = Craft::$app->request->getParam('provider');
+    /**
+     * Disconnect a login account (unlink)
+     *
+     * @return null
+     */
+    public function actionDisconnectLoginAccount()
+    {
+        $handle = Craft::$app->request->getParam('provider');
 
-		// delete social user
-		Social::$plugin->loginAccounts->deleteLoginAccountByProvider($handle);
+        // delete social user
+        Social::$plugin->loginAccounts->deleteLoginAccountByProvider($handle);
 
-		Craft::$app->getSession()->setNotice(Craft::t('app', 'Login account disconnected.'));
+        Craft::$app->getSession()->setNotice(Craft::t('app', 'Login account disconnected.'));
 
-		// redirect
-		$redirect = Craft::$app->request->referrer;
-		return $this->redirect($redirect);
-	}
+        // redirect
+        $redirect = Craft::$app->request->referrer;
+        return $this->redirect($redirect);
+    }
 
-	/**
-	 * Change Photo
-	 *
-	 * @return null
-	 */
-	public function actionChangePhoto()
-	{
-		$userId = Craft::$app->request->getParam('userId');
-		$photoUrl = Craft::$app->request->getParam('photoUrl');
+    /**
+     * Change Photo
+     *
+     * @return null
+     */
+    public function actionChangePhoto()
+    {
+        $userId = Craft::$app->request->getParam('userId');
+        $photoUrl = Craft::$app->request->getParam('photoUrl');
 
-		$user = Craft::$app->users->getUserById($userId);
+        $user = Craft::$app->users->getUserById($userId);
 
-		Social::$plugin->social->saveRemotePhoto($photoUrl, $user);
+        Social::$plugin->social->saveRemotePhoto($photoUrl, $user);
 
-		// redirect
-		$referrer = Craft::$app->request->referrer;
-		return $this->redirect($referrer);
-	}
+        // redirect
+        $referrer = Craft::$app->request->referrer;
+        return $this->redirect($referrer);
+    }
 
-	// Private Methods
-	// =========================================================================
+    // Private Methods
+    // =========================================================================
 
-	/**
-	 * Connect (register, login, link) a user from token
-	 *
-	 * @param Token $token
-	 */
-	private function _connectUserFromToken(Token $token)
-	{
-		$craftUser = Craft::$app->getUser()->getIdentity();
+    /**
+     * Connect (register, login, link) a user from token
+     *
+     * @param Token $token
+     */
+    private function _connectUserFromToken(Token $token)
+    {
+        $craftUser = Craft::$app->getUser()->getIdentity();
 
-		if ($craftUser)
-		{
-			return $this->_linkAccountFromToken($token, $craftUser);
-		}
-		else
-		{
-			return $this->_registerOrLoginFromToken($token);
-		}
-	}
+        if ($craftUser)
+        {
+            return $this->_linkAccountFromToken($token, $craftUser);
+        }
+        else
+        {
+            return $this->_registerOrLoginFromToken($token);
+        }
+    }
 
-	/**
-	 * Link account from token
-	 *
-	 * @param object $craftUser The logged-in user object
-	 *
-	 * @throws Exception
-	 * @return null
-	 */
-	private function _linkAccountFromToken(Token $token, $craftUser)
-	{
-		$this->_cleanSession();
+    /**
+     * Link account from token
+     *
+     * @param object $craftUser The logged-in user object
+     *
+     * @throws Exception
+     * @return null
+     */
+    private function _linkAccountFromToken(Token $token, $craftUser)
+    {
+        $this->_cleanSession();
 
-		if (!$this->redirect)
-		{
-			$this->redirect = $this->referer;
-		}
+        if (!$this->redirect)
+        {
+            $this->redirect = $this->referer;
+        }
 
-		$socialLoginProvider = Social::$plugin->loginProviders->getLoginProvider($token->providerHandle);
+        $socialLoginProvider = Social::$plugin->loginProviders->getLoginProvider($token->providerHandle);
 
-		$attributes = $socialLoginProvider->getProfile($token);
+        $attributes = $socialLoginProvider->getProfile($token);
 
-		$socialUid = $attributes['id'];
+        $socialUid = $attributes['id'];
 
-		$account = Social::$plugin->loginAccounts->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
+        $account = Social::$plugin->loginAccounts->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
 
-		if ($account)
-		{
-			if ($craftUser->id == $account->userId)
-			{
-				// Social::$plugin->loginAccounts->saveLoginAccount($account);
+        if ($account)
+        {
+            if ($craftUser->id == $account->userId)
+            {
+                // Social::$plugin->loginAccounts->saveLoginAccount($account);
                 Craft::$app->elements->saveElement($account);
 
-				Craft::$app->getSession()->setNotice(Craft::t('app', 'Login account added.'));
+                Craft::$app->getSession()->setNotice(Craft::t('app', 'Login account added.'));
 
-				return $this->redirect($this->redirect);
-			}
-			else
-			{
-				throw new Exception("This UID is already associated with another user. Disconnect from your current session and retry.");
-			}
-		}
-		else
-		{
-			// save social user
-			$account = new LoginAccount;
-			$account->userId = $craftUser->id;
-			$account->providerHandle = $socialLoginProvider->getHandle();
-			$account->socialUid = $socialUid;
+                return $this->redirect($this->redirect);
+            }
+            else
+            {
+                throw new Exception("This UID is already associated with another user. Disconnect from your current session and retry.");
+            }
+        }
+        else
+        {
+            // save social user
+            $account = new LoginAccount;
+            $account->userId = $craftUser->id;
+            $account->providerHandle = $socialLoginProvider->getHandle();
+            $account->socialUid = $socialUid;
 
-			// Social::$plugin->loginAccounts->saveLoginAccount($account);
+            // Social::$plugin->loginAccounts->saveLoginAccount($account);
 
             Craft::$app->getElements()->saveElement($account);
 
-			Craft::$app->getSession()->setNotice(Craft::t('app', 'Login account added.'));
+            Craft::$app->getSession()->setNotice(Craft::t('app', 'Login account added.'));
 
-			return $this->redirect($this->redirect);
-		}
-	}
+            return $this->redirect($this->redirect);
+        }
+    }
 
-	/**
-	 * Register or login user from an OAuth token
-	 *
-	 * @throws Exception
-	 * @return null
-	 */
-	private function _registerOrLoginFromToken(Token $token)
-	{
-		$socialLoginProvider = Social::$plugin->loginProviders->getLoginProvider($token->providerHandle);
+    /**
+     * Register or login user from an OAuth token
+     *
+     * @throws Exception
+     * @return null
+     */
+    private function _registerOrLoginFromToken(Token $token)
+    {
+        $socialLoginProvider = Social::$plugin->loginProviders->getLoginProvider($token->providerHandle);
 
-		$attributes = $socialLoginProvider->getProfile($token);
+        $attributes = $socialLoginProvider->getProfile($token);
 
-		$socialUid = $attributes['id'];
+        $socialUid = $attributes['id'];
 
-		$account = Social::$plugin->loginAccounts->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
+        $account = Social::$plugin->loginAccounts->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
 
-		if ($account)
-		{
-			$craftUser = Craft::$app->users->getUserById($account->userId);
+        if ($account)
+        {
+            $craftUser = Craft::$app->users->getUserById($account->userId);
 
-			if ($craftUser)
-			{
-				// save user
-				// Social::$plugin->loginAccounts->saveLoginAccount($account);
+            if ($craftUser)
+            {
+                // save user
+                // Social::$plugin->loginAccounts->saveLoginAccount($account);
                 Craft::$app->elements->saveElement($account);
 
-				// login
-				return $this->_login($craftUser, $account, $token);
-			}
-			else
-			{
-				throw new Exception("Social account exists but Craft user doesn't");
-			}
-		}
-		else
-		{
-			// Register user
-			$craftUser = Social::$plugin->loginAccounts->registerUser($attributes, $socialLoginProvider->getHandle());
+                // login
+                return $this->_login($craftUser, $account, $token);
+            }
+            else
+            {
+                throw new Exception("Social account exists but Craft user doesn't");
+            }
+        }
+        else
+        {
+            // Register user
+            $craftUser = Social::$plugin->loginAccounts->registerUser($attributes, $socialLoginProvider->getHandle());
 
-			if ($craftUser)
-			{
-				// Save social user
-				$account = new LoginAccount;
-				$account->userId = $craftUser->id;
-				$account->providerHandle = $socialLoginProvider->getHandle();
-				$account->socialUid = $socialUid;
-				// Social::$plugin->loginAccounts->saveLoginAccount($account);
+            if ($craftUser)
+            {
+                // Save social user
+                $account = new LoginAccount;
+                $account->userId = $craftUser->id;
+                $account->providerHandle = $socialLoginProvider->getHandle();
+                $account->socialUid = $socialUid;
+                // Social::$plugin->loginAccounts->saveLoginAccount($account);
 
                 Craft::$app->elements->saveElement($account);
 
-				// Login
-				return $this->_login($craftUser, $account, $token, true);
-			}
-			else
-			{
-				throw new Exception("Craft user couldn’t be created.");
-			}
-		}
-	}
+                // Login
+                return $this->_login($craftUser, $account, $token, true);
+            }
+            else
+            {
+                throw new Exception("Craft user couldn’t be created.");
+            }
+        }
+    }
 
-	/**
-	 * Login user from login account
-	 *
-	 * @return null
-	 */
-	private function _login(\craft\elements\User $craftUser, LoginAccount $account, Token $token, $registrationMode = false)
-	{
-		$this->_cleanSession();
+    /**
+     * Login user from login account
+     *
+     * @return null
+     */
+    private function _login(\craft\elements\User $craftUser, LoginAccount $account, Token $token, $registrationMode = false)
+    {
+        $this->_cleanSession();
 
-		if (!$this->redirect)
-		{
-			$this->redirect = $this->referer;
-		}
+        if (!$this->redirect)
+        {
+            $this->redirect = $this->referer;
+        }
 
-		if(!$account->authenticate($token))
+        if(!$account->authenticate($token))
         {
             throw new Exception("Coudln’t authenticate account.");
         }
 
-		if (Craft::$app->getUser()->login($craftUser))
-		{
-			if ($registrationMode)
-			{
-				Craft::$app->getSession()->setNotice(Craft::t('app', 'Account created.'));
-			}
-			else
-			{
-				Craft::$app->getSession()->setNotice(Craft::t('app', 'Logged in.'));
-			}
+        if (Craft::$app->getUser()->login($craftUser))
+        {
+            if ($registrationMode)
+            {
+                Craft::$app->getSession()->setNotice(Craft::t('app', 'Account created.'));
+            }
+            else
+            {
+                Craft::$app->getSession()->setNotice(Craft::t('app', 'Logged in.'));
+            }
 
-			return $this->redirect($this->redirect);
-		}
-		else
-		{
-			$errorCode = Social::$plugin->userSession->getLoginErrorCode();
-			$errorMessage = Social::$plugin->userSession->getLoginErrorMessage($errorCode, $account->user->username);
+            return $this->redirect($this->redirect);
+        }
+        else
+        {
+            $errorCode = Social::$plugin->userSession->getLoginErrorCode();
+            $errorMessage = Social::$plugin->userSession->getLoginErrorMessage($errorCode, $account->user->username);
 
-			Craft::$app->getSession()->setError($errorMessage);
+            Craft::$app->getSession()->setError($errorMessage);
 
-			return $this->redirect($this->referer);
-		}
-	}
+            return $this->redirect($this->referer);
+        }
+    }
 
-	/**
-	 * Clean session variables
-	 *
-	 * @return null
-	 */
-	private function _cleanSession()
-	{
-		Craft::$app->getSession()->remove('social.referer');
-		// Craft::$app->getSession()->remove('social.requestUri');
-	}
+    /**
+     * Clean session variables
+     *
+     * @return null
+     */
+    private function _cleanSession()
+    {
+        Craft::$app->getSession()->remove('social.referer');
+        // Craft::$app->getSession()->remove('social.requestUri');
+    }
 }

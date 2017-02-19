@@ -20,37 +20,37 @@ use Craft\Oauth_TokenModel;
 
 class SocialUserIdentity extends UserIdentity
 {
-	// Properties
-	// =========================================================================
+    // Properties
+    // =========================================================================
 
-	/**
-	 * @var Oauth_TokenModel|null
-	 */
-	public $token;
+    /**
+     * @var Oauth_TokenModel|null
+     */
+    public $token;
 
-	/**
-	 * @var int
-	 */
-	private $_id;
+    /**
+     * @var int
+     */
+    private $_id;
 
-	/**
-	 * @var UserModel
-	 */
-	private $_userModel;
+    /**
+     * @var UserModel
+     */
+    private $_userModel;
 
     // Public Methods
     // =========================================================================
 
     /**
-	 * Constructor
-	 *
-	 * @param Oauth_TokenModel $token
-	 *
-	 * @return null
-	 */
-	public function __construct(Oauth_TokenModel $token)
-	{
-	    $this->token = $token;
+     * Constructor
+     *
+     * @param Oauth_TokenModel $token
+     *
+     * @return null
+     */
+    public function __construct(Oauth_TokenModel $token)
+    {
+        $this->token = $token;
 
         $socialLoginProvider = Craft::app()->loginProviders->getLoginProvider($this->token->providerHandle);
         $data = $socialLoginProvider->getProfile($this->token);
@@ -60,15 +60,15 @@ class SocialUserIdentity extends UserIdentity
         {
             $this->_userModel = $account->getUser();
         }
-	}
+    }
 
-	/**
-	 * Authenticate
-	 *
-	 * @return bool
-	 */
-	public function authenticate()
-	{
+    /**
+     * Authenticate
+     *
+     * @return bool
+     */
+    public function authenticate()
+    {
         if ($this->_userModel)
         {
             return $this->_processUserStatus($this->_userModel);
@@ -77,79 +77,79 @@ class SocialUserIdentity extends UserIdentity
         {
             return false;
         }
-	}
+    }
 
-	/**
-	 * @return int
-	 */
-	public function getId()
-	{
-		return $this->_id;
-	}
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->_id;
+    }
 
-	/**
-	 * @return UserModel
-	 */
-	public function getUserModel()
-	{
-		return $this->_userModel;
-	}
+    /**
+     * @return UserModel
+     */
+    public function getUserModel()
+    {
+        return $this->_userModel;
+    }
 
-	// Private Methods
-	// =========================================================================
+    // Private Methods
+    // =========================================================================
 
-	/**
-	 * @param UserModel $user
-	 *
-	 * @throws Exception
-	 * @return null
-	 */
-	private function _processUserStatus(UserModel $user)
-	{
-		switch ($user->status)
-		{
-			// If the account is pending, they don't exist yet.
-			case UserStatus::Archived:
-			{
-				$this->errorCode = static::ERROR_USERNAME_INVALID;
-				break;
-			}
+    /**
+     * @param UserModel $user
+     *
+     * @throws Exception
+     * @return null
+     */
+    private function _processUserStatus(UserModel $user)
+    {
+        switch ($user->status)
+        {
+            // If the account is pending, they don't exist yet.
+            case UserStatus::Archived:
+            {
+                $this->errorCode = static::ERROR_USERNAME_INVALID;
+                break;
+            }
 
-			case UserStatus::Locked:
-			{
-				$this->errorCode = $this->_getLockedAccountErrorCode();
-				break;
-			}
+            case UserStatus::Locked:
+            {
+                $this->errorCode = $this->_getLockedAccountErrorCode();
+                break;
+            }
 
-			case UserStatus::Suspended:
-			{
-				$this->errorCode = static::ERROR_ACCOUNT_SUSPENDED;
-				break;
-			}
+            case UserStatus::Suspended:
+            {
+                $this->errorCode = static::ERROR_ACCOUNT_SUSPENDED;
+                break;
+            }
 
-			case UserStatus::Pending:
-			{
-				$this->errorCode = static::ERROR_PENDING_VERIFICATION;
-				break;
-			}
+            case UserStatus::Pending:
+            {
+                $this->errorCode = static::ERROR_PENDING_VERIFICATION;
+                break;
+            }
 
-			case UserStatus::Active:
-			{
-				$this->_id = $user->id;
-				$this->username = $user->username;
+            case UserStatus::Active:
+            {
+                $this->_id = $user->id;
+                $this->username = $user->username;
 
-				// Everything is good.
-				$this->errorCode = static::ERROR_NONE;
+                // Everything is good.
+                $this->errorCode = static::ERROR_NONE;
 
-				break;
-			}
+                break;
+            }
 
-			default:
-			{
-				throw new Exception(Craft::t('app', 'User has unknown status “{status}”', array($user->status)));
-			}
-		}
+            default:
+            {
+                throw new Exception(Craft::t('app', 'User has unknown status “{status}”', array($user->status)));
+            }
+        }
 
-		return $this->errorCode === static::ERROR_NONE;
-	}
+        return $this->errorCode === static::ERROR_NONE;
+    }
 }

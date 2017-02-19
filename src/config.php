@@ -2,41 +2,41 @@
 
 return [
 
-	/**
-	 * Allow Email Match
-	 */
-	'allowEmailMatch' => false,
+    /**
+     * Allow Email Match
+     */
+    'allowEmailMatch' => false,
 
 
-	/**
-	 * Lock social registration to specific domains
-	 */
-	'lockDomains' => [],
+    /**
+     * Lock social registration to specific domains
+     */
+    'lockDomains' => [],
 
 
-	/**
-	 * Twitter Configuration
-	 */
+    /**
+     * Twitter Configuration
+     */
 
-	//'twitter' => [
-	//    'userMapping' => [
-	//        'location' => '{{ location }}',
-	//        'profileUrl' => '{{ nickname }}',
-	//    ],
-	//],
+    //'twitter' => [
+    //    'userMapping' => [
+    //        'location' => '{{ location }}',
+    //        'profileUrl' => '{{ nickname }}',
+    //    ],
+    //],
 
 
-	/**
-	 * Facebook Configuration
-	 */
+    /**
+     * Facebook Configuration
+     */
 
-	//'facebook' => [
-	//    'userMapping' => [
-	//        'firstName' => '{{ firstName }}',
-	//        'lastName' => '{{ lastName }}',
-	//        'location' => '{{ locationName }}',
-	//        'gender' => '{{ gender }}',
-	//        'profileUrl' => '{{ link }}',
-	//    ],
-	//],
+    //'facebook' => [
+    //    'userMapping' => [
+    //        'firstName' => '{{ firstName }}',
+    //        'lastName' => '{{ lastName }}',
+    //        'location' => '{{ locationName }}',
+    //        'gender' => '{{ gender }}',
+    //        'profileUrl' => '{{ link }}',
+    //    ],
+    //],
 ];

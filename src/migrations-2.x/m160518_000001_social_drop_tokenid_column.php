@@ -6,19 +6,19 @@ namespace Craft;
  */
 class m160518_000001_social_drop_tokenid_column extends BaseMigration
 {
-	/**
-	 * Any migration code in here is wrapped inside of a transaction.
-	 *
-	 * @return bool
-	 */
-	public function safeUp()
-	{
-		Craft::log('Removing the `tokenId` column from the `social_login_accounts` table', LogLevel::Info, true);
+    /**
+     * Any migration code in here is wrapped inside of a transaction.
+     *
+     * @return bool
+     */
+    public function safeUp()
+    {
+        Craft::log('Removing the `tokenId` column from the `social_login_accounts` table', LogLevel::Info, true);
 
-		craft()->db->createCommand()->dropColumn('social_login_accounts', 'tokenId');
+        craft()->db->createCommand()->dropColumn('social_login_accounts', 'tokenId');
 
-		Craft::log('Done removing the `tokenId` column from the `social_login_accounts` table', LogLevel::Info, true);
+        Craft::log('Done removing the `tokenId` column from the `social_login_accounts` table', LogLevel::Info, true);
 
-		return true;
-	}
+        return true;
+    }
 }

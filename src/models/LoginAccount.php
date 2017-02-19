@@ -17,65 +17,65 @@ class LoginAccount extends Model
     /**
      * @var string
      */
-	protected $elementType = 'Social_LoginAccount';
+    protected $elementType = 'Social_LoginAccount';
 
     /**
      * @var UserModel|null
      */
-	private $_user;
+    private $_user;
 
-	// Public Methods
-	// =========================================================================
+    // Public Methods
+    // =========================================================================
 
-	/**
-	 * Use the login account's email or username as its string representation.
-	 *
-	 * @return string
-	 */
-	public function __toString()
-	{
-		if (craft()->config->get('useEmailAsUsername'))
-		{
-			return (string) $this->email;
-		}
-		else
-		{
-			return (string) $this->username;
-		}
-	}
+    /**
+     * Use the login account's email or username as its string representation.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        if (craft()->config->get('useEmailAsUsername'))
+        {
+            return (string) $this->email;
+        }
+        else
+        {
+            return (string) $this->username;
+        }
+    }
 
-	/**
-	 * Returns whether the current user can edit the element.
-	 *
-	 * @return bool
-	 */
-	public function isEditable()
-	{
-		return true;
-	}
+    /**
+     * Returns whether the current user can edit the element.
+     *
+     * @return bool
+     */
+    public function isEditable()
+    {
+        return true;
+    }
 
-	/**
-	 * Returns the element's CP edit URL.
-	 *
-	 * @return string|false
-	 */
-	public function getCpEditUrl()
-	{
-		return UrlHelper::getCpUrl('social/loginaccounts/'.$this->userId);
-	}
+    /**
+     * Returns the element's CP edit URL.
+     *
+     * @return string|false
+     */
+    public function getCpEditUrl()
+    {
+        return UrlHelper::getCpUrl('social/loginaccounts/'.$this->userId);
+    }
 
-	/**
-	 * Returns the URL to the element's thumbnail, if there is one.
-	 *
-	 * @param int|null $size
-	 *
-	 * @return string|null
-	 */
-	public function getThumbUrl($size = 100)
-	{
-	    $asset = $this->getUser()->getPhoto();
+    /**
+     * Returns the URL to the element's thumbnail, if there is one.
+     *
+     * @param int|null $size
+     *
+     * @return string|null
+     */
+    public function getThumbUrl($size = 100)
+    {
+        $asset = $this->getUser()->getPhoto();
 
-	    if($asset)
+        if($asset)
         {
             $url = $asset->getThumbUrl($size);
 
@@ -86,51 +86,51 @@ class LoginAccount extends Model
 
             return $url;
         }
-	}
+    }
 
-	/**
-	 * Returns the OAuth provider for this login account.
+    /**
+     * Returns the OAuth provider for this login account.
      *
      * @return IOauth_Provider|null
-	 */
-	public function getOauthProvider()
-	{
-		if ($this->providerHandle)
-		{
-			return Social::$plugin->oauth->getProvider($this->providerHandle);
-		}
-	}
+     */
+    public function getOauthProvider()
+    {
+        if ($this->providerHandle)
+        {
+            return Social::$plugin->oauth->getProvider($this->providerHandle);
+        }
+    }
 
-	/**
-	 * Returns the associated Craft user for this login account.
+    /**
+     * Returns the associated Craft user for this login account.
      *
      * @return UserModel
-	 */
-	public function getUser()
-	{
-		if (!isset($this->_user))
-		{
-			if ($this->userId)
-			{
-				$this->_user = craft()->users->getUserById($this->userId);
-			}
-		}
+     */
+    public function getUser()
+    {
+        if (!isset($this->_user))
+        {
+            if ($this->userId)
+            {
+                $this->_user = craft()->users->getUserById($this->userId);
+            }
+        }
 
-		return $this->_user;
-	}
+        return $this->_user;
+    }
 
-	/**
-	 * Returns the user's full name.
-	 *
-	 * @return string|null
-	 */
-	public function getFullName()
-	{
-		$firstName = trim($this->firstName);
-		$lastName = trim($this->lastName);
+    /**
+     * Returns the user's full name.
+     *
+     * @return string|null
+     */
+    public function getFullName()
+    {
+        $firstName = trim($this->firstName);
+        $lastName = trim($this->lastName);
 
-		return $firstName.($firstName && $lastName ? ' ' : '').$lastName;
-	}
+        return $firstName.($firstName && $lastName ? ' ' : '').$lastName;
+    }
 
     // Protected Methods
     // =========================================================================

@@ -5,70 +5,70 @@
 
 {% set content %}
 
-	<table id="fields" class="data fullwidth collapsible">
-		<thead>
-			<tr>
-				<th scope="col">{{ "Name"|t('app') }}</th>
-				<th scope="col">{{ "Handle"|t('app') }}</th>
-				<th scope="col">{{ "Login Provider Status"|t('app') }}</th>
+    <table id="fields" class="data fullwidth collapsible">
+        <thead>
+            <tr>
+                <th scope="col">{{ "Name"|t('app') }}</th>
+                <th scope="col">{{ "Handle"|t('app') }}</th>
+                <th scope="col">{{ "Login Provider Status"|t('app') }}</th>
 
-				{% if craft.config.get('advancedMode', 'social') %}
-					<th scope="col">{{ "Scope"|t('app') }}</th>
-					<th scope="col">{{ "Authorization Options"|t('app') }}</th>
-				{% endif %}
+                {% if craft.config.get('advancedMode', 'social') %}
+                    <th scope="col">{{ "Scope"|t('app') }}</th>
+                    <th scope="col">{{ "Authorization Options"|t('app') }}</th>
+                {% endif %}
 
-				<th scope="col">{{ "OAuth Provider Settings"|t('app') }}</th>
-			</tr>
-		</thead>
+                <th scope="col">{{ "OAuth Provider Settings"|t('app') }}</th>
+            </tr>
+        </thead>
 
-		<tbody>
-			{% for loginProvider in loginProviders %}
-				{% set oauthProvider = loginProvider.getOauthProvider() %}
-				<tr>
-					<td>
-						<div class="provider">
-							<div class="thumb">
-								<img src="{{ loginProvider.getIconUrl() }}" width="32" height="32" />
-							</div>
-							<div class="label">
-								{% if craft.config.get('advancedMode', 'social') %}
-									<a href="{{ url('settings/plugins/social/settings/loginproviders/'~loginProvider.handle) }}">{{ loginProvider.name }}</a>
-								{% else %}
-									{{ loginProvider.name }}
-								{% endif %}
-							</div>
-						</div>
-					</td>
+        <tbody>
+            {% for loginProvider in loginProviders %}
+                {% set oauthProvider = loginProvider.getOauthProvider() %}
+                <tr>
+                    <td>
+                        <div class="provider">
+                            <div class="thumb">
+                                <img src="{{ loginProvider.getIconUrl() }}" width="32" height="32" />
+                            </div>
+                            <div class="label">
+                                {% if craft.config.get('advancedMode', 'social') %}
+                                    <a href="{{ url('settings/plugins/social/settings/loginproviders/'~loginProvider.handle) }}">{{ loginProvider.name }}</a>
+                                {% else %}
+                                    {{ loginProvider.name }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </td>
 
-					<td class="light">{{ loginProvider.handle }}</td>
+                    <td class="light">{{ loginProvider.handle }}</td>
 
-					<td>
-						<form method="post" accept-charset="UTF-8">
+                    <td>
+                        <form method="post" accept-charset="UTF-8">
 
-							<input type="hidden" name="loginProvider" value="{{ loginProvider.handle }}">
+                            <input type="hidden" name="loginProvider" value="{{ loginProvider.handle }}">
 
-							{{ csrfInput() }}
+                            {{ csrfInput() }}
 
-							{% if loginProvider.isEnabled %}
-								<span class="status on"></span> {{ "Enabled"|t('app') }} 
-								<input type="button" value="{{ 'Disable'|t('app') }}" class="btn small formsubmit" data-action="social/login-providers/disable-login-provider">
-							{% else %}
-								<span class="status"></span> {{ "Disabled"|t('app') }} 
-								<input type="button" value="{{ 'Enable'|t('app') }}" class="btn small formsubmit" data-action="social/login-providers/enable-login-provider">
-							{% endif %}
-						</form>
+                            {% if loginProvider.isEnabled %}
+                                <span class="status on"></span> {{ "Enabled"|t('app') }} 
+                                <input type="button" value="{{ 'Disable'|t('app') }}" class="btn small formsubmit" data-action="social/login-providers/disable-login-provider">
+                            {% else %}
+                                <span class="status"></span> {{ "Disabled"|t('app') }} 
+                                <input type="button" value="{{ 'Enable'|t('app') }}" class="btn small formsubmit" data-action="social/login-providers/enable-login-provider">
+                            {% endif %}
+                        </form>
 
-					</td>
+                    </td>
 
-					{% if craft.config.get('advancedMode', 'social') %}
-						<td class="light">{{ "{count} permission(s)"|t('app', { count: loginProvider.getScope()|length }) }}</td>
-						<td class="light">{{ "{count} authorization option(s)"|t('app', { count: loginProvider.getAuthorizationOptions()|length }) }}</td>
-					{% endif %}
+                    {% if craft.config.get('advancedMode', 'social') %}
+                        <td class="light">{{ "{count} permission(s)"|t('app', { count: loginProvider.getScope()|length }) }}</td>
+                        <td class="light">{{ "{count} authorization option(s)"|t('app', { count: loginProvider.getAuthorizationOptions()|length }) }}</td>
+                    {% endif %}
 
-					<td class="thin"><a href="{{ url('oauth/providers/'~loginProvider.handle) }}" title="{{ '{provider} OAuth Settings'|t('app', { provider: loginProvider.name }) }}" data-icon="settings"></a></td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+                    <td class="thin"><a href="{{ url('oauth/providers/'~loginProvider.handle) }}" title="{{ '{provider} OAuth Settings'|t('app', { provider: loginProvider.name }) }}" data-icon="settings"></a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
 {% endset %}

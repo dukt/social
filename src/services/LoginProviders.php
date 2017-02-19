@@ -13,98 +13,98 @@ use Dukt\Social\Base\LoginProviderInterface;
 
 class LoginProviders extends Component
 {
-	// Public Methods
-	// =========================================================================
+    // Public Methods
+    // =========================================================================
 
-	/**
-	 * Disable a login provider by handle.
-	 *
-	 * @param string $handle
-	 *
-	 * @return bool
-	 */
-	public function disableLoginProvider($handle)
-	{
-		$plugin = Craft::$app->plugins->getPlugin('social');
-		$settings = $plugin->getSettings();
+    /**
+     * Disable a login provider by handle.
+     *
+     * @param string $handle
+     *
+     * @return bool
+     */
+    public function disableLoginProvider($handle)
+    {
+        $plugin = Craft::$app->plugins->getPlugin('social');
+        $settings = $plugin->getSettings();
 
-		$loginProviders = $settings->loginProviders;
-		$loginProviders[$handle]['enabled'] = false;
+        $loginProviders = $settings->loginProviders;
+        $loginProviders[$handle]['enabled'] = false;
 
-		$settings->loginProviders = $loginProviders;
+        $settings->loginProviders = $loginProviders;
 
-		return Craft::$app->plugins->savePluginSettings($plugin, $settings->getAttributes());
-	}
+        return Craft::$app->plugins->savePluginSettings($plugin, $settings->getAttributes());
+    }
 
-	/**
-	 * Enable a login provider by handle.
-	 *
-	 * @param string $handle
-	 *
-	 * @return bool
-	 */
-	public function enableLoginProvider($handle)
-	{
-		$plugin = Craft::$app->plugins->getPlugin('social');
-		$settings = $plugin->getSettings();
+    /**
+     * Enable a login provider by handle.
+     *
+     * @param string $handle
+     *
+     * @return bool
+     */
+    public function enableLoginProvider($handle)
+    {
+        $plugin = Craft::$app->plugins->getPlugin('social');
+        $settings = $plugin->getSettings();
 
-		$loginProviders = $settings->loginProviders;
-		$loginProviders[$handle]['enabled'] = true;
+        $loginProviders = $settings->loginProviders;
+        $loginProviders[$handle]['enabled'] = true;
 
-		$settings->loginProviders = $loginProviders;
+        $settings->loginProviders = $loginProviders;
 
-		return Craft::$app->plugins->savePluginSettings($plugin, $settings->getAttributes());
-	}
+        return Craft::$app->plugins->savePluginSettings($plugin, $settings->getAttributes());
+    }
 
-	/**
-	 * Get a login provider by handle.
-	 *
-	 * @param string $handle
-	 * @param bool|true $enabledOnly
-	 *
-	 * @return Social_ProviderModel|null
-	 */
-	public function getLoginProvider($handle, $enabledOnly = true)
-	{
-		$loginProviders = $this->getLoginProviders($enabledOnly);
+    /**
+     * Get a login provider by handle.
+     *
+     * @param string $handle
+     * @param bool|true $enabledOnly
+     *
+     * @return Social_ProviderModel|null
+     */
+    public function getLoginProvider($handle, $enabledOnly = true)
+    {
+        $loginProviders = $this->getLoginProviders($enabledOnly);
 
-		foreach ($loginProviders as $loginProvider)
-		{
-			if ($loginProvider->getHandle() == $handle)
-			{
-				return $loginProvider;
-			}
-		}
-	}
+        foreach ($loginProviders as $loginProvider)
+        {
+            if ($loginProvider->getHandle() == $handle)
+            {
+                return $loginProvider;
+            }
+        }
+    }
 
-	/**
-	 * Get login providers.
-	 *
-	 * @param bool|true $enabledOnly
-	 *
-	 * @return array
-	 */
-	public function getLoginProviders($enabledOnly = true)
-	{
-		return $this->_getLoginProviders($enabledOnly);
-	}
+    /**
+     * Get login providers.
+     *
+     * @param bool|true $enabledOnly
+     *
+     * @return array
+     */
+    public function getLoginProviders($enabledOnly = true)
+    {
+        return $this->_getLoginProviders($enabledOnly);
+    }
 
-	/**
-	 * Get login providers and instantiate them
-	 *
-	 * @param bool $enabledOnly
-	 *
-	 * @return array
-	 */
-	private function _getLoginProviders($enabledOnly)
-	{
-		// fetch all OAuth provider types
-		$socialLoginProviderTypes = array();
+    /**
+     * Get login providers and instantiate them
+     *
+     * @param bool $enabledOnly
+     *
+     * @return array
+     */
+    private function _getLoginProviders($enabledOnly)
+    {
+        // fetch all OAuth provider types
+        $socialLoginProviderTypes = array();
 
 /*		foreach (Craft::$app->plugins->call('getSocialLoginProviders', [], true) as $pluginSocialLoginProviderTypes)
-		{
-			$socialLoginProviderTypes = array_merge($socialLoginProviderTypes, $pluginSocialLoginProviderTypes);
-		}*/
+        {
+            $socialLoginProviderTypes = array_merge($socialLoginProviderTypes, $pluginSocialLoginProviderTypes);
+        }*/
 
         foreach(Craft::$app->plugins->getAllPlugins() as $plugin)
         {
@@ -114,33 +114,33 @@ class LoginProviders extends Component
             }
         }
 
-		// instantiate providers
-		$loginProviders = [];
+        // instantiate providers
+        $loginProviders = [];
 
-		foreach ($socialLoginProviderTypes as $socialLoginProviderType)
-		{
-			$loginProvider = $this->_createLoginProvider($socialLoginProviderType);
+        foreach ($socialLoginProviderTypes as $socialLoginProviderType)
+        {
+            $loginProvider = $this->_createLoginProvider($socialLoginProviderType);
 
-			if (!$enabledOnly || ($enabledOnly && $loginProvider->getIsEnabled()))
-			{
-				$loginProviders[$socialLoginProviderType] = $loginProvider;
-			}
-		}
+            if (!$enabledOnly || ($enabledOnly && $loginProvider->getIsEnabled()))
+            {
+                $loginProviders[$socialLoginProviderType] = $loginProvider;
+            }
+        }
 
-		ksort($loginProviders);
+        ksort($loginProviders);
 
-		return $loginProviders;
-	}
+        return $loginProviders;
+    }
 
-	/**
-	 * Create OAuth provider
+    /**
+     * Create OAuth provider
      *
      * @return LoginProviderInterface
-	 */
-	private function _createLoginProvider($socialLoginProviderType)
-	{
-		$socialLoginProvider = new $socialLoginProviderType;
+     */
+    private function _createLoginProvider($socialLoginProviderType)
+    {
+        $socialLoginProvider = new $socialLoginProviderType;
 
-		return $socialLoginProvider;
-	}
+        return $socialLoginProvider;
+    }
 }

@@ -22,16 +22,16 @@ class Plugin extends \craft\base\Plugin
 
     public static $plugin;
 
-	// Public Methods
-	// =========================================================================
+    // Public Methods
+    // =========================================================================
 
-	/**
-	 * Initialization
+    /**
+     * Initialization
      *
      * @return null
-	 */
-	public function init()
-	{
+     */
+    public function init()
+    {
         parent::init();
         self::$plugin = $this;
 
@@ -80,19 +80,19 @@ class Plugin extends \craft\base\Plugin
         $event->rules = array_merge($event->rules, $rules);
     }
 
-	/**
-	 * Get Social Login Providers
+    /**
+     * Get Social Login Providers
      *
      * @return array
-	 */
-	public function getSocialLoginProviders()
-	{
-		return [
-			'dukt\social\loginproviders\Facebook',
-			'dukt\social\loginproviders\Google',
-			'dukt\social\loginproviders\Twitter',
-		];
-	}
+     */
+    public function getSocialLoginProviders()
+    {
+        return [
+            'dukt\social\loginproviders\Facebook',
+            'dukt\social\loginproviders\Google',
+            'dukt\social\loginproviders\Twitter',
+        ];
+    }
 
     /**
      * Creates and returns the model used to store the plugin’s settings.
@@ -113,103 +113,103 @@ class Plugin extends \craft\base\Plugin
         return '';
     }
 
-	/**
-	 * Get Required Dependencies
+    /**
+     * Get Required Dependencies
      *
      * @return array
-	 */
-	public function getRequiredPlugins()
-	{
-		return [
-			[
-				'name'    => "OAuth",
-				'handle'  => 'oauth',
-				'url'     => 'https://dukt.net/craft/oauth',
-				'version' => '2.0.2'
-			]
-		];
-	}
+     */
+    public function getRequiredPlugins()
+    {
+        return [
+            [
+                'name'    => "OAuth",
+                'handle'  => 'oauth',
+                'url'     => 'https://dukt.net/craft/oauth',
+                'version' => '2.0.2'
+            ]
+        ];
+    }
 
-	/**
-	 * Get Name
+    /**
+     * Get Name
      *
      * @return string
-	 */
-	public function getName()
-	{
-		return Craft::t('app', 'Social Login');
-	}
+     */
+    public function getName()
+    {
+        return Craft::t('app', 'Social Login');
+    }
 
-	/**
-	 * Get Description
+    /**
+     * Get Description
      *
      * @return string
-	 */
-	public function getDescription()
-	{
-		return Craft::t('app', 'Let your visitors log into Craft with web services like Facebook, Google, Twitter…');
-	}
+     */
+    public function getDescription()
+    {
+        return Craft::t('app', 'Let your visitors log into Craft with web services like Facebook, Google, Twitter…');
+    }
 
-	/**
-	 * Get Version
+    /**
+     * Get Version
      *
      * @return string
-	 */
-	public function getVersion()
-	{
-		return '1.2.4';
-	}
+     */
+    public function getVersion()
+    {
+        return '1.2.4';
+    }
 
 
-	/**
-	 * Schema Version
+    /**
+     * Schema Version
      *
      * @return string
-	 */
-	public function getSchemaVersion()
-	{
-		return '1.0.2';
-	}
+     */
+    public function getSchemaVersion()
+    {
+        return '1.0.2';
+    }
 
-	/**
-	 * Get Developer
+    /**
+     * Get Developer
      *
      * @return string
-	 */
-	public function getDeveloper()
-	{
-		return 'Dukt';
-	}
+     */
+    public function getDeveloper()
+    {
+        return 'Dukt';
+    }
 
-	/**
-	 * Get Developer URL
+    /**
+     * Get Developer URL
      *
      * @return string
-	 */
-	public function getDeveloperUrl()
-	{
-		return 'https://dukt.net/';
-	}
+     */
+    public function getDeveloperUrl()
+    {
+        return 'https://dukt.net/';
+    }
 
-	/**
-	 * Get Documentation URL
+    /**
+     * Get Documentation URL
      *
      * @return string
-	 */
-	public function getDocumentationUrl()
-	{
-		return 'https://dukt.net/craft/social/docs/';
-	}
+     */
+    public function getDocumentationUrl()
+    {
+        return 'https://dukt.net/craft/social/docs/';
+    }
 
-	/**
-	 * Get Release Feed URL
+    /**
+     * Get Release Feed URL
      *
      * @return string
-	 */
-	public function getReleaseFeedUrl()
-	{
-		return 'https://dukt.net/craft/social/updates.json';
-	}
+     */
+    public function getReleaseFeedUrl()
+    {
+        return 'https://dukt.net/craft/social/updates.json';
+    }
 
     /**
      * Get Settings URL
@@ -217,9 +217,9 @@ class Plugin extends \craft\base\Plugin
      * @return string
      */
     public function getSettingsUrl()
-	{
-		return 'settings/plugins/social/settings/loginproviders';
-	}
+    {
+        return 'settings/plugins/social/settings/loginproviders';
+    }
 
     /**
      * Has CP Section
@@ -227,16 +227,16 @@ class Plugin extends \craft\base\Plugin
      * @return bool
      */
     public function hasCpSection()
-	{
-		$settings = $this->getSettings();
+    {
+        $settings = $this->getSettings();
 
-		if ($settings['showCpSection'])
-		{
-			return true;
-		}
+        if ($settings['showCpSection'])
+        {
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
     /**
      * Defines additional user table attributes.
@@ -273,7 +273,7 @@ class Plugin extends \craft\base\Plugin
                 'loginAccounts' => $loginAccounts,
             ];
 
-	        Craft::$app->getView()->registerCssFile('social/css/social.css');
+            Craft::$app->getView()->registerCssFile('social/css/social.css');
 
             $html = Craft::$app->getView()->renderTemplate('social/users/_login-accounts-column', $variables, true);
 
@@ -288,21 +288,21 @@ class Plugin extends \craft\base\Plugin
      *
      * @return array
      */
-	protected function defineSettings()
-	{
-		return [
-			'enableSocialRegistration' => [AttributeType::Bool, 'default' => true],
-			'enableSocialLogin' => [AttributeType::Bool, 'default' => true],
-			'loginProviders' => [AttributeType::Mixed],
-			'defaultGroup' => [AttributeType::Number, 'default' => null],
-			'autoFillProfile' => [AttributeType::Bool, 'default' => true],
-			'showCpSection' => [AttributeType::Bool, 'default' => true],
-			'enableCpLogin' => [AttributeType::Bool, 'default' => false],
-		];
-	}
+    protected function defineSettings()
+    {
+        return [
+            'enableSocialRegistration' => [AttributeType::Bool, 'default' => true],
+            'enableSocialLogin' => [AttributeType::Bool, 'default' => true],
+            'loginProviders' => [AttributeType::Mixed],
+            'defaultGroup' => [AttributeType::Number, 'default' => null],
+            'autoFillProfile' => [AttributeType::Bool, 'default' => true],
+            'showCpSection' => [AttributeType::Bool, 'default' => true],
+            'enableCpLogin' => [AttributeType::Bool, 'default' => false],
+        ];
+    }
 
-	// Private Methods
-	// =========================================================================
+    // Private Methods
+    // =========================================================================
 
     /**
      * Initialize event listeners
@@ -310,8 +310,8 @@ class Plugin extends \craft\base\Plugin
      * @return null
      */
     private function initEventListeners()
-	{
-		// social login for CP
+    {
+        // social login for CP
 
         if($this->settings->enableCpLogin)
         {
@@ -341,11 +341,11 @@ class Plugin extends \craft\base\Plugin
         }
 
 
-		// Delete social user when craft user is deleted
+        // Delete social user when craft user is deleted
 
-		Craft::$app->on('users.onBeforeDeleteUser', function (Event $event)
-		{
-			$user = $event->params['user'];
+        Craft::$app->on('users.onBeforeDeleteUser', function (Event $event)
+        {
+            $user = $event->params['user'];
 
             $this->loginAccounts->deleteLoginAccountByUserId($user->id);
         });
@@ -362,8 +362,8 @@ class Plugin extends \craft\base\Plugin
         {
             if ($context['account'])
             {
-	            $context['user'] = $context['account'];
-	            $context['loginAccounts'] = $this->loginAccounts->getLoginAccountsByUserId($context['account']->id);
+                $context['user'] = $context['account'];
+                $context['loginAccounts'] = $this->loginAccounts->getLoginAccountsByUserId($context['account']->id);
 
                 $loginProviders = $this->loginProviders->getLoginProviders();
                 $context['loginProviders'] = [];

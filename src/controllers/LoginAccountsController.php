@@ -14,31 +14,31 @@ use dukt\social\Plugin as Social;
 
 class LoginAccountsController extends Controller
 {
-	// Public Methods
-	// =========================================================================
+    // Public Methods
+    // =========================================================================
 
-	/**
-	 * Login Accounts Index
-	 *
-	 * @return null
-	 */
-	public function actionIndex()
-	{
+    /**
+     * Login Accounts Index
+     *
+     * @return null
+     */
+    public function actionIndex()
+    {
         Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
 
-		return $this->renderTemplate('social/loginaccounts/_index');
-	}
+        return $this->renderTemplate('social/loginaccounts/_index');
+    }
 
-	/**
-	 * Edit User's Login Accounts
-	 *
-	 * @param array $variable Route variables
-	 *
-	 * @throws HttpException
-	 * @return null
-	 */
-	public function actionEdit($userId)
-	{
+    /**
+     * Edit User's Login Accounts
+     *
+     * @param array $variable Route variables
+     *
+     * @throws HttpException
+     * @return null
+     */
+    public function actionEdit($userId)
+    {
         $user = Craft::$app->users->getUserById($userId);
 
         if ($user)
@@ -57,22 +57,22 @@ class LoginAccountsController extends Controller
         {
             throw new HttpException(404);
         }
-	}
+    }
 
-	/**
-	 * Delete Login Account
-	 *
-	 * @return null
-	 */
-	public function actionDeleteLoginAccount()
-	{
-		$this->requirePostRequest();
-		$this->requireAcceptsJson();
+    /**
+     * Delete Login Account
+     *
+     * @return null
+     */
+    public function actionDeleteLoginAccount()
+    {
+        $this->requirePostRequest();
+        $this->requireAcceptsJson();
 
-		$loginAccountId = Craft::$app->request->getRequiredBodyParam('id');
+        $loginAccountId = Craft::$app->request->getRequiredBodyParam('id');
 
-		Social::$plugin->loginAccounts->deleteLoginAccountById($loginAccountId);
+        Social::$plugin->loginAccounts->deleteLoginAccountById($loginAccountId);
 
-		return $this->asJson(array('success' => true));
-	}
+        return $this->asJson(array('success' => true));
+    }
 }

@@ -14,112 +14,112 @@ use craft\elements\User;
 
 class Social extends Component
 {
-	// Public Methods
-	// =========================================================================
+    // Public Methods
+    // =========================================================================
 
-	/**
-	 * Get login URL
-	 *
-	 * @param $providerHandle
-	 * @param array  $params
-	 *
-	 * @return string
-	 */
-	public function getLoginUrl($providerHandle, array $params = [])
-	{
-		$params['provider'] = $providerHandle;
+    /**
+     * Get login URL
+     *
+     * @param $providerHandle
+     * @param array  $params
+     *
+     * @return string
+     */
+    public function getLoginUrl($providerHandle, array $params = [])
+    {
+        $params['provider'] = $providerHandle;
 
-		if (isset($params['scope']) && is_array($params['scope']))
-		{
-			$params['scope'] = urlencode(base64_encode(serialize($params['scope'])));
-		}
+        if (isset($params['scope']) && is_array($params['scope']))
+        {
+            $params['scope'] = urlencode(base64_encode(serialize($params['scope'])));
+        }
 
-		$url = UrlHelper::siteUrl(Craft::$app->config->get('actionTrigger').'/social/social/login', $params);
+        $url = UrlHelper::siteUrl(Craft::$app->config->get('actionTrigger').'/social/social/login', $params);
 
-		return $url;
-	}
+        return $url;
+    }
 
-	/**
-	 * Get logout URL
-	 *
-	 * @param string|null $redirect
-	 *
-	 * @return string
-	 */
-	public function getLogoutUrl($redirect = null)
-	{
-		$params = ['redirect' => $redirect];
+    /**
+     * Get logout URL
+     *
+     * @param string|null $redirect
+     *
+     * @return string
+     */
+    public function getLogoutUrl($redirect = null)
+    {
+        $params = ['redirect' => $redirect];
 
-		return UrlHelper::actionUrl('social/social/logout', $params);
-	}
+        return UrlHelper::actionUrl('social/social/logout', $params);
+    }
 
-	/**
-	 * Get link account URL
-	 *
-	 * @param $handle
-	 *
-	 * @return string
-	 */
-	public function getLoginAccountConnectUrl($handle)
-	{
-		return UrlHelper::actionUrl('social/social/connect-login-account', [
-			'provider' => $handle
-		]);
-	}
+    /**
+     * Get link account URL
+     *
+     * @param $handle
+     *
+     * @return string
+     */
+    public function getLoginAccountConnectUrl($handle)
+    {
+        return UrlHelper::actionUrl('social/social/connect-login-account', [
+            'provider' => $handle
+        ]);
+    }
 
-	/**
-	 * Get unlink account URL
-	 *
-	 * @param $handle
-	 *
-	 * @return string
-	 */
-	public function getLoginAccountDisconnectUrl($handle)
-	{
-		return UrlHelper::actionUrl('social/social/disconnect-login-account', [
-			'provider' => $handle
-		]);
-	}
+    /**
+     * Get unlink account URL
+     *
+     * @param $handle
+     *
+     * @return string
+     */
+    public function getLoginAccountDisconnectUrl($handle)
+    {
+        return UrlHelper::actionUrl('social/social/disconnect-login-account', [
+            'provider' => $handle
+        ]);
+    }
 
-	/**
-	 * Save remote photo
-	 *
-	 * @param string $photoUrl
-	 * @param User $user
-	 *
-	 * @return bool
-	 */
-	public function saveRemotePhoto($photoUrl, User $user)
-	{
-		$filename = 'photo';
+    /**
+     * Save remote photo
+     *
+     * @param string $photoUrl
+     * @param User $user
+     *
+     * @return bool
+     */
+    public function saveRemotePhoto($photoUrl, User $user)
+    {
+        $filename = 'photo';
 
-		$tempPath = Craft::$app->path->getTempPath().'social/userphotos/'.$user->email.'/';
-		IOHelper::createFolder($tempPath);
-		$tempFilepath = $tempPath.$filename;
-		$client = new \Guzzle\Http\Client();
-		$response = $client->get($photoUrl)
-			->setResponseBody($tempPath.$filename)
-			->send();
+        $tempPath = Craft::$app->path->getTempPath().'social/userphotos/'.$user->email.'/';
+        IOHelper::createFolder($tempPath);
+        $tempFilepath = $tempPath.$filename;
+        $client = new \Guzzle\Http\Client();
+        $response = $client->get($photoUrl)
+            ->setResponseBody($tempPath.$filename)
+            ->send();
 
-		$extension = substr($response->getContentType(), strpos($response->getContentType(), "/") + 1);
+        $extension = substr($response->getContentType(), strpos($response->getContentType(), "/") + 1);
 
-		IOHelper::rename($tempPath.$filename, $tempPath.$filename.'.'.$extension);
+        IOHelper::rename($tempPath.$filename, $tempPath.$filename.'.'.$extension);
 
-		Craft::$app->users->deleteUserPhoto($user);
+        Craft::$app->users->deleteUserPhoto($user);
 
-		$image = Craft::$app->images->loadImage($tempPath.$filename.'.'.$extension);
-		$imageWidth = $image->getWidth();
-		$imageHeight = $image->getHeight();
+        $image = Craft::$app->images->loadImage($tempPath.$filename.'.'.$extension);
+        $imageWidth = $image->getWidth();
+        $imageHeight = $image->getHeight();
 
-		$dimension = min($imageWidth, $imageHeight);
-		$horizontalMargin = ($imageWidth - $dimension) / 2;
-		$verticalMargin = ($imageHeight - $dimension) / 2;
-		$image->crop($horizontalMargin, $imageWidth - $horizontalMargin, $verticalMargin, $imageHeight - $verticalMargin);
+        $dimension = min($imageWidth, $imageHeight);
+        $horizontalMargin = ($imageWidth - $dimension) / 2;
+        $verticalMargin = ($imageHeight - $dimension) / 2;
+        $image->crop($horizontalMargin, $imageWidth - $horizontalMargin, $verticalMargin, $imageHeight - $verticalMargin);
 
-		Craft::$app->users->saveUserPhoto($filename.'.'.$extension, $image, $user);
+        Craft::$app->users->saveUserPhoto($filename.'.'.$extension, $image, $user);
 
-		IOHelper::deleteFile($tempPath.$filename.'.'.$extension);
+        IOHelper::deleteFile($tempPath.$filename.'.'.$extension);
 
-		return true;
-	}
+        return true;
+    }
 }

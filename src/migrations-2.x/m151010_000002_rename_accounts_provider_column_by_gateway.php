@@ -6,19 +6,19 @@ namespace Craft;
  */
 class m151010_000002_rename_accounts_provider_column_by_gateway extends BaseMigration
 {
-	/**
-	 * Any migration code in here is wrapped inside of a transaction.
-	 *
-	 * @return bool
-	 */
-	public function safeUp()
-	{
-		Craft::log('Renaming social_accounts `provider` column by `gateway`', LogLevel::Info, true);
+    /**
+     * Any migration code in here is wrapped inside of a transaction.
+     *
+     * @return bool
+     */
+    public function safeUp()
+    {
+        Craft::log('Renaming social_accounts `provider` column by `gateway`', LogLevel::Info, true);
 
-		MigrationHelper::renameColumn('social_accounts', 'provider', 'gateway');
+        MigrationHelper::renameColumn('social_accounts', 'provider', 'gateway');
 
-		Craft::log('Done renaming social_accounts `provider` column by `gateway`', LogLevel::Info, true);
+        Craft::log('Done renaming social_accounts `provider` column by `gateway`', LogLevel::Info, true);
 
-		return true;
-	}
+        return true;
+    }
 }

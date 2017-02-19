@@ -13,22 +13,22 @@ use dukt\social\Plugin as Social;
 
 class SettingsController extends Controller
 {
-	// Public Methods
-	// =========================================================================
+    // Public Methods
+    // =========================================================================
 
-	/**
-	 * Settings Index
-	 *
-	 * @return null
-	 */
-	public function actionIndex()
-	{
-		$plugin = Craft::$app->plugins->getPlugin('social');
-		$variables['settings'] = $plugin->getSettings();
+    /**
+     * Settings Index
+     *
+     * @return null
+     */
+    public function actionIndex()
+    {
+        $plugin = Craft::$app->plugins->getPlugin('social');
+        $variables['settings'] = $plugin->getSettings();
 
-		$accounts = Social::$plugin->loginAccounts->getLoginAccounts();
-		$variables['totalAccounts'] = count($accounts);
+        $accounts = Social::$plugin->loginAccounts->getLoginAccounts();
+        $variables['totalAccounts'] = count($accounts);
 
-		return $this->renderTemplate('social/settings/_index', $variables);
-	}
+        return $this->renderTemplate('social/settings/_index', $variables);
+    }
 }

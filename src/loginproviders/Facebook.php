@@ -14,25 +14,25 @@ use GuzzleHttp\HandlerStack;
 
 class Facebook extends BaseProvider
 {
-	/**
-	 * @inheritdoc
-	 *
-	 * @return string
-	 */
-	public function getName()
-	{
-		return 'Facebook';
-	}
+    /**
+     * @inheritdoc
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return 'Facebook';
+    }
 
-	/**
-	 * @inheritdoc
-	 *
-	 * @return string
-	 */
-	public function getOauthProviderHandle()
-	{
-		return 'facebook';
-	}
+    /**
+     * @inheritdoc
+     *
+     * @return string
+     */
+    public function getOauthProviderHandle()
+    {
+        return 'facebook';
+    }
 
     public function getOauthProviderClass()
     {
@@ -54,18 +54,18 @@ class Facebook extends BaseProvider
         return $config;
     }
 
-	/**
-	 * @inheritdoc
+    /**
+     * @inheritdoc
      *
      * @return array|null
-	 */
-	public function getDefaultScope()
-	{
-		return [
-			'email',
-			'user_location',
-		];
-	}
+     */
+    public function getDefaultScope()
+    {
+        return [
+            'email',
+            'user_location',
+        ];
+    }
 
     /**
      * @inheritdoc
@@ -104,26 +104,26 @@ class Facebook extends BaseProvider
      *
      * @return array|null
      */
-	public function getRemoteProfile(Token $token)
-	{
+    public function getRemoteProfile(Token $token)
+    {
 /*		$oauthProvider = $this->getOauthProvider();
 
-		$client = new Client('https://graph.facebook.com/v2.8');
-		$client->addSubscriber($oauthProvider->getSubscriber($token));
+        $client = new Client('https://graph.facebook.com/v2.8');
+        $client->addSubscriber($oauthProvider->getSubscriber($token));
 
-		$fields = implode(',', [
-			'id', 'name', 'first_name', 'last_name',
-			'email', 'hometown', 'picture.type(large){url,is_silhouette}',
-			'cover{source}', 'gender', 'locale', 'link',
-			'location',
-		]);
+        $fields = implode(',', [
+            'id', 'name', 'first_name', 'last_name',
+            'email', 'hometown', 'picture.type(large){url,is_silhouette}',
+            'cover{source}', 'gender', 'locale', 'link',
+            'location',
+        ]);
 
-		$request = $client->get('/me?fields='.$fields);
+        $request = $client->get('/me?fields='.$fields);
 
-		$response = $request->send();
-		$json = $response->json();
+        $response = $request->send();
+        $json = $response->json();
 
-		return $json;*/
+        return $json;*/
 
         $client = $this->getClient($token);
 
@@ -145,7 +145,7 @@ class Facebook extends BaseProvider
         $jsonResponse = json_decode($response->getBody(), true);
 
         return $jsonResponse;
-	}
+    }
 
     /**
      * Get the authenticated client

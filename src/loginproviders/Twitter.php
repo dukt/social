@@ -32,24 +32,24 @@ class Twitter extends BaseProvider
     }
 
     /**
-	 * @inheritdoc
-	 *
-	 * @return string
-	 */
-	public function getName()
-	{
-		return 'Twitter';
-	}
+     * @inheritdoc
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return 'Twitter';
+    }
 
-	/**
-	 * @inheritdoc
-	 *
-	 * @return string
-	 */
-	public function getOauthProviderHandle()
-	{
-		return 'twitter';
-	}
+    /**
+     * @inheritdoc
+     *
+     * @return string
+     */
+    public function getOauthProviderHandle()
+    {
+        return 'twitter';
+    }
 
     /**
      * @inheritdoc
@@ -58,22 +58,22 @@ class Twitter extends BaseProvider
      *
      * @return array|null
      */
-	public function getProfile(Token $token)
-	{
-		$remoteProfile = $this->getRemoteProfile($token);
+    public function getProfile(Token $token)
+    {
+        $remoteProfile = $this->getRemoteProfile($token);
 
-		$photoUrl = $remoteProfile->imageUrl;
-		$photoUrl = str_replace("_normal.", ".", $photoUrl);
+        $photoUrl = $remoteProfile->imageUrl;
+        $photoUrl = str_replace("_normal.", ".", $photoUrl);
 
-		return [
-			'id' => $remoteProfile->uid,
-			'email' => $remoteProfile->email,
-			'photoUrl' => $photoUrl,
+        return [
+            'id' => $remoteProfile->uid,
+            'email' => $remoteProfile->email,
+            'photoUrl' => $photoUrl,
 
-			'nickname' => $remoteProfile->nickname,
-			'name' => $remoteProfile->name,
-			'location' => $remoteProfile->location,
-			'description' => $remoteProfile->description,
-		];
-	}
+            'nickname' => $remoteProfile->nickname,
+            'name' => $remoteProfile->name,
+            'location' => $remoteProfile->location,
+            'description' => $remoteProfile->description,
+        ];
+    }
 }

@@ -11,29 +11,29 @@ use dukt\social\models\Token;
 
 interface LoginProviderInterface
 {
-	// Public Methods
-	// =========================================================================
+    // Public Methods
+    // =========================================================================
 
-	/**
-	 * Returns the name of the login provider
-	 *
-	 * @return string
-	 */
-	public function getName();
+    /**
+     * Returns the name of the login provider
+     *
+     * @return string
+     */
+    public function getName();
 
-	/**
-	 * Returns the handle of the OAuth provider
-	 *
-	 * @return string
-	 */
-	public function getOauthProviderHandle();
+    /**
+     * Returns the handle of the OAuth provider
+     *
+     * @return string
+     */
+    public function getOauthProviderHandle();
 
-	/**
-	 * Returns a profile from an OAuth token
-	 *
-	 * @param Token $token
-	 *
-	 * @return array|null
-	 */
-	public function getProfile(Token $token);
+    /**
+     * Returns a profile from an OAuth token
+     *
+     * @param Token $token
+     *
+     * @return array|null
+     */
+    public function getProfile(Token $token);
 }

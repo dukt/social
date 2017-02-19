@@ -9,43 +9,43 @@ namespace Craft;
 
 class Social_LoginAccountRecord extends BaseRecord
 {
-	// Public Methods
-	// =========================================================================
+    // Public Methods
+    // =========================================================================
 
-	/**
-	 * Returns the name of the associated database table.
-	 *
-	 * @return string
-	 */
-	public function getTableName()
-	{
-		return 'social_login_accounts';
-	}
+    /**
+     * Returns the name of the associated database table.
+     *
+     * @return string
+     */
+    public function getTableName()
+    {
+        return 'social_login_accounts';
+    }
 
-	/**
-	 * Defines this model's relations to other models.
-	 *
-	 * @return array
-	 */
-	public function defineRelations()
-	{
-		return array(
-			'element' => array(static::BELONGS_TO, 'ElementRecord', 'id', 'onDelete' => static::CASCADE, 'required' => true),
-			'user' => array(static::BELONGS_TO, 'UserRecord', 'onDelete' => static::CASCADE, 'required' => true),
-		);
-	}
+    /**
+     * Defines this model's relations to other models.
+     *
+     * @return array
+     */
+    public function defineRelations()
+    {
+        return array(
+            'element' => array(static::BELONGS_TO, 'ElementRecord', 'id', 'onDelete' => static::CASCADE, 'required' => true),
+            'user' => array(static::BELONGS_TO, 'UserRecord', 'onDelete' => static::CASCADE, 'required' => true),
+        );
+    }
 
-	/**
-	 * Defines this model's database table indexes.
-	 *
-	 * @return array
-	 */
-	public function defineIndexes()
-	{
-		return array(
-			array('columns' => array('providerHandle', 'socialUid'), 'unique' => true)
-		);
-	}
+    /**
+     * Defines this model's database table indexes.
+     *
+     * @return array
+     */
+    public function defineIndexes()
+    {
+        return array(
+            array('columns' => array('providerHandle', 'socialUid'), 'unique' => true)
+        );
+    }
 
     // Protected Methods
     // =========================================================================
