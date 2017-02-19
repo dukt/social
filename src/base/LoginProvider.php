@@ -5,15 +5,13 @@
  * @license   https://dukt.net/craft/social/docs/license
  */
 
-namespace dukt\social\loginproviders;
+namespace dukt\social\base;
 
 use Craft;
-use dukt\social\base\LoginProviderInterface;
 use dukt\social\models\Token;
-use dukt\social\Plugin as Social;
 use craft\helpers\UrlHelper;
 
-abstract class BaseProvider implements LoginProviderInterface
+abstract class LoginProvider implements LoginProviderInterface
 {
     /**
      * OAuth Connect

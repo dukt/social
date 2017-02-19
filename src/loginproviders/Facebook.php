@@ -8,11 +8,11 @@
 namespace dukt\social\loginproviders;
 
 use dukt\social\Plugin as Social;
+use dukt\social\base\LoginProvider;
 use GuzzleHttp\Client;
 use dukt\social\models\Token;
-use GuzzleHttp\HandlerStack;
 
-class Facebook extends BaseProvider
+class Facebook extends LoginProvider
 {
     /**
      * @inheritdoc
