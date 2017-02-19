@@ -26,16 +26,6 @@ class Facebook extends LoginProvider
     }
 
     /**
-     * @inheritdoc
-     *
-     * @return string
-     */
-    public function getOauthProviderHandle()
-    {
-        return 'facebook';
-    }
-
-    /**
      * Get the OAuth provider.
      *
      * @return mixed

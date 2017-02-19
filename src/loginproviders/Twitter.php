@@ -7,7 +7,6 @@
 
 namespace dukt\social\loginproviders;
 
-use Craft;
 use craft\helpers\UrlHelper;
 use dukt\social\base\LoginProvider;
 use dukt\social\models\Token;
@@ -26,15 +25,10 @@ class Twitter extends LoginProvider
     }
 
     /**
-     * @inheritdoc
+     * OAuth version
      *
-     * @return string
+     * @return int
      */
-    public function getOauthProviderHandle()
-    {
-        return 'twitter';
-    }
-
     public function oauthVersion()
     {
         return 1;

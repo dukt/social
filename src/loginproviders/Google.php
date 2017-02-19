@@ -7,6 +7,7 @@
 
 namespace dukt\social\loginproviders;
 
+use craft\helpers\UrlHelper;
 use dukt\social\base\LoginProvider;
 use dukt\social\models\Token;
 use dukt\social\Plugin as Social;
@@ -21,16 +22,6 @@ class Google extends LoginProvider
     public function getName()
     {
         return 'Google';
-    }
-
-    /**
-     * @inheritdoc
-     *
-     * @return string
-     */
-    public function getOauthProviderHandle()
-    {
-        return 'google';
     }
 
     /**
