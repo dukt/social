@@ -44,7 +44,7 @@ class Plugin extends \craft\base\Plugin
 
         $this->setComponents([
             'social' => \dukt\social\services\Social::class,
-            'social_loginAccounts' => \dukt\social\services\LoginAccounts::class,
+            'loginAccounts' => \dukt\social\services\LoginAccounts::class,
             'loginProviders' => \dukt\social\services\LoginProviders::class,
             'userSession' => \dukt\social\services\UserSession::class,
             'oauth' => \dukt\social\services\Oauth::class,
