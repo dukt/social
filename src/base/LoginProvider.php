@@ -13,12 +13,46 @@ use craft\helpers\UrlHelper;
 
 abstract class LoginProvider implements LoginProviderInterface
 {
+    public function oauthVersion()
+    {
+        return 2;
+    }
+
     /**
      * OAuth Connect
      *
      * @return null
      */
     public function oauthConnect()
+    {
+        switch($this->oauthVersion())
+        {
+            case 1:
+                return $this->oauth1Connect();
+            case 2:
+                return $this->oauth2Connect();
+        }
+
+    }
+
+    private function oauth1Connect()
+    {
+        // OAuth provider
+        $provider = $this->getOauthProvider();
+
+        // Obtain temporary credentials
+        $temporaryCredentials = $provider->getTemporaryCredentials();
+
+        // Store credentials in the session
+        Craft::$app->getSession()->set('oauth.temporaryCredentials', $temporaryCredentials);
+
+        // Redirect to login screen
+        $authorizationUrl = $provider->getAuthorizationUrl($temporaryCredentials);
+
+        return Craft::$app->getResponse()->redirect($authorizationUrl);
+    }
+
+    private function oauth2Connect()
     {
         $provider = $this->getOauthProvider();
 
@@ -40,11 +74,52 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
-     * OAuth Callback
+     * OAuth Connect
      *
      * @return null
      */
     public function oauthCallback()
+    {
+        switch($this->oauthVersion())
+        {
+            case 1:
+                return $this->oauth1Callback();
+            case 2:
+                return $this->oauth2Callback();
+        }
+
+    }
+
+    /**
+     * OAuth Callback
+     *
+     * @return null
+     */
+    private function oauth1Callback()
+    {
+        $provider = $this->getOauthProvider();
+
+        $oauthToken = Craft::$app->request->getParam('oauth_token');
+        $oauthVerifier = Craft::$app->request->getParam('oauth_verifier');
+
+        // Retrieve the temporary credentials we saved before.
+        $temporaryCredentials = Craft::$app->getSession()->get('oauth.temporaryCredentials');
+
+        // Obtain token credentials from the server.
+        $token = $provider->getTokenCredentials($temporaryCredentials, $oauthToken, $oauthVerifier);
+
+        return [
+            'success' => true,
+            'token' => $token
+        ];
+    }
+
+    /**
+     * OAuth Callback
+     *
+     * @return null
+     */
+    private function oauth2Callback()
     {
         $provider = $this->getOauthProvider();
 

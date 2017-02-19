@@ -15,50 +15,9 @@ use dukt\social\Plugin as Social;
 
 class Twitter extends LoginProvider
 {
-    /**
-     * OAuth Connect
-     *
-     * @return null
-     */
-    public function oauthConnect()
+    public function oauthVersion()
     {
-        // OAuth provider
-        $provider = $this->getOauthProvider();
-
-        // Obtain temporary credentials
-        $temporaryCredentials = $provider->getTemporaryCredentials();
-
-        // Store credentials in the session
-        Craft::$app->getSession()->set('oauth.temporaryCredentials', $temporaryCredentials);
-
-        // Redirect to login screen
-        $authorizationUrl = $provider->getAuthorizationUrl($temporaryCredentials);
-
-        return Craft::$app->getResponse()->redirect($authorizationUrl);
-    }
-
-    /**
-     * OAuth Callback
-     *
-     * @return null
-     */
-    public function oauthCallback()
-    {
-        $provider = $this->getOauthProvider();
-
-        $oauthToken = Craft::$app->request->getParam('oauth_token');
-        $oauthVerifier = Craft::$app->request->getParam('oauth_verifier');
-
-        // Retrieve the temporary credentials we saved before.
-        $temporaryCredentials = Craft::$app->getSession()->get('oauth.temporaryCredentials');
-
-        // Obtain token credentials from the server.
-        $token = $provider->getTokenCredentials($temporaryCredentials, $oauthToken, $oauthVerifier);
-
-        return [
-            'success' => true,
-            'token' => $token
-        ];
+        return 1;
     }
 
     public function getOauthProviderClass()
