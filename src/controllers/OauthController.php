@@ -25,7 +25,7 @@ class OauthController extends Controller
     {
         /*$handle = Craft::$app->getSession()->get('social.loginProvider');
 
-        $loginProvider = Social::$plugin->loginProviders->getLoginProvider($handle);
+        $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($handle);
         $token = $loginProvider->oauthCallback();*/
 
         Craft::$app->getSession()->set('social.callback', true);

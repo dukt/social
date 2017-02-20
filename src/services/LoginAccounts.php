@@ -386,7 +386,7 @@ class LoginAccounts extends Component
             }
 
             if ($photoUrl) {
-                // Social::$plugin->social->saveRemotePhoto($photoUrl, $newUser);
+                // Social::$plugin->getSocial()->saveRemotePhoto($photoUrl, $newUser);
             }
         }
 

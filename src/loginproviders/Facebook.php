@@ -32,7 +32,7 @@ class Facebook extends LoginProvider
      */
     public function getOauthProvider()
     {
-        $providerInfos = Social::$plugin->oauth->getProviderInfos($this->getHandle());
+        $providerInfos = Social::$plugin->getOauth()->getProviderInfos($this->getHandle());
 
         $config = [
             'clientId' => $providerInfos['clientId'],
@@ -131,7 +131,7 @@ class Facebook extends LoginProvider
 
         if($token)
         {
-            $provider = Social::$plugin->oauth->getProvider('facebook');
+            $provider = Social::$plugin->getOauth()->getProvider('facebook');
 
             $stack = $provider->getSubscriber($token);
 

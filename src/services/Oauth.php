@@ -37,7 +37,7 @@ class Oauth extends Component
     {
         $handle = $options['provider'];
 
-        $loginProvider = Social::$plugin->loginProviders->getLoginProvider($handle);
+        $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($handle);
 
         Craft::$app->getSession()->set('social.loginProvider', $handle);
         if(Craft::$app->getSession()->get('social.callback') === true)

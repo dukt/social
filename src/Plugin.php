@@ -31,7 +31,7 @@ class Plugin extends \craft\base\Plugin
     public $hasCpSection = false;
 
     /**
-     * @var
+     * @var \dukt\social\Plugin The plugin instance.
      */
     public static $plugin;
 
@@ -39,9 +39,7 @@ class Plugin extends \craft\base\Plugin
     // =========================================================================
 
     /**
-     * Initialization
-     *
-     * @return null
+     * @inheritdoc
      */
     public function init()
     {

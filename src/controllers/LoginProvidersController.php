@@ -27,7 +27,7 @@ class LoginProvidersController extends Controller
     {
         Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
 
-        $variables['loginProviders'] = Social::$plugin->loginProviders->getLoginProviders(false);
+        $variables['loginProviders'] = Social::$plugin->getLoginProviders()->getLoginProviders(false);
 
         return $this->renderTemplate('social/loginproviders/_index', $variables);
     }
@@ -44,11 +44,11 @@ class LoginProvidersController extends Controller
     {
         if (!empty($variables['handle']))
         {
-            $loginProvider = Social::$plugin->loginProviders->getLoginProvider($variables['handle'], false, true);
+            $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($variables['handle'], false, true);
 
             if ($loginProvider)
             {
-                $variables['infos'] = Social::$plugin->oauth->getProviderInfos($variables['handle']);
+                $variables['infos'] = Social::$plugin->getOauth()->getProviderInfos($variables['handle']);
                 $variables['loginProvider'] = $loginProvider;
 
                 $configInfos = Craft::$app->getConfig()->get('providerInfos', 'oauth');
@@ -81,7 +81,7 @@ class LoginProvidersController extends Controller
         $this->requirePostRequest();
         $loginProvider = Craft::$app->getRequest()->getRequiredBodyParam('loginProvider');
 
-        if (Social::$plugin->loginProviders->enableLoginProvider($loginProvider))
+        if (Social::$plugin->getLoginProviders()->enableLoginProvider($loginProvider))
         {
             Craft::$app->getSession()->setNotice(Craft::t('app', 'Login provider enabled.'));
         }
@@ -103,7 +103,7 @@ class LoginProvidersController extends Controller
         $this->requirePostRequest();
         $loginProvider = Craft::$app->getRequest()->getRequiredBodyParam('loginProvider');
 
-        if (Social::$plugin->loginProviders->disableLoginProvider($loginProvider))
+        if (Social::$plugin->getLoginProviders()->disableLoginProvider($loginProvider))
         {
             Craft::$app->getSession()->setNotice(Craft::t('app', 'Login provider disabled.'));
         }

@@ -97,7 +97,7 @@ class LoginAccount extends Model
     {
         if ($this->providerHandle)
         {
-            return Social::$plugin->oauth->getProvider($this->providerHandle);
+            return Social::$plugin->getOauth()->getProvider($this->providerHandle);
         }
     }
 

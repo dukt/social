@@ -205,7 +205,7 @@ class LoginAccount extends Element implements IdentityInterface
             )
         );
 
-        $loginProviders = Social::$plugin->loginProviders->getLoginProviders();
+        $loginProviders = Social::$plugin->getLoginProviders()->getLoginProviders();
 
         if ($loginProviders)
         {
@@ -381,7 +381,7 @@ class LoginAccount extends Element implements IdentityInterface
         {
             case 'providerHandle':
             {
-                $provider = Social::$plugin->loginProviders->getLoginProvider($this->providerHandle);
+                $provider = Social::$plugin->getLoginProviders()->getLoginProvider($this->providerHandle);
 
                 if ($provider)
                 {

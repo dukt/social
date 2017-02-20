@@ -88,7 +88,7 @@ class Provider extends Model
      */
     public function getOauthProvider()
     {
-        return Social::$plugin->oauth->getProvider($this->oauthProviderHandle, false);
+        return Social::$plugin->getOauth()->getProvider($this->oauthProviderHandle, false);
     }
 
     /**

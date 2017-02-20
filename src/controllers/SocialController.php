@@ -67,7 +67,7 @@ class SocialController extends Controller
 
         // Request params
         $providerHandle = Craft::$app->getRequest()->getParam('provider');
-        // $oauthProvider = Social::$plugin->oauth->getProvider($providerHandle);
+        // $oauthProvider = Social::$plugin->getOauth()->getProvider($providerHandle);
 /*		$requestUri = Craft::$app->getRequest()->resolveRequestUri();
         Craft::$app->getSession()->set('social.requestUri', $requestUri);*/
 
@@ -78,7 +78,7 @@ class SocialController extends Controller
         // Try to connect
 /*		try
         {*/
-            if (!Social::$plugin->oauth->isProviderConfigured($providerHandle))
+            if (!Social::$plugin->getOauth()->isProviderConfigured($providerHandle))
             {
                 throw new Exception("OAuth provider is not configured");
             }
@@ -94,7 +94,7 @@ class SocialController extends Controller
             }
 
             // Provider scope & authorizationOptions
-            $socialProvider = Social::$plugin->loginProviders->getLoginProvider($providerHandle);
+            $socialProvider = Social::$plugin->getLoginProviders()->getLoginProvider($providerHandle);
 
             if (!$socialProvider)
             {
@@ -104,7 +104,7 @@ class SocialController extends Controller
             $scope = $socialProvider->getScope();
             $authorizationOptions = $socialProvider->getAuthorizationOptions();
 
-            if ($response = Social::$plugin->oauth->connect([
+            if ($response = Social::$plugin->getOauth()->connect([
                 'plugin'   => 'social',
                 'provider' => $providerHandle,
                 'scope'   => $scope,
@@ -201,7 +201,7 @@ class SocialController extends Controller
         $handle = Craft::$app->getRequest()->getParam('provider');
 
         // delete social user
-        Social::$plugin->loginAccounts->deleteLoginAccountByProvider($handle);
+        Social::$plugin->getLoginAccounts()->deleteLoginAccountByProvider($handle);
 
         Craft::$app->getSession()->setNotice(Craft::t('app', 'Login account disconnected.'));
 
@@ -222,7 +222,7 @@ class SocialController extends Controller
 
         $user = Craft::$app->users->getUserById($userId);
 
-        Social::$plugin->social->saveRemotePhoto($photoUrl, $user);
+        Social::$plugin->getSocial()->saveRemotePhoto($photoUrl, $user);
 
         // redirect
         $referrer = Craft::$app->getRequest()->referrer;
@@ -268,19 +268,19 @@ class SocialController extends Controller
             $this->redirect = $this->referer;
         }
 
-        $socialLoginProvider = Social::$plugin->loginProviders->getLoginProvider($token->providerHandle);
+        $socialLoginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($token->providerHandle);
 
         $attributes = $socialLoginProvider->getProfile($token);
 
         $socialUid = $attributes['id'];
 
-        $account = Social::$plugin->loginAccounts->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
+        $account = Social::$plugin->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
 
         if ($account)
         {
             if ($craftUser->id == $account->userId)
             {
-                // Social::$plugin->loginAccounts->saveLoginAccount($account);
+                // Social::$plugin->getLoginAccounts()->saveLoginAccount($account);
                 Craft::$app->elements->saveElement($account);
 
                 Craft::$app->getSession()->setNotice(Craft::t('app', 'Login account added.'));
@@ -300,7 +300,7 @@ class SocialController extends Controller
             $account->providerHandle = $socialLoginProvider->getHandle();
             $account->socialUid = $socialUid;
 
-            // Social::$plugin->loginAccounts->saveLoginAccount($account);
+            // Social::$plugin->getLoginAccounts()->saveLoginAccount($account);
 
             Craft::$app->getElements()->saveElement($account);
 
@@ -318,13 +318,13 @@ class SocialController extends Controller
      */
     private function _registerOrLoginFromToken(Token $token)
     {
-        $socialLoginProvider = Social::$plugin->loginProviders->getLoginProvider($token->providerHandle);
+        $socialLoginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($token->providerHandle);
 
         $attributes = $socialLoginProvider->getProfile($token);
 
         $socialUid = $attributes['id'];
 
-        $account = Social::$plugin->loginAccounts->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
+        $account = Social::$plugin->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
 
         if ($account)
         {
@@ -333,7 +333,7 @@ class SocialController extends Controller
             if ($craftUser)
             {
                 // save user
-                // Social::$plugin->loginAccounts->saveLoginAccount($account);
+                // Social::$plugin->getLoginAccounts()->saveLoginAccount($account);
                 Craft::$app->elements->saveElement($account);
 
                 // login
@@ -347,7 +347,7 @@ class SocialController extends Controller
         else
         {
             // Register user
-            $craftUser = Social::$plugin->loginAccounts->registerUser($attributes, $socialLoginProvider->getHandle());
+            $craftUser = Social::$plugin->getLoginAccounts()->registerUser($attributes, $socialLoginProvider->getHandle());
 
             if ($craftUser)
             {
@@ -356,7 +356,7 @@ class SocialController extends Controller
                 $account->userId = $craftUser->id;
                 $account->providerHandle = $socialLoginProvider->getHandle();
                 $account->socialUid = $socialUid;
-                // Social::$plugin->loginAccounts->saveLoginAccount($account);
+                // Social::$plugin->getLoginAccounts()->saveLoginAccount($account);
 
                 Craft::$app->elements->saveElement($account);
 
@@ -404,8 +404,8 @@ class SocialController extends Controller
         }
         else
         {
-            $errorCode = Social::$plugin->userSession->getLoginErrorCode();
-            $errorMessage = Social::$plugin->userSession->getLoginErrorMessage($errorCode, $account->user->username);
+            $errorCode = Social::$plugin->getUserSession()->getLoginErrorCode();
+            $errorMessage = Social::$plugin->getUserSession()->getLoginErrorMessage($errorCode, $account->user->username);
 
             Craft::$app->getSession()->setError($errorMessage);
 
