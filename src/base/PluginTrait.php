@@ -14,7 +14,7 @@ trait PluginTrait
     /**
      * Returns the social service.
      *
-     * @return \dukt\social\services\Social The config service
+     * @return \dukt\social\services\Social The social service
      */
     public function getSocial()
     {
@@ -23,31 +23,31 @@ trait PluginTrait
     }
 
     /**
-     * Returns the api service.
+     * Returns the loginAccounts service.
      *
-     * @return \dukt\social\services\Api The config service
+     * @return \dukt\social\services\LoginAccounts The loginAccounts service
      */
-    public function getApi()
+    public function getLoginAccounts()
     {
         /** @var Social $this */
-        return $this->get('api');
+        return $this->get('loginAccounts');
     }
 
     /**
-     * Returns the cache service.
+     * Returns the loginProviders service.
      *
-     * @return \dukt\social\services\Cache The config service
+     * @return \dukt\social\services\LoginProviders The loginProviders service
      */
-    public function getCache()
+    public function getLoginProviders()
     {
         /** @var Social $this */
-        return $this->get('cache');
+        return $this->get('loginProviders');
     }
 
     /**
      * Returns the oauth service.
      *
-     * @return \dukt\social\services\Oauth The config service
+     * @return \dukt\social\services\Oauth The oauth service
      */
     public function getOauth()
     {
@@ -56,13 +56,13 @@ trait PluginTrait
     }
 
     /**
-     * Returns the reports service.
+     * Returns the userSession service.
      *
-     * @return \dukt\social\services\Reports The config service
+     * @return \dukt\social\services\UserSession The userSession service
      */
-    public function getReports()
+    public function getUserSession()
     {
         /** @var Social $this */
-        return $this->get('reports');
+        return $this->get('userSession');
     }
 }
