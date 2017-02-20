@@ -8,6 +8,7 @@
 namespace dukt\social;
 
 use Craft;
+use dukt\social\base\PluginTrait;
 use yii\base\Event;
 use craft\web\UrlManager;
 use craft\events\RegisterUrlRulesEvent;
@@ -17,6 +18,11 @@ use dukt\social\web\assets\social\SocialAsset;
 
 class Plugin extends \craft\base\Plugin
 {
+    // Traits
+    // =========================================================================
+
+    use PluginTrait;
+
     // Properties
     // =========================================================================
 
