@@ -1,34 +1,30 @@
-# Social for Craft CMS 3.x
+# Social for Craft CMS
 
 Let your visitors log into Craft CMS with web services like Facebook, Google, Twitter…
 
+-------------------------------------------
 
 ## Requirements
 
-- [Craft 3.0+](https://craftcms.com/)
-- [OAuth 3.0+ plugin](https://dukt.net/craft/oauth)
+This plugin requires Craft CMS 3.0.0-beta.1 or later.
 
 ## Installation
 
-### Install with Composer
+To install the plugin, follow these instructions.
 
-To install Social via composer, run the following command:
+1. Open your terminal and go to your Craft project:
 
-    composer require dukt/craft-social
+        cd /path/to/project
 
-### Install manually
+2. Then tell Composer to load the plugin:
 
-To install Social plugin, follow these steps:
+        composer require dukt/craft-social
 
-1. Download the latest release of the plugin
-2. Drop the `social` plugin folder to `craft/plugins`
-3. Install Social plugin from the control panel in `Settings > Plugins`
+3. In the Control Panel, go to Settings → Plugins and click the “Install” button for Social.
 
-Social works on Craft CMS 3.x.
-
-## Links
+## Learn more
 
 - [Social Plugin Overview](https://dukt.net/craft/social/)
 - [Social Documentation](https://dukt.net/craft/social/docs)
 
-[Dukt.net](https://dukt.net/) 2017 - All rights reserved
+[Dukt.net](https://dukt.net/) © 2017 - All rights reserved
