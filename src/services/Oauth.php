@@ -15,7 +15,7 @@ class Oauth extends Component
 {
     public function getProviderInfos($handle)
     {
-        $loginProvidersConfig = Craft::$app->config->get('loginProviders', 'social');
+        $loginProvidersConfig = Craft::$app->getConfig()->get('loginProviders', 'social');
 
         if(isset($loginProvidersConfig[$handle]))
         {

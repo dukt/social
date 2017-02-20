@@ -56,23 +56,23 @@ class SocialController extends Controller
 
         if (!$this->referer)
         {
-            $this->referer = Craft::$app->request->referrer;
+            $this->referer = Craft::$app->getRequest()->referrer;
             Craft::$app->getSession()->set('social.referer', $this->referer);
         }
 
-        $this->redirect = Craft::$app->request->getParam('redirect');
+        $this->redirect = Craft::$app->getRequest()->getParam('redirect');
 
 
         // Connect
 
         // Request params
-        $providerHandle = Craft::$app->request->getParam('provider');
+        $providerHandle = Craft::$app->getRequest()->getParam('provider');
         // $oauthProvider = Social::$plugin->oauth->getProvider($providerHandle);
-/*		$requestUri = Craft::$app->request->resolveRequestUri();
+/*		$requestUri = Craft::$app->getRequest()->resolveRequestUri();
         Craft::$app->getSession()->set('social.requestUri', $requestUri);*/
 
         // Settings
-        $plugin = Craft::$app->plugins->getPlugin('social');
+        $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $pluginSettings = $plugin->getSettings();
 
         // Try to connect
@@ -171,11 +171,11 @@ class SocialController extends Controller
         // Craft::$app->getSession()->logout(false);
         Craft::$app->getUser()->logout(false);
 
-        $redirect = Craft::$app->request->getParam('redirect');
+        $redirect = Craft::$app->getRequest()->getParam('redirect');
 
         if (!$redirect)
         {
-            $redirect = Craft::$app->request->referrer;
+            $redirect = Craft::$app->getRequest()->referrer;
         }
 
         return $this->redirect($redirect);
@@ -198,7 +198,7 @@ class SocialController extends Controller
      */
     public function actionDisconnectLoginAccount()
     {
-        $handle = Craft::$app->request->getParam('provider');
+        $handle = Craft::$app->getRequest()->getParam('provider');
 
         // delete social user
         Social::$plugin->loginAccounts->deleteLoginAccountByProvider($handle);
@@ -206,7 +206,7 @@ class SocialController extends Controller
         Craft::$app->getSession()->setNotice(Craft::t('app', 'Login account disconnected.'));
 
         // redirect
-        $redirect = Craft::$app->request->referrer;
+        $redirect = Craft::$app->getRequest()->referrer;
         return $this->redirect($redirect);
     }
 
@@ -217,15 +217,15 @@ class SocialController extends Controller
      */
     public function actionChangePhoto()
     {
-        $userId = Craft::$app->request->getParam('userId');
-        $photoUrl = Craft::$app->request->getParam('photoUrl');
+        $userId = Craft::$app->getRequest()->getParam('userId');
+        $photoUrl = Craft::$app->getRequest()->getParam('photoUrl');
 
         $user = Craft::$app->users->getUserById($userId);
 
         Social::$plugin->social->saveRemotePhoto($photoUrl, $user);
 
         // redirect
-        $referrer = Craft::$app->request->referrer;
+        $referrer = Craft::$app->getRequest()->referrer;
         return $this->redirect($referrer);
     }
 

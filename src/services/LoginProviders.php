@@ -25,7 +25,7 @@ class LoginProviders extends Component
      */
     public function disableLoginProvider($handle)
     {
-        $plugin = Craft::$app->plugins->getPlugin('social');
+        $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $settings = $plugin->getSettings();
 
         $loginProviders = $settings->loginProviders;
@@ -33,7 +33,7 @@ class LoginProviders extends Component
 
         $settings->loginProviders = $loginProviders;
 
-        return Craft::$app->plugins->savePluginSettings($plugin, $settings->getAttributes());
+        return Craft::$app->getPlugins()->savePluginSettings($plugin, $settings->getAttributes());
     }
 
     /**
@@ -45,7 +45,7 @@ class LoginProviders extends Component
      */
     public function enableLoginProvider($handle)
     {
-        $plugin = Craft::$app->plugins->getPlugin('social');
+        $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $settings = $plugin->getSettings();
 
         $loginProviders = $settings->loginProviders;
@@ -53,7 +53,7 @@ class LoginProviders extends Component
 
         $settings->loginProviders = $loginProviders;
 
-        return Craft::$app->plugins->savePluginSettings($plugin, $settings->getAttributes());
+        return Craft::$app->getPlugins()->savePluginSettings($plugin, $settings->getAttributes());
     }
 
     /**
@@ -99,12 +99,12 @@ class LoginProviders extends Component
         // fetch all OAuth provider types
         $socialLoginProviderTypes = [];
 
-        /*		foreach (Craft::$app->plugins->call('getSocialLoginProviders', [], true) as $pluginSocialLoginProviderTypes)
+        /*		foreach (Craft::$app->getPlugins()->call('getSocialLoginProviders', [], true) as $pluginSocialLoginProviderTypes)
                 {
                     $socialLoginProviderTypes = array_merge($socialLoginProviderTypes, $pluginSocialLoginProviderTypes);
                 }*/
 
-        foreach (Craft::$app->plugins->getAllPlugins() as $plugin) {
+        foreach (Craft::$app->getPlugins()->getAllPlugins() as $plugin) {
             if (method_exists($plugin, 'getSocialLoginProviders')) {
                 $socialLoginProviderTypes = array_merge($socialLoginProviderTypes, $plugin->getSocialLoginProviders());
             }

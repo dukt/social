@@ -51,7 +51,7 @@ class LoginProvidersController extends Controller
                 $variables['infos'] = Social::$plugin->oauth->getProviderInfos($variables['handle']);
                 $variables['loginProvider'] = $loginProvider;
 
-                $configInfos = Craft::$app->config->get('providerInfos', 'oauth');
+                $configInfos = Craft::$app->getConfig()->get('providerInfos', 'oauth');
 
                 if (!empty($configInfos[$variables['handle']]))
                 {
@@ -79,7 +79,7 @@ class LoginProvidersController extends Controller
     public function actionEnableLoginProvider()
     {
         $this->requirePostRequest();
-        $loginProvider = Craft::$app->request->getRequiredBodyParam('loginProvider');
+        $loginProvider = Craft::$app->getRequest()->getRequiredBodyParam('loginProvider');
 
         if (Social::$plugin->loginProviders->enableLoginProvider($loginProvider))
         {
@@ -101,7 +101,7 @@ class LoginProvidersController extends Controller
     public function actionDisableLoginProvider()
     {
         $this->requirePostRequest();
-        $loginProvider = Craft::$app->request->getRequiredBodyParam('loginProvider');
+        $loginProvider = Craft::$app->getRequest()->getRequiredBodyParam('loginProvider');
 
         if (Social::$plugin->loginProviders->disableLoginProvider($loginProvider))
         {

@@ -23,7 +23,7 @@ class SettingsController extends Controller
      */
     public function actionIndex()
     {
-        $plugin = Craft::$app->plugins->getPlugin('social');
+        $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $variables['settings'] = $plugin->getSettings();
 
         $accounts = Social::$plugin->loginAccounts->getLoginAccounts();

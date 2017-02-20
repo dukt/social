@@ -69,7 +69,7 @@ class LoginAccountsController extends Controller
         $this->requirePostRequest();
         $this->requireAcceptsJson();
 
-        $loginAccountId = Craft::$app->request->getRequiredBodyParam('id');
+        $loginAccountId = Craft::$app->getRequest()->getRequiredBodyParam('id');
 
         Social::$plugin->loginAccounts->deleteLoginAccountById($loginAccountId);
 

@@ -80,7 +80,7 @@ class LoginAccount extends Element implements IdentityInterface
      */
     public function __toString()
     {
-        if (Craft::$app->config->get('useEmailAsUsername'))
+        if (Craft::$app->getConfig()->get('useEmailAsUsername'))
         {
             return (string) $this->email;
         }
@@ -226,7 +226,7 @@ class LoginAccount extends Element implements IdentityInterface
         }
 
         // Allow plugins to modify the sources
-        /*Craft::$app->plugins->call('modifyLoginAccountSources', array(&$sources, $context));*/
+        /*Craft::$app->getPlugins()->call('modifyLoginAccountSources', array(&$sources, $context));*/
 
         return $sources;
     }
@@ -250,7 +250,7 @@ class LoginAccount extends Element implements IdentityInterface
         $actions[] = $deleteAction;
 
         // Allow plugins to add additional actions
-        $allPluginActions = Craft::$app->plugins->call('addLoginAccountActions', array($source), true);
+        $allPluginActions = Craft::$app->getPlugins()->call('addLoginAccountActions', array($source), true);
 
         foreach ($allPluginActions as $pluginActions)
         {
@@ -277,7 +277,7 @@ class LoginAccount extends Element implements IdentityInterface
      */
     public function defineSortableAttributes()
     {
-        if (Craft::$app->config->get('useEmailAsUsername'))
+        if (Craft::$app->getConfig()->get('useEmailAsUsername'))
         {
             // Start with Email and don't even give Username as an option
             $attributes = array(
@@ -304,7 +304,7 @@ class LoginAccount extends Element implements IdentityInterface
         $attributes['dateUpdated']   = Craft::t('app', 'Date Updated');
 
         // Allow plugins to modify the attributes
-        Craft::$app->plugins->call('modifyLoginAccountSortableAttributes', array(&$attributes));
+        Craft::$app->getPlugins()->call('modifyLoginAccountSortableAttributes', array(&$attributes));
 
         return $attributes;
     }
@@ -316,7 +316,7 @@ class LoginAccount extends Element implements IdentityInterface
      */
     /*public function defineAvailableTableAttributes()
     {
-        if (Craft::$app->config->get('useEmailAsUsername'))
+        if (Craft::$app->getConfig()->get('useEmailAsUsername'))
         {
             // Start with Email and don't even give Username as an option
             $attributes = array(
@@ -344,7 +344,7 @@ class LoginAccount extends Element implements IdentityInterface
         $attributes['dateUpdated']   = array('label' => Craft::t('app', 'Date Updated'));
 
         // Allow plugins to modify the attributes
-        $pluginAttributes = Craft::$app->plugins->call('defineAdditionalLoginAccountTableAttributes', array(), true);
+        $pluginAttributes = Craft::$app->getPlugins()->call('defineAdditionalLoginAccountTableAttributes', array(), true);
 
         foreach ($pluginAttributes as $thisPluginAttributes)
         {
@@ -370,7 +370,7 @@ class LoginAccount extends Element implements IdentityInterface
     public function tableAttributeHtml(string $attribute): string
     {
         // First give plugins a chance to set this
-/*		$pluginAttributeHtml = Craft::$app->plugins->callFirst('getLoginAccountTableAttributeHtml', array($element, $attribute), true);
+/*		$pluginAttributeHtml = Craft::$app->getPlugins()->callFirst('getLoginAccountTableAttributeHtml', array($element, $attribute), true);
 
         if ($pluginAttributeHtml !== null)
         {
@@ -620,7 +620,7 @@ class LoginAccount extends Element implements IdentityInterface
      */
     protected static function defineTableAttributes(): array
     {
-        if (Craft::$app->config->get('useEmailAsUsername'))
+        if (Craft::$app->getConfig()->get('useEmailAsUsername'))
         {
             // Start with Email and don't even give Username as an option
             $attributes = array(
@@ -649,7 +649,7 @@ class LoginAccount extends Element implements IdentityInterface
 
 
         // Allow plugins to modify the attributes
-/*        $pluginAttributes = Craft::$app->plugins->call('defineAdditionalLoginAccountTableAttributes', array(), true);
+/*        $pluginAttributes = Craft::$app->getPlugins()->call('defineAdditionalLoginAccountTableAttributes', array(), true);
 
         foreach ($pluginAttributes as $thisPluginAttributes)
         {

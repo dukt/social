@@ -34,7 +34,7 @@ class Social extends Component
             $params['scope'] = urlencode(base64_encode(serialize($params['scope'])));
         }
 
-        $url = UrlHelper::siteUrl(Craft::$app->config->get('actionTrigger').'/social/social/login', $params);
+        $url = UrlHelper::siteUrl(Craft::$app->getConfig()->get('actionTrigger').'/social/social/login', $params);
 
         return $url;
     }

@@ -120,7 +120,7 @@ abstract class LoginProvider implements LoginProviderInterface
      */
     public function getScope()
     {
-        $providerConfig = Craft::$app->config->get($this->getHandle(), 'social');
+        $providerConfig = Craft::$app->getConfig()->get($this->getHandle(), 'social');
 
         if ($providerConfig && isset($providerConfig['scope']))
         {
@@ -139,7 +139,7 @@ abstract class LoginProvider implements LoginProviderInterface
      */
     public function getAuthorizationOptions()
     {
-        $providerConfig = Craft::$app->config->get($this->getHandle(), 'social');
+        $providerConfig = Craft::$app->getConfig()->get($this->getHandle(), 'social');
 
         if ($providerConfig && isset($providerConfig['authorizationOptions']))
         {
@@ -159,7 +159,7 @@ abstract class LoginProvider implements LoginProviderInterface
     public function getIsEnabled()
     {
         // get plugin settings
-        $plugin = Craft::$app->plugins->getPlugin('social');
+        $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $settings = $plugin->getSettings();
         $loginProviders = $settings->loginProviders;
 
@@ -243,8 +243,8 @@ abstract class LoginProvider implements LoginProviderInterface
     {
         $provider = $this->getOauthProvider();
 
-        $oauthToken = Craft::$app->request->getParam('oauth_token');
-        $oauthVerifier = Craft::$app->request->getParam('oauth_verifier');
+        $oauthToken = Craft::$app->getRequest()->getParam('oauth_token');
+        $oauthVerifier = Craft::$app->getRequest()->getParam('oauth_verifier');
 
         // Retrieve the temporary credentials we saved before.
         $temporaryCredentials = Craft::$app->getSession()->get('oauth.temporaryCredentials');
@@ -267,7 +267,7 @@ abstract class LoginProvider implements LoginProviderInterface
     {
         $provider = $this->getOauthProvider();
 
-        $code = Craft::$app->request->getParam('code');
+        $code = Craft::$app->getRequest()->getParam('code');
 
         // Try to get an access token (using the authorization code grant)
         $token = $provider->getAccessToken('authorization_code', [

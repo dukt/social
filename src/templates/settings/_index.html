@@ -36,7 +36,7 @@
 
                 <div id="defaultGroup">
                     {% set groups = [{ label: "None"|t, value: '' }] %}
-                    {% for group in craft.userGroups.getAllGroups() %}
+                    {% for group in craft.app.userGroups.getAllGroups() %}
                         {% set groups = groups|merge([{ label: group.name, value: group.id }]) %}
                     {% endfor %}
 
