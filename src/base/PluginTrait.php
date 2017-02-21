@@ -9,6 +9,15 @@ namespace dukt\social\base;
 
 use dukt\social\Plugin as Social;
 
+/**
+ * PluginTrait
+ *
+ * @property \dukt\social\services\Social           $social             The social service
+ * @property \dukt\social\services\LoginAccounts    $loginAccounts      The loginAccounts service
+ * @property \dukt\social\services\LoginProviders   $loginProviders     The loginProviders service
+ * @property \dukt\social\services\Oauth            $oauth              The oauth service
+ * @property \dukt\social\services\UserSession      $userSession        The userSession service
+ */
 trait PluginTrait
 {
     /**
