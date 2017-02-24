@@ -243,6 +243,7 @@ class Plugin extends \craft\base\Plugin
 
                 Craft::$app->getView()->registerCssFile("social/css/login.css", true);
                 Craft::$app->getView()->includeJsResource("social/js/login.js", true);
+
                 Craft::$app->getView()->includeJs("var socialLoginForm = new Craft.SocialLoginForm(".json_encode($jsLoginProviders).", ".json_encode($error).");");
             }
         }

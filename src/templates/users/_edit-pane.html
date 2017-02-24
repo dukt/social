@@ -63,11 +63,11 @@
     </div>
 </div>
 
-{% includejs %}
+{% js %}
 var adminTable = new Craft.AdminTable({
 tableSelector: '#loginAccounts',
 noObjectsSelector: '#nologinaccounts',
 deleteAction: 'social/login-accounts/delete-login-account',
 confirmDeleteMessage: '{{ "Are you sure you want to unlink “{name}” login account?"|t('app') }}',
 });
-{% endincludejs %}
+{% endjs %}

@@ -1,10 +1,10 @@
 <?php
-namespace dukt\social\web\assets\social;
+namespace dukt\social\web\assets\loginaccountindex;
 
 use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;
 
-class SocialAsset extends AssetBundle
+class LoginAccountIndexAsset extends AssetBundle
 {
     public function init()
     {
@@ -14,8 +14,8 @@ class SocialAsset extends AssetBundle
             CpAsset::class,
         ];
 
-        $this->css = [
-            'css/social.css',
+        $this->js = [
+            'LoginAccountIndex.js',
         ];
 
         parent::init();

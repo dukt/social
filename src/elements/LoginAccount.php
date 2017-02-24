@@ -11,6 +11,7 @@ use Craft;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
 use dukt\social\elements\db\LoginAccountQuery;
+use dukt\social\web\assets\loginaccountindex\LoginAccountIndexAsset;
 use yii\web\IdentityInterface;
 use craft\helpers\UrlHelper;
 use dukt\social\Plugin as Social;
@@ -182,7 +183,7 @@ class LoginAccount extends Element implements IdentityInterface
      */
     public function getIndexHtml($criteria, $disabledElementIds, $viewState, $sourceKey, $context, $includeContainer, $showCheckboxes)
     {
-        Craft::$app->templates->includeJsResource('social/js/social.js');
+        Craft::$app->getView()->registerAssetBundle(LoginAccountIndexAsset::class);
 
         return parent::getIndexHtml($criteria, $disabledElementIds, $viewState, $sourceKey, $context, $includeContainer, $showCheckboxes);
     }
