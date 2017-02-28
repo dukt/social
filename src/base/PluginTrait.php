@@ -10,7 +10,7 @@ namespace dukt\social\base;
 use dukt\social\Plugin as Social;
 
 /**
- * PluginTrait
+ * PluginTrait implements the common methods and properties for plugin classes.
  *
  * @property \dukt\social\services\Social           $social             The social service
  * @property \dukt\social\services\LoginAccounts    $loginAccounts      The loginAccounts service
