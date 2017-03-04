@@ -11,8 +11,6 @@ use Craft;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
 use dukt\social\elements\db\LoginAccountQuery;
-use dukt\social\web\assets\loginaccountindex\LoginAccountIndexAsset;
-use yii\web\IdentityInterface;
 use craft\helpers\UrlHelper;
 use dukt\social\Plugin as Social;
 
