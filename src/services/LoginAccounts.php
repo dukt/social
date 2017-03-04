@@ -67,7 +67,7 @@ class LoginAccounts extends Component
             return false;
         }
 
-        return LoginAccount::find()->userId($currentUser->id)->providerHandle($providerHandle)->first();
+        return LoginAccount::find()->userId($currentUser->id)->providerHandle($providerHandle)->one();
     }
 
     /**
@@ -80,7 +80,7 @@ class LoginAccounts extends Component
      */
     public function getLoginAccountByUid($providerHandle, $socialUid)
     {
-        return LoginAccount::find()->providerHandle($providerHandle)->socialUid($socialUid)->first();
+        return LoginAccount::find()->providerHandle($providerHandle)->socialUid($socialUid)->one();
     }
 
     /**
