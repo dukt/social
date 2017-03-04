@@ -386,7 +386,7 @@ class SocialController extends Controller
 
         if(!$account->authenticate($token))
         {
-            throw new Exception("Couldn’t authenticate account.");
+            throw new Exception("Coudln’t authenticate account.");
         }
 
         if (Craft::$app->getUser()->login($craftUser))

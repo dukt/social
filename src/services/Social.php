@@ -34,7 +34,7 @@ class Social extends Component
             $params['scope'] = urlencode(base64_encode(serialize($params['scope'])));
         }
 
-        $url = UrlHelper::siteUrl(Craft::$app->getConfig()->get('actionTrigger').'/social/social/login', $params);
+        $url = UrlHelper::siteUrl(Craft::$app->getConfig()->get('actionTrigger').'/social/login-accounts/login', $params);
 
         return $url;
     }
@@ -50,7 +50,7 @@ class Social extends Component
     {
         $params = ['redirect' => $redirect];
 
-        return UrlHelper::actionUrl('social/social/logout', $params);
+        return UrlHelper::actionUrl('social/login-accounts/logout', $params);
     }
 
     /**
@@ -62,7 +62,7 @@ class Social extends Component
      */
     public function getLoginAccountConnectUrl($handle)
     {
-        return UrlHelper::actionUrl('social/social/connect-login-account', [
+        return UrlHelper::actionUrl('social/login-accounts/connect-login-account', [
             'provider' => $handle
         ]);
     }
@@ -76,7 +76,7 @@ class Social extends Component
      */
     public function getLoginAccountDisconnectUrl($handle)
     {
-        return UrlHelper::actionUrl('social/social/disconnect-login-account', [
+        return UrlHelper::actionUrl('social/login-accounts/disconnect-login-account', [
             'provider' => $handle
         ]);
     }
