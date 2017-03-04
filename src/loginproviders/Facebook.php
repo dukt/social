@@ -125,18 +125,18 @@ class Facebook extends LoginProvider
      */
     private function getClient(Token $token)
     {
-        $options = [
-            'base_uri' => 'https://graph.facebook.com/v2.8',
-        ];
+        $headers = array();
 
         if($token)
         {
-            $provider = Social::$plugin->getOauth()->getProvider('facebook');
 
-            $stack = $provider->getSubscriber($token);
-
-            $options['handler'] = $stack;
+            $headers['Authorization'] = 'Bearer '.$token->getToken();
         }
+
+        $options = [
+            'base_uri' => 'https://graph.facebook.com/v2.8',
+            'headers' => $headers
+        ];
 
         return new Client($options);
     }
