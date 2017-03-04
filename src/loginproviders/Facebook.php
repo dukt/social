@@ -113,9 +113,7 @@ class Facebook extends LoginProvider
 
         $response = $client->request('GET', '/me', $options);
 
-        $jsonResponse = json_decode($response->getBody(), true);
-
-        return $jsonResponse;
+        return json_decode($response->getBody(), true);
     }
 
     /**
