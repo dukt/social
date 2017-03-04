@@ -33,6 +33,6 @@
     "handle": "social",
     "schemaVersion": "1.0.2",
     "documentationUrl": "https://dukt.net/craft/social/docs",
-    "changelogUrl": "https://dukt.net/craft/social/updates.json"
+    "changelogUrl": "https://dukt.net/social/changelog.md?craft=3"
   }
 }
