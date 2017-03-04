@@ -24,7 +24,12 @@ abstract class LoginProvider implements LoginProviderInterface
      */
     public function getInfos()
     {
-        return Social::$plugin->getOauth()->getProviderInfos($this->getHandle());
+        $handle = $this->getHandle();
+        $loginProvidersConfig = Craft::$app->getConfig()->get('loginProviders', 'social');
+
+        if (isset($loginProvidersConfig[$handle])) {
+            return $loginProvidersConfig[$handle];
+        }
     }
 
     /**

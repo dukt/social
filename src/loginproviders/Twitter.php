@@ -41,7 +41,7 @@ class Twitter extends LoginProvider
      */
     protected function getOauthProvider()
     {
-        $providerInfos = Social::$plugin->getOauth()->getProviderInfos($this->getHandle());
+        $providerInfos = $this->getInfos();
         $oauthProviderOptions = $providerInfos['oauthProviderOptions'];
 
         $config = [

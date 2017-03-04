@@ -39,20 +39,4 @@ class Oauth extends Component
             return $loginProvider->oauthConnect();
         }
     }
-
-    /**
-     * Get provider infos.
-     *
-     * @param $loginProviderHandle
-     *
-     * @return mixed
-     */
-    public function getProviderInfos($loginProviderHandle)
-    {
-        $loginProvidersConfig = Craft::$app->getConfig()->get('loginProviders', 'social');
-
-        if (isset($loginProvidersConfig[$loginProviderHandle])) {
-            return $loginProvidersConfig[$loginProviderHandle];
-        }
-    }
 }

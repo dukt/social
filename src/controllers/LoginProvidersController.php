@@ -47,16 +47,13 @@ class LoginProvidersController extends Controller
 
         if ($loginProvider)
         {
-            $infos = Social::$plugin->getOauth()->getProviderInfos($handle);
-
             $configInfos = Craft::$app->getConfig()->get('providerInfos', 'social');
 
             return $this->renderTemplate('social/loginproviders/_edit', [
                 'handle' => $handle,
-                'infos' => $infos,
+                'infos' => $loginProvider->getInfos(),
                 'configInfos' => $configInfos,
                 'loginProvider' => $loginProvider
-
             ]);
         }
         else
