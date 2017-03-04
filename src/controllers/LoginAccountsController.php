@@ -11,6 +11,7 @@ use Craft;
 use craft\web\Controller;
 use dukt\social\web\assets\social\SocialAsset;
 use dukt\social\Plugin as Social;
+use yii\web\HttpException;
 
 class LoginAccountsController extends Controller
 {
