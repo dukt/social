@@ -13,6 +13,7 @@ use craft\elements\User as UserModel;
 use dukt\social\elements\LoginAccount;
 use Exception;
 use craft\helpers\UrlHelper;
+use dukt\social\Plugin as Social;
 
 class LoginAccounts extends Component
 {
@@ -381,6 +382,28 @@ class LoginAccounts extends Component
         IOHelper::deleteFile($tempPath.$filename.'.'.$extension);
 
         return true;
+    }
+
+    /**
+     * OAuth connect.
+     *
+     * @param $loginProviderHandle
+     *
+     * @return mixed
+     */
+    public function oauthConnect($loginProviderHandle)
+    {
+        $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($loginProviderHandle);
+
+        Craft::$app->getSession()->set('social.loginProvider', $loginProviderHandle);
+
+        if (Craft::$app->getSession()->get('social.callback') === true) {
+            Craft::$app->getSession()->remove('social.callback');
+
+            return $loginProvider->oauthCallback();
+        } else {
+            return $loginProvider->oauthConnect();
+        }
     }
 
     // Private Methods

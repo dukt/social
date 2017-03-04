@@ -158,7 +158,7 @@ class LoginAccountsController extends Controller
             throw new Exception("Login provider is not configured");
         }
 
-        if ($response = Social::$plugin->getOauth()->connect($providerHandle))
+        if ($response = Social::$plugin->getLoginAccounts()->oauthConnect($providerHandle))
         {
             if($response && is_object($response) && !$response->data)
             {
