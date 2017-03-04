@@ -16,11 +16,31 @@ abstract class LoginProvider implements LoginProviderInterface
     // Public Methods
     // =========================================================================
 
-    public function getScopeDocsUrl()
+    /**
+     * Get API Manager URL
+     *
+     * @return string
+     */
+    public function getManagerUrl()
     {
-        return '#scopes';
+        return null;
     }
 
+    /**
+     * Get Scope Docs URL
+     *
+     * @return string
+     */
+    public function getScopeDocsUrl()
+    {
+        return null;
+    }
+
+    /**
+     * Is login provider configured
+     *
+     * @return bool
+     */
     public function isConfigured()
     {
         return true;

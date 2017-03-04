@@ -84,4 +84,23 @@ class Google extends LoginProvider
             'name' => $remoteProfile->getName(),
         ];
     }
+
+    /**
+     * Get API Manager URL
+     *
+     * @return string
+     */
+    public function getManagerUrl()
+    {
+        return 'https://code.google.com/apis/console/';
+    }
+    /**
+     * Get Scope Docs URL
+     *
+     * @return string
+     */
+    public function getScopeDocsUrl()
+    {
+        return 'https://developers.google.com/identity/protocols/googlescopes';
+    }
 }

@@ -94,4 +94,14 @@ class Twitter extends LoginProvider
     {
         return $this->getOauthProvider()->getUserDetails($token->token);
     }
+
+    /**
+     * Get API Manager URL
+     *
+     * @return string
+     */
+    public function getManagerUrl()
+    {
+        return 'https://dev.twitter.com/apps';
+    }
 }

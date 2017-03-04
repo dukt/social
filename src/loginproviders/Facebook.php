@@ -140,4 +140,24 @@ class Facebook extends LoginProvider
 
         return new Client($options);
     }
+
+    /**
+     * Get API Manager URL
+     *
+     * @return string
+     */
+    public function getManagerUrl()
+    {
+        return 'https://developers.facebook.com/apps';
+    }
+
+    /**
+     * Get Scope Docs URL
+     *
+     * @return string
+     */
+    public function getScopeDocsUrl()
+    {
+        return 'https://developers.facebook.com/docs/facebook-login/permissions';
+    }
 }
