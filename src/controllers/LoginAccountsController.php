@@ -8,6 +8,7 @@
 namespace dukt\social\controllers;
 
 use Craft;
+use craft\elements\User;
 use craft\web\Controller;
 use dukt\social\web\assets\social\SocialAsset;
 use dukt\social\Plugin as Social;
@@ -426,7 +427,7 @@ class LoginAccountsController extends Controller
      *
      * @return null
      */
-    private function _login(\craft\elements\User $craftUser, LoginAccount $account, Token $token, $registrationMode = false)
+    private function _login(User $craftUser, LoginAccount $account, Token $token, $registrationMode = false)
     {
         $this->_cleanSession();
 
