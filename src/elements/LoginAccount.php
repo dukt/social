@@ -92,6 +92,14 @@ class LoginAccount extends Element implements IdentityInterface
     }
 
     /**
+     * @inheritdoc
+     */
+    public function getIsEditable(): bool
+    {
+        return true;
+    }
+
+    /**
      * @param int $size
      *
      * @return mixed
@@ -186,6 +194,19 @@ class LoginAccount extends Element implements IdentityInterface
         Craft::$app->getView()->registerAssetBundle(LoginAccountIndexAsset::class);
 
         return parent::getIndexHtml($criteria, $disabledElementIds, $viewState, $sourceKey, $context, $includeContainer, $showCheckboxes);
+    }
+
+    public function getOauthProvider()
+    {
+        if ($this->providerHandle)
+        {
+            $loginProvider = $this->getLoginProvider();
+
+            if($loginProvider)
+            {
+                return $loginProvider->getOauthProvider();
+            }
+        }
     }
 
     public function getLoginProvider()
