@@ -305,7 +305,7 @@ class LoginAccount extends Element implements IdentityInterface
      *
      * @return array
      */
-    public function defineSortableAttributes()
+    protected static function defineSortOptions(): array
     {
         if (Craft::$app->getConfig()->get('useEmailAsUsername'))
         {
@@ -334,60 +334,10 @@ class LoginAccount extends Element implements IdentityInterface
         $attributes['dateUpdated']   = Craft::t('app', 'Date Updated');
 
         // Allow plugins to modify the attributes
-        Craft::$app->getPlugins()->call('modifyLoginAccountSortableAttributes', array(&$attributes));
+        // Craft::$app->getPlugins()->call('modifyLoginAccountSortableAttributes', array(&$attributes));
 
         return $attributes;
     }
-
-    /**
-     * Defines all of the available columns that can be shown in table views.
-     *
-     * @return array
-     */
-    /*public function defineAvailableTableAttributes()
-    {
-        if (Craft::$app->getConfig()->get('useEmailAsUsername'))
-        {
-            // Start with Email and don't even give Username as an option
-            $attributes = array(
-                'email' => array('label' => Craft::t('app', 'Email')),
-            );
-        }
-        else
-        {
-            $attributes = array(
-                'username' => array('label' => Craft::t('app', 'Username')),
-                'email'    => array('label' => Craft::t('app', 'Email')),
-            );
-        }
-
-        $attributes['fullName'] = array('label' => Craft::t('app', 'Full Name'));
-        $attributes['firstName'] = array('label' => Craft::t('app', 'First Name'));
-        $attributes['lastName'] = array('label' => Craft::t('app', 'Last Name'));
-
-        $attributes['providerHandle'] = array('label' => Craft::t('app', 'Login Provider'));
-        $attributes['socialUid']     = array('label' => Craft::t('app', 'Social User ID'));
-
-        $attributes['userId']        = array('label' => Craft::t('app', 'User ID'));
-        $attributes['lastLoginDate'] = array('label' => Craft::t('app', 'Last Login'));
-        $attributes['dateCreated']   = array('label' => Craft::t('app', 'Date Created'));
-        $attributes['dateUpdated']   = array('label' => Craft::t('app', 'Date Updated'));
-
-        // Allow plugins to modify the attributes
-        $pluginAttributes = Craft::$app->getPlugins()->call('defineAdditionalLoginAccountTableAttributes', array(), true);
-
-        foreach ($pluginAttributes as $thisPluginAttributes)
-        {
-            $attributes = array_merge($attributes, $thisPluginAttributes);
-        }
-
-        return $attributes;
-    }*/
-
-/*    protected static function defineDefaultTableAttributes(string $source): array
-    {
-        return ['username', 'fullName', 'providerHandle', 'socialUid', 'lastLoginDate'];
-    }*/
 
     /**
      * Returns the HTML that should be shown for a given element’s attribute in Table View.
@@ -400,12 +350,14 @@ class LoginAccount extends Element implements IdentityInterface
     public function tableAttributeHtml(string $attribute): string
     {
         // First give plugins a chance to set this
-/*		$pluginAttributeHtml = Craft::$app->getPlugins()->callFirst('getLoginAccountTableAttributeHtml', array($element, $attribute), true);
 
-        if ($pluginAttributeHtml !== null)
-        {
+        /*
+        $pluginAttributeHtml = Craft::$app->getPlugins()->callFirst('getLoginAccountTableAttributeHtml', array($element, $attribute), true);
+
+        if ($pluginAttributeHtml !== null) {
             return $pluginAttributeHtml;
-        }*/
+        }
+        */
 
         switch ($attribute)
         {
@@ -432,93 +384,6 @@ class LoginAccount extends Element implements IdentityInterface
             {
                 return parent::tableAttributeHtml($attribute);
             }
-        }
-    }
-
-    /**
-     * Defines any custom element criteria attributes for this element type.
-     *
-     * @return array
-     */
-/*	public function defineCriteriaAttributes()
-    {
-        return array(
-            'userId' => AttributeType::Number,
-            'providerHandle' => AttributeType::String,
-            'socialUid' => AttributeType::String,
-
-            'username' => AttributeType::String,
-            'email' => AttributeType::String,
-            'firstName' => AttributeType::String,
-            'lastName' => AttributeType::String,
-            'lastLoginDate' => AttributeType::DateTime,
-        );
-    }*/
-
-    /**
-     * Modifies an element query targeting elements of this type.
-     *
-     * @param DbCommand            $query
-     * @param ElementCriteriaModel $criteria
-     *
-     * @return null|false
-     */
-    public function modifyElementsQuery(DbCommand $query, ElementCriteriaModel $criteria)
-    {
-        $query->addSelect('
-            login_accounts.id,
-            login_accounts.userId,
-            login_accounts.providerHandle,
-            login_accounts.socialUid,
-
-            users.username,
-            users.firstName,
-            users.lastName,
-            users.email,
-            users.lastLoginDate,
-        ');
-
-        $query->join('social_login_accounts login_accounts', 'login_accounts.id = elements.id');
-        $query->leftJoin('users users', 'login_accounts.userId = users.id');
-
-        if ($criteria->userId)
-        {
-            $query->andWhere(DbHelper::parseParam('login_accounts.userId', $criteria->userId, $query->params));
-        }
-
-        if ($criteria->providerHandle)
-        {
-            $query->andWhere(DbHelper::parseParam('login_accounts.providerHandle', $criteria->providerHandle, $query->params));
-        }
-
-        if ($criteria->socialUid)
-        {
-            $query->andWhere(DbHelper::parseParam('login_accounts.socialUid', $criteria->socialUid, $query->params));
-        }
-
-        if ($criteria->username)
-        {
-            $query->andWhere(DbHelper::parseParam('users.username', $criteria->username, $query->params));
-        }
-
-        if ($criteria->firstName)
-        {
-            $query->andWhere(DbHelper::parseParam('users.firstName', $criteria->firstName, $query->params));
-        }
-
-        if ($criteria->lastName)
-        {
-            $query->andWhere(DbHelper::parseParam('users.lastName', $criteria->lastName, $query->params));
-        }
-
-        if ($criteria->email)
-        {
-            $query->andWhere(DbHelper::parseParam('users.email', $criteria->email, $query->params));
-        }
-
-        if ($criteria->lastLoginDate)
-        {
-            $query->andWhere(DbHelper::parseDateParam('users.lastLoginDate', $criteria->lastLoginDate, $query->params));
         }
     }
 
@@ -679,12 +544,15 @@ class LoginAccount extends Element implements IdentityInterface
 
 
         // Allow plugins to modify the attributes
-/*        $pluginAttributes = Craft::$app->getPlugins()->call('defineAdditionalLoginAccountTableAttributes', array(), true);
+
+        /*
+        $pluginAttributes = Craft::$app->getPlugins()->call('defineAdditionalLoginAccountTableAttributes', array(), true);
 
         foreach ($pluginAttributes as $thisPluginAttributes)
         {
             $attributes = array_merge($attributes, $thisPluginAttributes);
-        }*/
+        }
+        */
 
         return $attributes;
     }
