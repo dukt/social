@@ -12,6 +12,9 @@ use craft\web\Controller;
 use dukt\social\web\assets\social\SocialAsset;
 use dukt\social\Plugin as Social;
 use yii\web\HttpException;
+use dukt\social\models\Token;
+use dukt\social\elements\LoginAccount;
+use Exception;
 
 class LoginAccountsController extends Controller
 {
@@ -125,21 +128,18 @@ class LoginAccountsController extends Controller
 
         // Request params
         $providerHandle = Craft::$app->getRequest()->getParam('provider');
-        // $oauthProvider = Social::$plugin->getOauth()->getProvider($providerHandle);
-        /*		$requestUri = Craft::$app->getRequest()->resolveRequestUri();
-                Craft::$app->getSession()->set('social.requestUri', $requestUri);*/
 
         // Settings
         $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $pluginSettings = $plugin->getSettings();
 
+
         // Try to connect
-        /*		try
-                {*/
-        if (!Social::$plugin->getOauth()->isProviderConfigured($providerHandle))
+
+        /*
+        try
         {
-            throw new Exception("OAuth provider is not configured");
-        }
+        */
 
         if (!$pluginSettings['enableSocialLogin'])
         {
@@ -151,22 +151,18 @@ class LoginAccountsController extends Controller
             throw new Exception("Craft Pro is required");
         }
 
-        // Provider scope & authorizationOptions
-        $socialProvider = Social::$plugin->getLoginProviders()->getLoginProvider($providerHandle);
+        $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($providerHandle);
 
-        if (!$socialProvider)
+        if (!$loginProvider)
         {
             throw new Exception("Login provider is not configured");
         }
 
-        $scope = $socialProvider->getScope();
-        $authorizationOptions = $socialProvider->getAuthorizationOptions();
-
         if ($response = Social::$plugin->getOauth()->connect([
             'plugin'   => 'social',
             'provider' => $providerHandle,
-            'scope'   => $scope,
-            'authorizationOptions'   => $authorizationOptions
+            'scope'   => $loginProvider->getScope(),
+            'authorizationOptions'   => $loginProvider->getAuthorizationOptions()
         ]))
         {
             if($response && is_object($response) && !$response->data)
@@ -187,7 +183,9 @@ class LoginAccountsController extends Controller
                 throw new \Exception($response['errorMsg']);
             }
         }
-        /*}
+
+        /*
+        }
         catch(\Guzzle\Http\Exception\BadResponseException $e)
         {
             $response = $e->getResponse();
@@ -216,7 +214,8 @@ class LoginAccountsController extends Controller
             Craft::$app->getSession()->setFlash('error', $errorMsg);
             $this->_cleanSession();
             return $this->redirect($this->referer);
-        }*/
+        }
+        */
     }
 
     /**
@@ -226,7 +225,6 @@ class LoginAccountsController extends Controller
      */
     public function actionLogout()
     {
-        // Craft::$app->getSession()->logout(false);
         Craft::$app->getUser()->logout(false);
 
         $redirect = Craft::$app->getRequest()->getParam('redirect');
