@@ -188,6 +188,14 @@ class LoginAccount extends Element implements IdentityInterface
         return parent::getIndexHtml($criteria, $disabledElementIds, $viewState, $sourceKey, $context, $includeContainer, $showCheckboxes);
     }
 
+    public function getLoginProvider()
+    {
+        if ($this->providerHandle)
+        {
+            return Social::$plugin->getLoginProviders()->getLoginProvider($this->providerHandle);
+        }
+    }
+
     /**
      * Returns this element type's sources.
      *

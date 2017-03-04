@@ -20,16 +20,16 @@
 
     <h2>{{ "Login Accounts"|t('app') }}</h2>
 
-    <div id="nologinaccounts"{% if loginAccounts|length == 0 %} class="hidden"{% endif %}>
+    <div id="nologinaccounts"{% if loginAccounts|length > 0 %} class="hidden"{% endif %}>
         <p>{{ "No login accounts exist yet."|t('app') }}</p>
     </div>
 
-    {% if loginAccounts|length %}
+    {% if loginAccounts|length > 0 %}
 
         <table id="loginAccounts" class="data fullwidth">
             <thead>
                 <tr>
-                    <th>{{ "OAuth Provider"|t('app') }}</th>
+                    <th>{{ "Login Provider"|t('app') }}</th>
                     <th>{{ "Social User ID"|t('app') }}</th>
                 </tr>
             </thead>
@@ -37,16 +37,16 @@
             {% for account in loginAccounts %}
 
                 {% set user = account.user %}
-                {% set oauthProvider = craft.oauth.getProvider(account.providerHandle) %}
+                {% set loginProvider = account.getLoginProvider() %}
 
-                {% if oauthProvider %}
-                    <tr data-id="{{ account.id }}" data-name="{{ oauthProvider.name|t('app') }}">
+                {% if loginProvider %}
+                    <tr data-id="{{ account.id }}" data-name="{{ loginProvider.name|t('app') }}">
                         <td class="provider">
                             <div class="thumb">
-                                <img width="20" src="{{ oauthProvider.getIconUrl() }}" class="social-icon social-{{ oauthProvider.handle }}" />
+                                <img width="20" src="{{ loginProvider.getIconUrl() }}" class="social-icon social-{{ loginProvider.handle }}" />
                             </div>
 
-                            <div class="label">{{ oauthProvider.name }}</div>
+                            <div class="label">{{ loginProvider.name }}</div>
                         </td>
 
                         <td>
@@ -64,7 +64,6 @@
         </table>
 
     {% endif %}
-
 
     {% js %}
     var adminTable = new Craft.AdminTable({

@@ -102,6 +102,19 @@ class LoginAccount extends Model
     }
 
     /**
+     * Returns the OAuth provider for this login account.
+     *
+     * @return IOauth_Provider|null
+     */
+    public function getLoginProvider()
+    {
+        if ($this->providerHandle)
+        {
+            return Social::$plugin->getLoginProviders()->getLoginProvider($this->providerHandle);
+        }
+    }
+
+    /**
      * Returns the associated Craft user for this login account.
      *
      * @return UserModel
