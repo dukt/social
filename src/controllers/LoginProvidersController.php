@@ -11,6 +11,7 @@ use Craft;
 use craft\web\Controller;
 use dukt\social\web\assets\social\SocialAsset;
 use dukt\social\Plugin as Social;
+use yii\web\HttpException;
 
 class LoginProvidersController extends Controller
 {
@@ -40,30 +41,23 @@ class LoginProvidersController extends Controller
      * @throws HttpException
      * @return null
      */
-    public function actionEdit(array $variables = array())
+    public function actionEdit($handle)
     {
-        if (!empty($variables['handle']))
+        $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($handle, false, true);
+
+        if ($loginProvider)
         {
-            $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($variables['handle'], false, true);
+            $infos = Social::$plugin->getOauth()->getProviderInfos($handle);
 
-            if ($loginProvider)
-            {
-                $variables['infos'] = Social::$plugin->getOauth()->getProviderInfos($variables['handle']);
-                $variables['loginProvider'] = $loginProvider;
+            $configInfos = Craft::$app->getConfig()->get('providerInfos', 'social');
 
-                $configInfos = Craft::$app->getConfig()->get('providerInfos', 'oauth');
+            return $this->renderTemplate('social/loginproviders/_edit', [
+                'handle' => $handle,
+                'infos' => $infos,
+                'configInfos' => $configInfos,
+                'loginProvider' => $loginProvider
 
-                if (!empty($configInfos[$variables['handle']]))
-                {
-                    $variables['configInfos'] = $configInfos[$variables['handle']];
-                }
-
-                return $this->renderTemplate('social/loginproviders/_edit', $variables);
-            }
-            else
-            {
-                throw new HttpException(404);
-            }
+            ]);
         }
         else
         {

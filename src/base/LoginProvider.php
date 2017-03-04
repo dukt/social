@@ -16,6 +16,16 @@ abstract class LoginProvider implements LoginProviderInterface
     // Public Methods
     // =========================================================================
 
+    public function getScopeDocsUrl()
+    {
+        return '#scopes';
+    }
+
+    public function isConfigured()
+    {
+        return true;
+    }
+
     /**
      * OAuth version
      *

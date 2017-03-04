@@ -17,7 +17,6 @@
                     <th scope="col">{{ "Authorization Options"|t('app') }}</th>
                 {% endif %}
 
-                <th scope="col">{{ "OAuth Provider Settings"|t('app') }}</th>
             </tr>
         </thead>
 
@@ -25,7 +24,7 @@
             {% for loginProvider in loginProviders %}
                 {% set oauthProvider = loginProvider.getOauthProvider() %}
                 <tr>
-                    <td>
+                    <th>
                         <div class="provider">
                             <div class="thumb">
                                 <img src="{{ loginProvider.getIconUrl() }}" width="32" height="32" />
@@ -34,11 +33,11 @@
                                 {% if craft.app.config.get('advancedMode', 'social') %}
                                     <a href="{{ url('settings/plugins/social/settings/loginproviders/'~loginProvider.handle) }}">{{ loginProvider.name }}</a>
                                 {% else %}
-                                    {{ loginProvider.name }}
+                                    <a href="{{ url('social/loginproviders/'~loginProvider.handle) }}">{{ loginProvider.name }}</a>
                                 {% endif %}
                             </div>
                         </div>
-                    </td>
+                    </th>
 
                     <td class="light">{{ loginProvider.handle }}</td>
 
@@ -65,7 +64,6 @@
                         <td class="light">{{ "{count} authorization option(s)"|t('app', { count: loginProvider.getAuthorizationOptions()|length }) }}</td>
                     {% endif %}
 
-                    <td class="thin"><a href="{{ url('oauth/providers/'~loginProvider.handle) }}" title="{{ '{provider} OAuth Settings'|t('app', { provider: loginProvider.name }) }}" data-icon="settings"></a></td>
                 </tr>
             {% endfor %}
         </tbody>

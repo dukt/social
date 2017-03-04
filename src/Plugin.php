@@ -89,10 +89,10 @@ class Plugin extends \craft\base\Plugin
             'social/loginaccounts' => 'social/loginAccounts/index',
             'social/loginaccounts/<userId:\d+>' => 'social/login-accounts/edit',
 
-            'settings/plugins/social/settings/loginproviders' => 'social/login-providers/index',
-            'settings/plugins/social/settings/loginproviders/<handle:{handle}>' => 'social/loginProviders/edit',
+            'social/loginproviders' => 'social/login-providers/index',
+            'social/loginproviders/<handle:{handle}>' => 'social/login-providers/edit',
 
-            'settings/plugins/social/settings/settings' => 'social/settings/index',
+            'social/settings' => 'social/settings/index',
         ];
 
         $event->rules = array_merge($event->rules, $rules);
@@ -127,7 +127,7 @@ class Plugin extends \craft\base\Plugin
      */
     public function getSettingsResponse()
     {
-        $url = \craft\helpers\UrlHelper::cpUrl('settings/plugins/social/settings/loginproviders');
+        $url = \craft\helpers\UrlHelper::cpUrl('social/settings');
 
         \Craft::$app->controller->redirect($url);
 
