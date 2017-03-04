@@ -20,7 +20,7 @@ class Oauth extends Component
 {
     /**
      * OAuth connect.
-     * 
+     *
      * @param $loginProviderHandle
      *
      * @return mixed
