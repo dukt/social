@@ -167,16 +167,6 @@ class LoginAccount extends Element
     }
 
     /**
-     * Returns the element type name.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return Craft::t('app', 'Login Accounts');
-    }
-
-    /**
      * Returns the element index HTML.
      *
      * @param ElementCriteriaModel $criteria
