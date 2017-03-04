@@ -17,7 +17,7 @@ class OauthController extends Controller
     // Public Methods
     // =========================================================================
     /**
-     * Settings Index
+     * OAuth callback.
      *
      * @return null
      */
