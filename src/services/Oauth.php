@@ -11,8 +11,20 @@ use Craft;
 use dukt\social\Plugin as Social;
 use yii\base\Component;
 
+/**
+ * Class Oauth
+ *
+ * @package dukt\social\services
+ */
 class Oauth extends Component
 {
+    /**
+     * OAuth connect.
+     * 
+     * @param $loginProviderHandle
+     *
+     * @return mixed
+     */
     public function connect($loginProviderHandle)
     {
         $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($loginProviderHandle);
@@ -28,6 +40,13 @@ class Oauth extends Component
         }
     }
 
+    /**
+     * Is OAuth provider configured.
+     *
+     * @param $loginProviderHandle
+     *
+     * @return bool
+     */
     public function isProviderConfigured($loginProviderHandle)
     {
         if ($this->getProviderInfos($loginProviderHandle)) {
@@ -36,7 +55,14 @@ class Oauth extends Component
 
         return false;
     }
-    
+
+    /**
+     * Get provider infos.
+     *
+     * @param $loginProviderHandle
+     *
+     * @return mixed
+     */
     public function getProviderInfos($loginProviderHandle)
     {
         $loginProvidersConfig = Craft::$app->getConfig()->get('loginProviders', 'social');
