@@ -231,7 +231,7 @@ class Plugin extends \craft\base\Plugin
                     $jsLoginProvider = [
                         'name' => $loginProvider->getName(),
                         'handle' => $loginProvider->getHandle(),
-                        'url' => $this->social->getLoginUrl($loginProvider->getHandle()),
+                        'url' => $this->getLoginAccounts()->getLoginUrl($loginProvider->getHandle()),
                         'iconUrl' => $loginProvider->getIconUrl(),
                     ];
 

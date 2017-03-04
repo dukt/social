@@ -36,7 +36,7 @@ class SocialVariable
      */
     public function getLoginUrl($providerHandle, $params = array())
     {
-        return Social::$plugin->getSocial()->getLoginUrl($providerHandle, $params);
+        return Social::$plugin->getLoginAccounts()->getLoginUrl($providerHandle, $params);
     }
 
     /**
@@ -48,7 +48,7 @@ class SocialVariable
      */
     public function getLogoutUrl($redirect = null)
     {
-        return Social::$plugin->getSocial()->getLogoutUrl($redirect);
+        return Social::$plugin->getLoginAccounts()->getLogoutUrl($redirect);
     }
 
     /**
@@ -72,7 +72,7 @@ class SocialVariable
      */
     public function getLoginAccountConnectUrl($providerHandle)
     {
-        return Social::$plugin->getSocial()->getLoginAccountConnectUrl($providerHandle);
+        return Social::$plugin->getLoginAccounts()->getLoginAccountConnectUrl($providerHandle);
     }
 
     /**
@@ -84,7 +84,7 @@ class SocialVariable
      */
     public function getLoginAccountDisconnectUrl($providerHandle)
     {
-        return Social::$plugin->getSocial()->getLoginAccountDisconnectUrl($providerHandle);
+        return Social::$plugin->getLoginAccounts()->getLoginAccountDisconnectUrl($providerHandle);
     }
 
     /**

@@ -278,7 +278,7 @@ class LoginAccountsController extends Controller
 
         $user = Craft::$app->users->getUserById($userId);
 
-        Social::$plugin->getSocial()->saveRemotePhoto($photoUrl, $user);
+        Social::$plugin->getLoginAccounts()->saveRemotePhoto($photoUrl, $user);
 
         // redirect
         $referrer = Craft::$app->getRequest()->referrer;
