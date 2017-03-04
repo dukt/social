@@ -164,19 +164,6 @@ class LoginAccount extends Element
         return $this->_user;
     }
 
-    public function getOauthProvider()
-    {
-        if ($this->providerHandle)
-        {
-            $loginProvider = $this->getLoginProvider();
-
-            if($loginProvider)
-            {
-                return $loginProvider->getOauthProvider();
-            }
-        }
-    }
-
     public function getLoginProvider()
     {
         if ($this->providerHandle)
