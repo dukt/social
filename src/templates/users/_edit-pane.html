@@ -14,21 +14,21 @@
                 {% for account in loginAccounts %}
 
                     {% set user = account.user %}
-                    {% set oauthProvider = craft.oauth.getProvider(account.providerHandle) %}
+                    {% set loginProvider = account.getLoginProvider() %}
 
-                    {% if oauthProvider %}
-                        <tr data-id="{{ account.id }}" data-name="{{ oauthProvider.name|t('app') }}">
+                    {% if loginProvider %}
+                        <tr data-id="{{ account.id }}" data-name="{{ loginProvider.name|t('app') }}">
                             <td class="provider">
                                 <div class="thumb">
-                                    <img width="20" src="{{ oauthProvider.getIconUrl() }}" class="social-icon social-{{ oauthProvider.handle }}" />
+                                    <img width="20" src="{{ loginProvider.getIconUrl() }}" class="social-icon social-{{ loginProvider.handle }}" />
                                 </div>
 
-                                <div class="label">{{ oauthProvider.name }}</div>
+                                <div class="label">{{ loginProvider.name }}</div>
                             </td>
 
                             <td class="thin">
                                 {% if user.id == currentUser.id %}
-                                    <a class="btn small" title="{{ 'Disconnect'|t('app') }}" href="{{craft.social.getLoginAccountDisconnectUrl(oauthProvider.handle)}}">Disconnect</a>
+                                    <a class="btn small" title="{{ 'Disconnect'|t('app') }}" href="{{craft.social.getLoginAccountDisconnectUrl(loginProvider.handle)}}">Disconnect</a>
                                 {% else %}
                                     <a class="icon delete" title="{{ 'Delete'|t('app') }}"></a>
                                 {% endif %}
