@@ -13,19 +13,19 @@ use yii\base\Component;
 
 class Oauth extends Component
 {
-    public function getProviderInfos($handle)
+    public function getProviderInfos($loginProviderHandle)
     {
         $loginProvidersConfig = Craft::$app->getConfig()->get('loginProviders', 'social');
 
-        if(isset($loginProvidersConfig[$handle]))
+        if(isset($loginProvidersConfig[$loginProviderHandle]))
         {
-            return $loginProvidersConfig[$handle];
+            return $loginProvidersConfig[$loginProviderHandle];
         }
     }
 
-    public function isProviderConfigured($handle)
+    public function isProviderConfigured($loginProviderHandle)
     {
-        if($this->getProviderInfos($handle))
+        if($this->getProviderInfos($loginProviderHandle))
         {
             return true;
         }
@@ -35,11 +35,12 @@ class Oauth extends Component
 
     public function connect($options)
     {
-        $handle = $options['provider'];
+        $loginProviderHandle = $options['loginProviderHandle'];
 
-        $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($handle);
+        $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($loginProviderHandle);
 
-        Craft::$app->getSession()->set('social.loginProvider', $handle);
+        Craft::$app->getSession()->set('social.loginProvider', $loginProviderHandle);
+
         if(Craft::$app->getSession()->get('social.callback') === true)
         {
             Craft::$app->getSession()->remove('social.callback');

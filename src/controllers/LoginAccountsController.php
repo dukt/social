@@ -159,8 +159,7 @@ class LoginAccountsController extends Controller
         }
 
         if ($response = Social::$plugin->getOauth()->connect([
-            'plugin'   => 'social',
-            'provider' => $providerHandle,
+            'loginProviderHandle' => $providerHandle,
             'scope'   => $loginProvider->getScope(),
             'authorizationOptions'   => $loginProvider->getAuthorizationOptions()
         ]))
