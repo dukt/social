@@ -17,11 +17,11 @@ class SettingsController extends Controller
     // =========================================================================
 
     /**
-     * Settings Index
+     * General Settings
      *
      * @return null
      */
-    public function actionIndex()
+    public function actionGeneral()
     {
         $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $variables['settings'] = $plugin->getSettings();
@@ -29,6 +29,6 @@ class SettingsController extends Controller
         $accounts = Social::$plugin->getLoginAccounts()->getLoginAccounts();
         $variables['totalAccounts'] = count($accounts);
 
-        return $this->renderTemplate('social/settings/_index', $variables);
+        return $this->renderTemplate('social/settings/_general', $variables);
     }
 }

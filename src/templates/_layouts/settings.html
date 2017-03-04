@@ -1,19 +1,19 @@
 {% extends "_layouts/cp" %}
 
-{% set title = "Social Login"|t('app') %}
+{% set title = "Social Settings"|t('app') %}
 
 {% set docsUrl = 'https://dukt.net/craft/social/docs' %}
 
 {% if CraftEdition == CraftPro %}
 
     {% set crumbs = [
-        { label: "Social"|t, url: url('social') },
-        { label: "Settings"|t, url: url('social/settings') },
+        { label: "Settings"|t, url: url('settings') },
+        { label: "Plugins"|t, url: url('settings/plugins') },
     ] %}
 
     {% set tabs = {
-        loginProviders: { label: "Login Providers"|t, url: url('social/loginproviders') },
-        settings: { label: "Settings"|t, url: url('social/settings') },
+        loginProviders: { label: "Login Providers"|t, url: url('social/settings/loginproviders') },
+        settings: { label: "Settings"|t, url: url('social/settings/general') },
     } %}
 
 {% else %}

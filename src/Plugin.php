@@ -84,15 +84,14 @@ class Plugin extends \craft\base\Plugin
         $rules = [
             'social' => 'social/login-accounts/index',
 
-            'social/settings' => 'social/settings/index',
-
             'social/loginaccounts' => 'social/loginAccounts/index',
             'social/loginaccounts/<userId:\d+>' => 'social/login-accounts/edit',
 
-            'social/loginproviders' => 'social/login-providers/index',
-            'social/loginproviders/<handle:{handle}>' => 'social/login-providers/edit',
+            'social/settings/general' => 'social/settings/general',
+            'social/settings/loginproviders' => 'social/login-providers/index',
+            'social/settings/loginproviders/<handle:{handle}>' => 'social/login-providers/edit',
 
-            'social/settings' => 'social/settings/index',
+            // 'social/settings' => 'social/settings/index',
         ];
 
         $event->rules = array_merge($event->rules, $rules);
