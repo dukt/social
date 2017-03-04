@@ -45,8 +45,8 @@ class Twitter extends LoginProvider
         $oauthProviderOptions = $providerInfos['oauthProviderOptions'];
 
         $config = [
-            'identifier' => (isset($oauthProviderOptions['consumerKey']) ? $oauthProviderOptions['consumerKey'] : ''),
-            'secret' => (isset($oauthProviderOptions['consumerSecret']) ? $oauthProviderOptions['consumerSecret'] : ''),
+            'identifier' => (isset($oauthProviderOptions['clientId']) ? $oauthProviderOptions['clientId'] : ''),
+            'secret' => (isset($oauthProviderOptions['clientSecret']) ? $oauthProviderOptions['clientSecret'] : ''),
         ];
 
         if(!isset($config['callback_uri']))

@@ -10,11 +10,22 @@ namespace dukt\social\base;
 use Craft;
 use craft\web\Response;
 use dukt\social\models\Token;
+use dukt\social\Plugin as Social;
 
 abstract class LoginProvider implements LoginProviderInterface
 {
     // Public Methods
     // =========================================================================
+
+    /**
+     * Get provider infos
+     *
+     * @return mixed
+     */
+    public function getInfos()
+    {
+        return Social::$plugin->getOauth()->getProviderInfos($this->getHandle());
+    }
 
     /**
      * Get API Manager URL
