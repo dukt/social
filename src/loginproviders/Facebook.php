@@ -30,7 +30,7 @@ class Facebook extends LoginProvider
      *
      * @return mixed
      */
-    public function getOauthProvider()
+    protected function getOauthProvider()
     {
         $providerInfos = Social::$plugin->getOauth()->getProviderInfos($this->getHandle());
 
