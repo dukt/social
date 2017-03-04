@@ -12,6 +12,7 @@ use yii\base\Component;
 use craft\elements\User as UserModel;
 use dukt\social\elements\LoginAccount;
 use Exception;
+use craft\helpers\UrlHelper;
 
 class LoginAccounts extends Component
 {
@@ -191,18 +192,20 @@ class LoginAccounts extends Component
     /**
      * Deletes login accounts
      *
-     * @param Social_LoginAccount|array $loginAccounts
+     * @param string|array $loginAccounts
      *
      * @return bool
      */
-    public function deleteLoginAccounts($loginAccounts)
+    public function deleteLoginAccounts($loginAccountStringOrArray)
     {
-        if (!$loginAccounts) {
+        if (!$loginAccountStringOrArray) {
             return false;
         }
 
-        if (!is_array($loginAccounts)) {
-            $loginAccounts = [$loginAccounts];
+        if (!is_array($loginAccountStringOrArray)) {
+            $loginAccounts = [$loginAccountStringOrArray];
+        } else {
+            $loginAccounts = $loginAccountStringOrArray;
         }
 
         foreach ($loginAccounts as $loginAccount) {
@@ -342,11 +345,11 @@ class LoginAccounts extends Component
      * Save remote photo
      *
      * @param string $photoUrl
-     * @param User $user
+     * @param UserModel $user
      *
      * @return bool
      */
-    public function saveRemotePhoto($photoUrl, User $user)
+    public function saveRemotePhoto($photoUrl, UserModel $user)
     {
         $filename = 'photo';
 
