@@ -41,6 +41,10 @@ class OauthController extends Controller
             $url .= '&';
         }
 
+
+        // Pass the existing string containing oauth data
+        // Todo: take the whole request into accounts (headers, body params, etc...)
+
         $url .= Craft::$app->getRequest()->getQueryString();
 
         return $this->redirect($url);
