@@ -166,26 +166,6 @@ class LoginAccount extends Element
         return $this->_user;
     }
 
-    /**
-     * Returns the element index HTML.
-     *
-     * @param ElementCriteriaModel $criteria
-     * @param array                $disabledElementIds
-     * @param array                $viewState
-     * @param string|null          $sourceKey
-     * @param string|null          $context
-     * @param bool                 $includeContainer
-     * @param bool                 $showCheckboxes
-     *
-     * @return string
-     */
-    public function getIndexHtml($criteria, $disabledElementIds, $viewState, $sourceKey, $context, $includeContainer, $showCheckboxes)
-    {
-        Craft::$app->getView()->registerAssetBundle(LoginAccountIndexAsset::class);
-
-        return parent::getIndexHtml($criteria, $disabledElementIds, $viewState, $sourceKey, $context, $includeContainer, $showCheckboxes);
-    }
-
     public function getOauthProvider()
     {
         if ($this->providerHandle)
