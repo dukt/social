@@ -15,7 +15,7 @@ class SocialAsset extends AssetBundle
         ];
 
         $this->css = [
-            'css/social.css',
+            'social.css',
         ];
 
         parent::init();
