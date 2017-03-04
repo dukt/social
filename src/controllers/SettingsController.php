@@ -17,7 +17,7 @@ class SettingsController extends Controller
     // =========================================================================
 
     /**
-     * General Settings
+     * General settings.
      *
      * @return null
      */
