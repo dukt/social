@@ -41,22 +41,6 @@ class Oauth extends Component
     }
 
     /**
-     * Is OAuth provider configured.
-     *
-     * @param $loginProviderHandle
-     *
-     * @return bool
-     */
-    public function isProviderConfigured($loginProviderHandle)
-    {
-        if ($this->getProviderInfos($loginProviderHandle)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Get provider infos.
      *
      * @param $loginProviderHandle
