@@ -19,11 +19,7 @@
 {% from _self import configWarning %}
 
 {% set content %}
-
-    {% set providerScope = loginProvider.getScope() %}
-    {% set providerAuthorizationOptions = loginProvider.getAuthorizationOptions() %}
-    {% set oauthProvider = loginProvider.getOauthProvider() %}
-
+    
     <h2 class="first">{{ "Login Provider"|t('app') }}</h2>
 
     {% if loginProvider.iconUrl %}
@@ -66,12 +62,12 @@
 
     <h2>{{ "Scope"|t('app') }}</h2>
 
-    {% if providerScope %}
+    {% if loginProvider.scope %}
 
-        <p>{{ "{total} permission(s) defined:"|t('app', { total: providerScope|length }) }}</p>
+        <p>{{ "{total} permission(s) defined:"|t('app', { total: loginProvider.scope|length }) }}</p>
 
         <ul class="bullets">
-            {% for scope in providerScope %}
+            {% for scope in loginProvider.scope %}
                 <li>{{ scope }}</li>
             {% endfor %}
         </ul>
@@ -98,10 +94,10 @@
 
     <h2>{{ "Authorization Options"|t('app') }}</h2>
 
-    {% if providerAuthorizationOptions %}
-        <p>{{ "{total} authorization option(s) defined:"|t('app', { total: providerAuthorizationOptions|length }) }}</p>
+    {% if loginProvider.authorizationOptions %}
+        <p>{{ "{total} authorization option(s) defined:"|t('app', { total: loginProvider.authorizationOptions|length }) }}</p>
         <ul class="bullets">
-            {% for optionKey, optionValue in providerAuthorizationOptions %}
+            {% for optionKey, optionValue in loginProvider.authorizationOptions %}
                 <li><strong>{{ optionKey }}:</strong> {{ optionValue }} </li>
             {% endfor %}
         </ul>
