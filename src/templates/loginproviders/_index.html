@@ -22,7 +22,6 @@
 
         <tbody>
             {% for loginProvider in loginProviders %}
-                {% set oauthProvider = loginProvider.getOauthProvider() %}
                 <tr>
                     <th>
                         <div class="provider">
@@ -60,8 +59,8 @@
                     </td>
 
                     {% if craft.app.config.get('advancedMode', 'social') %}
-                        <td class="light">{{ "{count} permission(s)"|t('app', { count: loginProvider.getScope()|length }) }}</td>
-                        <td class="light">{{ "{count} authorization option(s)"|t('app', { count: loginProvider.getAuthorizationOptions()|length }) }}</td>
+                        <td class="light">{{ "{count} permission(s)"|t('app', { count: loginProvider.scope|length }) }}</td>
+                        <td class="light">{{ "{count} authorization option(s)"|t('app', { count: loginProvider.authorizationOptions|length }) }}</td>
                     {% endif %}
 
                 </tr>
