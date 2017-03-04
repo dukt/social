@@ -398,18 +398,6 @@ class LoginAccount extends Element implements IdentityInterface
     }
 
     /**
-     * Populates an element model based on a query result.
-     *
-     * @param array $row
-     *
-     * @return Social_LoginAccountModel
-     */
-    public function populateElementModel($row)
-    {
-        return Social_LoginAccountModel::populateModel($row);
-    }
-
-    /**
      * @inheritdoc
      * @throws Exception if reasons
      */
