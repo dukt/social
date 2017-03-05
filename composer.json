@@ -1,5 +1,5 @@
 {
-  "name": "dukt/craft-social",
+  "name": "dukt/social",
   "description": "Let your visitors log into Craft with web services like Facebook, Google, Twitter…",
   "version": "2.0.0-beta.1",
   "type": "craft-plugin",
