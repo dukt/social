@@ -464,7 +464,7 @@ class LoginAccounts extends Component
                         try {
                             $newUser->{$attribute} = Craft::$app->templates->renderString($template, $variables);
                         } catch (\Exception $e) {
-                            // Social::log('Could not map:'.print_r([$attribute, $template, $variables, $e->getMessage()], true), LogLevel::Warning);
+                            Craft::warning('Could not map:'.print_r([$attribute, $template, $variables, $e->getMessage()], true), __METHOD__);
                         }
                     }
                 } else {
@@ -475,7 +475,7 @@ class LoginAccounts extends Component
                         try {
                             $userContent[$fieldHandle] = Craft::$app->templates->renderString($template, $variables);
                         } catch (\Exception $e) {
-                            // Social::log('Could not map:'.print_r([$template, $variables, $e->getMessage()], true), LogLevel::Warning);
+                            Craft::warning('Could not map:'.print_r([$template, $variables, $e->getMessage()], true), __METHOD__);
                         }
                     }
                 }
@@ -499,7 +499,7 @@ class LoginAccounts extends Component
         // save user
 
         if (!Craft::$app->elements->saveElement($newUser)) {
-            // Social::log('There was a problem creating the user:'.print_r($newUser->getErrors(), true), LogLevel::Error);
+            Craft::error('There was a problem creating the user:'.print_r($newUser->getErrors(), true), __METHOD__);
             throw new Exception("Craft user couldn’t be created.");
         }
 
@@ -512,7 +512,7 @@ class LoginAccounts extends Component
                     $photoUrl = Craft::$app->templates->renderString($userMapping['photoUrl'], $variables);
                     $photoUrl = html_entity_decode($photoUrl);
                 } catch (\Exception $e) {
-                    // Social::log('Could not map:'.print_r(['photoUrl', $userMapping['photoUrl'], $variables, $e->getMessage()], true), LogLevel::Warning);
+                    Craft::warning('Could not map:'.print_r(['photoUrl', $userMapping['photoUrl'], $variables, $e->getMessage()], true), __METHOD__);
                 }
             } else {
                 if (!empty($attributes['photoUrl'])) {

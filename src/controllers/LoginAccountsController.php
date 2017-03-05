@@ -186,7 +186,7 @@ class LoginAccountsController extends Controller
         {
             $response = $e->getResponse();
 
-            // Social::log((string) $response, LogLevel::Error);
+            // Craft::error((string) $response, __METHOD__);
 
             $body = $response->getBody();
             $json = json_decode($body, true);
