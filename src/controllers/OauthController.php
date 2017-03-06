@@ -30,7 +30,7 @@ class OauthController extends Controller
 
         Craft::$app->getSession()->set('social.callback', true);
 
-        $url = Craft::$app->getSession()->get('social.loginReferrer');
+        $url = Craft::$app->getSession()->get('social.loginControllerUrl');
 
         if(strpos($url, '?') === false)
         {

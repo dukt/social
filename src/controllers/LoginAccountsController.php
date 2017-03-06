@@ -30,18 +30,18 @@ class LoginAccountsController extends Controller
     protected $allowAnonymous = ['actionLogin'];
 
     /**
-     * Redirect URL
+     * URL to redirect to after login.
      *
      * @var string
      */
     private $redirect;
 
     /**
-     * Referer URL
+     * URL where the login was initiated from.
      *
      * @var string
      */
-    private $referer;
+    private $originUrl;
 
     // Public Methods
     // =========================================================================
@@ -112,14 +112,14 @@ class LoginAccountsController extends Controller
      */
     public function actionLogin()
     {
-        Craft::$app->getSession()->set('social.loginReferrer', Craft::$app->getRequest()->getAbsoluteUrl());
+        Craft::$app->getSession()->set('social.loginControllerUrl', Craft::$app->getRequest()->getAbsoluteUrl());
 
-        $this->referer = Craft::$app->getSession()->get('social.referer');
+        $this->originUrl = Craft::$app->getSession()->get('social.originUrl');
 
-        if (!$this->referer)
+        if (!$this->originUrl)
         {
-            $this->referer = Craft::$app->getRequest()->referrer;
-            Craft::$app->getSession()->set('social.referer', $this->referer);
+            $this->originUrl = Craft::$app->getRequest()->referrer;
+            Craft::$app->getSession()->set('social.originUrl', $this->originUrl);
         }
 
         $this->redirect = Craft::$app->getRequest()->getParam('redirect');
@@ -202,14 +202,14 @@ class LoginAccountsController extends Controller
 
             Craft::$app->getSession()->setFlash('error', $errorMsg);
             $this->_cleanSession();
-            return $this->redirect($this->referer);
+            return $this->redirect($this->originUrl);
         }
         catch (\Exception $e)
         {
             $errorMsg = $e->getMessage();
             Craft::$app->getSession()->setFlash('error', $errorMsg);
             $this->_cleanSession();
-            return $this->redirect($this->referer);
+            return $this->redirect($this->originUrl);
         }
         */
     }
@@ -317,7 +317,7 @@ class LoginAccountsController extends Controller
 
         if (!$this->redirect)
         {
-            $this->redirect = $this->referer;
+            $this->redirect = $this->originUrl;
         }
 
         $socialLoginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($token->providerHandle);
@@ -433,7 +433,7 @@ class LoginAccountsController extends Controller
 
         if (!$this->redirect)
         {
-            $this->redirect = $this->referer;
+            $this->redirect = $this->originUrl;
         }
 
         if(!$account->authenticate($token))
@@ -461,7 +461,7 @@ class LoginAccountsController extends Controller
 
             Craft::$app->getSession()->setError($errorMessage);
 
-            return $this->redirect($this->referer);
+            return $this->redirect($this->originUrl);
         }
     }
 
@@ -472,7 +472,7 @@ class LoginAccountsController extends Controller
      */
     private function _cleanSession()
     {
-        Craft::$app->getSession()->remove('social.referer');
+        Craft::$app->getSession()->remove('social.originUrl');
         // Craft::$app->getSession()->remove('social.requestUri');
     }
 }
