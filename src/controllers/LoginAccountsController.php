@@ -23,7 +23,7 @@ class LoginAccountsController extends Controller
     // Properties
     // =========================================================================
 
-    protected $allowAnonymous = ['actionLlogin'];
+    protected $allowAnonymous = ['actionLogin'];
 
     /**
      * URL to redirect to after login.
