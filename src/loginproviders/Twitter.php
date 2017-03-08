@@ -51,7 +51,7 @@ class Twitter extends LoginProvider
 
         if(!isset($config['callback_uri']))
         {
-            $config['callback_uri'] = UrlHelper::actionUrl('social/oauth/callback');
+            $config['callback_uri'] = UrlHelper::actionUrl('social/login/callback');
         }
 
         return new \League\OAuth1\Client\Server\Twitter($config);

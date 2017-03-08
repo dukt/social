@@ -8,6 +8,7 @@
 namespace dukt\social\services;
 
 use Craft;
+use dukt\social\base\LoginProvider;
 use yii\base\Component;
 use Dukt\Social\Base\LoginProviderInterface;
 
@@ -62,7 +63,7 @@ class LoginProviders extends Component
      * @param string    $handle
      * @param bool|true $enabledOnly
      *
-     * @return Social_ProviderModel|null
+     * @return LoginProvider|LoginProviderInterface|null
      */
     public function getLoginProvider($handle, $enabledOnly = true)
     {
