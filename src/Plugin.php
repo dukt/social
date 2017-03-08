@@ -157,7 +157,7 @@ class Plugin extends \craft\base\Plugin
     public function defineAdditionalUserTableAttributes()
     {
         return [
-            'loginAccounts' => Craft::t('app', 'Login Accounts')
+            'loginAccounts' => Craft::t('social', 'Login Accounts')
         ];
     }
 

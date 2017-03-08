@@ -285,7 +285,7 @@ class LoginAccountsController extends Controller
         // delete social user
         Social::$plugin->getLoginAccounts()->deleteLoginAccountByProvider($handle);
 
-        Craft::$app->getSession()->setNotice(Craft::t('app', 'Login account disconnected.'));
+        Craft::$app->getSession()->setNotice(Craft::t('social', 'Login account disconnected.'));
 
         // redirect
         $redirect = Craft::$app->getRequest()->referrer;
@@ -388,7 +388,7 @@ class LoginAccountsController extends Controller
                 // Social::$plugin->getLoginAccounts()->saveLoginAccount($account);
                 Craft::$app->elements->saveElement($account);
 
-                Craft::$app->getSession()->setNotice(Craft::t('app', 'Login account added.'));
+                Craft::$app->getSession()->setNotice(Craft::t('social', 'Login account added.'));
 
                 return $this->redirect($this->redirect);
             }
@@ -409,7 +409,7 @@ class LoginAccountsController extends Controller
 
             Craft::$app->getElements()->saveElement($account);
 
-            Craft::$app->getSession()->setNotice(Craft::t('app', 'Login account added.'));
+            Craft::$app->getSession()->setNotice(Craft::t('social', 'Login account added.'));
 
             return $this->redirect($this->redirect);
         }
@@ -670,11 +670,11 @@ class LoginAccountsController extends Controller
         {
             if ($registrationMode)
             {
-                Craft::$app->getSession()->setNotice(Craft::t('app', 'Account created.'));
+                Craft::$app->getSession()->setNotice(Craft::t('social', 'Account created.'));
             }
             else
             {
-                Craft::$app->getSession()->setNotice(Craft::t('app', 'Logged in.'));
+                Craft::$app->getSession()->setNotice(Craft::t('social', 'Logged in.'));
             }
 
             return $this->redirect($this->redirect);

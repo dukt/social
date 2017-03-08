@@ -100,7 +100,7 @@ class LoginAccounts extends Component
             $accountRecord = LoginAccount::model()->findById($account->id);
 
             if (!$accountRecord) {
-                throw new Exception(Craft::t('app', 'No social user exists with the ID “{id}”', ['id' => $account->id]));
+                throw new Exception(Craft::t('social', 'No social user exists with the ID “{id}”', ['id' => $account->id]));
             }
         } else {
             $accountRecord = new LoginAccount;

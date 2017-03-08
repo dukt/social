@@ -4,7 +4,7 @@
 {% set title = user.email  %}
 
 {% set crumbs = [
-    { label: "Social Login"|t, url: url('social') }
+    { label: "Social Login"|t('social'), url: url('social') }
 ] %}
 
 {% set content %}
@@ -12,16 +12,16 @@
     <a href="{{ user.cpEditUrl }}"><img width="80" src="{{ user.getThumbUrl(80) }}" /></a>
 
     <ul>
-        <li><strong>{{ "Username:"|t('app') }}</strong> <a href="{{ user.cpEditUrl }}">{{ user.username }}</a></li>
-        <li><strong>{{ "Email:"|t('app') }}</strong> {{ user.email }}</li>
+        <li><strong>{{ "Username:"|t('social') }}</strong> <a href="{{ user.cpEditUrl }}">{{ user.username }}</a></li>
+        <li><strong>{{ "Email:"|t('social') }}</strong> {{ user.email }}</li>
     </ul>
 
     <hr>
 
-    <h2>{{ "Login Accounts"|t('app') }}</h2>
+    <h2>{{ "Login Accounts"|t('social') }}</h2>
 
     <div id="nologinaccounts"{% if loginAccounts|length > 0 %} class="hidden"{% endif %}>
-        <p>{{ "No login accounts exist yet."|t('app') }}</p>
+        <p>{{ "No login accounts exist yet."|t('social') }}</p>
     </div>
 
     {% if loginAccounts|length > 0 %}
@@ -29,8 +29,8 @@
         <table id="loginAccounts" class="data fullwidth">
             <thead>
                 <tr>
-                    <th>{{ "Login Provider"|t('app') }}</th>
-                    <th>{{ "Social User ID"|t('app') }}</th>
+                    <th>{{ "Login Provider"|t('social') }}</th>
+                    <th>{{ "Social User ID"|t('social') }}</th>
                 </tr>
             </thead>
 
@@ -40,7 +40,7 @@
                 {% set loginProvider = account.getLoginProvider() %}
 
                 {% if loginProvider %}
-                    <tr data-id="{{ account.id }}" data-name="{{ loginProvider.name|t('app') }}">
+                    <tr data-id="{{ account.id }}" data-name="{{ loginProvider.name|t('social') }}">
                         <td class="provider">
                             <div class="thumb">
                                 <img width="20" src="{{ loginProvider.getIconUrl() }}" class="social-icon social-{{ loginProvider.handle }}" />
@@ -54,7 +54,7 @@
                         </td>
 
                         <td class="thin">
-                            <a class="icon delete" title="{{ 'Disconnect'|t('app') }}"></a>
+                            <a class="icon delete" title="{{ 'Disconnect'|t('social') }}"></a>
                         </td>
                     </tr>
                 {% endif %}
@@ -70,7 +70,7 @@
         tableSelector: '#loginAccounts',
         noObjectsSelector: '#nologinaccounts',
         deleteAction: 'social/login-accounts/delete-login-account',
-        confirmDeleteMessage: '{{ "Are you sure you want to unlink “{name}” login account?"|t('app') }}',
+        confirmDeleteMessage: '{{ "Are you sure you want to unlink “{name}” login account?"|t('social') }}',
     });
     {% endjs %}
 

@@ -1,10 +1,10 @@
 <div class="pane">
     <div class="data">
 
-        <h2>{{ "Login Accounts"|t('app') }}</h2>
+        <h2>{{ "Login Accounts"|t('social') }}</h2>
 
         <div id="nologinaccounts"{% if loginAccounts|length > 0 or loginProviders|length > 0 %} class="hidden"{% endif %}>
-            <p class="light">{{ "No login accounts."|t('app') }}</p>
+            <p class="light">{{ "No login accounts."|t('social') }}</p>
         </div>
 
         {% if loginAccounts|length or user.id == currentUser.id %}
@@ -17,7 +17,7 @@
                     {% set loginProvider = account.getLoginProvider() %}
 
                     {% if loginProvider %}
-                        <tr data-id="{{ account.id }}" data-name="{{ loginProvider.name|t('app') }}">
+                        <tr data-id="{{ account.id }}" data-name="{{ loginProvider.name|t('social') }}">
                             <td class="provider">
                                 <div class="thumb">
                                     <img width="20" src="{{ loginProvider.getIconUrl() }}" class="social-icon social-{{ loginProvider.handle }}" />
@@ -28,9 +28,9 @@
 
                             <td class="thin">
                                 {% if user.id == currentUser.id %}
-                                    <a class="btn small" title="{{ 'Disconnect'|t('app') }}" href="{{craft.social.getLoginAccountDisconnectUrl(loginProvider.handle)}}">Disconnect</a>
+                                    <a class="btn small" title="{{ 'Disconnect'|t('social') }}" href="{{craft.social.getLoginAccountDisconnectUrl(loginProvider.handle)}}">Disconnect</a>
                                 {% else %}
-                                    <a class="icon delete" title="{{ 'Delete'|t('app') }}"></a>
+                                    <a class="icon delete" title="{{ 'Delete'|t('social') }}"></a>
                                 {% endif %}
                             </td>
 
@@ -68,6 +68,6 @@ var adminTable = new Craft.AdminTable({
 tableSelector: '#loginAccounts',
 noObjectsSelector: '#nologinaccounts',
 deleteAction: 'social/login-accounts/delete-login-account',
-confirmDeleteMessage: '{{ "Are you sure you want to unlink “{name}” login account?"|t('app') }}',
+confirmDeleteMessage: '{{ "Are you sure you want to unlink “{name}” login account?"|t('social') }}',
 });
 {% endjs %}

@@ -8,13 +8,13 @@
     <table id="fields" class="data fullwidth collapsible">
         <thead>
             <tr>
-                <th scope="col">{{ "Name"|t('app') }}</th>
-                <th scope="col">{{ "Handle"|t('app') }}</th>
-                <th scope="col">{{ "Login Provider Status"|t('app') }}</th>
+                <th scope="col">{{ "Name"|t('social') }}</th>
+                <th scope="col">{{ "Handle"|t('social') }}</th>
+                <th scope="col">{{ "Login Provider Status"|t('social') }}</th>
 
                 {% if craft.app.config.get('advancedMode', 'social') %}
-                    <th scope="col">{{ "Scope"|t('app') }}</th>
-                    <th scope="col">{{ "Authorization Options"|t('app') }}</th>
+                    <th scope="col">{{ "Scope"|t('social') }}</th>
+                    <th scope="col">{{ "Authorization Options"|t('social') }}</th>
                 {% endif %}
 
             </tr>
@@ -48,19 +48,19 @@
                             {{ csrfInput() }}
 
                             {% if loginProvider.isEnabled %}
-                                <span class="status on"></span> {{ "Enabled"|t('app') }} 
-                                <input type="button" value="{{ 'Disable'|t('app') }}" class="btn small formsubmit" data-action="social/login-providers/disable-login-provider">
+                                <span class="status on"></span> {{ "Enabled"|t('social') }} 
+                                <input type="button" value="{{ 'Disable'|t('social') }}" class="btn small formsubmit" data-action="social/login-providers/disable-login-provider">
                             {% else %}
-                                <span class="status"></span> {{ "Disabled"|t('app') }} 
-                                <input type="button" value="{{ 'Enable'|t('app') }}" class="btn small formsubmit" data-action="social/login-providers/enable-login-provider">
+                                <span class="status"></span> {{ "Disabled"|t('social') }} 
+                                <input type="button" value="{{ 'Enable'|t('social') }}" class="btn small formsubmit" data-action="social/login-providers/enable-login-provider">
                             {% endif %}
                         </form>
 
                     </td>
 
                     {% if craft.app.config.get('advancedMode', 'social') %}
-                        <td class="light">{{ "{count} permission(s)"|t('app', { count: loginProvider.scope|length }) }}</td>
-                        <td class="light">{{ "{count} authorization option(s)"|t('app', { count: loginProvider.authorizationOptions|length }) }}</td>
+                        <td class="light">{{ "{count} permission(s)"|t('social', { count: loginProvider.scope|length }) }}</td>
+                        <td class="light">{{ "{count} authorization option(s)"|t('social', { count: loginProvider.authorizationOptions|length }) }}</td>
                     {% endif %}
 
                 </tr>

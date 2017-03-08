@@ -74,11 +74,11 @@ class LoginProvidersController extends Controller
 
         if (Social::$plugin->getLoginProviders()->enableLoginProvider($loginProvider))
         {
-            Craft::$app->getSession()->setNotice(Craft::t('app', 'Login provider enabled.'));
+            Craft::$app->getSession()->setNotice(Craft::t('social', 'Login provider enabled.'));
         }
         else
         {
-            Craft::$app->getSession()->setError(Craft::t('app', 'Couldn’t enable login provider.'));
+            Craft::$app->getSession()->setError(Craft::t('social', 'Couldn’t enable login provider.'));
         }
 
         return $this->redirectToPostedUrl();
@@ -96,11 +96,11 @@ class LoginProvidersController extends Controller
 
         if (Social::$plugin->getLoginProviders()->disableLoginProvider($loginProvider))
         {
-            Craft::$app->getSession()->setNotice(Craft::t('app', 'Login provider disabled.'));
+            Craft::$app->getSession()->setNotice(Craft::t('social', 'Login provider disabled.'));
         }
         else
         {
-            Craft::$app->getSession()->setError(Craft::t('app', 'Couldn’t disable login provider.'));
+            Craft::$app->getSession()->setError(Craft::t('social', 'Couldn’t disable login provider.'));
         }
 
         return $this->redirectToPostedUrl();

@@ -184,7 +184,7 @@ class LoginAccount extends Element
         $sources = array(
             array(
                 'key' => '*',
-                'label' => Craft::t('app', 'All login accounts'),
+                'label' => Craft::t('social', 'All login accounts'),
                 'criteria' => [],
                 'hasThumbs' => false
             )
@@ -194,7 +194,7 @@ class LoginAccount extends Element
 
         if ($loginProviders)
         {
-            $sources[] = array('heading' => Craft::t('app', 'Login Providers'));
+            $sources[] = array('heading' => Craft::t('social', 'Login Providers'));
 
             foreach ($loginProviders as $loginProvider)
             {
@@ -203,7 +203,7 @@ class LoginAccount extends Element
 
                 $sources[] = array(
                     'key' => $key,
-                    'label'     => Craft::t('app', $loginProvider->getName()),
+                    'label'     => Craft::t('social', $loginProvider->getName()),
                     'criteria'  => array('providerHandle' => $providerHandle),
                     'hasThumbs' => false
                 );
@@ -229,8 +229,8 @@ class LoginAccount extends Element
 
         $deleteAction = Craft::$app->elements->getAction('Delete');
         $deleteAction->setParams(array(
-            'confirmationMessage' => Craft::t('app', 'Are you sure you want to delete the selected login accounts?'),
-            'successMessage'      => Craft::t('app', 'Login accounts deleted.'),
+            'confirmationMessage' => Craft::t('social', 'Are you sure you want to delete the selected login accounts?'),
+            'successMessage'      => Craft::t('social', 'Login accounts deleted.'),
         ));
         $actions[] = $deleteAction;
 
@@ -266,27 +266,27 @@ class LoginAccount extends Element
         {
             // Start with Email and don't even give Username as an option
             $attributes = array(
-                'email' => Craft::t('app', 'Email'),
+                'email' => Craft::t('social', 'Email'),
             );
         }
         else
         {
             $attributes = array(
-                'username' => Craft::t('app', 'Username'),
-                'email'    => Craft::t('app', 'Email'),
+                'username' => Craft::t('social', 'Username'),
+                'email'    => Craft::t('social', 'Email'),
             );
         }
 
-        $attributes['firstName']     = Craft::t('app', 'First Name');
-        $attributes['lastName']      = Craft::t('app', 'Last Name');
+        $attributes['firstName']     = Craft::t('social', 'First Name');
+        $attributes['lastName']      = Craft::t('social', 'Last Name');
 
-        $attributes['providerHandle'] = Craft::t('app', 'Login Provider');
-        $attributes['socialUid']     = Craft::t('app', 'Social User ID');
+        $attributes['providerHandle'] = Craft::t('social', 'Login Provider');
+        $attributes['socialUid']     = Craft::t('social', 'Social User ID');
 
-        $attributes['userId']        = Craft::t('app', 'User ID');
-        $attributes['lastLoginDate'] = Craft::t('app', 'Last Login');
-        $attributes['dateCreated']   = Craft::t('app', 'Date Created');
-        $attributes['dateUpdated']   = Craft::t('app', 'Date Updated');
+        $attributes['userId']        = Craft::t('social', 'User ID');
+        $attributes['lastLoginDate'] = Craft::t('social', 'Last Login');
+        $attributes['dateCreated']   = Craft::t('social', 'Date Created');
+        $attributes['dateUpdated']   = Craft::t('social', 'Date Updated');
 
         // Allow plugins to modify the attributes
         // Craft::$app->getPlugins()->call('modifyLoginAccountSortableAttributes', array(&$attributes));
@@ -399,28 +399,28 @@ class LoginAccount extends Element
         {
             // Start with Email and don't even give Username as an option
             $attributes = array(
-                'email' => array('label' => Craft::t('app', 'Email')),
+                'email' => array('label' => Craft::t('social', 'Email')),
             );
         }
         else
         {
             $attributes = array(
-                'username' => array('label' => Craft::t('app', 'Username')),
-                'email'    => array('label' => Craft::t('app', 'Email')),
+                'username' => array('label' => Craft::t('social', 'Username')),
+                'email'    => array('label' => Craft::t('social', 'Email')),
             );
         }
 
-        $attributes['fullName'] = array('label' => Craft::t('app', 'Full Name'));
-        $attributes['firstName'] = array('label' => Craft::t('app', 'First Name'));
-        $attributes['lastName'] = array('label' => Craft::t('app', 'Last Name'));
+        $attributes['fullName'] = array('label' => Craft::t('social', 'Full Name'));
+        $attributes['firstName'] = array('label' => Craft::t('social', 'First Name'));
+        $attributes['lastName'] = array('label' => Craft::t('social', 'Last Name'));
 
-        $attributes['providerHandle'] = array('label' => Craft::t('app', 'Login Provider'));
-        $attributes['socialUid']     = array('label' => Craft::t('app', 'Social User ID'));
+        $attributes['providerHandle'] = array('label' => Craft::t('social', 'Login Provider'));
+        $attributes['socialUid']     = array('label' => Craft::t('social', 'Social User ID'));
 
-        $attributes['userId']        = array('label' => Craft::t('app', 'User ID'));
-        $attributes['lastLoginDate'] = array('label' => Craft::t('app', 'Last Login'));
-        $attributes['dateCreated']   = array('label' => Craft::t('app', 'Date Created'));
-        $attributes['dateUpdated']   = array('label' => Craft::t('app', 'Date Updated'));
+        $attributes['userId']        = array('label' => Craft::t('social', 'User ID'));
+        $attributes['lastLoginDate'] = array('label' => Craft::t('social', 'Last Login'));
+        $attributes['dateCreated']   = array('label' => Craft::t('social', 'Date Created'));
+        $attributes['dateUpdated']   = array('label' => Craft::t('social', 'Date Updated'));
 
 
         // Allow plugins to modify the attributes
