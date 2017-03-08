@@ -15,8 +15,8 @@
 
         {{ forms.lightswitchField({
             first: true,
-            label: 'Enable Social Login'|t,
-            instructions: "When disabled, users will not be able to social login & register."|t,
+            label: 'Enable Social Login'|t('social'),
+            instructions: "When disabled, users will not be able to social login & register."|t('social'),
             name: 'settings[enableSocialLogin]',
             on:   settings.enableSocialLogin,
             toggle: 'enable-sociallogin'
@@ -25,8 +25,8 @@
         <div id="enable-sociallogin"{% if not settings.enableSocialLogin %} class="hidden"{% endif %}>
 
             {{ forms.lightswitchField({
-                label: 'Enable Social Registration'|t,
-                instructions: "When disabled, users will not able to register with a social service, but will still be able to social login to an existing account."|t,
+                label: 'Enable Social Registration'|t('social'),
+                instructions: "When disabled, users will not able to register with a social service, but will still be able to social login to an existing account."|t('social'),
                 name: 'settings[enableSocialRegistration]',
                 on:   settings.enableSocialRegistration,
                 toggle: 'enable-socialregistration'
@@ -35,14 +35,14 @@
             <div id="enable-socialregistration"{% if not settings.enableSocialRegistration %} class="hidden"{% endif %}>
 
                 <div id="defaultGroup">
-                    {% set groups = [{ label: "None"|t, value: '' }] %}
+                    {% set groups = [{ label: "None"|t('social'), value: '' }] %}
                     {% for group in craft.app.userGroups.getAllGroups() %}
                         {% set groups = groups|merge([{ label: group.name, value: group.id }]) %}
                     {% endfor %}
 
                     {{ forms.selectField({
-                        label: "Default User Group"|t,
-                        instructions: "Choose a user group that users will be added to when registering with a social service."|t,
+                        label: "Default User Group"|t('social'),
+                        instructions: "Choose a user group that users will be added to when registering with a social service."|t('social'),
                         name: 'settings[defaultGroup]',
                         options: groups,
                         value: (settings.defaultGroup is defined ? settings.defaultGroup : null)
@@ -50,8 +50,8 @@
                 </div>
 
                 {{ forms.lightswitchField({
-                    label: 'Auto-Fill Profile'|t,
-                    instructions: "Automatically fills user fields when a user registers, based on `userMapping` config variables."|t,
+                    label: 'Auto-Fill Profile'|t('social'),
+                    instructions: "Automatically fills user fields when a user registers, based on `userMapping` config variables."|t('social'),
                     name: 'settings[autoFillProfile]',
                     on:   settings.autoFillProfile
                 }) }}
@@ -59,8 +59,8 @@
             </div>
 
             {{ forms.lightswitchField({
-                label: 'Enable CP Social Login'|t,
-                instructions: "Toggles the visibility of Social Login buttons on the Control Panel's login screen."|t,
+                label: 'Enable CP Social Login'|t('social'),
+                instructions: "Toggles the visibility of Social Login buttons on the Control Panel's login screen."|t('social'),
                 name: 'settings[enableCpLogin]',
                 on:   settings.enableCpLogin
             }) }}
@@ -68,8 +68,8 @@
         </div>
 
         {{ forms.lightswitchField({
-            label: 'Show CP Section'|t,
-            instructions: "Toggles the visibility of the Social Login menu item in the Control Panel sidebar."|t,
+            label: 'Show CP Section'|t('social'),
+            instructions: "Toggles the visibility of the Social Login menu item in the Control Panel sidebar."|t('social'),
             name: 'settings[showCpSection]',
             on:   settings.showCpSection
         }) }}
