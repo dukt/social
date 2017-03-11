@@ -97,35 +97,6 @@ class Plugin extends \craft\base\Plugin
     }
 
     /**
-     * Returns the HTML of the user table attribute.
-     *
-     * @param UserModel $user
-     * @param           $attribute
-     *
-     * @return string
-     */
-/*    public function getUserTableAttributeHtml(UserModel $user, $attribute)
-    {
-        if ($attribute == 'loginAccounts') {
-            $loginAccounts = $this->loginAccounts->getLoginAccountsByUserId($user->id);
-
-            if (!$loginAccounts) {
-                return '';
-            }
-
-            $variables = [
-                'loginAccounts' => $loginAccounts,
-            ];
-
-            Craft::$app->getView()->registerCssFile('social/css/social.css');
-
-            $html = Craft::$app->getView()->renderTemplate('social/users/_login-accounts-column', $variables, true);
-
-            return $html;
-        }
-    }*/
-
-    /**
      * Defines additional user table attributes.
      *
      * @return array
