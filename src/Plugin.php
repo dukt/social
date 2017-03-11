@@ -97,19 +97,6 @@ class Plugin extends \craft\base\Plugin
     }
 
     /**
-     * Defines additional user table attributes.
-     *
-     * @return array
-     */
-    public function defineAdditionalUserTableAttributes()
-    {
-        return [
-            'loginAccounts' => Craft::t('social', 'Login Accounts')
-        ];
-    }
-
-
-    /**
      * @return mixed
      */
     public function defineTemplateComponent()
