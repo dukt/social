@@ -616,7 +616,7 @@ class LoginAccountsController extends Controller
                     }
 
                     if ($photoUrl) {
-                        // Social::$plugin->getSocial()->saveRemotePhoto($photoUrl, $newUser);
+                        Social::$plugin->getLoginAccounts()->saveRemotePhoto($photoUrl, $newUser);
                     }
                 }
 
