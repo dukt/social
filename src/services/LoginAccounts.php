@@ -8,6 +8,7 @@
 namespace dukt\social\services;
 
 use Craft;
+use craft\helpers\FileHelper;
 use yii\base\Component;
 use craft\elements\User as UserModel;
 use dukt\social\elements\LoginAccount;
@@ -307,19 +308,50 @@ class LoginAccounts extends Component
     {
         $filename = 'photo';
 
-        $tempPath = Craft::$app->path->getTempPath().'social/userphotos/'.$user->email.'/';
-        IOHelper::createFolder($tempPath);
-        $tempFilepath = $tempPath.$filename;
-        $client = new \Guzzle\Http\Client();
-        $response = $client->get($photoUrl)
-            ->setResponseBody($tempPath.$filename)
-            ->send();
+        $tempPath = Craft::$app->path->getTempPath().'/social/userphotos/'.$user->email.'/';
 
-        $extension = substr($response->getContentType(), strpos($response->getContentType(), "/") + 1);
+        FileHelper::createDirectory($tempPath);
 
-        IOHelper::rename($tempPath.$filename, $tempPath.$filename.'.'.$extension);
+        $client = new \GuzzleHttp\Client();
 
-        Craft::$app->users->deleteUserPhoto($user);
+        $response = $client->request('GET', $photoUrl, array(
+            'save_to' => $tempPath.$filename
+        ));
+
+        if ($response->getStatusCode() != 200)
+        {
+            return;
+        }
+
+        $contentTypes = $response->getHeader('Content-Type');
+
+        if(is_array($contentTypes) && isset($contentTypes[0])) {
+            switch($contentTypes[0]) {
+                case 'image/gif':
+                    $extension = 'gif';
+                    break;
+                case 'image/jpeg':
+                    $extension = 'jpg';
+                    break;
+                case 'image/png':
+                    $extension = 'png';
+                    break;
+                case 'image/svg+xml':
+                    $extension = 'svg';
+                    break;
+
+                default:
+                    throw new \Exception('Image type “'.$contentTypes[0].'” not supported');
+            }
+        } else {
+            throw new \Exception('Image type not supported');
+        }
+
+        rename($tempPath.$filename, $tempPath.$filename.'.'.$extension);
+
+        if($user->photoId) {
+            Craft::$app->users->deleteUserPhoto($user);
+        }
 
         $image = Craft::$app->images->loadImage($tempPath.$filename.'.'.$extension);
         $imageWidth = $image->getWidth();
@@ -330,9 +362,9 @@ class LoginAccounts extends Component
         $verticalMargin = ($imageHeight - $dimension) / 2;
         $image->crop($horizontalMargin, $imageWidth - $horizontalMargin, $verticalMargin, $imageHeight - $verticalMargin);
 
-        Craft::$app->users->saveUserPhoto($filename.'.'.$extension, $image, $user);
+        Craft::$app->users->saveUserPhoto($tempPath.$filename.'.'.$extension, $user, $filename.'.'.$extension);
 
-        IOHelper::deleteFile($tempPath.$filename.'.'.$extension);
+        FileHelper::removeFile($tempPath.$filename.'.'.$extension);
 
         return true;
     }
