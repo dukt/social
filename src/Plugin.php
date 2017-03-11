@@ -58,11 +58,8 @@ class Plugin extends \craft\base\Plugin
         $this->hasCpSection = $this->hasCpSection();
 
         $this->setComponents([
-            'social' => \dukt\social\services\Social::class,
             'loginAccounts' => \dukt\social\services\LoginAccounts::class,
             'loginProviders' => \dukt\social\services\LoginProviders::class,
-            'userSession' => \dukt\social\services\UserSession::class,
-            'oauth' => \dukt\social\services\Oauth::class,
         ]);
 
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, [$this, 'registerCpUrlRules']);
