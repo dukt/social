@@ -399,19 +399,18 @@ class LoginAccount extends Element
         {
             // Start with Email and don't even give Username as an option
             $attributes = array(
-                'email' => array('label' => Craft::t('social', 'Email')),
+                'users.email' => array('label' => Craft::t('social', 'Email')),
             );
         }
         else
         {
             $attributes = array(
                 'users.username' => array('label' => Craft::t('social', 'Username')),
-                'email'    => array('label' => Craft::t('social', 'Email')),
+                'users.email'    => array('label' => Craft::t('social', 'Email')),
             );
         }
 
-        $attributes['users.fullName'] = array('label' => Craft::t('social', 'Full Name'));
-        $attributes['users.firstName'] = array('label' => Craft::t('social', 'First Name'));
+        $attributes['firstName'] = array('label' => Craft::t('social', 'First Name'));
         $attributes['lastName'] = array('label' => Craft::t('social', 'Last Name'));
 
         $attributes['providerHandle'] = array('label' => Craft::t('social', 'Login Provider'));
@@ -448,6 +447,6 @@ class LoginAccount extends Element
      */
     protected static function defineDefaultTableAttributes(string $source): array
     {
-        return ['users.username', 'fullName', 'providerHandle', 'socialUid', 'lastLoginDate'];
+        return ['users.username', 'providerHandle', 'socialUid', 'lastLoginDate'];
     }
 }
