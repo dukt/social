@@ -252,7 +252,7 @@ class LoginAccount extends Element
      */
     protected static function defineSearchableAttributes(): array
     {
-        return array('username', 'email', 'firstName', 'lastName', 'fullName', 'providerHandle', 'socialUid', 'userId');
+        return array('users.username', 'email', 'firstName', 'lastName', 'fullName', 'providerHandle', 'socialUid', 'userId');
     }
 
     /**
@@ -266,19 +266,19 @@ class LoginAccount extends Element
         {
             // Start with Email and don't even give Username as an option
             $attributes = array(
-                'email' => Craft::t('social', 'Email'),
+                'users.email' => Craft::t('social', 'Email'),
             );
         }
         else
         {
             $attributes = array(
-                'username' => Craft::t('social', 'Username'),
-                'email'    => Craft::t('social', 'Email'),
+                'users.username' => Craft::t('social', 'Username'),
+                'users.email'    => Craft::t('social', 'Email'),
             );
         }
 
-        $attributes['firstName']     = Craft::t('social', 'First Name');
-        $attributes['lastName']      = Craft::t('social', 'Last Name');
+        $attributes['users.firstName']     = Craft::t('social', 'First Name');
+        $attributes['users.lastName']      = Craft::t('social', 'Last Name');
 
         $attributes['providerHandle'] = Craft::t('social', 'Login Provider');
         $attributes['socialUid']     = Craft::t('social', 'Social User ID');
@@ -405,13 +405,13 @@ class LoginAccount extends Element
         else
         {
             $attributes = array(
-                'username' => array('label' => Craft::t('social', 'Username')),
+                'users.username' => array('label' => Craft::t('social', 'Username')),
                 'email'    => array('label' => Craft::t('social', 'Email')),
             );
         }
 
-        $attributes['fullName'] = array('label' => Craft::t('social', 'Full Name'));
-        $attributes['firstName'] = array('label' => Craft::t('social', 'First Name'));
+        $attributes['users.fullName'] = array('label' => Craft::t('social', 'Full Name'));
+        $attributes['users.firstName'] = array('label' => Craft::t('social', 'First Name'));
         $attributes['lastName'] = array('label' => Craft::t('social', 'Last Name'));
 
         $attributes['providerHandle'] = array('label' => Craft::t('social', 'Login Provider'));
@@ -448,6 +448,6 @@ class LoginAccount extends Element
      */
     protected static function defineDefaultTableAttributes(string $source): array
     {
-        return ['username', 'fullName', 'providerHandle', 'socialUid', 'lastLoginDate'];
+        return ['users.username', 'fullName', 'providerHandle', 'socialUid', 'lastLoginDate'];
     }
 }

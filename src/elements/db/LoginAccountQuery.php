@@ -75,15 +75,14 @@ class LoginAccountQuery extends ElementQuery
 
     protected function beforePrepare(): bool
     {
-        // join in the products table
-
-        /*$query->join('social_login_accounts login_accounts', 'login_accounts.id = elements.id');
-        $query->leftJoin('users users', 'login_accounts.userId = users.id');*/
+        /*
+        $query->join('social_login_accounts login_accounts', 'login_accounts.id = elements.id');
+        $query->leftJoin('users users', 'login_accounts.userId = users.id');
+        */
 
         $this->joinElementTable('social_login_accounts');
         $this->query->leftJoin('{{%users}} users', '[[social_login_accounts.userId]] = [[users.id]]');
 
-        // select the userId column
         $this->query->select([
             'social_login_accounts.userId',
             'social_login_accounts.providerHandle',
@@ -127,7 +126,6 @@ class LoginAccountQuery extends ElementQuery
         if ($this->lastLoginDate) {
             $this->subQuery->andWhere(Db::parseParam('users.lastLoginDate', $this->lastLoginDate));
         }
-
 
         return parent::beforePrepare();
     }
