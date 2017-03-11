@@ -8,6 +8,9 @@
 namespace dukt\social;
 
 use Craft;
+use craft\elements\User;
+use craft\events\RegisterElementTableAttributesEvent;
+use craft\events\SetElementTableAttributeHtmlEvent;
 use dukt\social\base\PluginTrait;
 use yii\base\Event;
 use craft\web\UrlManager;
@@ -64,9 +67,76 @@ class Plugin extends \craft\base\Plugin
 
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, [$this, 'registerCpUrlRules']);
 
+
+        // Additional user table attribute
+
+        Event::on(User::class, User::EVENT_REGISTER_TABLE_ATTRIBUTES, function(RegisterElementTableAttributesEvent $event) {
+            $event->tableAttributes['loginAccounts'] = Craft::t('social', 'Login Accounts');
+        });
+
+        Event::on(User::class, User::EVENT_SET_TABLE_ATTRIBUTE_HTML, function(SetElementTableAttributeHtmlEvent $event) {
+            if($event->attribute === 'loginAccounts') {
+
+                $user = $event->sender;
+
+                $loginAccounts = $this->getLoginAccounts()->getLoginAccountsByUserId($user->Id);
+
+                if ($loginAccounts) {
+                    // Craft::$app->getView()->registerCssFile('social/css/social.css');
+                    $event->html = Craft::$app->getView()->renderTemplate('social/users/_login-accounts-column', [
+                        'loginAccounts' => $loginAccounts,
+                    ]);
+                } else {
+                    $event->html = '';
+                }
+            }
+        });
+
         // $this->initEventListeners();
         $this->initTemplateHooks();
     }
+
+    /**
+     * Returns the HTML of the user table attribute.
+     *
+     * @param UserModel $user
+     * @param           $attribute
+     *
+     * @return string
+     */
+/*    public function getUserTableAttributeHtml(UserModel $user, $attribute)
+    {
+        if ($attribute == 'loginAccounts') {
+            $loginAccounts = $this->loginAccounts->getLoginAccountsByUserId($user->id);
+
+            if (!$loginAccounts) {
+                return '';
+            }
+
+            $variables = [
+                'loginAccounts' => $loginAccounts,
+            ];
+
+            Craft::$app->getView()->registerCssFile('social/css/social.css');
+
+            $html = Craft::$app->getView()->renderTemplate('social/users/_login-accounts-column', $variables, true);
+
+            return $html;
+        }
+    }*/
+
+    /**
+     * Defines additional user table attributes.
+     *
+     * @return array
+     */
+    public function defineAdditionalUserTableAttributes()
+    {
+        return [
+            'loginAccounts' => Craft::t('social', 'Login Accounts')
+        ];
+    }
+
 
     /**
      * @return mixed
@@ -149,46 +219,6 @@ class Plugin extends \craft\base\Plugin
         return false;
     }
 
-    /**
-     * Defines additional user table attributes.
-     *
-     * @return array
-     */
-    public function defineAdditionalUserTableAttributes()
-    {
-        return [
-            'loginAccounts' => Craft::t('social', 'Login Accounts')
-        ];
-    }
-
-    /**
-     * Returns the HTML of the user table attribute.
-     *
-     * @param UserModel $user
-     * @param           $attribute
-     *
-     * @return string
-     */
-    public function getUserTableAttributeHtml(UserModel $user, $attribute)
-    {
-        if ($attribute == 'loginAccounts') {
-            $loginAccounts = $this->loginAccounts->getLoginAccountsByUserId($user->id);
-
-            if (!$loginAccounts) {
-                return '';
-            }
-
-            $variables = [
-                'loginAccounts' => $loginAccounts,
-            ];
-
-            Craft::$app->getView()->registerCssFile('social/css/social.css');
-
-            $html = Craft::$app->getView()->renderTemplate('social/users/_login-accounts-column', $variables, true);
-
-            return $html;
-        }
-    }
     // Protected Methods
     // =========================================================================
 
