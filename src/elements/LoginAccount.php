@@ -252,7 +252,7 @@ class LoginAccount extends Element
      */
     protected static function defineSearchableAttributes(): array
     {
-        return array('users.username', 'email', 'firstName', 'lastName', 'fullName', 'providerHandle', 'socialUid', 'userId');
+        return array('username', 'email', 'firstName', 'lastName', 'fullName', 'providerHandle', 'socialUid', 'userId');
     }
 
     /**
