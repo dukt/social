@@ -13,11 +13,11 @@ class m160518_000001_social_drop_tokenid_column extends BaseMigration
      */
     public function safeUp()
     {
-        Craft::log('Removing the `tokenId` column from the `social_login_accounts` table', LogLevel::Info, true);
+        echo 'Removing the `tokenId` column from the `social_login_accounts` table';
 
         craft()->db->createCommand()->dropColumn('social_login_accounts', 'tokenId');
 
-        Craft::log('Done removing the `tokenId` column from the `social_login_accounts` table', LogLevel::Info, true);
+        echo 'Done removing the `tokenId` column from the `social_login_accounts` table';
 
         return true;
     }

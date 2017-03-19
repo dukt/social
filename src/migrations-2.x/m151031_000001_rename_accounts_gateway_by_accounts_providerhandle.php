@@ -13,11 +13,11 @@ class m151031_000001_rename_accounts_gateway_by_accounts_providerhandle extends 
      */
     public function safeUp()
     {
-        Craft::log('Renaming social_accounts `gateway` column by `providerHandle`', LogLevel::Info, true);
+        echo 'Renaming social_accounts `gateway` column by `providerHandle`';
 
         MigrationHelper::renameColumn('social_accounts', 'gateway', 'providerHandle');
 
-        Craft::log('Done renaming social_accounts `gateway` column by `providerHandle`', LogLevel::Info, true);
+        echo 'Done renaming social_accounts `gateway` column by `providerHandle`';
 
         return true;
     }

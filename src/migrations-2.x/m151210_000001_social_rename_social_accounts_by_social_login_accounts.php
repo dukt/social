@@ -13,11 +13,11 @@ class m151210_000001_social_rename_social_accounts_by_social_login_accounts exte
      */
     public function safeUp()
     {
-        Craft::log('Renaming `social_accounts` table to `social_login_accounts`', LogLevel::Info, true);
+        echo 'Renaming `social_accounts` table to `social_login_accounts`';
 
         MigrationHelper::renameTable('social_accounts', 'social_login_accounts');
 
-        Craft::log('Done renaming `social_accounts` table to `social_login_accounts`', LogLevel::Info, true);
+        echo 'Done renaming `social_accounts` table to `social_login_accounts`';
 
         return true;
     }

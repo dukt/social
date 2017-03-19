@@ -13,11 +13,11 @@ class m151010_000002_rename_accounts_provider_column_by_gateway extends BaseMigr
      */
     public function safeUp()
     {
-        Craft::log('Renaming social_accounts `provider` column by `gateway`', LogLevel::Info, true);
+        echo 'Renaming social_accounts `provider` column by `gateway`';
 
         MigrationHelper::renameColumn('social_accounts', 'provider', 'gateway');
 
-        Craft::log('Done renaming social_accounts `provider` column by `gateway`', LogLevel::Info, true);
+        echo 'Done renaming social_accounts `provider` column by `gateway`';
 
         return true;
     }

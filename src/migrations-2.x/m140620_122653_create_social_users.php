@@ -15,7 +15,7 @@ class m140620_122653_create_social_users extends BaseMigration
     {
         if (!craft()->db->tableExists('social_users'))
         {
-            Craft::log('Creating the social_users table.', LogLevel::Info, true);
+            echo 'Creating the social_users table.';
 
             // Create the craft_social_users table
             craft()->db->createCommand()->createTable('social_users', array(

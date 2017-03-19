@@ -13,11 +13,11 @@ class m160510_000001_social_make_elemental extends BaseMigration
      */
     public function safeUp()
     {
-        Craft::log('Creating elements for all rows in the `social_login_accounts` table', LogLevel::Info, true);
+        echo 'Creating elements for all rows in the `social_login_accounts` table';
 
         MigrationHelper::makeElemental('social_login_accounts', 'Social_LoginAccount');
 
-        Craft::log('Done creating elements for all rows in the `social_login_accounts` table', LogLevel::Info, true);
+        echo 'Done creating elements for all rows in the `social_login_accounts` table';
 
         return true;
     }

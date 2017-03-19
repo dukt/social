@@ -13,13 +13,13 @@ class m151010_000001_interchange_social_users_and_accounts_tables extends BaseMi
      */
     public function safeUp()
     {
-        Craft::log('Interchanging social_users and social_accounts table names', LogLevel::Info, true);
+        echo 'Interchanging social_users and social_accounts table names';
 
         MigrationHelper::renameTable('social_users', 'social_accounts_temp');
         MigrationHelper::renameTable('social_accounts', 'social_users');
         MigrationHelper::renameTable('social_accounts_temp', 'social_accounts');
 
-        Craft::log('Done interchanging social_users and social_accounts table names', LogLevel::Info, true);
+        echo 'Done interchanging social_users and social_accounts table names';
 
         return true;
     }
