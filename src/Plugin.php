@@ -175,27 +175,6 @@ class Plugin extends \craft\base\Plugin
         return false;
     }
 
-    // Protected Methods
-    // =========================================================================
-
-    /**
-     * Define Social Settings.
-     *
-     * @return array
-     */
-    protected function defineSettings()
-    {
-        return [
-            'enableSocialRegistration' => [AttributeType::Bool, 'default' => true],
-            'enableSocialLogin' => [AttributeType::Bool, 'default' => true],
-            'loginProviders' => [AttributeType::Mixed],
-            'defaultGroup' => [AttributeType::Number, 'default' => null],
-            'autoFillProfile' => [AttributeType::Bool, 'default' => true],
-            'showCpSection' => [AttributeType::Bool, 'default' => true],
-            'enableCpLogin' => [AttributeType::Bool, 'default' => false],
-        ];
-    }
-
     // Private Methods
     // =========================================================================
 
