@@ -1,8 +1,8 @@
 <?php
 /**
- * @link      https://dukt.net/craft/social/
+ * @link      https://dukt.net/social/
  * @copyright Copyright (c) 2017, Dukt
- * @license   https://dukt.net/craft/social/docs/license
+ * @license   https://dukt.net/social/docs/license
  */
 
 namespace dukt\social\base;
