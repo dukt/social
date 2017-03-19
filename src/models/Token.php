@@ -11,6 +11,13 @@ use craft\base\Model;
 
 class Token extends Model
 {
+    /**
+     * @var string|null Provider handle
+     */
     public $providerHandle;
+
+    /**
+     * @var mixed|null Token
+     */
     public $token;
 }
