@@ -1,10 +1,12 @@
 <?php
-namespace Craft;
+namespace social\migrations;
+
+use craft\db\Migration;
 
 /**
  * The class name is the UTC timestamp in the format of mYYMMDD_HHMMSS_pluginHandle_migrationName
  */
-class m141106_220045_social_add_accounts_table extends BaseMigration
+class m141106_220045_social_add_accounts_table extends Migration
 {
     /**
      * Any migration code in here is wrapped inside of a transaction.
@@ -13,24 +15,36 @@ class m141106_220045_social_add_accounts_table extends BaseMigration
      */
     public function safeUp()
     {
-        if (!craft()->db->tableExists('social_accounts'))
-        {
-            // Create the craft_social_accounts table
-            craft()->db->createCommand()->createTable('social_accounts', array(
-                'userId'            => array('column' => 'integer', 'required' => true),
-                'hasEmail'          => array('maxLength' => 1, 'default' => false, 'required' => true, 'column' => 'tinyint', 'unsigned' => true),
-                'hasPassword'       => array('maxLength' => 1, 'default' => false, 'required' => true, 'column' => 'tinyint', 'unsigned' => true),
-                'temporaryEmail'    => array('required' => false),
-                'temporaryPassword' => array('required' => true),
-            ), null, true);
+        $this->createTable('{{%social_accounts}}', [
+            'id' => $this->primaryKey(),
+            'userId' => $this->integer()->notNull(),
+            'hasEmail' => $this->boolean()->notNull()->defaultValue(false),
+            'hasPassword' => $this->boolean()->notNull()->defaultValue(false),
+            'temporaryEmail' => $this->string(),
+            'temporaryPassword' => $this->string()->notNull(),
 
-            // Add indexes to craft_social_accounts
-            craft()->db->createCommand()->createIndex('social_accounts', 'userId', true);
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+        ]);
 
-            // Add foreign keys to craft_social_accounts
-            craft()->db->createCommand()->addForeignKey('social_accounts', 'userId', 'users', 'id', 'CASCADE', null);
-        }
+
+        // Add indexes to craft_social_users
+        $this->createIndex($this->db->getIndexName('{{%social_accounts}}', 'userId', true), '{{%social_accounts}}', 'userId', true);
+
+        // Add foreign keys to craft_social_accounts
+        $this->addForeignKey($this->db->getForeignKeyName('{{%social_accounts}}', 'userId'), '{{%social_accounts}}', 'userId', '{{%users}}', 'id', 'CASCADE', null);
 
         return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function safeDown()
+    {
+        echo "m141106_220045_social_add_accounts_table cannot be reverted.\n";
+
+        return false;
     }
 }

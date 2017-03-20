@@ -1,10 +1,12 @@
 <?php
-namespace Craft;
+namespace social\migrations;
+
+use craft\db\Migration;
 
 /**
  * The class name is the UTC timestamp in the format of mYYMMDD_HHMMSS_pluginHandle_migrationName
  */
-class m160518_000001_social_drop_tokenid_column extends BaseMigration
+class m160518_000001_social_drop_tokenid_column extends Migration
 {
     /**
      * Any migration code in here is wrapped inside of a transaction.
@@ -13,12 +15,18 @@ class m160518_000001_social_drop_tokenid_column extends BaseMigration
      */
     public function safeUp()
     {
-        echo 'Removing the `tokenId` column from the `social_login_accounts` table';
-
-        craft()->db->createCommand()->dropColumn('social_login_accounts', 'tokenId');
-
-        echo 'Done removing the `tokenId` column from the `social_login_accounts` table';
+        $this->dropColumn('{{%social_login_accounts}}', 'tokenId');
 
         return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function safeDown()
+    {
+        echo "m160510_000001_social_make_elemental cannot be reverted.\n";
+
+        return false;
     }
 }
