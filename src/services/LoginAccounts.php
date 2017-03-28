@@ -364,8 +364,6 @@ class LoginAccounts extends Component
 
         Craft::$app->users->saveUserPhoto($tempPath.$filename.'.'.$extension, $user, $filename.'.'.$extension);
 
-        FileHelper::removeFile($tempPath.$filename.'.'.$extension);
-
         return true;
     }
 }
