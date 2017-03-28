@@ -79,7 +79,7 @@ class LoginAccount extends Element
      */
     public function __toString()
     {
-        if (Craft::$app->getConfig()->get('useEmailAsUsername'))
+        if (Craft::$app->getConfig()->getGeneral()->useEmailAsUsername)
         {
             return (string) $this->email;
         }
@@ -262,7 +262,7 @@ class LoginAccount extends Element
      */
     protected static function defineSortOptions(): array
     {
-        if (Craft::$app->getConfig()->get('useEmailAsUsername'))
+        if (Craft::$app->getConfig()->getGeneral()->useEmailAsUsername)
         {
             // Start with Email and don't even give Username as an option
             $attributes = array(
@@ -395,7 +395,7 @@ class LoginAccount extends Element
      */
     protected static function defineTableAttributes(): array
     {
-        if (Craft::$app->getConfig()->get('useEmailAsUsername'))
+        if (Craft::$app->getConfig()->getGeneral()->useEmailAsUsername)
         {
             // Start with Email and don't even give Username as an option
             $attributes = array(

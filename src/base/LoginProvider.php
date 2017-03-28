@@ -25,7 +25,7 @@ abstract class LoginProvider implements LoginProviderInterface
     public function getInfos()
     {
         $handle = $this->getHandle();
-        $loginProvidersConfig = Craft::$app->getConfig()->get('loginProviders', 'social');
+        $loginProvidersConfig = Social::$plugin->getSettings()->loginProviders;
 
         if (isset($loginProvidersConfig[$handle])) {
             return $loginProvidersConfig[$handle];
@@ -166,16 +166,14 @@ abstract class LoginProvider implements LoginProviderInterface
      */
     public function getScope()
     {
-        $providerConfig = Craft::$app->getConfig()->get($this->getHandle(), 'social');
+        $providerHandle = $this->getHandle();
+        $loginProvidersConfig = Social::$plugin->getSettings()->loginProviders;
 
-        if ($providerConfig && isset($providerConfig['scope']))
-        {
-            return $providerConfig['scope'];
+        if(isset($loginProvidersConfig[$providerHandle]['scope'])) {
+            return $loginProvidersConfig[$providerHandle]['scope'];
         }
-        else
-        {
-            return $this->getDefaultScope();
-        }
+
+        return $this->getDefaultScope();
     }
 
     /**
@@ -185,16 +183,14 @@ abstract class LoginProvider implements LoginProviderInterface
      */
     public function getAuthorizationOptions()
     {
-        $providerConfig = Craft::$app->getConfig()->get($this->getHandle(), 'social');
+        $providerHandle = $this->getHandle();
+        $loginProvidersConfig = Social::$plugin->getSettings()->loginProviders;
 
-        if ($providerConfig && isset($providerConfig['authorizationOptions']))
-        {
-            return $providerConfig['authorizationOptions'];
+        if(isset($loginProvidersConfig[$providerHandle]['authorizationOptions'])) {
+            return $loginProvidersConfig[$providerHandle]['authorizationOptions'];
         }
-        else
-        {
-            return $this->getDefaultAuthorizationOptions();
-        }
+
+        return $this->getDefaultAuthorizationOptions();
     }
 
     /**
@@ -207,9 +203,9 @@ abstract class LoginProvider implements LoginProviderInterface
         // get plugin settings
         $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $settings = $plugin->getSettings();
-        $loginProviders = $settings->loginProviders;
+        $loginProvidersConfig = $settings->loginProviders;
 
-        if (isset($loginProviders[$this->getHandle()]['enabled']) && $loginProviders[$this->getHandle()]['enabled'])
+        if (isset($loginProvidersConfig[$this->getHandle()]['enabled']) && $loginProvidersConfig[$this->getHandle()]['enabled'])
         {
             return true;
         }

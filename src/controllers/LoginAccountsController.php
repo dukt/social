@@ -489,7 +489,7 @@ class LoginAccountsController extends Controller
         if (!empty($attributes['email'])) {
             // check domain locking
 
-            $lockDomains = Craft::$app->getConfig()->get('lockDomains', 'social');
+            $lockDomains = Social::$plugin->getSettings()->lockDomains;
 
             if (count($lockDomains) > 0) {
                 $domainRejected = true;
@@ -540,8 +540,12 @@ class LoginAccountsController extends Controller
                 */
                 $variables = $attributes;
 
-                $providerConfig = Craft::$app->getConfig()->get($providerHandle, 'social');
-                $userMapping = isset($providerConfig['userMapping']) ? $providerConfig['userMapping'] : null;
+                $allMappings = Social::$plugin->getSettings()->userMapping;
+                $userMapping = null;
+
+                if(isset($loginProviders[$providerHandle])) {
+                    $userMapping = $loginProviders[$providerHandle];
+                }
 
                 $userModelAttributes = ['email', 'username', 'firstName', 'lastName', 'preferredLocale', 'weekStartDay'];
 
@@ -636,7 +640,7 @@ class LoginAccountsController extends Controller
                 */
 
             } else {
-                if (Craft::$app->getConfig()->get('allowEmailMatch', 'social') !== true) {
+                if (Social::$plugin->getSettings()->allowEmailMatch !== true) {
                     throw new Exception("An account already exists with this email: ".$attributes['email']);
                 }
             }

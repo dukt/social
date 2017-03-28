@@ -12,7 +12,6 @@ namespace dukt\social\migrations;
 
 use Craft;
 use craft\db\Migration;
-use craft\services\Config;
 
 /**
  * OAuth Install Migration
@@ -53,7 +52,7 @@ class Install extends Migration
      */
     public function safeUp()
     {
-        $this->driver = Craft::$app->getConfig()->get('driver', Config::CATEGORY_DB);
+        $this->driver = Craft::$app->getConfig()->getDb()->driver;
         $this->createTables();
         $this->createIndexes();
         $this->addForeignKeys();
@@ -74,7 +73,7 @@ class Install extends Migration
      */
     public function safeDown()
     {
-        $this->driver = Craft::$app->getConfig()->get('driver', Config::CATEGORY_DB);
+        $this->driver = Craft::$app->getConfig()->getDb()->driver;
         $this->removeIndexes();
         $this->removeTables();
         return true;

@@ -25,9 +25,9 @@ class Settings extends Model
     public $enableSocialLogin = true;
 
     /**
-     * @var mixed|null Login providers
+     * @var array Login providers
      */
-    public $loginProviders;
+    public $loginProviders = [];
 
     /**
      * @var int|null Default group
@@ -48,4 +48,19 @@ class Settings extends Model
      * @var bool Enable social login for the CP
      */
     public $enableCpLogin = false;
+
+    /**
+     * @var bool Allow email matching
+     */
+    public $allowEmailMatch = false;
+
+    /**
+     * @var array Lock social registration to specific domains
+     */
+    public $lockDomains = [];
+
+    /**
+     * @var array User mapping
+     */
+    public $userMapping = [];
 }
