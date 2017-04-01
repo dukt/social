@@ -22,6 +22,16 @@ To install the plugin, follow these instructions.
 
 3. In the Control Panel, go to Settings → Plugins and click the “Install” button for Social.
 
+## Reference
+
+Use [Sami](https://github.com/FriendsOfPHP/Sami) to generate the reference documentation:
+
+1. `cd reference`
+2. `curl -O http://get.sensiolabs.org/sami.phar`
+3. `php sami.phar update sami-config.php -v`
+
+Then open the `build/index.html` file in the browser.
+
 ## Learn more
 
 - [Social Plugin Overview](https://dukt.net/craft/social/)
