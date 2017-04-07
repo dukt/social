@@ -295,12 +295,7 @@ class LoginAccount extends Element
     }
 
     /**
-     * Returns the HTML that should be shown for a given element’s attribute in Table View.
-     *
-     * @param BaseElementModel $element
-     * @param string           $attribute
-     *
-     * @return string
+     * @inheritdoc
      */
     public function tableAttributeHtml(string $attribute): string
     {

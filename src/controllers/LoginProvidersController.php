@@ -36,7 +36,7 @@ class LoginProvidersController extends Controller
     /**
      * Edit Login Provider
      *
-     * @param array $variable Route variables
+     * @param string $handle Login provider’s handle
      *
      * @throws HttpException
      * @return null

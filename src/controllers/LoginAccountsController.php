@@ -57,7 +57,7 @@ class LoginAccountsController extends Controller
     /**
      * Edit User's Login Accounts
      *
-     * @param array $variable Route variables
+     * @param int $userId The user ID
      *
      * @throws HttpException
      * @return null

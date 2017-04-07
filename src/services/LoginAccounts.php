@@ -194,7 +194,7 @@ class LoginAccounts extends Component
     /**
      * Deletes login accounts
      *
-     * @param string|array $loginAccounts
+     * @param string|array $loginAccountStringOrArray
      *
      * @return bool
      */
@@ -205,12 +205,10 @@ class LoginAccounts extends Component
         }
 
         if (!is_array($loginAccountStringOrArray)) {
-            $loginAccounts = [$loginAccountStringOrArray];
-        } else {
-            $loginAccounts = $loginAccountStringOrArray;
+            $loginAccountStringOrArray = [$loginAccountStringOrArray];
         }
 
-        foreach ($loginAccounts as $loginAccount) {
+        foreach ($loginAccountStringOrArray as $loginAccount) {
             Craft::$app->elements->deleteElement($loginAccount);
         }
 
