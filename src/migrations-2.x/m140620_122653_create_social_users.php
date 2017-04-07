@@ -1,5 +1,5 @@
 <?php
-namespace social\migrations;
+namespace dukt\social\migrations;
 
 use craft\db\Migration;
 
