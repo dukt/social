@@ -5,7 +5,7 @@
  * @license   https://dukt.net/social/docs/license
  */
 
-namespace dukt\social\variables;
+namespace dukt\social\web\twig\variables;
 
 use dukt\social\Plugin as Social;
 

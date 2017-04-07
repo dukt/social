@@ -12,11 +12,11 @@ use craft\elements\User;
 use craft\events\RegisterElementTableAttributesEvent;
 use craft\events\SetElementTableAttributeHtmlEvent;
 use dukt\social\base\PluginTrait;
+use dukt\social\web\twig\variables\SocialVariable;
 use yii\base\Event;
 use craft\web\UrlManager;
 use craft\events\RegisterUrlRulesEvent;
 use dukt\social\models\Settings;
-use dukt\social\variables\SocialVariable;
 use dukt\social\web\assets\social\SocialAsset;
 
 class Plugin extends \craft\base\Plugin
@@ -95,7 +95,7 @@ class Plugin extends \craft\base\Plugin
     }
 
     /**
-     * @return mixed
+     * @inheritdoc
      */
     public function defineTemplateComponent()
     {
