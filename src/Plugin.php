@@ -175,6 +175,19 @@ class Plugin extends \craft\base\Plugin
         return false;
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function beforeUpdate(string $fromVersion): bool
+    {
+        if (version_compare($fromVersion, '1.1.0', '<')) {
+            Craft::error('Social Login 2 requires you to be running at least v1.1.0 before updating');
+            return false;
+        }
+
+        return true;
+    }
+
     // Private Methods
     // =========================================================================
 
