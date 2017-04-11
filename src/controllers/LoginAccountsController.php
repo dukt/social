@@ -237,9 +237,14 @@ class LoginAccountsController extends Controller
 
 
         // Pass the existing string containing oauth data
-        // Todo: take the whole request into accounts (headers, body params, etc...)
 
-        $url .= Craft::$app->getRequest()->getQueryString();
+        $queryParams = Craft::$app->getRequest()->getQueryParams();
+
+        if(isset($queryParams['p'])) {
+            unset($queryParams['p']);
+        }
+
+        $url .= http_build_query($queryParams);
 
         return $this->redirect($url);
     }
