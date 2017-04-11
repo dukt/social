@@ -247,9 +247,7 @@ class LoginAccounts extends Component
             $params['scope'] = urlencode(base64_encode(serialize($params['scope'])));
         }
 
-        $url = UrlHelper::siteUrl(Craft::$app->getConfig()->getGeneral()->actionTrigger.'/social/login-accounts/login', $params);
-
-        return $url;
+        return UrlHelper::actionUrl('social/login-accounts/login', $params);
     }
 
     /**
