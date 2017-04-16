@@ -1,22 +1,57 @@
 <?php
 namespace dukt\social\elements\db;
 
-use craft\db\Query;
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
-use dukt\social\elements\LoginAccount;
 
 class LoginAccountQuery extends ElementQuery
 {
+    // Properties
+    // =========================================================================
+
+    /**
+     * @var
+     */
     public $userId;
+    /**
+     * @var
+     */
     public $providerHandle;
+    /**
+     * @var
+     */
     public $socialUid;
+    /**
+     * @var
+     */
     public $username;
+    /**
+     * @var
+     */
     public $email;
+    /**
+     * @var
+     */
     public $firstName;
+    /**
+     * @var
+     */
     public $lastName;
+    /**
+     * @var
+     */
     public $lastLoginDate;
 
+    // Public Methods
+    // =========================================================================
+
+    /**
+     * Sets the [[userId]] property.
+     *
+     * @param int|int[]|null $value The property value
+     *
+     * @return static self reference
+     */
     public function userId($value)
     {
         $this->userId = $value;
@@ -24,6 +59,13 @@ class LoginAccountQuery extends ElementQuery
         return $this;
     }
 
+    /**
+     * Sets the [[providerHandle]] property.
+     *
+     * @param string|string[]|null $value The property value
+     *
+     * @return static self reference
+     */
     public function providerHandle($value)
     {
         $this->providerHandle = $value;
@@ -31,6 +73,13 @@ class LoginAccountQuery extends ElementQuery
         return $this;
     }
 
+    /**
+     * Sets the [[socialUid]] property.
+     *
+     * @param string|string[]|null $value The property value
+     *
+     * @return static self reference
+     */
     public function socialUid($value)
     {
         $this->socialUid = $value;
@@ -38,6 +87,13 @@ class LoginAccountQuery extends ElementQuery
         return $this;
     }
 
+    /**
+     * Sets the [[username]] property.
+     *
+     * @param string|string[]|null $value The property value
+     *
+     * @return static self reference
+     */
     public function username($value)
     {
         $this->username = $value;
@@ -45,6 +101,13 @@ class LoginAccountQuery extends ElementQuery
         return $this;
     }
 
+    /**
+     * Sets the [[email]] property.
+     *
+     * @param string|string[]|null $value The property value
+     *
+     * @return static self reference
+     */
     public function email($value)
     {
         $this->email = $value;
@@ -52,6 +115,13 @@ class LoginAccountQuery extends ElementQuery
         return $this;
     }
 
+    /**
+     * Sets the [[firstName]] property.
+     *
+     * @param string|string[]|null $value The property value
+     *
+     * @return static self reference
+     */
     public function firstName($value)
     {
         $this->firstName = $value;
@@ -59,6 +129,13 @@ class LoginAccountQuery extends ElementQuery
         return $this;
     }
 
+    /**
+     * Sets the [[lastName]] property.
+     *
+     * @param string|string[]|null $value The property value
+     *
+     * @return static self reference
+     */
     public function lastName($value)
     {
         $this->lastName = $value;
@@ -66,6 +143,13 @@ class LoginAccountQuery extends ElementQuery
         return $this;
     }
 
+    /**
+     * Sets the [[lastLoginDate]] property.
+     *
+     * @param string|string[]|null $value The property value
+     *
+     * @return static self reference
+     */
     public function lastLoginDate($value)
     {
         $this->lastLoginDate = $value;
@@ -73,13 +157,14 @@ class LoginAccountQuery extends ElementQuery
         return $this;
     }
 
+    // Protected Methods
+    // =========================================================================
+
+    /**
+     * @inheritdoc
+     */
     protected function beforePrepare(): bool
     {
-        /*
-        $query->join('social_login_accounts login_accounts', 'login_accounts.id = elements.id');
-        $query->leftJoin('users users', 'login_accounts.userId = users.id');
-        */
-
         $this->joinElementTable('social_login_accounts');
         $this->query->leftJoin('{{%users}} users', '[[social_login_accounts.userId]] = [[users.id]]');
 
