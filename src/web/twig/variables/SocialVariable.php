@@ -7,6 +7,9 @@
 
 namespace dukt\social\web\twig\variables;
 
+use Craft;
+use dukt\social\elements\db\LoginAccountQuery;
+use dukt\social\elements\LoginAccount;
 use dukt\social\Plugin as Social;
 
 class SocialVariable
@@ -15,15 +18,20 @@ class SocialVariable
     // =========================================================================
 
     /**
-     * Returns an ElementCriteriaModell for Social_LoginAccount elements.
+     * Returns a new EntryQuery instance.
      *
-     * @param array|null $criteria
+     * @param mixed $criteria
      *
-     * @return ElementCriteriaModel
+     * @return LoginAccountQuery
      */
-    public function loginAccounts($criteria = null)
+    public function loginAccounts($criteria = null): LoginAccountQuery
     {
-        return craft()->elements->getCriteria('Social_LoginAccount', $criteria);
+        $query = LoginAccount::find();
+        if ($criteria) {
+            Craft::configure($query, $criteria);
+        }
+
+        return $query;
     }
 
     /**
