@@ -5,9 +5,8 @@
 
 {% set crumbs = [
     { label: "Settings"|t('social'), url: url('settings') },
-    { label: "Plugins"|t('social'), url: url('settings/plugins') },
-    { label: "Social"|t('social'), url: url('social/settings') },
-    { label: "Login Providers"|t('social'), url: url('social/settings/loginproviders') },
+    { label: "Social"|t('social'), url: url('settings/social') },
+    { label: "Login Providers"|t('social'), url: url('settings/social/loginproviders') },
 ] %}
 
 {% macro configWarning(setting, file) -%}

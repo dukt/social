@@ -8,12 +8,11 @@
 
     {% set crumbs = [
         { label: "Settings"|t('social'), url: url('settings') },
-        { label: "Plugins"|t('social'), url: url('settings/plugins') },
     ] %}
 
     {% set tabs = {
-        loginProviders: { label: "Login Providers"|t('social'), url: url('social/settings/loginproviders') },
-        settings: { label: "Settings"|t('social'), url: url('social/settings/general') },
+        loginProviders: { label: "Login Providers"|t('social'), url: url('settings/social/loginproviders') },
+        settings: { label: "Settings"|t('social'), url: url('settings/social/general') },
     } %}
 
 {% else %}
