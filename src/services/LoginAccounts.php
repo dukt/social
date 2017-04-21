@@ -251,20 +251,6 @@ class LoginAccounts extends Component
     }
 
     /**
-     * Get logout URL
-     *
-     * @param string|null $redirect
-     *
-     * @return string
-     */
-    public function getLogoutUrl($redirect = null)
-    {
-        $params = ['redirect' => $redirect];
-
-        return UrlHelper::actionUrl('social/login-accounts/logout', $params);
-    }
-
-    /**
      * Get link account URL
      *
      * @param $handle
