@@ -48,18 +48,6 @@ class SocialVariable
     }
 
     /**
-     * Get the logout URL
-     *
-     * @param string|null $redirect
-     *
-     * @return string
-     */
-    public function getLogoutUrl($redirect = null)
-    {
-        return Social::$plugin->getLoginAccounts()->getLogoutUrl($redirect);
-    }
-
-    /**
      * Get the login account by provider handle
      *
      * @param string $loginProviderHandle
