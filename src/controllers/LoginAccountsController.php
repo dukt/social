@@ -250,25 +250,6 @@ class LoginAccountsController extends Controller
     }
 
     /**
-     * Logout
-     *
-     * @return null
-     */
-    public function actionLogout()
-    {
-        Craft::$app->getUser()->logout(false);
-
-        $redirect = Craft::$app->getRequest()->getParam('redirect');
-
-        if (!$redirect)
-        {
-            $redirect = Craft::$app->getRequest()->referrer;
-        }
-
-        return $this->redirect($redirect);
-    }
-
-    /**
      * Connect a login account (link)
      *
      * @return null
