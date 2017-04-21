@@ -52,7 +52,7 @@ class SocialVariable
      *
      * @param string $loginProviderHandle
      *
-     * @return Social_LoginAccountModel|null
+     * @return LoginAccount|null
      */
     public function getLoginAccountByLoginProvider($loginProviderHandle)
     {
