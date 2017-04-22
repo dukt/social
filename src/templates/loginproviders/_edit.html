@@ -38,9 +38,9 @@
     <h2>{{ "Client"|t('social') }}</h2>
 
     <ul>
-        <li><strong>Redirect URI:</strong></li>
         <li><strong>Client ID:</strong> {{ loginProvider.infos.oauthProviderOptions.clientId ?? '' }}</li>
         <li><strong>Client Secret:</strong> {{ loginProvider.infos.oauthProviderOptions.clientSecret ?? '' }}</li>
+        <li><strong>Redirect URI:</strong> {{ loginProvider.getRedirectUri() }}</li>
     </ul>
 
     <p class="light">{{ "Client ID & secret can be defined with <strong><code>{providerHandle}.clientId</code></strong> and <strong><code>{providerHandle}.clientSecret</code></strong> variable containing an array of permissions in: {path}."|t({
