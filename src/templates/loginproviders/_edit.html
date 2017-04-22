@@ -9,14 +9,6 @@
     { label: "Login Providers"|t('social'), url: url('settings/social/loginproviders') },
 ] %}
 
-{% macro configWarning(setting, file) -%}
-    {{ "This is being overridden by the {setting} config setting."|t({
-    setting: '<strong>'~setting~'</strong>'
-    })|raw }}
-{%- endmacro %}
-
-{% from _self import configWarning %}
-
 {% set content %}
 
     <h2 class="first">{{ "Login Provider"|t('social') }}</h2>
