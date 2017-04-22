@@ -236,7 +236,7 @@ class LoginAccountsController extends Controller
         }
 
 
-        // Pass the existing string containing oauth data
+        // Pass the existing string containing oauth data to the next redirect
 
         $queryParams = Craft::$app->getRequest()->getQueryParams();
 
