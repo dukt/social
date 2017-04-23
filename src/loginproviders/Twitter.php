@@ -42,11 +42,10 @@ class Twitter extends LoginProvider
     protected function getOauthProvider()
     {
         $providerInfos = $this->getInfos();
-        $oauthProviderOptions = $providerInfos['oauthProviderOptions'];
 
         $config = [
-            'identifier' => (isset($oauthProviderOptions['clientId']) ? $oauthProviderOptions['clientId'] : ''),
-            'secret' => (isset($oauthProviderOptions['clientSecret']) ? $oauthProviderOptions['clientSecret'] : ''),
+            'identifier' => (isset($providerInfos['clientId']) ? $providerInfos['clientId'] : ''),
+            'secret' => (isset($providerInfos['clientSecret']) ? $providerInfos['clientSecret'] : ''),
         ];
 
         if(!isset($config['callback_uri']))

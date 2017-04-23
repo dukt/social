@@ -35,22 +35,16 @@ return [
      */
     'loginProviders' => [
         'google' => [
-            'oauthProviderOptions' => [
-                'clientId' => 'OAUTH_CLIENT_ID',
-                'clientSecret' => 'OAUTH_CLIENT_SECRET'
-            ],
+            'clientId' => 'OAUTH_CLIENT_ID',
+            'clientSecret' => 'OAUTH_CLIENT_SECRET'
         ],
         'facebook' => [
-            'oauthProviderOptions' => [
-                'clientId' => 'OAUTH_CLIENT_ID',
-                'clientSecret' => 'OAUTH_CLIENT_SECRET'
-            ],
+            'clientId' => 'OAUTH_CLIENT_ID',
+            'clientSecret' => 'OAUTH_CLIENT_SECRET'
         ],
         'twitter' => [
-            'oauthProviderOptions' => [
-                'clientId' => 'OAUTH_CLIENT_ID',
-                'clientSecret' => 'OAUTH_CLIENT_SECRET'
-            ],
+            'clientId' => 'OAUTH_CLIENT_ID',
+            'clientSecret' => 'OAUTH_CLIENT_SECRET'
         ]
     ]
 ];

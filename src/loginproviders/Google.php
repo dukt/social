@@ -32,11 +32,10 @@ class Google extends LoginProvider
     protected function getOauthProvider()
     {
         $providerInfos = $this->getInfos();
-        $oauthProviderOptions = $providerInfos['oauthProviderOptions'];
 
         $config = [
-            'clientId' => (isset($oauthProviderOptions['clientId']) ? $oauthProviderOptions['clientId'] : ''),
-            'clientSecret' => (isset($oauthProviderOptions['clientSecret']) ? $oauthProviderOptions['clientSecret'] : ''),
+            'clientId' => (isset($providerInfos['clientId']) ? $providerInfos['clientId'] : ''),
+            'clientSecret' => (isset($providerInfos['clientSecret']) ? $providerInfos['clientSecret'] : ''),
             'redirectUri' => UrlHelper::actionUrl('social/login-accounts/callback'),
         ];
 

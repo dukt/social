@@ -35,8 +35,8 @@ class Facebook extends LoginProvider
         $providerInfos = $this->getInfos();
 
         $config = [
-            'clientId' => $providerInfos['oauthProviderOptions']['clientId'],
-            'clientSecret' => $providerInfos['oauthProviderOptions']['clientSecret'],
+            'clientId' => $providerInfos['clientId'],
+            'clientSecret' => $providerInfos['clientSecret'],
             'graphApiVersion' => 'v2.8',
             'redirectUri' => UrlHelper::actionUrl('social/login-accounts/callback'),
         ];

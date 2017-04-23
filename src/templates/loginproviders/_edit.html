@@ -22,10 +22,6 @@
             <p><span class="status on"></span> {{ "Social Login with {provider} is enabled"|t('social', { provider: loginProvider.name }) }}</p>
         {% else %}
             <p><span class="status"></span> {{ "Social Login with {provider} is disabled"|t('social', { provider: loginProvider.name }) }}</p>
-            <p class="light">{{ "This login provider can be enabled by setting <strong><code>{providerHandle}LoginProvider.enabled</code></strong> to <strong><code>true</code></strong> in {path}"|t({
-                providerHandle: loginProvider.handle,
-                path: '<code>craft/config/social.php</code>'
-            })|raw }}</p>
         {% endif %}
 
     {% else %}
@@ -38,12 +34,12 @@
     <h2>{{ "Client"|t('social') }}</h2>
 
     <ul>
-        <li><strong>Client ID:</strong> {{ loginProvider.infos.oauthProviderOptions.clientId ?? '' }}</li>
-        <li><strong>Client Secret:</strong> {{ loginProvider.infos.oauthProviderOptions.clientSecret ?? '' }}</li>
+        <li><strong>Client ID:</strong> {{ loginProvider.infos.clientId ?? '' }}</li>
+        <li><strong>Client Secret:</strong> {{ loginProvider.infos.clientSecret ?? '' }}</li>
         <li><strong>Redirect URI:</strong> {{ loginProvider.getRedirectUri() }}</li>
     </ul>
 
-    <p class="light">{{ "Client ID & secret can be defined with <strong><code>{providerHandle}.clientId</code></strong> and <strong><code>{providerHandle}.clientSecret</code></strong> variable containing an array of permissions in: {path}."|t({
+    <p class="light">{{ "Client ID & secret can be defined with <strong><code>loginProviders.{providerHandle}.clientId</code></strong> and <strong><code>loginProviders.{providerHandle}.clientSecret</code></strong> variable containing an array of permissions in: {path}."|t({
 			provider: loginProvider.name,
 			providerHandle: loginProvider.handle,
 			path: '<code>craft/config/social.php</code>'
@@ -68,7 +64,7 @@
 
     <p class="light">{{ "Scope expresses the permissions that users will get when they login with {provider}."|t('social', { provider: loginProvider.name }) }}</p>
 
-    <p class="light">{{ "Default scope can be overridden by adding a <strong><code>{providerHandle}.scope</code></strong> variable containing an array of permissions in: {path}."|t({
+    <p class="light">{{ "Default scope can be overridden by adding a <strong><code>loginProviders.{providerHandle}.scope</code></strong> variable containing an array of permissions in: {path}."|t({
         provider: loginProvider.name,
         providerHandle: loginProvider.handle,
         path: '<code>craft/config/social.php</code>'
@@ -98,7 +94,7 @@
 
     <p class="light">{{ "Authorization options are extra parameters which are passed when logging in with {provider}."|t('social', { provider: loginProvider.name }) }}</p>
 
-    <p class="light">{{ "Default authorization options can be overriden by adding a <strong><code>{providerHandle}.authorizationOptions</code></strong> variable containing a key/value array of authorization options in: {path}."|t({
+    <p class="light">{{ "Default authorization options can be overriden by adding a <strong><code>loginProviders.{providerHandle}.authorizationOptions</code></strong> variable containing a key/value array of authorization options in: {path}."|t({
         provider: loginProvider.name,
         providerHandle: loginProvider.handle,
         path: '<code>craft/config/social.php</code>'
