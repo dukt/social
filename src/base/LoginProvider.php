@@ -29,8 +29,8 @@ abstract class LoginProvider implements LoginProviderInterface
         $handle = $this->getHandle();
         $loginProvidersConfig = Social::$plugin->getLoginProviderConfig($handle);
 
-        if (isset($loginProvidersConfig[$handle])) {
-            return $loginProvidersConfig[$handle];
+        if ($loginProvidersConfig) {
+            return $loginProvidersConfig;
         }
     }
 
