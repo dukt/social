@@ -9,6 +9,7 @@ namespace dukt\social\controllers;
 
 use Craft;
 use craft\web\Controller;
+use dukt\social\Plugin;
 use dukt\social\web\assets\social\SocialAsset;
 use dukt\social\Plugin as Social;
 use yii\web\HttpException;
@@ -526,11 +527,12 @@ class LoginAccountsController extends Controller
                 */
                 $variables = $attributes;
 
-                $allMappings = Social::$plugin->getSettings()->userMapping;
+                $loginProviderConfig = Plugin::$plugin->getLoginProviderConfig($providerHandle);
+
                 $userMapping = null;
 
-                if(isset($loginProviders[$providerHandle])) {
-                    $userMapping = $loginProviders[$providerHandle];
+                if(isset($loginProviderConfig['userMapping'])) {
+                    $userMapping = $loginProviderConfig['userMapping'];
                 }
 
                 $userModelAttributes = ['email', 'username', 'firstName', 'lastName', 'preferredLocale', 'weekStartDay'];

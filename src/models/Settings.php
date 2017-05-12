@@ -58,9 +58,4 @@ class Settings extends Model
      * @var bool Show CP section
      */
     public $showCpSection = true;
-
-    /**
-     * @var array User mapping
-     */
-    public $userMapping = [];
 }

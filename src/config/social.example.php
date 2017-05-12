@@ -13,38 +13,32 @@ return [
     'lockDomains' => [],
 
     /**
-     * User mapping
-     */
-    'userMapping' => [
-        'twitter' => [
-            'location' => '{{ location }}',
-            'profileUrl' => '{{ nickname }}',
-        ],
-
-        'facebook' => [
-            'firstName' => '{{ firstName }}',
-            'lastName' => '{{ lastName }}',
-            'location' => '{{ locationName }}',
-            'gender' => '{{ gender }}',
-            'profileUrl' => '{{ link }}',
-        ]
-    ],
-
-    /**
      * Login providers
      */
     'loginProviders' => [
         'google' => [
             'clientId' => 'OAUTH_CLIENT_ID',
-            'clientSecret' => 'OAUTH_CLIENT_SECRET'
+            'clientSecret' => 'OAUTH_CLIENT_SECRET',
+            'userMapping' => [],
         ],
         'facebook' => [
             'clientId' => 'OAUTH_CLIENT_ID',
-            'clientSecret' => 'OAUTH_CLIENT_SECRET'
+            'clientSecret' => 'OAUTH_CLIENT_SECRET',
+            'userMapping' => [
+                'firstName' => '{{ firstName }}',
+                'lastName' => '{{ lastName }}',
+                'location' => '{{ locationName }}',
+                'gender' => '{{ gender }}',
+                'profileUrl' => '{{ link }}',
+            ],
         ],
         'twitter' => [
             'clientId' => 'OAUTH_CLIENT_ID',
-            'clientSecret' => 'OAUTH_CLIENT_SECRET'
+            'clientSecret' => 'OAUTH_CLIENT_SECRET',
+            'userMapping' => [
+                'location' => '{{ location }}',
+                'profileUrl' => '{{ nickname }}',
+            ],
         ]
     ]
 ];
