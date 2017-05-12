@@ -12,6 +12,7 @@ use craft\helpers\UrlHelper;
 use craft\web\Response;
 use dukt\social\models\Token;
 use dukt\social\Plugin as Social;
+use dukt\social\Plugin;
 
 abstract class LoginProvider implements LoginProviderInterface
 {
@@ -26,7 +27,7 @@ abstract class LoginProvider implements LoginProviderInterface
     public function getInfos()
     {
         $handle = $this->getHandle();
-        $loginProvidersConfig = Social::$plugin->getSettings()->loginProviders;
+        $loginProvidersConfig = Social::$plugin->getLoginProviderConfig($handle);
 
         if (isset($loginProvidersConfig[$handle])) {
             return $loginProvidersConfig[$handle];
@@ -168,10 +169,10 @@ abstract class LoginProvider implements LoginProviderInterface
     public function getScope()
     {
         $providerHandle = $this->getHandle();
-        $loginProvidersConfig = Social::$plugin->getSettings()->loginProviders;
+        $config = Plugin::$plugin->getLoginProviderConfig($providerHandle);
 
-        if(isset($loginProvidersConfig[$providerHandle]['scope'])) {
-            return $loginProvidersConfig[$providerHandle]['scope'];
+        if(isset($config['scope'])) {
+            return $config['scope'];
         }
 
         return $this->getDefaultScope();
@@ -185,10 +186,10 @@ abstract class LoginProvider implements LoginProviderInterface
     public function getAuthorizationOptions()
     {
         $providerHandle = $this->getHandle();
-        $loginProvidersConfig = Social::$plugin->getSettings()->loginProviders;
+        $config = Plugin::$plugin->getLoginProviderConfig($providerHandle);
 
-        if(isset($loginProvidersConfig[$providerHandle]['authorizationOptions'])) {
-            return $loginProvidersConfig[$providerHandle]['authorizationOptions'];
+        if(isset($config['authorizationOptions'])) {
+            return $config['authorizationOptions'];
         }
 
         return $this->getDefaultAuthorizationOptions();
@@ -204,9 +205,9 @@ abstract class LoginProvider implements LoginProviderInterface
         // get plugin settings
         $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $settings = $plugin->getSettings();
-        $loginProvidersConfig = $settings->loginProviders;
+        $enabledLoginProviders = $settings->enabledLoginProviders;
 
-        if (isset($loginProvidersConfig[$this->getHandle()]['enabled']) && $loginProvidersConfig[$this->getHandle()]['enabled'])
+        if (in_array($this->getHandle(), $enabledLoginProviders))
         {
             return true;
         }

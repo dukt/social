@@ -50,9 +50,9 @@ class Settings extends Model
     public $lockDomains = [];
 
     /**
-     * @var array Login providers
+     * @var array Enabled login providers
      */
-    public $loginProviders = [];
+    public $enabledLoginProviders = [];
 
     /**
      * @var bool Show CP section

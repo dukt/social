@@ -30,12 +30,15 @@ class LoginProviders extends Component
         $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $settings = $plugin->getSettings();
 
-        $loginProviders = $settings->loginProviders;
-        $loginProviders[$handle]['enabled'] = false;
+        $enabledLoginProviders = $settings->enabledLoginProviders;
 
-        $settings->loginProviders = $loginProviders;
+        if(($key = array_search($handle, $enabledLoginProviders)) !== false) {
+            unset($enabledLoginProviders[$key]);
+        }
 
-        return Plugin::$plugin->savePluginSettings($settings);
+        $settings->enabledLoginProviders = $enabledLoginProviders;
+
+        return Craft::$app->getPlugins()->savePluginSettings($plugin, $settings->getAttributes());
     }
 
     /**
@@ -50,12 +53,15 @@ class LoginProviders extends Component
         $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $settings = $plugin->getSettings();
 
-        $loginProviders = $settings->loginProviders;
-        $loginProviders[$handle]['enabled'] = true;
+        $enabledLoginProviders = $settings->enabledLoginProviders;
 
-        $settings->loginProviders = $loginProviders;
+        if(!in_array($handle, $enabledLoginProviders)) {
+            $enabledLoginProviders[] = $handle;
+        }
 
-        return Plugin::$plugin->savePluginSettings($settings);
+        $settings->enabledLoginProviders = $enabledLoginProviders;
+
+        return Craft::$app->getPlugins()->savePluginSettings($plugin, $settings->getAttributes());
     }
 
     /**
