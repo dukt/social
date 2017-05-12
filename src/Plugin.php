@@ -167,8 +167,8 @@ class Plugin extends \craft\base\Plugin
         $loginProviders = $settings->loginProviders;
 
         foreach($loginProviders as $key => $loginProvider) {
-            $loginProviders[$key]['scope'] = [];
-            $loginProviders[$key]['authorizationOptions'] = [];
+            $loginProviders[$key]['scope'] = null;
+            $loginProviders[$key]['authorizationOptions'] = null;
         }
 
         $settings->loginProviders = $loginProviders;
