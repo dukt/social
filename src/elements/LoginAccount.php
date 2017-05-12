@@ -208,4 +208,15 @@ class LoginAccount extends Element
 
         return $this->_user;
     }
+
+    /**
+     * @param $token
+     *
+     * @return bool
+     */
+    public function authenticate($token): bool
+    {
+        // Todo: Check authentication again with token?
+        return true;
+    }
 }
