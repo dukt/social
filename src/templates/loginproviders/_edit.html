@@ -39,7 +39,7 @@
         <li><strong>Redirect URI:</strong> {{ loginProvider.getRedirectUri() }}</li>
     </ul>
 
-    <p class="light">{{ "Client ID & secret can be defined with <strong><code>loginProviders.{providerHandle}.clientId</code></strong> and <strong><code>loginProviders.{providerHandle}.clientSecret</code></strong> variable containing an array of permissions in: {path}."|t({
+    <p class="light">{{ "Client ID and client secret can be defined with <strong><code>loginProviders.{providerHandle}.clientId</code></strong> and <strong><code>loginProviders.{providerHandle}.clientSecret</code></strong> variable containing an array of permissions in: {path}."|t({
 			provider: loginProvider.name,
 			providerHandle: loginProvider.handle,
 			path: '<code>craft/config/social.php</code>'
