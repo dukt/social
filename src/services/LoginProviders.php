@@ -30,11 +30,10 @@ class LoginProviders extends Component
         $settings = $plugin->getSettings();
 
         $loginProviders = $settings->loginProviders;
-        $loginProviders[$handle]['enabled'] = false;
+        $loginProvider = $loginProviders[$handle];
+        $loginProvider['enabled'] = false;
 
-        $settings->loginProviders = $loginProviders;
-
-        return Craft::$app->getPlugins()->savePluginSettings($plugin, $settings->getAttributes());
+        return $this->saveLoginProvider($handle, $loginProvider);
     }
 
     /**
@@ -50,7 +49,31 @@ class LoginProviders extends Component
         $settings = $plugin->getSettings();
 
         $loginProviders = $settings->loginProviders;
-        $loginProviders[$handle]['enabled'] = true;
+        $loginProvider = $loginProviders[$handle];
+        $loginProvider['enabled'] = true;
+
+        return $this->saveLoginProvider($handle, $loginProvider);
+    }
+
+    /**
+     * Save login provider and force scope and authorization options to be null so that they keep coming from the config file.
+     *
+     * @param $handle
+     * @param $loginProvider
+     *
+     * @return bool
+     */
+    public function saveLoginProvider($handle, $loginProvider)
+    {
+        $plugin = Craft::$app->getPlugins()->getPlugin('social');
+        $settings = $plugin->getSettings();
+
+        $loginProviders = $settings->loginProviders;
+
+        $loginProvider['scope'] = null;
+        $loginProvider['authorizationOptions'] = null;
+
+        $loginProviders[$handle] = $loginProvider;
 
         $settings->loginProviders = $loginProviders;
 
