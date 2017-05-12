@@ -9,6 +9,7 @@ namespace dukt\social\services;
 
 use Craft;
 use dukt\social\base\LoginProvider;
+use dukt\social\Plugin;
 use yii\base\Component;
 use Dukt\Social\Base\LoginProviderInterface;
 
@@ -30,10 +31,11 @@ class LoginProviders extends Component
         $settings = $plugin->getSettings();
 
         $loginProviders = $settings->loginProviders;
-        $loginProvider = $loginProviders[$handle];
-        $loginProvider['enabled'] = false;
+        $loginProviders[$handle]['enabled'] = false;
 
-        return $this->saveLoginProvider($handle, $loginProvider);
+        $settings->loginProviders = $loginProviders;
+
+        return Plugin::$plugin->savePluginSettings($settings);
     }
 
     /**
@@ -49,35 +51,11 @@ class LoginProviders extends Component
         $settings = $plugin->getSettings();
 
         $loginProviders = $settings->loginProviders;
-        $loginProvider = $loginProviders[$handle];
-        $loginProvider['enabled'] = true;
-
-        return $this->saveLoginProvider($handle, $loginProvider);
-    }
-
-    /**
-     * Save login provider and force scope and authorization options to be null so that they keep coming from the config file.
-     *
-     * @param $handle
-     * @param $loginProvider
-     *
-     * @return bool
-     */
-    public function saveLoginProvider($handle, $loginProvider)
-    {
-        $plugin = Craft::$app->getPlugins()->getPlugin('social');
-        $settings = $plugin->getSettings();
-
-        $loginProviders = $settings->loginProviders;
-
-        $loginProvider['scope'] = null;
-        $loginProvider['authorizationOptions'] = null;
-
-        $loginProviders[$handle] = $loginProvider;
+        $loginProviders[$handle]['enabled'] = true;
 
         $settings->loginProviders = $loginProviders;
 
-        return Craft::$app->getPlugins()->savePluginSettings($plugin, $settings->getAttributes());
+        return Plugin::$plugin->savePluginSettings($settings);
     }
 
     /**

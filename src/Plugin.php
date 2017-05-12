@@ -160,6 +160,22 @@ class Plugin extends \craft\base\Plugin
         return '';
     }
 
+    public function savePluginSettings(Settings $settings)
+    {
+        $plugin = Craft::$app->getPlugins()->getPlugin('social');
+
+        $loginProviders = $settings->loginProviders;
+
+        foreach($loginProviders as $key => $loginProvider) {
+            $loginProviders[$key]['scope'] = [];
+            $loginProviders[$key]['authorizationOptions'] = [];
+        }
+
+        $settings->loginProviders = $loginProviders;
+
+        return Craft::$app->getPlugins()->savePluginSettings($plugin, $settings->getAttributes());
+    }
+
     /**
      * Has CP Section
      *
