@@ -9,15 +9,17 @@ namespace dukt\social;
 
 use Craft;
 use craft\elements\User;
+use craft\events\DefineComponentsEvent;
 use craft\events\RegisterElementTableAttributesEvent;
-use craft\events\SetElementTableAttributeHtmlEvent;
-use dukt\social\base\PluginTrait;
-use dukt\social\web\twig\variables\SocialVariable;
-use yii\base\Event;
-use craft\web\UrlManager;
 use craft\events\RegisterUrlRulesEvent;
+use craft\events\SetElementTableAttributeHtmlEvent;
+use craft\web\twig\variables\CraftVariable;
+use craft\web\UrlManager;
+use dukt\social\base\PluginTrait;
 use dukt\social\models\Settings;
+use dukt\social\web\twig\variables\SocialVariable;
 use dukt\social\web\assets\social\SocialAsset;
+use yii\base\Event;
 
 class Plugin extends \craft\base\Plugin
 {
@@ -87,6 +89,10 @@ class Plugin extends \craft\base\Plugin
                     $event->html = '';
                 }
             }
+        });
+
+        Event::on(CraftVariable::class, CraftVariable::EVENT_DEFINE_COMPONENTS, function(DefineComponentsEvent $event) {
+            $event->components['social'] = SocialVariable::class;
         });
 
         // Todo
