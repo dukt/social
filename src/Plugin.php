@@ -66,9 +66,6 @@ class Plugin extends \craft\base\Plugin
 
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, [$this, 'registerCpUrlRules']);
 
-
-        // Additional user table attribute
-
         Event::on(User::class, User::EVENT_REGISTER_TABLE_ATTRIBUTES, function(RegisterElementTableAttributesEvent $event) {
             $event->tableAttributes['loginAccounts'] = Craft::t('social', 'Login Accounts');
         });
