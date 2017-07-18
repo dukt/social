@@ -11,6 +11,7 @@ Changelog
 
 - Improved Social variable for Craft 3.0.0 beta 20 compatibility
 - The plugin now requires Craft 3.0.0 beta 20 or above
+- Renamed changelog.md to CHANGELOG.md
 
 ### Craft 3.0 update
 
