@@ -16,6 +16,13 @@
       "homepage": "https://dukt.net/"
     }
   ],
+  "support": {
+    "email": "support@dukt.net",
+    "issues": "https://github.com/dukt/social/issues?state=open",
+    "source": "https://github.com/dukt/social",
+    "docs": "https://github.com/dukt/social",
+    "rss": "https://github.com/dukt/social/commits/v2.atom"
+  },
   "require": {
     "craftcms/cms": "~3.0.0-beta.8",
     "league/oauth1-client": "1.7.0@dev",
