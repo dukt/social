@@ -1,7 +1,18 @@
-Social Changelog
+Changelog
 ===================
 
-## Unreleased
+## 2.0.0-beta.1 - Unreleased
+
+### Added
+
+- Added support section to composer.json
+
+### Improved
+
+- Improved Social variable for Craft 3.0.0 beta 20 compatibility
+- The plugin now requires Craft 3.0.0 beta 20 or above
+
+### Craft 3.0 update
 
 - `SocialController:_login()` is now taking a token instead of an account as a parameter
 - `SocialUserIdentity::_construct()` is now taking an `Oauth_TokenModel` as a parameter instead of an account ID
