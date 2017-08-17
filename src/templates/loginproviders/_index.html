@@ -11,10 +11,6 @@
                 <th scope="col">{{ "Name"|t('social') }}</th>
                 <th scope="col">{{ "Handle"|t('social') }}</th>
                 <th scope="col">{{ "Login Provider Status"|t('social') }}</th>
-
-                <th scope="col">{{ "Scope"|t('social') }}</th>
-                <th scope="col">{{ "Authorization Options"|t('social') }}</th>
-
             </tr>
         </thead>
 
@@ -51,10 +47,6 @@
                         </form>
 
                     </td>
-
-
-                    <td class="light">{{ "{count} permission(s)"|t('social', { count: loginProvider.scope|length }) }}</td>
-                    <td class="light">{{ "{count} authorization option(s)"|t('social', { count: loginProvider.authorizationOptions|length }) }}</td>
                 </tr>
             {% endfor %}
         </tbody>
