@@ -166,6 +166,8 @@ class Plugin extends \craft\base\Plugin
     /**
      * Returns login provider config.
      *
+     * @param $handle
+     *
      * @return mixed
      */
     public function getLoginProviderConfig($handle)

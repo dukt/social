@@ -106,6 +106,7 @@ class LoginAccountsController extends Controller
      * Login
      *
      * @return null
+     * @throws Exception
      */
     public function actionLogin()
     {
@@ -328,6 +329,8 @@ class LoginAccountsController extends Controller
      * Connect (register, login, link) a user from token
      *
      * @param Token $token
+     *
+     * @return null
      */
     private function connectUserFromToken(Token $token)
     {
@@ -346,10 +349,11 @@ class LoginAccountsController extends Controller
     /**
      * Link account from token
      *
+     * @param Token  $token
      * @param object $craftUser The logged-in user object
      *
-     * @throws Exception
      * @return null
+     * @throws Exception
      */
     private function linkAccountFromToken(Token $token, $craftUser)
     {
@@ -405,8 +409,10 @@ class LoginAccountsController extends Controller
     /**
      * Register or login user from an OAuth token
      *
-     * @throws Exception
+     * @param Token $token
+     *
      * @return null
+     * @throws Exception
      */
     private function registerOrLoginFromToken(Token $token)
     {
@@ -642,7 +648,13 @@ class LoginAccountsController extends Controller
     /**
      * Login user from login account
      *
+     * @param User         $craftUser
+     * @param LoginAccount $account
+     * @param Token        $token
+     * @param bool         $registrationMode
+     *
      * @return null
+     * @throws Exception
      */
     private function login(User $craftUser, LoginAccount $account, Token $token, $registrationMode = false)
     {

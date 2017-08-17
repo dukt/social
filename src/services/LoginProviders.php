@@ -137,6 +137,8 @@ class LoginProviders extends Component
     /**
      * Create OAuth provider
      *
+     * @param $socialLoginProviderType
+     *
      * @return LoginProviderInterface
      */
     private function _createLoginProvider($socialLoginProviderType)

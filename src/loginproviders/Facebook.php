@@ -119,6 +119,8 @@ class Facebook extends LoginProvider
     /**
      * Get the authenticated client
      *
+     * @param Token $token
+     *
      * @return Client
      */
     private function getClient(Token $token)

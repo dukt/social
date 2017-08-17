@@ -34,6 +34,8 @@ class LoginAccounts extends Component
     /**
      * Get all of the social accounts for a given user id.
      *
+     * @param $userId
+     *
      * @return array|null
      */
     public function getLoginAccountsByUserId($userId)
@@ -281,10 +283,11 @@ class LoginAccounts extends Component
     /**
      * Save remote photo
      *
-     * @param string $photoUrl
+     * @param string    $photoUrl
      * @param UserModel $user
      *
      * @return bool
+     * @throws Exception
      */
     public function saveRemotePhoto($photoUrl, UserModel $user)
     {
