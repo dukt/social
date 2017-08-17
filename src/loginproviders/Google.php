@@ -36,7 +36,7 @@ class Google extends LoginProvider
         $config = [
             'clientId' => (isset($providerInfos['clientId']) ? $providerInfos['clientId'] : ''),
             'clientSecret' => (isset($providerInfos['clientSecret']) ? $providerInfos['clientSecret'] : ''),
-            'redirectUri' => UrlHelper::actionUrl('social/login-accounts/callback'),
+            'redirectUri' => $this->getRedirectUri(),
         ];
 
         return new \Dukt\OAuth2\Client\Provider\Google($config);

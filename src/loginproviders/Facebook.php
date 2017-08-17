@@ -38,7 +38,7 @@ class Facebook extends LoginProvider
             'clientId' => $providerInfos['clientId'],
             'clientSecret' => $providerInfos['clientSecret'],
             'graphApiVersion' => 'v2.8',
-            'redirectUri' => UrlHelper::actionUrl('social/login-accounts/callback'),
+            'redirectUri' => $this->getRedirectUri(),
         ];
 
         return new \League\OAuth2\Client\Provider\Facebook($config);
