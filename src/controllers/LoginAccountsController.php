@@ -17,10 +17,19 @@ use craft\elements\User;
 use dukt\social\models\Token;
 use dukt\social\elements\LoginAccount;
 use Exception;
+use yii\base\Event;
 
 
 class LoginAccountsController extends Controller
 {
+    // Constants
+    // =========================================================================
+
+    /**
+     * @event RegisterComponentTypesEvent The event that is triggered when registering element types.
+     */
+    const EVENT_BEFORE_REGISTER = 'beforeRegister';
+
     // Properties
     // =========================================================================
 
@@ -514,23 +523,13 @@ class LoginAccountsController extends Controller
                 }
 
 
-                /*
-                // Fire an 'onBeforeRegister' event
-                $event = new Event($this, [
-                    'account' => &$attributes,
-                ]);
+                // Fire a 'beforeRegister' event
+                if ($this->hasEventHandlers(self::EVENT_BEFORE_REGISTER)) {
+                    $this->trigger(self::EVENT_BEFORE_REGISTER, new Event([
+                        'account' => &$attributes,
+                    ]));
+                }
 
-                $this->onBeforeRegister($event);
-
-                $this->trigger('beforeRegister', new ElementEvent([
-                    'account' => &$attributes,
-                ]));
-                */
-
-                /*
-                if ($event->performAction)
-                {
-                */
                 $variables = $attributes;
 
                 $loginProviderConfig = Plugin::$plugin->getLoginProviderConfig($providerHandle);
@@ -630,12 +629,6 @@ class LoginAccountsController extends Controller
                 Craft::$app->elements->saveElement($newUser);
 
                 return $newUser;
-
-                /*
-                }
-
-                return null;
-                */
 
             } else {
                 if (Social::$plugin->getSettings()->allowEmailMatch !== true) {
