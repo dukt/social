@@ -10,6 +10,7 @@ namespace dukt\social\elements;
 use Craft;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
+use craft\helpers\Html;
 use dukt\social\elements\db\LoginAccountQuery;
 use dukt\social\Plugin as Social;
 
@@ -162,10 +163,13 @@ class LoginAccount extends Element
     protected static function defineTableAttributes(): array
     {
         $attributes['socialUid'] = ['label' => Craft::t('social', 'Social User ID')];
-        $attributes['providerHandle'] = ['label' => Craft::t('social', 'Login Provider')];
-        $attributes['userId'] = ['label' => Craft::t('social', 'User ID')];
+        $attributes['username'] = ['label' => Craft::t('social', 'Username')];
+        $attributes['fullName'] = ['label' => Craft::t('social', 'Full Name')];
+        $attributes['email'] = ['label' => Craft::t('social', 'Email')];
+        $attributes['provider'] = ['label' => Craft::t('social', 'Login Provider')];
         $attributes['dateCreated'] = ['label' => Craft::t('social', 'Date Created')];
         $attributes['dateUpdated'] = ['label' => Craft::t('social', 'Date Updated')];
+        $attributes['lastLoginDate'] = ['label' => Craft::t('social', 'Last Login')];
 
         return $attributes;
     }
@@ -173,14 +177,38 @@ class LoginAccount extends Element
     /**
      * @inheritdoc
      */
+    protected function tableAttributeHtml(string $attribute): string
+    {
+        switch ($attribute) {
+            case 'username':
+                $user = $this->getUser();
+                return $user ? Craft::$app->getView()->renderTemplate('_elements/element', ['element' => $user]) : '';
+            case 'email':
+                $user = $this->getUser();
+                return $user ? Html::encodeParams('<a href="mailto:{email}">{email}</a>', ['email' => $user->email]) : '';
+            case 'fullName':
+                $user = $this->getUser();
+                return $user && $user->getFullName() ? $user->getFullName() : '';
+            case 'provider':
+                $loginProvider = $this->getLoginProvider();
+                return $loginProvider ? Craft::$app->getView()->renderTemplate('social/loginaccounts/_element', ['loginProvider' => $loginProvider]) : '';
+        }
+
+        return parent::tableAttributeHtml($attribute);
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected static function defineSortOptions(): array
     {
-        $attributes['providerHandle'] = Craft::t('social', 'Login Provider');
         $attributes['socialUid'] = Craft::t('social', 'Social User ID');
-
-        $attributes['userId'] = Craft::t('social', 'User ID');
+        $attributes['username'] = Craft::t('social', 'Username');
+        $attributes['email'] = Craft::t('social', 'Email');
+        $attributes['providerHandle'] = Craft::t('social', 'Login Provider');
         $attributes['elements.dateCreated'] = Craft::t('social', 'Date Created');
         $attributes['elements.dateUpdated'] = Craft::t('social', 'Date Updated');
+        $attributes['lastLoginDate'] = Craft::t('social', 'Last Login');
 
         return $attributes;
     }
@@ -218,5 +246,16 @@ class LoginAccount extends Element
     {
         // Todo: Check authentication again with token?
         return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function datetimeAttributes(): array
+    {
+        $names = parent::datetimeAttributes();
+        $names[] = 'lastLoginDate';
+
+        return $names;
     }
 }

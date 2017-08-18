@@ -167,6 +167,7 @@ class LoginAccountQuery extends ElementQuery
     {
         $this->joinElementTable('social_login_accounts');
         $this->query->leftJoin('{{%users}} users', '[[social_login_accounts.userId]] = [[users.id]]');
+        $this->subQuery->leftJoin('{{%users}} users', '[[social_login_accounts.userId]] = [[users.id]]');
 
         $this->query->select([
             'social_login_accounts.userId',
