@@ -177,6 +177,14 @@ class LoginAccount extends Element
     /**
      * @inheritdoc
      */
+    protected static function defineDefaultTableAttributes(string $source): array
+    {
+        return ['username', 'fullName', 'email', 'provider', 'dateCreated', 'lastLoginDate'];
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function tableAttributeHtml(string $attribute): string
     {
         switch ($attribute) {
