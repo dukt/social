@@ -555,7 +555,7 @@ class LoginAccountsController extends Controller
 
                             if (array_key_exists($attribute, $newUser->getAttributes())) {
                                 try {
-                                    $newUser->{$attribute} = Craft::$app->templates->renderString($template, $variables);
+                                    $newUser->{$attribute} = Craft::$app->getView()->renderString($template, $variables);
                                 } catch (\Exception $e) {
                                     Craft::warning('Could not map:'.print_r([$attribute, $template, $variables, $e->getMessage()], true), __METHOD__);
                                 }
@@ -566,7 +566,7 @@ class LoginAccountsController extends Controller
                             // Check to make sure custom field exists for user profile
                             if (isset($newUser->getContent()[$fieldHandle])) {
                                 try {
-                                    $userContent[$fieldHandle] = Craft::$app->templates->renderString($template, $variables);
+                                    $userContent[$fieldHandle] = Craft::$app->getView()->renderString($template, $variables);
                                 } catch (\Exception $e) {
                                     Craft::warning('Could not map:'.print_r([$template, $variables, $e->getMessage()], true), __METHOD__);
                                 }
@@ -574,7 +574,11 @@ class LoginAccountsController extends Controller
                         }
                     }
 
-                    $newUser->setContentFromPost($userContent);
+                    // $newUser->setContentFromPost($userContent);
+
+                    foreach($userContent as $field => $value) {
+                        $newUser->setFieldValue($field, $value);
+                    }
                 }
 
 
@@ -602,7 +606,7 @@ class LoginAccountsController extends Controller
 
                     if (isset($userMapping['photoUrl'])) {
                         try {
-                            $photoUrl = Craft::$app->templates->renderString($userMapping['photoUrl'], $variables);
+                            $photoUrl = Craft::$app->getView()->renderString($userMapping['photoUrl'], $variables);
                             $photoUrl = html_entity_decode($photoUrl);
                         } catch (\Exception $e) {
                             Craft::warning('Could not map:'.print_r(['photoUrl', $userMapping['photoUrl'], $variables, $e->getMessage()], true), __METHOD__);
