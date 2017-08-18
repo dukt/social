@@ -37,12 +37,16 @@
 
                             {{ csrfInput() }}
 
-                            {% if loginProvider.isEnabled %}
-                                <span class="status on"></span> {{ "Enabled"|t('social') }} 
-                                <input type="button" value="{{ 'Disable'|t('social') }}" class="btn small formsubmit" data-action="social/login-providers/disable-login-provider">
+                            {% if loginProvider.isConfigured %}
+								{% if loginProvider.isEnabled  %}
+                                    <span class="status on"></span> {{ "Enabled"|t('social') }} 
+                                    <input type="button" value="{{ 'Disable'|t('social') }}" class="btn small formsubmit" data-action="social/login-providers/disable-login-provider">
+                                {% else %}
+                                    <span class="status"></span> {{ "Disabled"|t('social') }} 
+                                    <input type="button" value="{{ 'Enable'|t('social') }}" class="btn small formsubmit" data-action="social/login-providers/enable-login-provider">
+								{% endif %}
                             {% else %}
-                                <span class="status"></span> {{ "Disabled"|t('social') }} 
-                                <input type="button" value="{{ 'Enable'|t('social') }}" class="btn small formsubmit" data-action="social/login-providers/enable-login-provider">
+                                <span class="status"></span> {{ "Not configured"|t('social') }} 
                             {% endif %}
                         </form>
 

@@ -61,7 +61,13 @@ abstract class LoginProvider implements LoginProviderInterface
      */
     public function isConfigured()
     {
-        return true;
+        $infos = $this->getInfos();
+
+        if(!empty($infos['clientId'])) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

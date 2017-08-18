@@ -23,10 +23,9 @@
         {% else %}
             <p><span class="status"></span> {{ "Social Login with {provider} is disabled"|t('social', { provider: loginProvider.name }) }}</p>
         {% endif %}
-
     {% else %}
-        <p><span class="status"></span> {{ "Social Login with {provider} is disabled"|t('social', { provider: loginProvider.name }) }}</p>
-        <p class="light">{{ "Social Login with {provider} is disabled because {oauthProviderLink} is not configured."|t('social', { provider: loginProvider.name, oauthProviderLink: '<a href="'~url('oauth/providers/'~loginProvider.handle)~'">{provider} OAuth provider</a>'|t({provider: loginProvider.name}) })|raw }}</p>
+        <p><span class="status"></span> {{ "Not configured"|t('social', { provider: loginProvider.name }) }}</p>
+        <p class="light">{{ "Social Login with {provider} is disabled because the client ID or secret is missing for this provider."|t('social', { provider: loginProvider.name}) }}</p>
     {% endif %}
 
     <hr>
