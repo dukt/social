@@ -573,8 +573,6 @@ class LoginAccountsController extends Controller
                         }
                     }
 
-                    // $newUser->setContentFromPost($userContent);
-
                     foreach($userContent as $field => $value) {
                         $newUser->setFieldValue($field, $value);
                     }
