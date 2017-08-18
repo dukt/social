@@ -217,18 +217,6 @@ class LoginAccounts extends Component
         return true;
     }
 
-    /**
-     * Fires an 'onBeforeRegister' event.
-     *
-     * @param Event $event
-     *
-     * @return null
-     */
-    public function onBeforeRegister(Event $event)
-    {
-        $this->raiseEvent('onBeforeRegister', $event);
-    }
-
     // Former Social service methods
     // =========================================================================
 
