@@ -21,70 +21,8 @@ use dukt\social\Plugin as Social;
  */
 class LoginAccount extends Element
 {
-    // Private Properties
+    // Static
     // =========================================================================
-
-    /**
-     * @var
-     */
-    private $_user;
-
-    // Public Properties
-    // =========================================================================
-
-    /**
-     * @var
-     */
-    public $userId;
-
-    /**
-     * @var
-     */
-    public $providerHandle;
-
-    /**
-     * @var
-     */
-    public $socialUid;
-
-    // Public Methods
-    // =========================================================================
-
-    /**
-     * @inheritdoc
-     */
-    /** @noinspection PhpInconsistentReturnPointsInspection */
-    public function __toString()
-    {
-        return (string)$this->socialUid;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function afterSave(bool $isNew)
-    {
-        if ($isNew) {
-            Craft::$app->db->createCommand()
-                ->insert('{{%social_login_accounts}}', [
-                    'id' => $this->id,
-                    'userId' => $this->userId,
-                    'providerHandle' => $this->providerHandle,
-                    'socialUid' => $this->socialUid,
-                ])
-                ->execute();
-        } else {
-            Craft::$app->db->createCommand()
-                ->update('{{%social_login_accounts}}', [
-                    'userId' => $this->userId,
-                    'providerHandle' => $this->providerHandle,
-                    'socialUid' => $this->socialUid,
-                ], ['id' => $this->id])
-                ->execute();
-        }
-
-        parent::afterSave($isNew);
-    }
 
     /**
      * @inheritdoc
@@ -134,6 +72,30 @@ class LoginAccount extends Element
     /**
      * @inheritdoc
      */
+    protected static function defineSearchableAttributes(): array
+    {
+        return ['socialUid', 'username', 'firstName', 'lastName', 'fullName', 'email', 'loginProvider'];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected static function defineSortOptions(): array
+    {
+        $attributes['socialUid'] = Craft::t('social', 'Social User ID');
+        $attributes['username'] = Craft::t('social', 'Username');
+        $attributes['email'] = Craft::t('social', 'Email');
+        $attributes['providerHandle'] = Craft::t('social', 'Login Provider');
+        $attributes['elements.dateCreated'] = Craft::t('social', 'Date Created');
+        $attributes['elements.dateUpdated'] = Craft::t('social', 'Date Updated');
+        $attributes['lastLoginDate'] = Craft::t('social', 'Last Login');
+
+        return $attributes;
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected static function defineTableAttributes(): array
     {
         $attributes['socialUid'] = ['label' => Craft::t('social', 'Social User ID')];
@@ -156,51 +118,50 @@ class LoginAccount extends Element
         return ['username', 'fullName', 'email', 'loginProvider', 'dateCreated', 'lastLoginDate'];
     }
 
+    // Properties
+    // =========================================================================
+
+    /**
+     * @var
+     */
+    public $userId;
+
+    /**
+     * @var
+     */
+    public $providerHandle;
+
+    /**
+     * @var
+     */
+    public $socialUid;
+
+    /**
+     * @var
+     */
+    private $_user;
+
+    // Public Methods
+    // =========================================================================
+
     /**
      * @inheritdoc
      */
-    protected static function defineSearchableAttributes(): array
+    /** @noinspection PhpInconsistentReturnPointsInspection */
+    public function __toString()
     {
-        return ['socialUid', 'username', 'firstName', 'lastName', 'fullName', 'email', 'loginProvider'];
+        return (string)$this->socialUid;
     }
 
     /**
-     * @inheritdoc
+     * @param $token
+     *
+     * @return bool
      */
-    protected function tableAttributeHtml(string $attribute): string
+    public function authenticate($token): bool
     {
-        switch ($attribute) {
-            case 'username':
-                $user = $this->getUser();
-                return $user ? Craft::$app->getView()->renderTemplate('_elements/element', ['element' => $user]) : '';
-            case 'email':
-                $user = $this->getUser();
-                return $user ? Html::encodeParams('<a href="mailto:{email}">{email}</a>', ['email' => $user->email]) : '';
-            case 'lastLoginDate':
-                $user = $this->getUser();
-                return Craft::$app->getFormatter()->asTime($user->lastLoginDate, 'short');
-            case 'loginProvider':
-                $loginProvider = $this->getLoginProvider();
-                return $loginProvider ? Craft::$app->getView()->renderTemplate('social/loginaccounts/_element', ['loginProvider' => $loginProvider]) : '';
-        }
-
-        return parent::tableAttributeHtml($attribute);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected static function defineSortOptions(): array
-    {
-        $attributes['socialUid'] = Craft::t('social', 'Social User ID');
-        $attributes['username'] = Craft::t('social', 'Username');
-        $attributes['email'] = Craft::t('social', 'Email');
-        $attributes['providerHandle'] = Craft::t('social', 'Login Provider');
-        $attributes['elements.dateCreated'] = Craft::t('social', 'Date Created');
-        $attributes['elements.dateUpdated'] = Craft::t('social', 'Date Updated');
-        $attributes['lastLoginDate'] = Craft::t('social', 'Last Login');
-
-        return $attributes;
+        // Todo: Check authentication again with token?
+        return true;
     }
 
     /**
@@ -225,17 +186,6 @@ class LoginAccount extends Element
         }
 
         return $this->_user;
-    }
-
-    /**
-     * @param $token
-     *
-     * @return bool
-     */
-    public function authenticate($token): bool
-    {
-        // Todo: Check authentication again with token?
-        return true;
     }
 
     /**
@@ -279,4 +229,61 @@ class LoginAccount extends Element
             return $user->email;
         }
     }
+
+    // Indexes, etc.
+    // -------------------------------------------------------------------------
+
+    /**
+     * @inheritdoc
+     */
+    protected function tableAttributeHtml(string $attribute): string
+    {
+        switch ($attribute) {
+            case 'username':
+                $user = $this->getUser();
+                return $user ? Craft::$app->getView()->renderTemplate('_elements/element', ['element' => $user]) : '';
+            case 'email':
+                $user = $this->getUser();
+                return $user ? Html::encodeParams('<a href="mailto:{email}">{email}</a>', ['email' => $user->email]) : '';
+            case 'lastLoginDate':
+                $user = $this->getUser();
+                return Craft::$app->getFormatter()->asTime($user->lastLoginDate, 'short');
+            case 'loginProvider':
+                $loginProvider = $this->getLoginProvider();
+                return $loginProvider ? Craft::$app->getView()->renderTemplate('social/loginaccounts/_element', ['loginProvider' => $loginProvider]) : '';
+        }
+
+        return parent::tableAttributeHtml($attribute);
+    }
+
+    // Events
+    // -------------------------------------------------------------------------
+
+    /**
+     * @inheritdoc
+     */
+    public function afterSave(bool $isNew)
+    {
+        if ($isNew) {
+            Craft::$app->db->createCommand()
+                ->insert('{{%social_login_accounts}}', [
+                    'id' => $this->id,
+                    'userId' => $this->userId,
+                    'providerHandle' => $this->providerHandle,
+                    'socialUid' => $this->socialUid,
+                ])
+                ->execute();
+        } else {
+            Craft::$app->db->createCommand()
+                ->update('{{%social_login_accounts}}', [
+                    'userId' => $this->userId,
+                    'providerHandle' => $this->providerHandle,
+                    'socialUid' => $this->socialUid,
+                ], ['id' => $this->id])
+                ->execute();
+        }
+
+        parent::afterSave($isNew);
+    }
+
 }
