@@ -57,5 +57,5 @@ class Settings extends Model
     /**
      * @var bool Show CP section
      */
-    public $showCpSection = true;
+    public $showCpSection = false;
 }
