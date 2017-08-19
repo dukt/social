@@ -4,39 +4,55 @@ namespace dukt\social\elements\db;
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
 
+/**
+ * LoginAccountQuery represents a SELECT SQL statement for login accounts in a way that is independent of DBMS.
+ *
+ * @author Dukt <support@dukt.net>
+ * @since  2.0
+ */
 class LoginAccountQuery extends ElementQuery
 {
     // Properties
     // =========================================================================
 
+    // General parameters
+    // -------------------------------------------------------------------------
+
     /**
      * @var
      */
     public $userId;
+
     /**
      * @var
      */
     public $providerHandle;
+
     /**
      * @var
      */
     public $socialUid;
-    /**
-     * @var
-     */
-    public $username;
+
     /**
      * @var
      */
     public $email;
+
+    /**
+     * @var
+     */
+    public $username;
+
     /**
      * @var
      */
     public $firstName;
+
     /**
      * @var
      */
     public $lastName;
+
     /**
      * @var
      */
@@ -88,20 +104,6 @@ class LoginAccountQuery extends ElementQuery
     }
 
     /**
-     * Sets the [[email]] property.
-     *
-     * @param string|string[]|null $value The property value
-     *
-     * @return static self reference
-     */
-    public function email($value)
-    {
-        $this->email = $value;
-
-        return $this;
-    }
-
-    /**
      * Sets the [[username]] property.
      *
      * @param string|string[]|null $value The property value
@@ -111,6 +113,20 @@ class LoginAccountQuery extends ElementQuery
     public function username($value)
     {
         $this->username = $value;
+
+        return $this;
+    }
+
+    /**
+     * Sets the [[email]] property.
+     *
+     * @param string|string[]|null $value The property value
+     *
+     * @return static self reference
+     */
+    public function email($value)
+    {
+        $this->email = $value;
 
         return $this;
     }
