@@ -88,20 +88,6 @@ class LoginAccountQuery extends ElementQuery
     }
 
     /**
-     * Sets the [[username]] property.
-     *
-     * @param string|string[]|null $value The property value
-     *
-     * @return static self reference
-     */
-    public function username($value)
-    {
-        $this->username = $value;
-
-        return $this;
-    }
-
-    /**
      * Sets the [[email]] property.
      *
      * @param string|string[]|null $value The property value
@@ -111,6 +97,20 @@ class LoginAccountQuery extends ElementQuery
     public function email($value)
     {
         $this->email = $value;
+
+        return $this;
+    }
+
+    /**
+     * Sets the [[username]] property.
+     *
+     * @param string|string[]|null $value The property value
+     *
+     * @return static self reference
+     */
+    public function username($value)
+    {
+        $this->username = $value;
 
         return $this;
     }
@@ -173,12 +173,6 @@ class LoginAccountQuery extends ElementQuery
             'social_login_accounts.userId',
             'social_login_accounts.providerHandle',
             'social_login_accounts.socialUid',
-
-            'users.username',
-            'users.email',
-            'users.firstName',
-            'users.lastName',
-            'users.lastLoginDate',
         ]);
 
         if ($this->userId) {
@@ -193,12 +187,12 @@ class LoginAccountQuery extends ElementQuery
             $this->subQuery->andWhere(Db::parseParam('social_login_accounts.socialUid', $this->socialUid));
         }
 
-        if ($this->username) {
-            $this->subQuery->andWhere(Db::parseParam('users.username', $this->username));
-        }
-
         if ($this->email) {
             $this->subQuery->andWhere(Db::parseParam('users.email', $this->email));
+        }
+
+        if ($this->username) {
+            $this->subQuery->andWhere(Db::parseParam('users.username', $this->username));
         }
 
         if ($this->firstName) {

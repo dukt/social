@@ -47,39 +47,13 @@ class LoginAccount extends Element
      */
     public $socialUid;
 
-    /**
-     * @var
-     */
-    public $username;
-
-    /**
-     * @var
-     */
-    public $email;
-
-    /**
-     * @var
-     */
-    public $firstName;
-
-    /**
-     * @var
-     */
-    public $lastName;
-
-    /**
-     * @var
-     */
-    public $lastLoginDate;
-
     // Public Methods
     // =========================================================================
 
     /**
-     * Use the login account's email or username as its string representation.
-     *
-     * @return string
+     * @inheritdoc
      */
+    /** @noinspection PhpInconsistentReturnPointsInspection */
     public function __toString()
     {
         return (string)$this->socialUid;
@@ -166,7 +140,7 @@ class LoginAccount extends Element
         $attributes['username'] = ['label' => Craft::t('social', 'Username')];
         $attributes['fullName'] = ['label' => Craft::t('social', 'Full Name')];
         $attributes['email'] = ['label' => Craft::t('social', 'Email')];
-        $attributes['provider'] = ['label' => Craft::t('social', 'Login Provider')];
+        $attributes['loginProvider'] = ['label' => Craft::t('social', 'Login Provider')];
         $attributes['dateCreated'] = ['label' => Craft::t('social', 'Date Created')];
         $attributes['dateUpdated'] = ['label' => Craft::t('social', 'Date Updated')];
         $attributes['lastLoginDate'] = ['label' => Craft::t('social', 'Last Login')];
@@ -179,7 +153,15 @@ class LoginAccount extends Element
      */
     protected static function defineDefaultTableAttributes(string $source): array
     {
-        return ['username', 'fullName', 'email', 'provider', 'dateCreated', 'lastLoginDate'];
+        return ['username', 'fullName', 'email', 'loginProvider', 'dateCreated', 'lastLoginDate'];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected static function defineSearchableAttributes(): array
+    {
+        return ['socialUid', 'username', 'firstName', 'lastName', 'fullName', 'email', 'loginProvider'];
     }
 
     /**
@@ -194,10 +176,10 @@ class LoginAccount extends Element
             case 'email':
                 $user = $this->getUser();
                 return $user ? Html::encodeParams('<a href="mailto:{email}">{email}</a>', ['email' => $user->email]) : '';
-            case 'fullName':
+            case 'lastLoginDate':
                 $user = $this->getUser();
-                return $user && $user->getFullName() ? $user->getFullName() : '';
-            case 'provider':
+                return Craft::$app->getFormatter()->asTime($user->lastLoginDate, 'short');
+            case 'loginProvider':
                 $loginProvider = $this->getLoginProvider();
                 return $loginProvider ? Craft::$app->getView()->renderTemplate('social/loginaccounts/_element', ['loginProvider' => $loginProvider]) : '';
         }
@@ -257,13 +239,44 @@ class LoginAccount extends Element
     }
 
     /**
-     * @inheritdoc
+     * Gets the user's username.
+     *
+     * @return string|null
      */
-    public function datetimeAttributes(): array
+    public function getUsername()
     {
-        $names = parent::datetimeAttributes();
-        $names[] = 'lastLoginDate';
+        $user = $this->getUser();
 
-        return $names;
+        if($user) {
+            return $user->username;
+        }
+    }
+
+    /**
+     * Gets the user's full name.
+     *
+     * @return string|null
+     */
+    public function getFullName()
+    {
+        $user = $this->getUser();
+
+        if($user) {
+            return $user->getFullName();
+        }
+    }
+
+    /**
+     * Gets the user's email.
+     *
+     * @return string|null
+     */
+    public function getEmail()
+    {
+        $user = $this->getUser();
+
+        if($user) {
+            return $user->email;
+        }
     }
 }

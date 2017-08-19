@@ -19,6 +19,11 @@ abstract class LoginProvider implements LoginProviderInterface
     // Public Methods
     // =========================================================================
 
+    public function __toString()
+    {
+        return $this->getName();
+    }
+
     /**
      * Get provider infos
      *
