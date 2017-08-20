@@ -10,6 +10,7 @@ namespace dukt\social;
 use Craft;
 use craft\elements\User;
 use craft\events\DefineComponentsEvent;
+use craft\events\ModelEvent;
 use craft\events\RegisterElementTableAttributesEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\SetElementTableAttributeHtmlEvent;
@@ -91,6 +92,15 @@ class Plugin extends \craft\base\Plugin
 
         Event::on(CraftVariable::class, CraftVariable::EVENT_DEFINE_COMPONENTS, function(DefineComponentsEvent $event) {
             $event->components['social'] = SocialVariable::class;
+        });
+
+        Event::on(User::class, User::EVENT_AFTER_SAVE, function(ModelEvent $event) {
+            $user = $event->sender;
+            $loginAccounts = Plugin::$plugin->getLoginAccounts()->getLoginAccountsByUserId($user->id);
+
+            foreach($loginAccounts as $loginAccount) {
+                Plugin::$plugin->getLoginAccounts()->saveLoginAccount($loginAccount);
+            }
         });
 
         // Todo
