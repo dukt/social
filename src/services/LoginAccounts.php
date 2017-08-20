@@ -9,6 +9,7 @@ namespace dukt\social\services;
 
 use Craft;
 use craft\helpers\FileHelper;
+use dukt\social\helpers\SocialHelper;
 use yii\base\Component;
 use craft\elements\User as UserModel;
 use dukt\social\elements\LoginAccount;
@@ -237,7 +238,7 @@ class LoginAccounts extends Component
             $params['scope'] = urlencode(base64_encode(serialize($params['scope'])));
         }
 
-        return UrlHelper::actionUrl('social/login-accounts/login', $params);
+        return SocialHelper::siteActionUrl('social/login-accounts/login', $params);
     }
 
     /**

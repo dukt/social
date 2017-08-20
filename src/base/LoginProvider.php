@@ -10,6 +10,7 @@ namespace dukt\social\base;
 use Craft;
 use craft\helpers\UrlHelper;
 use craft\web\Response;
+use dukt\social\helpers\SocialHelper;
 use dukt\social\models\Token;
 use dukt\social\Plugin as Social;
 use dukt\social\Plugin;
@@ -245,19 +246,7 @@ abstract class LoginProvider implements LoginProviderInterface
      */
     public function getRedirectUri()
     {
-        // Force `addTrailingSlashesToUrls` to `false` while we generate the redirectUri
-        $addTrailingSlashesToUrls = Craft::$app->getConfig()->getGeneral()->addTrailingSlashesToUrls;
-        Craft::$app->getConfig()->getGeneral()->addTrailingSlashesToUrls = false;
-
-        $redirectUri = UrlHelper::actionUrl('social/login-accounts/callback');
-
-        // Set `addTrailingSlashesToUrls` back to its original value
-        Craft::$app->getConfig()->getGeneral()->addTrailingSlashesToUrls = $addTrailingSlashesToUrls;
-
-        // We don't want the CP trigger showing in the action URL.
-        $redirectUri =  str_replace(Craft::$app->getConfig()->getGeneral()->cpTrigger.'/', '', $redirectUri);
-
-        return $redirectUri;
+        return SocialHelper::siteActionUrl('social/login-accounts/callback');
     }
 
     // Private Methods
