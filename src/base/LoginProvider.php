@@ -215,8 +215,7 @@ abstract class LoginProvider implements LoginProviderInterface
     public function getIsEnabled()
     {
         // get plugin settings
-        $plugin = Craft::$app->getPlugins()->getPlugin('social');
-        $settings = $plugin->getSettings();
+        $settings = Plugin::$plugin->getSettings();
         $enabledLoginProviders = $settings->enabledLoginProviders;
 
         if (in_array($this->getHandle(), $enabledLoginProviders))
