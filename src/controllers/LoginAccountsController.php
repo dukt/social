@@ -566,7 +566,7 @@ class LoginAccountsController extends Controller
                             $fieldHandle = $key;
 
                             // Check to make sure custom field exists for user profile
-                            if (isset($newUser->getContent()[$fieldHandle])) {
+                            if (isset($newUser->{$fieldHandle})) {
                                 try {
                                     $userContent[$fieldHandle] = Craft::$app->getView()->renderString($template, $variables);
                                 } catch (\Exception $e) {
