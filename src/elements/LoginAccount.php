@@ -203,6 +203,34 @@ class LoginAccount extends Element
     }
 
     /**
+     * Gets the user's first name.
+     *
+     * @return string|null
+     */
+    public function getFirstName()
+    {
+        $user = $this->getUser();
+
+        if($user) {
+            return $user->firstName;
+        }
+    }
+
+    /**
+     * Gets the user's last name.
+     *
+     * @return string|null
+     */
+    public function getLastName()
+    {
+        $user = $this->getUser();
+
+        if($user) {
+            return $user->lastName;
+        }
+    }
+
+    /**
      * Gets the user's full name.
      *
      * @return string|null
