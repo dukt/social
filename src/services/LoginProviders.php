@@ -104,28 +104,41 @@ class LoginProviders extends Component
      */
     private function _getLoginProviders($enabledOnly)
     {
-        // fetch all OAuth provider types
-        $socialLoginProviderTypes = [];
+        // Fetch Social's login providers
 
-        /*		foreach (Craft::$app->getPlugins()->call('getSocialLoginProviders', [], true) as $pluginSocialLoginProviderTypes)
-                {
-                    $socialLoginProviderTypes = array_merge($socialLoginProviderTypes, $pluginSocialLoginProviderTypes);
-                }*/
+        $loginProviderTypes = Plugin::$plugin->getSocialLoginProviders();
+
+
+        // Fetch login providers from other plugins
 
         foreach (Craft::$app->getPlugins()->getAllPlugins() as $plugin) {
             if (method_exists($plugin, 'getSocialLoginProviders')) {
-                $socialLoginProviderTypes = array_merge($socialLoginProviderTypes, $plugin->getSocialLoginProviders());
+                $pluginLoginProviders = $plugin->getSocialLoginProviders();
+
+                foreach($pluginLoginProviders as $pluginLoginProvider) {
+                    $alreadyExists = false;
+                    foreach($loginProviderTypes as $loginProviderType) {
+                        if ($loginProviderType === $pluginLoginProvider) {
+                            $alreadyExists = true;
+                        }
+                    }
+
+                    if(!$alreadyExists) {
+                        array_push($loginProviderTypes, $pluginLoginProvider);
+                    }
+                }
             }
         }
 
-        // instantiate providers
+        // Instantiate providers
+
         $loginProviders = [];
 
-        foreach ($socialLoginProviderTypes as $socialLoginProviderType) {
-            $loginProvider = $this->_createLoginProvider($socialLoginProviderType);
+        foreach ($loginProviderTypes as $loginProviderType) {
+            $loginProvider = $this->_createLoginProvider($loginProviderType);
 
             if (!$enabledOnly || ($enabledOnly && $loginProvider->getIsEnabled())) {
-                $loginProviders[$socialLoginProviderType] = $loginProvider;
+                $loginProviders[$loginProviderType] = $loginProvider;
             }
         }
 
