@@ -233,11 +233,6 @@ class LoginAccounts extends Component
     {
         $params['provider'] = $providerHandle;
 
-        if (isset($params['scope']) && is_array($params['scope']))
-        {
-            $params['scope'] = urlencode(base64_encode(serialize($params['scope'])));
-        }
-
         return SocialHelper::siteActionUrl('social/login-accounts/login', $params);
     }
 
