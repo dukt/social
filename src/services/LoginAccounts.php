@@ -15,7 +15,6 @@ use craft\elements\User as UserModel;
 use dukt\social\elements\LoginAccount;
 use Exception;
 use craft\helpers\UrlHelper;
-use dukt\social\Plugin as Social;
 
 class LoginAccounts extends Component
 {
