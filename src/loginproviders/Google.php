@@ -76,11 +76,10 @@ class Google extends LoginProvider
         return [
             'id' => $remoteProfile->getId(),
             'email' => $remoteProfile->getEmail(),
+            'name' => $remoteProfile->getName(),
             'firstName' => $remoteProfile->getFirstName(),
             'lastName' => $remoteProfile->getLastName(),
             'photoUrl' => $photoUrl,
-
-            'name' => $remoteProfile->getName(),
         ];
     }
 

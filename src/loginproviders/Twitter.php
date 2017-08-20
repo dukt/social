@@ -74,7 +74,6 @@ class Twitter extends LoginProvider
             'id' => $remoteProfile->uid,
             'email' => $remoteProfile->email,
             'photoUrl' => $photoUrl,
-
             'nickname' => $remoteProfile->nickname,
             'name' => $remoteProfile->name,
             'location' => $remoteProfile->location,

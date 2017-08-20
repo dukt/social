@@ -74,7 +74,6 @@ class Facebook extends LoginProvider
             'firstName' => (isset($remoteProfile['first_name']) ? $remoteProfile['first_name'] : null ),
             'lastName' => (isset($remoteProfile['last_name']) ? $remoteProfile['last_name'] : null ),
             'photoUrl' => (isset($remoteProfile['picture']['data']['url']) ? $remoteProfile['picture']['data']['url'] : null ),
-
             'name' => (isset($remoteProfile['name']) ? $remoteProfile['name'] : null ),
             'hometown' => (isset($remoteProfile['hometown']) ? $remoteProfile['hometown'] : null ),
             'isDefaultPicture' => (isset($remoteProfile['picture']['data']['is_silhouette']) ? $remoteProfile['picture']['data']['is_silhouette'] : null ),
