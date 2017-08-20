@@ -13,6 +13,7 @@ use dukt\social\helpers\SocialHelper;
 use yii\base\Component;
 use craft\elements\User as UserModel;
 use dukt\social\elements\LoginAccount;
+use dukt\social\records\LoginAccount as LoginAccountRecord;
 use Exception;
 use craft\helpers\UrlHelper;
 
@@ -100,7 +101,7 @@ class LoginAccounts extends Component
         $isNewAccount = !$account->id;
 
         if (!$isNewAccount) {
-            $accountRecord = LoginAccount::model()->findById($account->id);
+            $accountRecord = $this->_getLoginAccountRecordById($account->id);
 
             if (!$accountRecord) {
                 throw new Exception(Craft::t('social', 'No social user exists with the ID “{id}”', ['id' => $account->id]));
@@ -120,7 +121,7 @@ class LoginAccounts extends Component
         $account->addErrors($accountRecord->getErrors());
 
         if (!$account->hasErrors()) {
-            $transaction = Craft::$app->db->getCurrentTransaction() === null ? Craft::$app->db->beginTransaction() : null;
+            $transaction = Craft::$app->getDb()->beginTransaction();
 
             try {
                 if (Craft::$app->elements->saveElement($account)) {
@@ -338,5 +339,28 @@ class LoginAccounts extends Component
         Craft::$app->users->saveUserPhoto($tempPath.$filename.'.'.$extension, $user, $filename.'.'.$extension);
 
         return true;
+    }
+
+    // Private Methods
+    // =========================================================================
+
+    /**
+     * Gets a user record by its ID.
+     *
+     * @param int $loginAccountId
+     *
+     * @return LoginAccountRecord
+     * @throws UserNotFoundException if $loginAccountId is invalid
+     */
+    private function _getLoginAccountRecordById(int $loginAccountId): LoginAccountRecord
+    {
+        $loginAccountRecord = LoginAccountRecord::findOne($loginAccountId);
+
+        if (!$loginAccountRecord) {
+            // todo
+            // throw new UserNotFoundException("No user exists with the ID '{$loginAccountId}'");
+        }
+
+        return $loginAccountRecord;
     }
 }
