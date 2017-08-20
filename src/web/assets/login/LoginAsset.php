@@ -1,10 +1,10 @@
 <?php
-namespace dukt\social\web\assets\loginaccountindex;
+namespace dukt\social\web\assets\login;
 
 use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;
 
-class LoginAccountIndexAsset extends AssetBundle
+class LoginAsset extends AssetBundle
 {
     public function init()
     {

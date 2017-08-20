@@ -33,7 +33,10 @@ class LoginAccountsController extends Controller
     // Properties
     // =========================================================================
 
-    protected $allowAnonymous = ['actionLogin', 'actionCallback'];
+    /**
+     * @inheritdoc
+     */
+    protected $allowAnonymous = ['login', 'callback'];
 
     /**
      * URL to redirect to after login.

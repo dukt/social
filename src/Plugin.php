@@ -17,6 +17,7 @@ use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use dukt\social\base\PluginTrait;
 use dukt\social\models\Settings;
+use dukt\social\web\assets\login\LoginAsset;
 use dukt\social\web\twig\variables\SocialVariable;
 use dukt\social\web\assets\social\SocialAsset;
 use yii\base\Event;
@@ -93,7 +94,7 @@ class Plugin extends \craft\base\Plugin
         });
 
         // Todo
-        // $this->initEventListeners();
+        $this->initEventListeners();
         $this->initTemplateHooks();
     }
 
@@ -222,7 +223,8 @@ class Plugin extends \craft\base\Plugin
         // social login for CP
 
         if ($this->settings->enableCpLogin) {
-            if (Craft::$app->getRequest()->isCpRequest() && Craft::$app->getRequest()->getSegment(1) == 'login') {
+            if (Craft::$app->getRequest()->getIsCpRequest() && Craft::$app->getRequest()->getSegment(1) == 'login') {
+
                 $loginProviders = $this->loginProviders->getLoginProviders();
                 $jsLoginProviders = [];
 
@@ -239,10 +241,9 @@ class Plugin extends \craft\base\Plugin
 
                 $error = Craft::$app->getSession()->getFlash('error');
 
-                Craft::$app->getView()->registerCssFile("social/css/login.css", true);
-                Craft::$app->getView()->includeJsResource("social/js/login.js", true);
+                Craft::$app->getView()->registerAssetBundle(LoginAsset::class);
 
-                Craft::$app->getView()->includeJs("var socialLoginForm = new Craft.SocialLoginForm(".json_encode($jsLoginProviders).", ".json_encode($error).");");
+                Craft::$app->getView()->registerJs("var socialLoginForm = new Craft.SocialLoginForm(".json_encode($jsLoginProviders).", ".json_encode($error).");");
             }
         }
 
