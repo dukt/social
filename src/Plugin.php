@@ -256,15 +256,6 @@ class Plugin extends \craft\base\Plugin
                 Craft::$app->getView()->registerJs("var socialLoginForm = new Craft.SocialLoginForm(".json_encode($jsLoginProviders).", ".json_encode($error).");");
             }
         }
-
-
-        // Delete social user when craft user is deleted
-
-        Craft::$app->on('users.onBeforeDeleteUser', function(Event $event) {
-            $user = $event->params['user'];
-
-            $this->loginAccounts->deleteLoginAccountByUserId($user->id);
-        });
     }
 
     /**
