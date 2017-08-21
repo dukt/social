@@ -233,7 +233,7 @@ class Plugin extends \craft\base\Plugin
         // social login for CP
 
         if ($this->settings->enableCpLogin) {
-            if (Craft::$app->getRequest()->getIsCpRequest() && Craft::$app->getRequest()->getSegment(1) == 'login') {
+            if (Craft::$app->getRequest()->getIsCpRequest() && Craft::$app->getRequest()->getSegment(1) === 'login') {
 
                 $loginProviders = $this->loginProviders->getLoginProviders();
                 $jsLoginProviders = [];
