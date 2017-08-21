@@ -73,7 +73,7 @@ class Plugin extends \craft\base\Plugin
         });
 
         Event::on(User::class, User::EVENT_SET_TABLE_ATTRIBUTE_HTML, function(SetElementTableAttributeHtmlEvent $event) {
-            if($event->attribute === 'loginAccounts') {
+            if ($event->attribute === 'loginAccounts') {
 
                 $user = $event->sender;
 
@@ -98,7 +98,7 @@ class Plugin extends \craft\base\Plugin
             $user = $event->sender;
             $loginAccounts = Plugin::$plugin->getLoginAccounts()->getLoginAccountsByUserId($user->id);
 
-            foreach($loginAccounts as $loginAccount) {
+            foreach ($loginAccounts as $loginAccount) {
                 Plugin::$plugin->getLoginAccounts()->saveLoginAccount($loginAccount);
             }
         });
@@ -185,8 +185,7 @@ class Plugin extends \craft\base\Plugin
     {
         $config = Craft::$app->getConfig()->getConfigFromFile('social');
 
-        if(isset($config['loginProviders'][$handle]))
-        {
+        if (isset($config['loginProviders'][$handle])) {
             return $config['loginProviders'][$handle];
         }
     }
@@ -214,6 +213,7 @@ class Plugin extends \craft\base\Plugin
     {
         if (version_compare($fromVersion, '1.1.0', '<')) {
             Craft::error('Social Login 2 requires you to be running at least v1.1.0 before updating');
+
             return false;
         }
 

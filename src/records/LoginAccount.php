@@ -31,10 +31,10 @@ class LoginAccount extends ActiveRecord
      */
     public function defineRelations()
     {
-        return array(
-            'element' => array(static::BELONGS_TO, 'ElementRecord', 'id', 'onDelete' => static::CASCADE, 'required' => true),
-            'user' => array(static::BELONGS_TO, 'UserRecord', 'onDelete' => static::CASCADE, 'required' => true),
-        );
+        return [
+            'element' => [static::BELONGS_TO, 'ElementRecord', 'id', 'onDelete' => static::CASCADE, 'required' => true],
+            'user' => [static::BELONGS_TO, 'UserRecord', 'onDelete' => static::CASCADE, 'required' => true],
+        ];
     }
 
     /**
@@ -44,9 +44,9 @@ class LoginAccount extends ActiveRecord
      */
     public function defineIndexes()
     {
-        return array(
-            array('columns' => array('providerHandle', 'socialUid'), 'unique' => true)
-        );
+        return [
+            ['columns' => ['providerHandle', 'socialUid'], 'unique' => true]
+        ];
     }
 
     // Protected Methods
@@ -59,9 +59,9 @@ class LoginAccount extends ActiveRecord
      */
     public function defineAttributes()
     {
-        return array(
-            'providerHandle' => array(AttributeType::String, 'required' => true),
-            'socialUid' => array(AttributeType::String, 'required' => true),
-        );
+        return [
+            'providerHandle' => [AttributeType::String, 'required' => true],
+            'socialUid' => [AttributeType::String, 'required' => true],
+        ];
     }
 }

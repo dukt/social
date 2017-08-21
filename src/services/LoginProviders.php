@@ -32,7 +32,7 @@ class LoginProviders extends Component
 
         $enabledLoginProviders = $settings->enabledLoginProviders;
 
-        if(($key = array_search($handle, $enabledLoginProviders)) !== false) {
+        if (($key = array_search($handle, $enabledLoginProviders)) !== false) {
             unset($enabledLoginProviders[$key]);
         }
 
@@ -55,7 +55,7 @@ class LoginProviders extends Component
 
         $enabledLoginProviders = $settings->enabledLoginProviders;
 
-        if(!in_array($handle, $enabledLoginProviders)) {
+        if (!in_array($handle, $enabledLoginProviders)) {
             $enabledLoginProviders[] = $handle;
         }
 
@@ -115,15 +115,15 @@ class LoginProviders extends Component
             if (method_exists($plugin, 'getSocialLoginProviders')) {
                 $pluginLoginProviders = $plugin->getSocialLoginProviders();
 
-                foreach($pluginLoginProviders as $pluginLoginProvider) {
+                foreach ($pluginLoginProviders as $pluginLoginProvider) {
                     $alreadyExists = false;
-                    foreach($loginProviderTypes as $loginProviderType) {
+                    foreach ($loginProviderTypes as $loginProviderType) {
                         if ($loginProviderType === $pluginLoginProvider) {
                             $alreadyExists = true;
                         }
                     }
 
-                    if(!$alreadyExists) {
+                    if (!$alreadyExists) {
                         array_push($loginProviderTypes, $pluginLoginProvider);
                     }
                 }

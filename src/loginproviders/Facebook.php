@@ -7,8 +7,6 @@
 
 namespace dukt\social\loginproviders;
 
-use craft\helpers\UrlHelper;
-use dukt\social\Plugin as Social;
 use dukt\social\base\LoginProvider;
 use GuzzleHttp\Client;
 use dukt\social\models\Token;
@@ -69,20 +67,20 @@ class Facebook extends LoginProvider
         $remoteProfile = $this->getRemoteProfile($token);
 
         return [
-            'id' => (isset($remoteProfile['id']) ? $remoteProfile['id'] : null ),
-            'email' => (isset($remoteProfile['email']) ? $remoteProfile['email'] : null ),
-            'firstName' => (isset($remoteProfile['first_name']) ? $remoteProfile['first_name'] : null ),
-            'lastName' => (isset($remoteProfile['last_name']) ? $remoteProfile['last_name'] : null ),
-            'photoUrl' => (isset($remoteProfile['picture']['data']['url']) ? $remoteProfile['picture']['data']['url'] : null ),
-            'name' => (isset($remoteProfile['name']) ? $remoteProfile['name'] : null ),
-            'hometown' => (isset($remoteProfile['hometown']) ? $remoteProfile['hometown'] : null ),
-            'isDefaultPicture' => (isset($remoteProfile['picture']['data']['is_silhouette']) ? $remoteProfile['picture']['data']['is_silhouette'] : null ),
-            'coverPhotoUrl' => (isset($remoteProfile['cover']['source']) ? $remoteProfile['cover']['source'] : null ),
-            'gender' => (isset($remoteProfile['gender']) ? $remoteProfile['gender'] : null ),
-            'locale' => (isset($remoteProfile['locale']) ? $remoteProfile['locale'] : null ),
-            'link' => (isset($remoteProfile['link']) ? $remoteProfile['link'] : null ),
-            'locationId' => (isset($remoteProfile['location']['id']) ? $remoteProfile['location']['id'] : null ),
-            'locationName' => (isset($remoteProfile['location']['name']) ? $remoteProfile['location']['name'] : null ),
+            'id' => (isset($remoteProfile['id']) ? $remoteProfile['id'] : null),
+            'email' => (isset($remoteProfile['email']) ? $remoteProfile['email'] : null),
+            'firstName' => (isset($remoteProfile['first_name']) ? $remoteProfile['first_name'] : null),
+            'lastName' => (isset($remoteProfile['last_name']) ? $remoteProfile['last_name'] : null),
+            'photoUrl' => (isset($remoteProfile['picture']['data']['url']) ? $remoteProfile['picture']['data']['url'] : null),
+            'name' => (isset($remoteProfile['name']) ? $remoteProfile['name'] : null),
+            'hometown' => (isset($remoteProfile['hometown']) ? $remoteProfile['hometown'] : null),
+            'isDefaultPicture' => (isset($remoteProfile['picture']['data']['is_silhouette']) ? $remoteProfile['picture']['data']['is_silhouette'] : null),
+            'coverPhotoUrl' => (isset($remoteProfile['cover']['source']) ? $remoteProfile['cover']['source'] : null),
+            'gender' => (isset($remoteProfile['gender']) ? $remoteProfile['gender'] : null),
+            'locale' => (isset($remoteProfile['locale']) ? $remoteProfile['locale'] : null),
+            'link' => (isset($remoteProfile['link']) ? $remoteProfile['link'] : null),
+            'locationId' => (isset($remoteProfile['location']['id']) ? $remoteProfile['location']['id'] : null),
+            'locationName' => (isset($remoteProfile['location']['name']) ? $remoteProfile['location']['name'] : null),
         ];
     }
 
@@ -124,10 +122,9 @@ class Facebook extends LoginProvider
      */
     private function getClient(Token $token)
     {
-        $headers = array();
+        $headers = [];
 
-        if($token)
-        {
+        if ($token) {
 
             $headers['Authorization'] = 'Bearer '.$token->getToken();
         }

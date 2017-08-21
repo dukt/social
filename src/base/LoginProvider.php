@@ -8,7 +8,6 @@
 namespace dukt\social\base;
 
 use Craft;
-use craft\helpers\UrlHelper;
 use craft\web\Response;
 use dukt\social\helpers\SocialHelper;
 use dukt\social\models\Token;
@@ -69,7 +68,7 @@ abstract class LoginProvider implements LoginProviderInterface
     {
         $infos = $this->getInfos();
 
-        if(!empty($infos['clientId'])) {
+        if (!empty($infos['clientId'])) {
             return true;
         }
 
@@ -93,8 +92,7 @@ abstract class LoginProvider implements LoginProviderInterface
      */
     public function oauthConnect()
     {
-        switch($this->oauthVersion())
-        {
+        switch ($this->oauthVersion()) {
             case 1:
                 return $this->oauth1Connect();
             case 2:
@@ -109,14 +107,12 @@ abstract class LoginProvider implements LoginProviderInterface
      */
     public function oauthCallback()
     {
-        switch($this->oauthVersion())
-        {
+        switch ($this->oauthVersion()) {
             case 1:
                 return $this->oauth1Callback();
             case 2:
                 return $this->oauth2Callback();
         }
-
     }
 
     /**
@@ -183,7 +179,7 @@ abstract class LoginProvider implements LoginProviderInterface
         $providerHandle = $this->getHandle();
         $config = Plugin::$plugin->getLoginProviderConfig($providerHandle);
 
-        if(isset($config['scope'])) {
+        if (isset($config['scope'])) {
             return $config['scope'];
         }
 
@@ -200,7 +196,7 @@ abstract class LoginProvider implements LoginProviderInterface
         $providerHandle = $this->getHandle();
         $config = Plugin::$plugin->getLoginProviderConfig($providerHandle);
 
-        if(isset($config['authorizationOptions'])) {
+        if (isset($config['authorizationOptions'])) {
             return $config['authorizationOptions'];
         }
 
@@ -218,8 +214,7 @@ abstract class LoginProvider implements LoginProviderInterface
         $settings = Plugin::$plugin->getSettings();
         $enabledLoginProviders = $settings->enabledLoginProviders;
 
-        if (in_array($this->getHandle(), $enabledLoginProviders))
-        {
+        if (in_array($this->getHandle(), $enabledLoginProviders)) {
             return true;
         }
 
@@ -287,8 +282,7 @@ abstract class LoginProvider implements LoginProviderInterface
         $scope = $this->getScope();
         $options = $this->getAuthorizationOptions();
 
-        if(!is_array($options))
-        {
+        if (!is_array($options)) {
             $options = [];
         }
 

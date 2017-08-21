@@ -45,16 +45,13 @@ class LoginProvidersController extends Controller
     {
         $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($handle, false, true);
 
-        if ($loginProvider)
-        {
+        if ($loginProvider) {
             return $this->renderTemplate('social/loginproviders/_edit', [
                 'handle' => $handle,
                 'infos' => $loginProvider->getInfos(),
                 'loginProvider' => $loginProvider
             ]);
-        }
-        else
-        {
+        } else {
             throw new HttpException(404);
         }
     }
@@ -69,12 +66,9 @@ class LoginProvidersController extends Controller
         $this->requirePostRequest();
         $loginProvider = Craft::$app->getRequest()->getRequiredBodyParam('loginProvider');
 
-        if (Social::$plugin->getLoginProviders()->enableLoginProvider($loginProvider))
-        {
+        if (Social::$plugin->getLoginProviders()->enableLoginProvider($loginProvider)) {
             Craft::$app->getSession()->setNotice(Craft::t('social', 'Login provider enabled.'));
-        }
-        else
-        {
+        } else {
             Craft::$app->getSession()->setError(Craft::t('social', 'Couldn’t enable login provider.'));
         }
 
@@ -91,12 +85,9 @@ class LoginProvidersController extends Controller
         $this->requirePostRequest();
         $loginProvider = Craft::$app->getRequest()->getRequiredBodyParam('loginProvider');
 
-        if (Social::$plugin->getLoginProviders()->disableLoginProvider($loginProvider))
-        {
+        if (Social::$plugin->getLoginProviders()->disableLoginProvider($loginProvider)) {
             Craft::$app->getSession()->setNotice(Craft::t('social', 'Login provider disabled.'));
-        }
-        else
-        {
+        } else {
             Craft::$app->getSession()->setError(Craft::t('social', 'Couldn’t disable login provider.'));
         }
 

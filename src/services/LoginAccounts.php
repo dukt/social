@@ -224,8 +224,8 @@ class LoginAccounts extends Component
     /**
      * Get login URL
      *
-     * @param $providerHandle
-     * @param array  $params
+     * @param       $providerHandle
+     * @param array $params
      *
      * @return string
      */
@@ -283,19 +283,18 @@ class LoginAccounts extends Component
 
         $client = new \GuzzleHttp\Client();
 
-        $response = $client->request('GET', $photoUrl, array(
+        $response = $client->request('GET', $photoUrl, [
             'save_to' => $tempPath.$filename
-        ));
+        ]);
 
-        if ($response->getStatusCode() != 200)
-        {
+        if ($response->getStatusCode() != 200) {
             return;
         }
 
         $contentTypes = $response->getHeader('Content-Type');
 
-        if(is_array($contentTypes) && isset($contentTypes[0])) {
-            switch($contentTypes[0]) {
+        if (is_array($contentTypes) && isset($contentTypes[0])) {
+            switch ($contentTypes[0]) {
                 case 'image/gif':
                     $extension = 'gif';
                     break;
@@ -318,7 +317,7 @@ class LoginAccounts extends Component
 
         rename($tempPath.$filename, $tempPath.$filename.'.'.$extension);
 
-        if($user->photoId) {
+        if ($user->photoId) {
             Craft::$app->users->deleteUserPhoto($user);
         }
 

@@ -197,7 +197,7 @@ class LoginAccount extends Element
     {
         $user = $this->getUser();
 
-        if($user) {
+        if ($user) {
             return $user->username;
         }
     }
@@ -211,7 +211,7 @@ class LoginAccount extends Element
     {
         $user = $this->getUser();
 
-        if($user) {
+        if ($user) {
             return $user->firstName;
         }
     }
@@ -225,7 +225,7 @@ class LoginAccount extends Element
     {
         $user = $this->getUser();
 
-        if($user) {
+        if ($user) {
             return $user->lastName;
         }
     }
@@ -239,7 +239,7 @@ class LoginAccount extends Element
     {
         $user = $this->getUser();
 
-        if($user) {
+        if ($user) {
             return $user->getFullName();
         }
     }
@@ -253,7 +253,7 @@ class LoginAccount extends Element
     {
         $user = $this->getUser();
 
-        if($user) {
+        if ($user) {
             return $user->email;
         }
     }
@@ -269,15 +269,19 @@ class LoginAccount extends Element
         switch ($attribute) {
             case 'username':
                 $user = $this->getUser();
+
                 return $user ? Craft::$app->getView()->renderTemplate('_elements/element', ['element' => $user]) : '';
             case 'email':
                 $user = $this->getUser();
+
                 return $user ? Html::encodeParams('<a href="mailto:{email}">{email}</a>', ['email' => $user->email]) : '';
             case 'lastLoginDate':
                 $user = $this->getUser();
+
                 return Craft::$app->getFormatter()->asTime($user->lastLoginDate, 'short');
             case 'loginProvider':
                 $loginProvider = $this->getLoginProvider();
+
                 return $loginProvider ? Craft::$app->getView()->renderTemplate('social/loginaccounts/_element', ['loginProvider' => $loginProvider]) : '';
         }
 
@@ -313,5 +317,4 @@ class LoginAccount extends Element
 
         parent::afterSave($isNew);
     }
-
 }

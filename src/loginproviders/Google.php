@@ -7,10 +7,8 @@
 
 namespace dukt\social\loginproviders;
 
-use craft\helpers\UrlHelper;
 use dukt\social\base\LoginProvider;
 use dukt\social\models\Token;
-use dukt\social\Plugin as Social;
 
 class Google extends LoginProvider
 {
@@ -68,8 +66,7 @@ class Google extends LoginProvider
 
         $photoUrl = $remoteProfile->getAvatar();
 
-        if(strpos($photoUrl, '?') !== false)
-        {
+        if (strpos($photoUrl, '?') !== false) {
             $photoUrl = substr($photoUrl, 0, strpos($photoUrl, "?"));
         }
 
@@ -92,6 +89,7 @@ class Google extends LoginProvider
     {
         return 'https://code.google.com/apis/console/';
     }
+
     /**
      * Get Scope Docs URL
      *

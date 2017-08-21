@@ -7,10 +7,8 @@
 
 namespace dukt\social\loginproviders;
 
-use craft\helpers\UrlHelper;
 use dukt\social\base\LoginProvider;
 use dukt\social\models\Token;
-use dukt\social\Plugin as Social;
 
 class Twitter extends LoginProvider
 {
@@ -48,8 +46,7 @@ class Twitter extends LoginProvider
             'secret' => (isset($providerInfos['clientSecret']) ? $providerInfos['clientSecret'] : ''),
         ];
 
-        if(!isset($config['callback_uri']))
-        {
+        if (!isset($config['callback_uri'])) {
             $config['callback_uri'] = $this->getRedirectUri();
         }
 

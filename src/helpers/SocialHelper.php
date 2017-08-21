@@ -30,7 +30,7 @@ class SocialHelper
         Craft::$app->getConfig()->getGeneral()->addTrailingSlashesToUrls = $addTrailingSlashesToUrls;
 
         // We don't want the CP trigger showing in the action URL.
-        $redirectUri =  str_replace(Craft::$app->getConfig()->getGeneral()->cpTrigger.'/', '', $redirectUri);
+        $redirectUri = str_replace(Craft::$app->getConfig()->getGeneral()->cpTrigger.'/', '', $redirectUri);
 
         return $redirectUri;
     }
