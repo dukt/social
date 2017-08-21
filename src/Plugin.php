@@ -103,9 +103,8 @@ class Plugin extends \craft\base\Plugin
             }
         });
 
-        // Todo
-        $this->initEventListeners();
-        $this->initTemplateHooks();
+        $this->initCpSocialLogin();
+        $this->initLoginAccountsUserPane();
     }
 
     /**
@@ -139,7 +138,7 @@ class Plugin extends \craft\base\Plugin
     }
 
     /**
-     * Get Social Login Providers
+     * Get Social login providers.
      *
      * @return array
      */
@@ -191,7 +190,7 @@ class Plugin extends \craft\base\Plugin
     }
 
     /**
-     * Has CP Section
+     * Has CP Section.
      *
      * @return bool
      */
@@ -224,11 +223,11 @@ class Plugin extends \craft\base\Plugin
     // =========================================================================
 
     /**
-     * Initialize event listeners
+     * Social login for the control panel.
      *
      * @return null
      */
-    private function initEventListeners()
+    private function initCpSocialLogin()
     {
         // social login for CP
 
@@ -259,11 +258,11 @@ class Plugin extends \craft\base\Plugin
     }
 
     /**
-     * Initialize template hooks
+     * Initialize login accounts user pane.
      *
      * @return null
      */
-    private function initTemplateHooks()
+    private function initLoginAccountsUserPane()
     {
         Craft::$app->getView()->hook('cp.users.edit.right-pane', function(&$context) {
             if ($context['account']) {
