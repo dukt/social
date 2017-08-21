@@ -9,6 +9,7 @@ namespace dukt\social\services;
 
 use Craft;
 use craft\helpers\FileHelper;
+use dukt\social\errors\LoginAccountNotFoundException;
 use dukt\social\helpers\SocialHelper;
 use yii\base\Component;
 use craft\elements\User as UserModel;
@@ -344,15 +345,14 @@ class LoginAccounts extends Component
      * @param int $loginAccountId
      *
      * @return LoginAccountRecord
-     * @throws UserNotFoundException if $loginAccountId is invalid
+     * @throws LoginAccountNotFoundException if $loginAccountId is invalid
      */
     private function _getLoginAccountRecordById(int $loginAccountId): LoginAccountRecord
     {
         $loginAccountRecord = LoginAccountRecord::findOne($loginAccountId);
 
         if (!$loginAccountRecord) {
-            // todo
-            // throw new UserNotFoundException("No user exists with the ID '{$loginAccountId}'");
+            throw new LoginAccountNotFoundException("No login account exists with the ID '{$loginAccountId}'");
         }
 
         return $loginAccountRecord;
