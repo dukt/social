@@ -39,7 +39,7 @@
     "name": "Social",
     "handle": "social",
     "schemaVersion": "1.0.2",
-    "documentationUrl": "https://dukt.net/craft/social/docs",
-    "changelogUrl": "https://dukt.net/social/changelog.md?craft=3"
+    "documentationUrl": "https://github.com/dukt/social-docs",
+    "changelogUrl": "https://raw.githubusercontent.com/dukt/social/develop/CHANGELOG.md"
   }
 }
