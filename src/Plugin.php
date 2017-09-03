@@ -229,9 +229,7 @@ class Plugin extends \craft\base\Plugin
      */
     private function initCpSocialLogin()
     {
-        // social login for CP
-
-        if ($this->settings->enableCpLogin) {
+        if (!Craft::$app->getRequest()->getIsConsoleRequest() && $this->settings->enableCpLogin) {
             if (Craft::$app->getRequest()->getIsCpRequest() && Craft::$app->getRequest()->getSegment(1) === 'login') {
 
                 $loginProviders = $this->loginProviders->getLoginProviders();
