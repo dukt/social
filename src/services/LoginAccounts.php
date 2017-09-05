@@ -227,9 +227,6 @@ class LoginAccounts extends Component
         return true;
     }
 
-    // Former Social service methods
-    // =========================================================================
-
     /**
      * Get login URL
      *
