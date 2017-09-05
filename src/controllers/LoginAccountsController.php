@@ -134,16 +134,9 @@ class LoginAccountsController extends Controller
 
         // Connect
 
-        // Request params
         $providerHandle = Craft::$app->getRequest()->getParam('provider');
-
-        // Settings
         $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $pluginSettings = $plugin->getSettings();
-
-
-        // Try to connect
-
 
         try {
             if (!$pluginSettings['enableSocialLogin']) {
@@ -171,9 +164,9 @@ class LoginAccountsController extends Controller
                     $token->token = $response['token'];
 
                     return $this->connectUserFromToken($token);
-                } else {
-                    throw new \Exception($response['errorMsg']);
                 }
+
+                throw new \Exception($response['errorMsg']);
             }
         } catch (BadResponseException $e) {
             $response = $e->getResponse();
@@ -300,11 +293,10 @@ class LoginAccountsController extends Controller
 
         if (!Craft::$app->getSession()->get('social.callback')) {
             return $loginProvider->oauthConnect();
-        } else {
-            Craft::$app->getSession()->remove('social.callback');
-
-            return $loginProvider->oauthCallback();
         }
+
+        Craft::$app->getSession()->remove('social.callback');
+        return $loginProvider->oauthCallback();
     }
 
     /**
@@ -320,9 +312,9 @@ class LoginAccountsController extends Controller
 
         if ($craftUser) {
             return $this->linkAccountFromToken($token, $craftUser);
-        } else {
-            return $this->registerOrLoginFromToken($token);
         }
+
+        return $this->registerOrLoginFromToken($token);
     }
 
     /**
@@ -350,32 +342,34 @@ class LoginAccountsController extends Controller
 
         $account = Social::$plugin->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
 
+
+        // Existing login account
+
         if ($account) {
             if ($craftUser->id == $account->userId) {
-                // Social::$plugin->getLoginAccounts()->saveLoginAccount($account);
                 Craft::$app->elements->saveElement($account);
 
                 Craft::$app->getSession()->setNotice(Craft::t('social', 'Login account added.'));
 
                 return $this->redirect($this->redirect);
-            } else {
-                throw new Exception("This UID is already associated with another user. Disconnect from your current session and retry.");
             }
-        } else {
-            // save social user
-            $account = new LoginAccount;
-            $account->userId = $craftUser->id;
-            $account->providerHandle = $socialLoginProvider->getHandle();
-            $account->socialUid = $socialUid;
 
-            // Social::$plugin->getLoginAccounts()->saveLoginAccount($account);
-
-            Craft::$app->getElements()->saveElement($account);
-
-            Craft::$app->getSession()->setNotice(Craft::t('social', 'Login account added.'));
-
-            return $this->redirect($this->redirect);
+            throw new Exception("This UID is already associated with another user. Disconnect from your current session and retry.");
         }
+
+
+        // New login account
+
+        $account = new LoginAccount;
+        $account->userId = $craftUser->id;
+        $account->providerHandle = $socialLoginProvider->getHandle();
+        $account->socialUid = $socialUid;
+
+        Craft::$app->getElements()->saveElement($account);
+
+        Craft::$app->getSession()->setNotice(Craft::t('social', 'Login account added.'));
+
+        return $this->redirect($this->redirect);
     }
 
     /**
@@ -396,39 +390,39 @@ class LoginAccountsController extends Controller
 
         $account = Social::$plugin->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
 
+
+        // Existing user
+
         if ($account) {
             $craftUser = Craft::$app->users->getUserById($account->userId);
 
             if ($craftUser) {
-                // save user
-                // Social::$plugin->getLoginAccounts()->saveLoginAccount($account);
                 Craft::$app->elements->saveElement($account);
 
-                // login
                 return $this->login($craftUser, $account, $token);
-            } else {
-                throw new Exception("Social account exists but Craft user doesn't");
             }
-        } else {
-            // Register user
-            $craftUser = $this->registerUser($attributes, $socialLoginProvider->getHandle());
 
-            if ($craftUser) {
-                // Save social user
-                $account = new LoginAccount;
-                $account->userId = $craftUser->id;
-                $account->providerHandle = $socialLoginProvider->getHandle();
-                $account->socialUid = $socialUid;
-                // Social::$plugin->getLoginAccounts()->saveLoginAccount($account);
-
-                Craft::$app->elements->saveElement($account);
-
-                // Login
-                return $this->login($craftUser, $account, $token, true);
-            } else {
-                throw new Exception("Craft user couldn’t be created.");
-            }
+            throw new Exception("Social account exists but Craft user doesn't");
         }
+
+
+        // Register new user
+
+        $craftUser = $this->registerUser($attributes, $socialLoginProvider->getHandle());
+
+        if ($craftUser) {
+            // Save social user
+            $account = new LoginAccount;
+            $account->userId = $craftUser->id;
+            $account->providerHandle = $socialLoginProvider->getHandle();
+            $account->socialUid = $socialUid;
+
+            Craft::$app->elements->saveElement($account);
+
+            return $this->login($craftUser, $account, $token, true);
+        }
+
+        throw new Exception("Craft user couldn’t be created.");
     }
 
     /**
@@ -581,10 +575,10 @@ class LoginAccountsController extends Controller
                 Craft::$app->elements->saveElement($newUser);
 
                 return $newUser;
-            } else {
-                if (Social::$plugin->getSettings()->allowEmailMatch !== true) {
-                    throw new Exception("An account already exists with this email: ".$attributes['email']);
-                }
+            }
+
+            if (Social::$plugin->getSettings()->allowEmailMatch !== true) {
+                throw new Exception("An account already exists with this email: ".$attributes['email']);
             }
         } else {
             throw new Exception("Email address not provided.");
@@ -616,6 +610,9 @@ class LoginAccountsController extends Controller
             throw new Exception("Couldn’t authenticate account.");
         }
 
+
+        // Success
+        
         if (Craft::$app->getUser()->login($craftUser)) {
             if ($registrationMode) {
                 Craft::$app->getSession()->setNotice(Craft::t('social', 'Account created.'));
@@ -624,14 +621,17 @@ class LoginAccountsController extends Controller
             }
 
             return $this->redirect($this->redirect);
-        } else {
-            $errorCode = Social::$plugin->getUserSession()->getLoginErrorCode();
-            $errorMessage = Social::$plugin->getUserSession()->getLoginErrorMessage($errorCode, $account->user->username);
-
-            Craft::$app->getSession()->setError($errorMessage);
-
-            return $this->redirect($this->originUrl);
         }
+
+
+        // Error
+
+        $errorCode = Social::$plugin->getUserSession()->getLoginErrorCode();
+        $errorMessage = Social::$plugin->getUserSession()->getLoginErrorMessage($errorCode, $account->user->username);
+
+        Craft::$app->getSession()->setError($errorMessage);
+
+        return $this->redirect($this->originUrl);
     }
 
     /**
@@ -642,6 +642,5 @@ class LoginAccountsController extends Controller
     private function _cleanSession()
     {
         Craft::$app->getSession()->remove('social.originUrl');
-        // Craft::$app->getSession()->remove('social.requestUri');
     }
 }
