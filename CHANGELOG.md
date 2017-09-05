@@ -53,8 +53,9 @@ Changelog
 - Using echos instead of Craft logs for migrations.
 - The plugin doesn’t require the OAuth plugin for Craft anymore.
 - Login accounts attached to a user are being saved again after saving a user in order to update the search index.
-
-### Changed
+- `dukt\social\base\LoginProvider::getRemoteProfile()` is now a protected method.
+- Removed support for `scope` parameter in `dukt\social\services\LoginAccounts::getLoginUrl()`.
+- Removed `advancedMode` config setting.
 - Removed `Craft\Social_InstallController`.
 - Removed `Craft\Social_LoginAccountModel`.
 - Removed `Craft\Social_ProviderModel`.
@@ -69,8 +70,6 @@ Changelog
 - Removed `dukt\social\web\twig\variables\SocialVariable::getLogoutUrl()`.
 - Removed `_special/install/dependencies.html` template.
 - Removed `_special/install/dependencies.html` template.
-- Removed support for `scope` parameter in `dukt\social\services\LoginAccounts::getLoginUrl()`.
-- Removed `advancedMode` config setting.
 - Renamed `Craft\Social_LoginAccountElementType` to `dukt\social\elements\LoginAccount` .
 - Renamed `Craft\Social_LoginAccountRecord` to `dukt\social\records\LoginAccount`.
 - Renamed `Craft\Social_LoginAccountsController` to `dukt\social\controllers\LoginAccountsController`.
@@ -81,8 +80,7 @@ Changelog
 - Renamed `Craft\SocialPlugin` to `dukt\social\Plugin`.
 - Renamed `Craft\SocialVariable` to `dukt\social\web\twig\variables\SocialVariable`.
 - Renamed `Dukt\Social\LoginProviders\BaseProvider` to `dukt\social\base\LoginProvider`.
-- Renamed to `$referer` to `$originUrl` for `dukt\social\controllers\LoginAccountsController`.
-- `dukt\social\base\LoginProvider::getRemoteProfile()` is now a protected method.
+- Renamed `$referer` to `$originUrl` in `dukt\social\controllers\LoginAccountsController`.
 - Renamed `settings/_index.html` template to `settings/index.html`.
 - Renamed `resources/images/defaultuser.svg` to `icons/defaultuser.svg`.
 
