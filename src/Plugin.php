@@ -272,12 +272,11 @@ class Plugin extends \craft\base\Plugin
             if ($context['account']) {
                 $context['user'] = $context['account'];
                 $context['loginAccounts'] = $this->loginAccounts->getLoginAccountsByUserId($context['account']->id);
-
                 $context['loginProviders'] = $this->loginProviders->getLoginProviders();
 
                 Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
 
-                return Craft::$app->getView()->renderTemplate('social/users/_edit-pane', $context);
+                return Craft::$app->getView()->renderTemplate('social/_components/users/login-accounts-pane', $context);
             }
         });
     }
