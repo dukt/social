@@ -13,6 +13,7 @@ use craft\elements\db\ElementQueryInterface;
 use craft\helpers\Html;
 use dukt\social\elements\db\LoginAccountQuery;
 use dukt\social\Plugin as Social;
+use dukt\social\models\Token;
 
 /**
  * Class LoginAccount
@@ -158,10 +159,15 @@ class LoginAccount extends Element
      *
      * @return bool
      */
-    public function authenticate($token): bool
+    public function authenticate(Token $token): bool
     {
-        // Todo: Check authentication again with token?
-        return true;
+        $socialLoginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($token->providerHandle);
+
+        $attributes = $socialLoginProvider->getProfile($token);
+
+        $socialUid = $attributes['id'];
+
+        return $this->socialUid === $socialUid;
     }
 
     /**
