@@ -11,12 +11,19 @@ use dukt\social\base\LoginProvider;
 use GuzzleHttp\Client;
 use dukt\social\models\Token;
 
+/**
+ * Facebook represents the Facebook login provider.
+ *
+ * @author Dukt <support@dukt.net>
+ * @since   1.0
+ */
 class Facebook extends LoginProvider
 {
+    // Public Methods
+    // =========================================================================
+
     /**
      * @inheritdoc
-     *
-     * @return string
      */
     public function getName()
     {
@@ -24,28 +31,7 @@ class Facebook extends LoginProvider
     }
 
     /**
-     * Get the OAuth provider.
-     *
-     * @return mixed
-     */
-    protected function getOauthProvider()
-    {
-        $providerInfos = $this->getInfos();
-
-        $config = [
-            'clientId' => $providerInfos['clientId'],
-            'clientSecret' => $providerInfos['clientSecret'],
-            'graphApiVersion' => 'v2.8',
-            'redirectUri' => $this->getRedirectUri(),
-        ];
-
-        return new \League\OAuth2\Client\Provider\Facebook($config);
-    }
-
-    /**
      * @inheritdoc
-     *
-     * @return array|null
      */
     public function getDefaultScope()
     {
@@ -57,10 +43,22 @@ class Facebook extends LoginProvider
 
     /**
      * @inheritdoc
-     *
-     * @param Token $token
-     *
-     * @return array|null
+     */
+    public function getManagerUrl()
+    {
+        return 'https://developers.facebook.com/apps';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getScopeDocsUrl()
+    {
+        return 'https://developers.facebook.com/docs/facebook-login/permissions';
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getProfile(Token $token)
     {
@@ -84,14 +82,32 @@ class Facebook extends LoginProvider
         ];
     }
 
+    // Protected Methods
+    // =========================================================================
+
     /**
-     * @inheritDoc
+     * @inheritdoc
      *
-     * @param $token
-     *
-     * @return array|null
+     * @return \League\OAuth2\Client\Provider\Facebook
      */
-    public function getRemoteProfile(Token $token)
+    protected function getOauthProvider()
+    {
+        $providerInfos = $this->getInfos();
+
+        $config = [
+            'clientId' => $providerInfos['clientId'],
+            'clientSecret' => $providerInfos['clientSecret'],
+            'graphApiVersion' => 'v2.8',
+            'redirectUri' => $this->getRedirectUri(),
+        ];
+
+        return new \League\OAuth2\Client\Provider\Facebook($config);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getRemoteProfile(Token $token)
     {
         $client = $this->getClient($token);
 
@@ -113,8 +129,11 @@ class Facebook extends LoginProvider
         return json_decode($response->getBody(), true);
     }
 
+    // Private Methods
+    // =========================================================================
+
     /**
-     * Get the authenticated client
+     * Returns the authenticated Guzzle client.
      *
      * @param Token $token
      *
@@ -135,25 +154,5 @@ class Facebook extends LoginProvider
         ];
 
         return new Client($options);
-    }
-
-    /**
-     * Get API Manager URL
-     *
-     * @return string
-     */
-    public function getManagerUrl()
-    {
-        return 'https://developers.facebook.com/apps';
-    }
-
-    /**
-     * Get Scope Docs URL
-     *
-     * @return string
-     */
-    public function getScopeDocsUrl()
-    {
-        return 'https://developers.facebook.com/docs/facebook-login/permissions';
     }
 }

@@ -15,14 +15,14 @@ interface LoginProviderInterface
     // =========================================================================
 
     /**
-     * Returns the name of the login provider
+     * Returns the name of the login provider.
      *
      * @return string
      */
     public function getName();
 
     /**
-     * Returns a profile from an OAuth token
+     * Returns a profile from an OAuth token.
      *
      * @param Token $token
      *

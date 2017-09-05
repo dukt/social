@@ -228,7 +228,7 @@ abstract class LoginProvider implements LoginProviderInterface
      *
      * @return array|null
      */
-    public function getRemoteProfile(Token $token)
+    protected function getRemoteProfile(Token $token)
     {
         return $this->getOauthProvider()->getResourceOwner($token->token);
     }

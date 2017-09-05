@@ -10,12 +10,19 @@ namespace dukt\social\loginproviders;
 use dukt\social\base\LoginProvider;
 use dukt\social\models\Token;
 
+/**
+ * Twitter represents the Twitter login provider.
+ *
+ * @author Dukt <support@dukt.net>
+ * @since   1.0
+ */
 class Twitter extends LoginProvider
 {
+    // Public Methods
+    // =========================================================================
+
     /**
      * @inheritdoc
-     *
-     * @return string
      */
     public function getName()
     {
@@ -23,9 +30,7 @@ class Twitter extends LoginProvider
     }
 
     /**
-     * OAuth version
-     *
-     * @return int
+     * @inheritdoc
      */
     public function oauthVersion()
     {
@@ -33,32 +38,15 @@ class Twitter extends LoginProvider
     }
 
     /**
-     * Get the OAuth provider.
-     *
-     * @return mixed
+     * @inheritdoc
      */
-    protected function getOauthProvider()
+    public function getManagerUrl()
     {
-        $providerInfos = $this->getInfos();
-
-        $config = [
-            'identifier' => (isset($providerInfos['clientId']) ? $providerInfos['clientId'] : ''),
-            'secret' => (isset($providerInfos['clientSecret']) ? $providerInfos['clientSecret'] : ''),
-        ];
-
-        if (!isset($config['callback_uri'])) {
-            $config['callback_uri'] = $this->getRedirectUri();
-        }
-
-        return new \League\OAuth1\Client\Server\Twitter($config);
+        return 'https://dev.twitter.com/apps';
     }
 
     /**
      * @inheritdoc
-     *
-     * @param Token $token
-     *
-     * @return array|null
      */
     public function getProfile(Token $token)
     {
@@ -78,25 +66,35 @@ class Twitter extends LoginProvider
         ];
     }
 
+    // Protected Methods
+    // =========================================================================
+
     /**
-     * Returns the remote profile.
+     * Returns the login provider’s OAuth provider.
      *
-     * @param $token
-     *
-     * @return array|null
+     * @return \League\OAuth1\Client\Server\Twitter
      */
-    public function getRemoteProfile(Token $token)
+    protected function getOauthProvider()
     {
-        return $this->getOauthProvider()->getUserDetails($token->token);
+        $providerInfos = $this->getInfos();
+
+        $config = [
+            'identifier' => (isset($providerInfos['clientId']) ? $providerInfos['clientId'] : ''),
+            'secret' => (isset($providerInfos['clientSecret']) ? $providerInfos['clientSecret'] : ''),
+        ];
+
+        if (!isset($config['callback_uri'])) {
+            $config['callback_uri'] = $this->getRedirectUri();
+        }
+
+        return new \League\OAuth1\Client\Server\Twitter($config);
     }
 
     /**
-     * Get API Manager URL
-     *
-     * @return string
+     * @inheritdoc
      */
-    public function getManagerUrl()
+    protected function getRemoteProfile(Token $token)
     {
-        return 'https://dev.twitter.com/apps';
+        return $this->getOauthProvider()->getUserDetails($token->token);
     }
 }
