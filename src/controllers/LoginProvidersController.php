@@ -51,9 +51,9 @@ class LoginProvidersController extends Controller
                 'infos' => $loginProvider->getInfos(),
                 'loginProvider' => $loginProvider
             ]);
-        } else {
-            throw new HttpException(404);
         }
+
+        throw new HttpException(404);
     }
 
     /**
