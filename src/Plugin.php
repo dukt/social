@@ -86,7 +86,7 @@ class Plugin extends \craft\base\Plugin
                 $loginAccounts = $this->getLoginAccounts()->getLoginAccountsByUserId($user->Id);
 
                 if ($loginAccounts) {
-                    $event->html = Craft::$app->getView()->renderTemplate('social/_components/users/login-accounts-column', [
+                    $event->html = Craft::$app->getView()->renderTemplate('social/_components/users/login-accounts-table-attribute', [
                         'loginAccounts' => $loginAccounts,
                     ]);
                 } else {
