@@ -175,36 +175,29 @@ class LoginAccountsController extends Controller
                     throw new \Exception($response['errorMsg']);
                 }
             }
-
-        }
-        catch(BadResponseException $e)
-        {
+        } catch (BadResponseException $e) {
             $response = $e->getResponse();
             $body = $response->getBody();
             $json = json_decode($body, true);
 
-            if($json)
-            {
+            if ($json) {
                 $errorMsg = $json['error']['message'];
-            }
-            else
-            {
+            } else {
                 $errorMsg = "Couldn’t login.";
             }
 
-            Craft::error((string) $response, __METHOD__);
+            Craft::error((string)$response, __METHOD__);
             Craft::$app->getSession()->setFlash('error', $errorMsg);
             $this->_cleanSession();
+
             return $this->redirect($this->originUrl);
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $errorMsg = $e->getMessage();
             Craft::$app->getSession()->setFlash('error', $errorMsg);
             $this->_cleanSession();
+
             return $this->redirect($this->originUrl);
         }
-
     }
 
     /**
