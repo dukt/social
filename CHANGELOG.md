@@ -1,7 +1,7 @@
 Changelog
 ===================
 
-## 2.0.0-beta.1 - Unreleased
+## 2.0.0-beta.1 - 2017-09-06
 
 ### Added
 - Craft 3.0 compatibility.
