@@ -10,8 +10,25 @@ Changelog
 - Admins can now remove Login Accounts from the CP user edit screen.
 - Users with access to the CP can now connect and disconnect login accounts from their account page.
 - Added a login accounts user table attribute.
+- Social 1.1.0 is required before updating to Craft 3.
+- Added `dukt\social\base\LoginProvider::__toString()`.
+- Added `dukt\social\base\LoginProvider::getInfos()`.
+- Added `dukt\social\base\LoginProvider::getManagerUrl()`.
+- Added `dukt\social\base\LoginProvider::getRedirectUri()`.
+- Added `dukt\social\base\LoginProvider::getScopeDocsUrl()`.
 - Added `dukt\social\base\PluginTrait`.
 - Added `dukt\social\elements\db\LoginAccountQuery`.
+- Added `dukt\social\elements\LoginAccount::defineDefaultTableAttributes()`.
+- Added `dukt\social\elements\LoginAccount::getUsername()`.
+- Added `dukt\social\elements\LoginAccount::getFirstName()`.
+- Added `dukt\social\elements\LoginAccount::getLastName()`.
+- Added `dukt\social\elements\LoginAccount::getEmail()`.
+- Added `dukt\social\errors\LoginAccountNotFoundException`.
+- Added `dukt\social\loginproviders\Facebook::getManagerUrl()`.
+- Added `dukt\social\loginproviders\Facebook::getScopeDocsUrl()`.
+- Added `dukt\social\loginproviders\Google::getManagerUrl()`.
+- Added `dukt\social\loginproviders\Google::getScopeDocsUrl()`.
+- Added `dukt\social\loginproviders\Twitter::getManagerUrl()`.
 - Added `dukt\social\models\Settings`.
 - Added `dukt\social\models\Token`.
 - Added `dukt\social\web\assets\login\LoginAsset`.
@@ -21,6 +38,21 @@ Changelog
 - Added `_components/users/login-accounts-table-attribute.html` template.
 - Added `loginaccounts/_element.html` template.
 - Added `settings/_general.html` template.
+- Added `icons/facebook.svg` icon.
+- Added `icons/google.svg` icon.
+- Added `icons/twitter.svg` icon.
+- Added `craftcms/cms:^3.0.0-beta.20` dependency.
+- Added `league/oauth1-client:1.7.0@dev` dependency.
+- Added `league/oauth2-client:^2.2` dependency.
+- Added `dukt/oauth2-google:^2.0"` dependency.
+- Added `league/oauth2-facebook:^2.0` dependency.
+
+### Improved
+- Login providers now appear disabled if the OAuth client ID is not set.
+- `dukt\social\elements\LoginAccount::authenticate()` now checks that there is a matching Social UID before logging in.
+- Using echos instead of Craft logs for migrations.
+- The plugin doesn’t require the OAuth plugin for Craft anymore.
+- Login accounts attached to a user are being saved again after saving a user in order to update the search index.
 
 ### Changed
 - Removed `Craft\Social_InstallController`.
@@ -31,8 +63,14 @@ Changelog
 - Removed `Craft\SocialService`.
 - Removed `Craft\SocialTrait`.
 - Removed `Craft\SocialUserIdentity`.
+- Removed `dukt\social\base\LoginProvider::getOauthProvider()`.
+- Removed `dukt\social\controllers\LoginAccountsController::actionLogout()`.
+- Removed `dukt\social\services\LoginAccounts::getLogoutUrl()`.
+- Removed `dukt\social\web\twig\variables\SocialVariable::getLogoutUrl()`.
 - Removed `_special/install/dependencies.html` template.
 - Removed `_special/install/dependencies.html` template.
+- Removed support for `scope` parameter in `dukt\social\services\LoginAccounts::getLoginUrl()`.
+- Removed `advancedMode` config setting.
 - Renamed `Craft\Social_LoginAccountElementType` to `dukt\social\elements\LoginAccount` .
 - Renamed `Craft\Social_LoginAccountRecord` to `dukt\social\records\LoginAccount`.
 - Renamed `Craft\Social_LoginAccountsController` to `dukt\social\controllers\LoginAccountsController`.
@@ -43,17 +81,23 @@ Changelog
 - Renamed `Craft\SocialPlugin` to `dukt\social\Plugin`.
 - Renamed `Craft\SocialVariable` to `dukt\social\web\twig\variables\SocialVariable`.
 - Renamed `Dukt\Social\LoginProviders\BaseProvider` to `dukt\social\base\LoginProvider`.
+- Renamed to `$referer` to `$originUrl` for `dukt\social\controllers\LoginAccountsController`.
+- `dukt\social\base\LoginProvider::getRemoteProfile()` is now a protected method.
 - Renamed `settings/_index.html` template to `settings/index.html`.
+- Renamed `resources/images/defaultuser.svg` to `icons/defaultuser.svg`.
+
+### Fixed
+- Fixed a bug where `\dukt\social\services\LoginAccounts::saveRemotePhoto()` was trying to remove a temp file that didn’t exist.
 
 ## 1.2.4 - 2017-01-13
 
 ### Added
-- Added `SocialTrait`
-- Added `Social_InstallController`
-- Added `docsUrl` to settings pages
+- Added `SocialTrait`.
+- Added `Social_InstallController`.
+- Added `docsUrl` to settings pages.
 
 ### Improved
-- Improved installation process
-- Checking plugin requirements from `Social_ProviderModel::getOauthProvider()` and `Social_LoginAccountModel::getOauthProvider()`
-- Removed `Social_PluginController`
-- Removed `Social_PluginService`
+- Improved installation process.
+- Checking plugin requirements from `Social_ProviderModel::getOauthProvider()` and `Social_LoginAccountModel::getOauthProvider()`.
+- Removed `Social_PluginController`.
+- Removed `Social_PluginService`.
