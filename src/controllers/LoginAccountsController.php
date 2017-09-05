@@ -12,6 +12,7 @@ use craft\web\Controller;
 use dukt\social\Plugin;
 use dukt\social\web\assets\social\SocialAsset;
 use dukt\social\Plugin as Social;
+use GuzzleHttp\Exception\BadResponseException;
 use yii\web\HttpException;
 use craft\elements\User;
 use dukt\social\models\Token;
@@ -143,48 +144,42 @@ class LoginAccountsController extends Controller
 
         // Try to connect
 
-        /*
-        try
-        {
-        */
 
-        if (!$pluginSettings['enableSocialLogin']) {
-            throw new Exception("Social login is disabled");
-        }
-
-        if (Craft::$app->getEdition() != Craft::Pro) {
-            throw new Exception("Craft Pro is required");
-        }
-
-        $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($providerHandle);
-
-        if (!$loginProvider) {
-            throw new Exception("Login provider is not configured");
-        }
-
-        if ($response = $this->oauthConnect($providerHandle)) {
-            if ($response && is_object($response) && !$response->data) {
-                return $response;
+        try {
+            if (!$pluginSettings['enableSocialLogin']) {
+                throw new Exception("Social login is disabled");
             }
 
-            if ($response['success']) {
-                $token = new Token();
-                $token->providerHandle = $providerHandle;
-                $token->token = $response['token'];
-
-                return $this->connectUserFromToken($token);
-            } else {
-                throw new \Exception($response['errorMsg']);
+            if (Craft::$app->getEdition() != Craft::Pro) {
+                throw new Exception("Craft Pro is required");
             }
+
+            $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($providerHandle);
+
+            if (!$loginProvider) {
+                throw new Exception("Login provider is not configured");
+            }
+
+            if ($response = $this->oauthConnect($providerHandle)) {
+                if ($response && is_object($response) && !$response->data) {
+                    return $response;
+                }
+
+                if ($response['success']) {
+                    $token = new Token();
+                    $token->providerHandle = $providerHandle;
+                    $token->token = $response['token'];
+
+                    return $this->connectUserFromToken($token);
+                } else {
+                    throw new \Exception($response['errorMsg']);
+                }
+            }
+
         }
-        /*
-        }
-        catch(\Guzzle\Http\Exception\BadResponseException $e)
+        catch(BadResponseException $e)
         {
             $response = $e->getResponse();
-
-            // Craft::error((string) $response, __METHOD__);
-
             $body = $response->getBody();
             $json = json_decode($body, true);
 
@@ -197,6 +192,7 @@ class LoginAccountsController extends Controller
                 $errorMsg = "Couldn’t login.";
             }
 
+            Craft::error((string) $response, __METHOD__);
             Craft::$app->getSession()->setFlash('error', $errorMsg);
             $this->_cleanSession();
             return $this->redirect($this->originUrl);
@@ -208,7 +204,7 @@ class LoginAccountsController extends Controller
             $this->_cleanSession();
             return $this->redirect($this->originUrl);
         }
-        */
+
     }
 
     /**
