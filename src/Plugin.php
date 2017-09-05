@@ -80,13 +80,12 @@ class Plugin extends \craft\base\Plugin
 
         Event::on(User::class, User::EVENT_SET_TABLE_ATTRIBUTE_HTML, function(SetElementTableAttributeHtmlEvent $event) {
             if ($event->attribute === 'loginAccounts') {
-
+                Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
                 $user = $event->sender;
 
                 $loginAccounts = $this->getLoginAccounts()->getLoginAccountsByUserId($user->Id);
 
                 if ($loginAccounts) {
-                    // Craft::$app->getView()->registerCssFile('social/css/social.css');
                     $event->html = Craft::$app->getView()->renderTemplate('social/_components/users/login-accounts-column', [
                         'loginAccounts' => $loginAccounts,
                     ]);
