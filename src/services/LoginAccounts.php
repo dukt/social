@@ -98,7 +98,7 @@ class LoginAccounts extends Component
     }
 
     /**
-     * Save Account
+     * Saves a login account.
      *
      * @param LoginAccount $account
      *
@@ -162,7 +162,7 @@ class LoginAccounts extends Component
     }
 
     /**
-     * Delete a social account by provider
+     * Deletes a social account by provider.
      *
      * @param $providerHandle
      *
@@ -176,7 +176,7 @@ class LoginAccounts extends Component
     }
 
     /**
-     * Delete a social login account by its ID
+     * Deletes a social login account by its ID.
      *
      * @param int $id
      *
@@ -190,7 +190,7 @@ class LoginAccounts extends Component
     }
 
     /**
-     * Deletes a login account
+     * Deletes a login account.
      *
      * @param LoginAccount $loginAccount
      *
@@ -204,7 +204,7 @@ class LoginAccounts extends Component
     }
 
     /**
-     * Get login URL
+     * Get login URL.
      *
      * @param       $providerHandle
      * @param array $params
@@ -219,7 +219,7 @@ class LoginAccounts extends Component
     }
 
     /**
-     * Get link account URL
+     * Get link account URL.
      *
      * @param $handle
      *
@@ -233,7 +233,7 @@ class LoginAccounts extends Component
     }
 
     /**
-     * Get unlink account URL
+     * Get unlink account URL.
      *
      * @param $handle
      *
@@ -247,7 +247,7 @@ class LoginAccounts extends Component
     }
 
     /**
-     * Save remote photo
+     * Save a remote photo.
      *
      * @param string    $photoUrl
      * @param UserModel $user
