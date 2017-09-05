@@ -11,13 +11,13 @@
 
 {% set content %}
 
-    <h2 class="first">{{ "{loginProvider} Status"|t('social', { loginProvider: loginProvider.name }) }}</h2>
+    <h2 class="first">{{ "Status"|t('social', { loginProvider: loginProvider.name }) }}</h2>
 
     {% if loginProvider.isConfigured %}
         {% if loginProvider.isEnabled %}
-            <p><span class="status on"></span> {{ "Social Login with {provider} is enabled"|t('social', { provider: loginProvider.name }) }}</p>
+            <p><span class="status on"></span> {{ "Social Login with {provider} is enabled."|t('social', { provider: loginProvider.name }) }}</p>
         {% else %}
-            <p><span class="status"></span> {{ "Social Login with {provider} is disabled"|t('social', { provider: loginProvider.name }) }}</p>
+            <p><span class="status"></span> {{ "Social Login with {provider} is disabled."|t('social', { provider: loginProvider.name }) }}</p>
         {% endif %}
     {% else %}
         <p><span class="status"></span> {{ "Not configured"|t('social', { provider: loginProvider.name }) }}</p>
