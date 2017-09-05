@@ -172,21 +172,7 @@ class LoginAccounts extends Component
     {
         $loginAccount = $this->getLoginAccountByLoginProvider($providerHandle);
 
-        return $this->deleteLoginAccounts($loginAccount);
-    }
-
-    /**
-     * Delete all social accounts by user ID
-     *
-     * @param int $userId
-     *
-     * @return bool
-     */
-    public function deleteLoginAccountByUserId($userId)
-    {
-        $loginAccounts = $this->getLoginAccountById($userId);
-
-        return $this->deleteLoginAccounts($loginAccounts);
+        return $this->deleteLoginAccount($loginAccount);
     }
 
     /**
@@ -200,29 +186,19 @@ class LoginAccounts extends Component
     {
         $loginAccount = $this->getLoginAccountById($id);
 
-        return $this->deleteLoginAccounts($loginAccount);
+        return $this->deleteLoginAccount($loginAccount);
     }
 
     /**
-     * Deletes login accounts
+     * Deletes a login account
      *
-     * @param string|array $loginAccountStringOrArray
+     * @param LoginAccount $loginAccount
      *
      * @return bool
      */
-    public function deleteLoginAccounts($loginAccountStringOrArray)
+    public function deleteLoginAccount(LoginAccount $loginAccount)
     {
-        if (!$loginAccountStringOrArray) {
-            return false;
-        }
-
-        if (!is_array($loginAccountStringOrArray)) {
-            $loginAccountStringOrArray = [$loginAccountStringOrArray];
-        }
-
-        foreach ($loginAccountStringOrArray as $loginAccount) {
-            Craft::$app->elements->deleteElement($loginAccount);
-        }
+        Craft::$app->elements->deleteElement($loginAccount);
 
         return true;
     }
