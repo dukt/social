@@ -48,7 +48,7 @@ class SocialVariable
      *
      * @return string
      */
-    public function getLoginUrl($providerHandle, $params = array())
+    public function getLoginUrl($providerHandle, array $params = [])
     {
         return Social::$plugin->getLoginAccounts()->getLoginUrl($providerHandle, $params);
     }

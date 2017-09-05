@@ -136,7 +136,7 @@ abstract class LoginProvider implements LoginProviderInterface
     /**
      * Get the class name, stripping all the namespaces.
      *
-     * For example, "Dukt\Social\LoginProviders\Dribbble" becomes "Dribbble"
+     * For example, "dukt\social\loginproviders\Google" becomes "Google"
      *
      * @return string
      */
@@ -228,6 +228,19 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
+     * Returns the URI users are redirected to after they have connected.
+     *
+     * @return string
+     */
+    public function getRedirectUri()
+    {
+        return SocialHelper::siteActionUrl('social/login-accounts/callback');
+    }
+
+    // Protected Methods
+    // =========================================================================
+
+    /**
      * Returns the remote profile.
      *
      * @param $token
@@ -237,16 +250,6 @@ abstract class LoginProvider implements LoginProviderInterface
     protected function getRemoteProfile(Token $token)
     {
         return $this->getOauthProvider()->getResourceOwner($token->token);
-    }
-
-    /**
-     * Returns the URI users are redirected to after they have connected.
-     *
-     * @return string
-     */
-    public function getRedirectUri()
-    {
-        return SocialHelper::siteActionUrl('social/login-accounts/callback');
     }
 
     // Private Methods
