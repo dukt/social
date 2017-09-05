@@ -11,11 +11,7 @@
 
 {% set content %}
 
-    <h2 class="first">{{ "Login Provider"|t('social') }}</h2>
-
-    {% if loginProvider.iconUrl %}
-        <img src="{{ loginProvider.iconUrl }}" height="48" />
-    {% endif %}
+    <h2 class="first">{{ "{loginProvider} Status"|t('social', { loginProvider: loginProvider.name }) }}</h2>
 
     {% if loginProvider.isConfigured %}
         {% if loginProvider.isEnabled %}
@@ -25,23 +21,29 @@
         {% endif %}
     {% else %}
         <p><span class="status"></span> {{ "Not configured"|t('social', { provider: loginProvider.name }) }}</p>
-        <p class="light">{{ "Social Login with {provider} is disabled because the client ID or secret is missing for this provider."|t('social', { provider: loginProvider.name}) }}</p>
+        <p class="light">{{ "Social Login with {provider} is disabled because the OAuth client ID or secret is missing for this provider."|t('social', { provider: loginProvider.name}) }}</p>
     {% endif %}
 
     <hr>
 
     <h2>{{ "OAuth Client"|t('social') }}</h2>
 
+	{% if loginProvider.managerUrl %}
+        <p class="light">{{ "Go to the {link} to manage your OAuth application."|t('social', {link: '<a href="'~loginProvider.managerUrl~'">{label}</a>'|t('social', {label: "{loginProvider} API console"|t('social', {loginProvider: loginProvider.name})})})|raw }}</p>
+	{% endif %}
+
+
     <ul class="bullets">
         <li><strong>Client ID:</strong> {{ loginProvider.infos.clientId ?? '' }}</li>
         <li><strong>Client Secret:</strong> {{ loginProvider.infos.clientSecret ?? '' }}</li>
         <li><strong>Redirect URI:</strong> {{ loginProvider.getRedirectUri() }}</li>
+
     </ul>
 
 
 	{% if loginProvider.scope or loginProvider.authorizationOptions %}
         {% if loginProvider.scope %}
-            <h2>{{ "Permissions"|t('social') }}</h2>
+            <h2>{{ "OAuth Permissions"|t('social') }}</h2>
             <ul class="bullets">
                 {% for scope in loginProvider.scope %}
                     <li>{{ scope }}</li>
