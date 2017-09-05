@@ -1,67 +1,54 @@
-<div class="pane">
-    <div class="data">
+{% if user.id == currentUser.id or currentUser.admin %}
+    <div class="pane">
+        <div class="data">
 
-        <h2>{{ "Login Accounts"|t('social') }}</h2>
+            <h2>{{ "Login Accounts"|t('social') }}</h2>
 
-        <div id="nologinaccounts"{% if loginAccounts|length > 0 or loginProviders|length > 0 %} class="hidden"{% endif %}>
-            <p class="light">{{ "No login accounts."|t('social') }}</p>
-        </div>
-
-        {% if loginAccounts|length or user.id == currentUser.id %}
+            <div id="nologinaccounts"{% if loginAccounts|length > 0 or loginProviders|length > 0 %} class="hidden"{% endif %}>
+                <p class="light">{{ "No login accounts."|t('social') }}</p>
+            </div>
 
             <table id="loginAccounts" class="fullwidth">
+                {% for loginProvider in loginProviders %}
+                    {% set connected = false %}
+                    {% for account in loginAccounts %}
+                        {% if loginProvider.handle == account.getLoginProvider().handle %}
+                            {% set connected = true %}
+                        {% endif %}
+                    {% endfor %}
 
-                {% for account in loginAccounts %}
+                    <tr>
+                        <td class="provider">
+                            <div class="thumb">
+                                <img width="20" src="{{ loginProvider.getIconUrl() }}" class="social-icon social-{{ loginProvider.handle }}" />
+                            </div>
 
-                    {% set user = account.user %}
-                    {% set loginProvider = account.getLoginProvider() %}
-
-                    {% if loginProvider %}
-                        <tr data-id="{{ account.id }}" data-name="{{ loginProvider.name|t('social') }}">
-                            <td class="provider">
-                                <div class="thumb">
-                                    <img width="20" src="{{ loginProvider.getIconUrl() }}" class="social-icon social-{{ loginProvider.handle }}" />
-                                </div>
-
-                                <div class="label">{{ loginProvider.name }}</div>
-                            </td>
-
-                            <td class="thin">
+                            <div class="label">{{ loginProvider.name }}</div>
+                        </td>
+                        <td class="thin">
+                            {% if connected %}
                                 {% if user.id == currentUser.id %}
                                     <a class="btn small" title="{{ 'Disconnect'|t('social') }}" href="{{craft.social.getLoginAccountDisconnectUrl(loginProvider.handle)}}">Disconnect</a>
+                                {% elseif currentUser.admin %}
+                                    <a class="btn small delete" title="{{ 'Delete'|t('social') }}">{{ 'Delete'|t('social') }}</a>
                                 {% else %}
-                                    <a class="icon delete" title="{{ 'Delete'|t('social') }}"></a>
+                                    <div class="btn small disabled">{{ 'Connected'|t('social') }}</div>
                                 {% endif %}
-                            </td>
-
-                        </tr>
-                    {% endif %}
-
+                            {% else %}
+                                {% if user.id == currentUser.id %}
+                                    <a class="btn small submit" href="{{ craft.social.loginUrl(loginProvider.handle) }}" data-provider="{{ loginProvider.handle }}">Connect</a>
+                                {% else %}
+                                    <div class="btn small submit disabled">{{ 'Connect'|t('social') }}</div>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
                 {% endfor %}
-
-                {% if user.id == currentUser.id %}
-                    {% for loginProvider in loginProviders %}
-                        <tr>
-                            <td class="provider">
-                                <div class="thumb">
-                                    <img width="20" src="{{ loginProvider.getIconUrl() }}" class="social-icon social-{{ loginProvider.handle }}" />
-                                </div>
-
-                                <div class="label">{{ loginProvider.name }}</div>
-                            </td>
-                            <td class="thin">
-                                <a class="btn small submit" href="{{ craft.social.loginUrl(loginProvider.handle) }}" data-provider="{{ loginProvider.handle }}">Connect</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-
             </table>
 
-        {% endif %}
-
+        </div>
     </div>
-</div>
+{% endif %}
 
 {% js %}
 var adminTable = new Craft.AdminTable({

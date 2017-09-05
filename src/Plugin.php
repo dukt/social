@@ -267,22 +267,7 @@ class Plugin extends \craft\base\Plugin
                 $context['user'] = $context['account'];
                 $context['loginAccounts'] = $this->loginAccounts->getLoginAccountsByUserId($context['account']->id);
 
-                $loginProviders = $this->loginProviders->getLoginProviders();
-                $context['loginProviders'] = [];
-
-                foreach ($loginProviders as $loginProvider) {
-                    $providerAvailable = true;
-
-                    foreach ($context['loginAccounts'] as $loginAccount) {
-                        if ($loginProvider->getHandle() == $loginAccount->providerHandle) {
-                            $providerAvailable = false;
-                        }
-                    }
-
-                    if ($providerAvailable) {
-                        $context['loginProviders'][] = $loginProvider;
-                    }
-                }
+                $context['loginProviders'] = $this->loginProviders->getLoginProviders();
 
                 Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
 
