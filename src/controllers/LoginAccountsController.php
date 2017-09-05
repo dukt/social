@@ -214,11 +214,6 @@ class LoginAccountsController extends Controller
      */
     public function actionCallback()
     {
-        /*$handle = Craft::$app->getSession()->get('social.loginProvider');
-
-        $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($handle);
-        $token = $loginProvider->oauthCallback();*/
-
         Craft::$app->getSession()->set('social.callback', true);
 
         $url = Craft::$app->getSession()->get('social.loginControllerUrl');
