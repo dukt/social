@@ -14,6 +14,12 @@ use dukt\social\models\Token;
 use dukt\social\Plugin as Social;
 use dukt\social\Plugin;
 
+/**
+ * LoginProvider is the base class for classes representing login providers in terms of objects.
+ *
+ * @author Dukt <support@dukt.net>
+ * @since   1.0
+ */
 abstract class LoginProvider implements LoginProviderInterface
 {
     // Public Methods

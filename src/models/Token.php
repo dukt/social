@@ -9,6 +9,12 @@ namespace dukt\social\models;
 
 use craft\base\Model;
 
+/**
+ * Token model class.
+ *
+ * @author Dukt <support@dukt.net>
+ * @since   2.0
+ */
 class Token extends Model
 {
     /**

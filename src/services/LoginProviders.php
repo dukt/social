@@ -13,6 +13,14 @@ use dukt\social\Plugin;
 use yii\base\Component;
 use Dukt\Social\Base\LoginProviderInterface;
 
+/**
+ * The LoginProviders service provides APIs for managing login providers in Craft.
+ *
+ * An instance of the LoginProviders service is globally accessible in Craft via [[Plugin::loginProviders `Plugin::getInstance()->getLoginProviders()`]].
+ *
+ * @author Dukt <support@dukt.net>
+ * @since   1.0
+ */
 class LoginProviders extends Component
 {
     // Public Methods
@@ -95,8 +103,11 @@ class LoginProviders extends Component
         return $this->_getLoginProviders($enabledOnly);
     }
 
+    // Private Methods
+    // =========================================================================
+
     /**
-     * Get login providers and instantiate them
+     * Get login providers and instantiate them.
      *
      * @param bool $enabledOnly
      *
@@ -148,7 +159,7 @@ class LoginProviders extends Component
     }
 
     /**
-     * Create OAuth provider
+     * Instantiates an OAuth provider.
      *
      * @param $socialLoginProviderType
      *
@@ -156,8 +167,6 @@ class LoginProviders extends Component
      */
     private function _createLoginProvider($socialLoginProviderType)
     {
-        $socialLoginProvider = new $socialLoginProviderType;
-
-        return $socialLoginProvider;
+        return new $socialLoginProviderType;
     }
 }

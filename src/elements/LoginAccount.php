@@ -15,10 +15,16 @@ use dukt\social\elements\db\LoginAccountQuery;
 use dukt\social\Plugin as Social;
 use dukt\social\models\Token;
 
+
 /**
- * Class LoginAccount
+ * LoginAccount represents a login account element.
  *
- * @package dukt\social\elements
+ * @property int $userId
+ * @property string $providerHandle
+ * @property string $socialUid
+ *
+ * @author Dukt <support@dukt.net>
+ * @since  2.0
  */
 class LoginAccount extends Element
 {

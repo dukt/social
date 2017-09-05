@@ -12,6 +12,12 @@ use dukt\social\elements\db\LoginAccountQuery;
 use dukt\social\elements\LoginAccount;
 use dukt\social\Plugin as Social;
 
+/**
+ * Class SocialVariable variable.
+ *
+ * @author Dukt <support@dukt.net>
+ * @since   1.0
+ */
 class SocialVariable
 {
     // Public Methods

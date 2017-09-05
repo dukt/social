@@ -20,7 +20,14 @@ use dukt\social\elements\LoginAccount;
 use Exception;
 use yii\base\Event;
 
-
+/**
+ * The LoginAccountsController class is a controller that handles various login account related tasks.
+ *
+ * Note that all actions in the controller, except [[actionLogin]], [[actionCallback]], require an authenticated Craft session via [[allowAnonymous]].
+ *
+ * @author Dukt <support@dukt.net>
+ * @since   1.0
+ */
 class LoginAccountsController extends Controller
 {
     // Constants

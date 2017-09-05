@@ -1,11 +1,8 @@
 <?php
 /**
- * OAuth plugin for Craft CMS 3.x
- *
- * Consume OAuth-based web services.
- *
- * @link      https://dukt.net/
- * @copyright Copyright (c) 2017 Dukt
+ * @link      https://dukt.net/craft/social/
+ * @copyright Copyright (c) 2017, Dukt
+ * @license   https://dukt.net/craft/social/docs/license
  */
 
 namespace dukt\social\migrations;
@@ -14,18 +11,10 @@ use Craft;
 use craft\db\Migration;
 
 /**
- * OAuth Install Migration
+ * Class Install
  *
- * If your plugin needs to create any custom database tables when it gets installed,
- * create a migrations/ folder within your plugin folder, and save an Install.php file
- * within it using the following template:
- *
- * If you need to perform any additional actions on install/uninstall, override the
- * safeUp() and safeDown() methods.
- *
- * @author    Dukt
- * @package   OAuth
- * @since     3.0.0
+ * @author Dukt <support@dukt.net>
+ * @since  2.0
  */
 class Install extends Migration
 {

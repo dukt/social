@@ -11,6 +11,14 @@ use Craft;
 use craft\web\Controller;
 use dukt\social\Plugin as Social;
 
+/**
+ * The SettingsController class is a controller that handles various settings related tasks.
+ *
+ * Note that all actions in the controller require an authenticated Craft session via [[allowAnonymous]].
+ *
+ * @author Dukt <support@dukt.net>
+ * @since   1.0
+ */
 class SettingsController extends Controller
 {
     // Public Methods

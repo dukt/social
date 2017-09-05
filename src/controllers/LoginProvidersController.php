@@ -13,6 +13,14 @@ use dukt\social\web\assets\social\SocialAsset;
 use dukt\social\Plugin as Social;
 use yii\web\HttpException;
 
+/**
+ * The LoginProvidersController class is a controller that handles various login provider related tasks.
+ *
+ * Note that all actions in the controller require an authenticated Craft session via [[allowAnonymous]].
+ *
+ * @author Dukt <support@dukt.net>
+ * @since   1.0
+ */
 class LoginProvidersController extends Controller
 {
 
@@ -20,9 +28,9 @@ class LoginProvidersController extends Controller
     // =========================================================================
 
     /**
-     * Login Providers Index
+     * Login Providers index.
      *
-     * @return null
+     * @return \yii\web\Response
      */
     public function actionIndex()
     {

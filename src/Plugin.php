@@ -23,6 +23,12 @@ use dukt\social\web\twig\variables\SocialVariable;
 use dukt\social\web\assets\social\SocialAsset;
 use yii\base\Event;
 
+/**
+ * Social plugin class.
+ *
+ * @author Dukt <support@dukt.net>
+ * @since   1.0
+ */
 class Plugin extends \craft\base\Plugin
 {
     // Traits

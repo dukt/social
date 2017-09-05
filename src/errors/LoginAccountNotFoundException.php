@@ -11,6 +11,9 @@ use yii\base\Exception;
 
 /**
  * Class LoginAccountNotFoundException
+ *
+ * @author    Dukt <support@dukt.net>
+ * @since     2.0
  */
 class LoginAccountNotFoundException extends Exception
 {

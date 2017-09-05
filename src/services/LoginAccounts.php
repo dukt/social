@@ -18,6 +18,14 @@ use dukt\social\records\LoginAccount as LoginAccountRecord;
 use Exception;
 use craft\helpers\UrlHelper;
 
+/**
+ * The LoginAccounts service provides APIs for managing login accounts in Craft.
+ *
+ * An instance of the LoginAccounts service is globally accessible in Craft via [[Plugin::loginAccounts `Plugin::getInstance()->getLoginAccounts()`]].
+ *
+ * @author Dukt <support@dukt.net>
+ * @since   1.0
+ */
 class LoginAccounts extends Component
 {
     // Public Methods
