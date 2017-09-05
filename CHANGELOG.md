@@ -4,7 +4,7 @@ Changelog
 ## 2.0.0-beta.1 - Unreleased
 
 ### Added
-- Craft 3.0 compatiblity.
+- Craft 3.0 compatibility.
 - Users can now social login from the CP's login page.
 - Added an “Enable CP Login” plugin setting.
 - Admins can now remove Login Accounts from the CP user edit screen.
