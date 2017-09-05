@@ -87,7 +87,7 @@ class Plugin extends \craft\base\Plugin
 
                 if ($loginAccounts) {
                     // Craft::$app->getView()->registerCssFile('social/css/social.css');
-                    $event->html = Craft::$app->getView()->renderTemplate('social/users/_login-accounts-column', [
+                    $event->html = Craft::$app->getView()->renderTemplate('social/_components/users/login-accounts-column', [
                         'loginAccounts' => $loginAccounts,
                     ]);
                 } else {
