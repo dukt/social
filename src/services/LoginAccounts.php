@@ -54,7 +54,7 @@ class LoginAccounts extends Component
     }
 
     /**
-     * Get a social account by it's id.
+     * Returns a social account from its ID.
      *
      * @param int $id
      *
@@ -190,7 +190,7 @@ class LoginAccounts extends Component
     }
 
     /**
-     * Delete a social login account by it's ID
+     * Delete a social login account by its ID
      *
      * @param int $id
      *
