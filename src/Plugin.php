@@ -9,11 +9,11 @@ namespace dukt\social;
 
 use Craft;
 use craft\elements\User;
-use craft\events\DefineComponentsEvent;
 use craft\events\ModelEvent;
 use craft\events\RegisterElementTableAttributesEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\SetElementTableAttributeHtmlEvent;
+use craft\helpers\UrlHelper;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use dukt\social\base\PluginTrait;
@@ -159,9 +159,9 @@ class Plugin extends \craft\base\Plugin
      */
     public function getSettingsResponse()
     {
-        $url = \craft\helpers\UrlHelper::cpUrl('settings/social/loginproviders');
+        $url = UrlHelper::cpUrl('settings/social/loginproviders');
 
-        \Craft::$app->controller->redirect($url);
+        Craft::$app->controller->redirect($url);
 
         return '';
     }
