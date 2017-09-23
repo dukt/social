@@ -11,54 +11,38 @@
 
 {% set content %}
 
-    <h2 class="first">{{ "Status"|t('social', { loginProvider: loginProvider.name }) }}</h2>
 
-    {% if loginProvider.isConfigured %}
-        {% if loginProvider.isEnabled %}
-            <p><span class="status on"></span> {{ "Social Login with {provider} is enabled."|t('social', { provider: loginProvider.name }) }}</p>
-        {% else %}
-            <p><span class="status"></span> {{ "Social Login with {provider} is disabled."|t('social', { provider: loginProvider.name }) }}</p>
-        {% endif %}
-    {% else %}
-        <p><span class="status"></span> {{ "Not configured"|t('social', { provider: loginProvider.name }) }}</p>
-        <p class="light">{{ "Social Login with {provider} is disabled because the OAuth client ID or secret is missing for this provider."|t('social', { provider: loginProvider.name}) }}</p>
-    {% endif %}
+    <h2 class="first">{{ '1. Create the OAuth application'|t('social') }}</h2>
 
-    <hr>
+    <p>{{ 'Go to the {link}, create a new application or configure an existing one using the following settings:'|t('social', {link: '<a href="'~loginProvider.managerUrl~'">'~'{loginProvider} API Console'|t('social', { loginProvider: loginProvider.name })~'</a>'})|raw }}</p>
 
-    <h2>{{ "OAuth Client"|t('social') }}</h2>
+	{{ forms.textField({
+		readonly: true,
+		label: "Redirect URI"|t('social'),
+		value: loginProvider.getRedirectUri()
+	}) }}
 
-	{% if loginProvider.managerUrl %}
-        <p class="light">{{ "Go to the {link} to manage your OAuth application."|t('social', {link: '<a href="'~loginProvider.managerUrl~'">{label}</a>'|t('social', {label: "{loginProvider} API console"|t('social', {loginProvider: loginProvider.name})})})|raw }}</p>
-	{% endif %}
+    <h2>{{ '2. Configure the OAuth client'|t('social') }}</h2>
 
+    <p>{{ '{loginProvider} will provide you with a client ID and secret for your application.'|t('social', { loginProvider: loginProvider.name }) }}</p>
+    <p>{{ 'Copy the client ID & client secret from the {link}, and paste them in your <code>config/social.php</code> file.'|t('social', { link: '<a href="'~loginProvider.managerUrl~'">'~'{loginProvider} API Console'|t('social', { loginProvider: loginProvider.name })~'</a>'})|raw }}</p>
 
-    <ul class="bullets">
-        <li><strong>Client ID:</strong> {{ loginProvider.infos.clientId ?? '' }}</li>
-        <li><strong>Client Secret:</strong> {{ loginProvider.infos.clientSecret ?? '' }}</li>
-        <li><strong>Redirect URI:</strong> {{ loginProvider.getRedirectUri() }}</li>
+	{{ forms.textField({
+		readonly: true,
+        instructions: "Set <code>loginProviders."~loginProvider.handle~".clientId</code> in <code>config/social.php</code>.",
+        placeholder: "{loginProvider} Client ID"|t('social', { loginProvider: loginProvider.name }),
+		label: "Client ID"|t('social'),
+		name: 'settings[oauthClientId]',
+		value: loginProvider.infos.clientId ?? '',
+	}) }}
 
-    </ul>
-
-
-	{% if loginProvider.scope or loginProvider.authorizationOptions %}
-        {% if loginProvider.scope %}
-            <h2>{{ "OAuth Permissions"|t('social') }}</h2>
-            <ul class="bullets">
-                {% for scope in loginProvider.scope %}
-                    <li>{{ scope }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-
-        {% if loginProvider.authorizationOptions %}
-            <h2>{{ "Authorization Options"|t('social') }}</h2>
-            <ul class="bullets">
-                {% for optionKey, optionValue in loginProvider.authorizationOptions %}
-                    <li><strong>{{ optionKey }}:</strong> {{ optionValue }} </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-	{% endif %}
+	{{ forms.textField({
+		readonly: true,
+        instructions: "Set <code>loginProviders."~loginProvider.handle~".clientSecret</code> in <code>config/social.php</code>.",
+        placeholder: "{loginProvider} Client Secret"|t('social', { loginProvider: loginProvider.name }),
+		label: "Client Secret"|t('social'),
+		name: 'settings[oauthClientSecret]',
+		value: loginProvider.infos.clientSecret ?? '',
+	}) }}
 
 {% endset %}

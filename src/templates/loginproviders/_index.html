@@ -23,7 +23,8 @@
                                 <img src="{{ loginProvider.getIconUrl() }}" width="32" height="32" />
                             </div>
                             <div class="label">
-                                <a href="{{ url('settings/social/loginproviders/'~loginProvider.handle) }}">{{ loginProvider.name }}</a>
+                                {#<a href="{{ url('settings/social/loginproviders/'~loginProvider.handle) }}">{{ loginProvider.name }}</a>#}
+								{{ loginProvider.name }}
                             </div>
                         </div>
                     </th>
@@ -50,6 +51,9 @@
                             {% endif %}
                         </form>
 
+                    </td>
+                    <td>
+                        <a href="{{ url('settings/social/loginproviders/'~loginProvider.handle) }}"><span class="icon settings"></span> Settings</a>
                     </td>
                 </tr>
             {% endfor %}
