@@ -11,7 +11,6 @@
 
 {% set content %}
 
-
     <h2 class="first">{{ '1. Create the OAuth application'|t('social') }}</h2>
 
     <p>{{ 'Go to the {link}, create a new application or configure an existing one using the following settings:'|t('social', {link: '<a href="'~loginProvider.managerUrl~'">'~'{loginProvider} API Console'|t('social', { loginProvider: loginProvider.name })~'</a>'})|raw }}</p>
