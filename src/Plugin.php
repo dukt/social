@@ -137,8 +137,6 @@ class Plugin extends \craft\base\Plugin
             'settings/social/settings' => 'social/settings/settings',
             'settings/social/loginproviders' => 'social/login-providers/index',
             'settings/social/loginproviders/<handle:{handle}>' => 'social/login-providers/edit',
-
-            // 'social/settings' => 'social/settings/index',
         ];
 
         $event->rules = array_merge($event->rules, $rules);
