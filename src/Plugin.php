@@ -143,20 +143,6 @@ class Plugin extends \craft\base\Plugin
     }
 
     /**
-     * Get Social login providers.
-     *
-     * @return array
-     */
-    public function getSocialLoginProviders()
-    {
-        return [
-            'dukt\social\loginproviders\Facebook',
-            'dukt\social\loginproviders\Google',
-            'dukt\social\loginproviders\Twitter',
-        ];
-    }
-
-    /**
      * Creates and returns the model used to store the plugin’s settings.
      *
      * @return \craft\base\Model|null
