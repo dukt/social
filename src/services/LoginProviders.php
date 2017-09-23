@@ -149,7 +149,8 @@ class LoginProviders extends Component
             $loginProvider = $this->_createLoginProvider($loginProviderType);
 
             if (!$enabledOnly || ($enabledOnly && $loginProvider->getIsEnabled())) {
-                $loginProviders[$loginProviderType] = $loginProvider;
+                $key = substr($loginProviderType, strrpos($loginProviderType, "\\") + 1);
+                $loginProviders[$key] = $loginProvider;
             }
         }
 
