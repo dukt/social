@@ -95,8 +95,10 @@ class Plugin extends \craft\base\Plugin
             }
         });
 
-        Event::on(CraftVariable::class, CraftVariable::EVENT_DEFINE_COMPONENTS, function(DefineComponentsEvent $event) {
-            $event->components['social'] = SocialVariable::class;
+        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function(Event $event) {
+            /** @var CraftVariable $variable */
+            $variable = $event->sender;
+            $variable->set('social', SocialVariable::class);
         });
 
         Event::on(User::class, User::EVENT_AFTER_SAVE, function(ModelEvent $event) {
