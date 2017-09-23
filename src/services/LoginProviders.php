@@ -9,6 +9,7 @@ namespace dukt\social\services;
 
 use Craft;
 use dukt\social\base\LoginProvider;
+use dukt\social\events\RegisterLoginProviderTypesEvent;
 use dukt\social\Plugin;
 use yii\base\Component;
 use Dukt\Social\Base\LoginProviderInterface;
@@ -23,6 +24,14 @@ use Dukt\Social\Base\LoginProviderInterface;
  */
 class LoginProviders extends Component
 {
+    // Constants
+    // =========================================================================
+
+    /**
+     * @event RegisterLoginProviderTypesEvent The event that is triggered when registering login providers.
+     */
+    const EVENT_REGISTER_LOGIN_PROVIDER_TYPES = 'registerLoginProviderTypes';
+
     // Public Methods
     // =========================================================================
 
@@ -115,33 +124,7 @@ class LoginProviders extends Component
      */
     private function _getLoginProviders($enabledOnly)
     {
-        // Fetch Social's login providers
-
-        $loginProviderTypes = Plugin::$plugin->getSocialLoginProviders();
-
-
-        // Fetch login providers from other plugins
-
-        foreach (Craft::$app->getPlugins()->getAllPlugins() as $plugin) {
-            if (method_exists($plugin, 'getSocialLoginProviders')) {
-                $pluginLoginProviders = $plugin->getSocialLoginProviders();
-
-                foreach ($pluginLoginProviders as $pluginLoginProvider) {
-                    $alreadyExists = false;
-                    foreach ($loginProviderTypes as $loginProviderType) {
-                        if ($loginProviderType === $pluginLoginProvider) {
-                            $alreadyExists = true;
-                        }
-                    }
-
-                    if (!$alreadyExists) {
-                        array_push($loginProviderTypes, $pluginLoginProvider);
-                    }
-                }
-            }
-        }
-
-        // Instantiate providers
+        $loginProviderTypes = $this->_getLoginProviderTypes();
 
         $loginProviders = [];
 
@@ -157,6 +140,30 @@ class LoginProviders extends Component
         ksort($loginProviders);
 
         return $loginProviders;
+    }
+
+    /**
+     * Get login provider types.
+     *
+     * @return array
+     */
+    private function _getLoginProviderTypes()
+    {
+        $loginProviderTypes = [
+            'dukt\social\loginproviders\Facebook',
+            'dukt\social\loginproviders\Google',
+            'dukt\social\loginproviders\Twitter',
+        ];
+
+        $eventName = self::EVENT_REGISTER_LOGIN_PROVIDER_TYPES;
+
+        $event = new RegisterLoginProviderTypesEvent([
+            'loginProviderTypes' => $loginProviderTypes
+        ]);
+
+        $this->trigger($eventName, $event);
+
+        return $event->loginProviderTypes;
     }
 
     /**
