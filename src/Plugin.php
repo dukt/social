@@ -132,7 +132,7 @@ class Plugin extends \craft\base\Plugin
             'social/loginaccounts/<userId:\d+>' => 'social/login-accounts/edit',
 
             'settings/social' => ['template' => 'social/settings/index'],
-            'settings/social/general' => 'social/settings/general',
+            'settings/social/settings' => 'social/settings/settings',
             'settings/social/loginproviders' => 'social/login-providers/index',
             'settings/social/loginproviders/<handle:{handle}>' => 'social/login-providers/edit',
 

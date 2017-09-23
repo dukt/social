@@ -1,6 +1,6 @@
 {% extends "_layouts/cp" %}
 
-{% set title = "Social"|t('social') %}
+{% set title = "Social Settings"|t('social') %}
 
 {% set docsUrl = 'https://dukt.net/social/docs' %}
 
@@ -12,7 +12,7 @@
 
     {% set tabs = {
         loginProviders: { label: "Login Providers"|t('social'), url: url('settings/social/loginproviders') },
-        settings: { label: "Settings"|t('social'), url: url('settings/social/general') },
+        settings: { label: "Settings"|t('social'), url: url('settings/social/settings') },
     } %}
 
 {% else %}

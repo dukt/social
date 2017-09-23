@@ -29,7 +29,7 @@ class SettingsController extends Controller
      *
      * @return null
      */
-    public function actionGeneral()
+    public function actionSettings()
     {
         $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $variables['settings'] = $plugin->getSettings();
