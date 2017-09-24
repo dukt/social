@@ -129,14 +129,6 @@ class Plugin extends \craft\base\Plugin
     }
 
     /**
-     * @inheritdoc
-     */
-    public function defineTemplateComponent()
-    {
-        return SocialVariable::class;
-    }
-
-    /**
      * Creates and returns the model used to store the plugin’s settings.
      *
      * @return \craft\base\Model|null
