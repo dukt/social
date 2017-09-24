@@ -72,7 +72,21 @@ class Plugin extends \craft\base\Plugin
             'loginProviders' => \dukt\social\services\LoginProviders::class,
         ]);
 
-        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, [$this, 'registerCpUrlRules']);
+        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event) {
+            $rules = [
+                'social' => 'social/login-accounts/index',
+
+                'social/loginaccounts' => 'social/loginAccounts/index',
+                'social/loginaccounts/<userId:\d+>' => 'social/login-accounts/edit',
+
+                'settings/social' => 'social/login-providers/index',
+                'settings/social/loginproviders' => 'social/login-providers/index',
+                'settings/social/loginproviders/<handle:{handle}>' => 'social/login-providers/edit',
+                'settings/social/settings' => 'social/settings/settings',
+            ];
+
+            $event->rules = array_merge($event->rules, $rules);
+        });
 
         Event::on(User::class, User::EVENT_REGISTER_TABLE_ATTRIBUTES, function(RegisterElementTableAttributesEvent $event) {
             $event->tableAttributes['loginAccounts'] = Craft::t('social', 'Login Accounts');
@@ -120,26 +134,6 @@ class Plugin extends \craft\base\Plugin
     public function defineTemplateComponent()
     {
         return SocialVariable::class;
-    }
-
-    /**
-     * @param RegisterUrlRulesEvent $event
-     */
-    public function registerCpUrlRules(RegisterUrlRulesEvent $event)
-    {
-        $rules = [
-            'social' => 'social/login-accounts/index',
-
-            'social/loginaccounts' => 'social/loginAccounts/index',
-            'social/loginaccounts/<userId:\d+>' => 'social/login-accounts/edit',
-
-            'settings/social' => 'social/login-providers/index',
-            'settings/social/loginproviders' => 'social/login-providers/index',
-            'settings/social/loginproviders/<handle:{handle}>' => 'social/login-providers/edit',
-            'settings/social/settings' => 'social/settings/settings',
-        ];
-
-        $event->rules = array_merge($event->rules, $rules);
     }
 
     /**
