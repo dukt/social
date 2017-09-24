@@ -1,7 +1,7 @@
 Changelog
 ===================
 
-## 2.0.0-beta.2 - Unreleased
+## 2.0.0-beta.2 - 2017-09-24
 
 ### Added
 - Added the `registerLoginProviderTypes` event to `dukt\social\services\LoginAccounts`, giving plugins a change to register login provider types (replacing `getSocialLoginProviders()`).
