@@ -1,6 +1,24 @@
 Changelog
 ===================
 
+## 2.0.0-beta.2 - Unreleased
+
+### Added
+- Added the `registerLoginProviderTypes` event to `dukt\social\services\LoginAccounts`, giving plugins a change to register login provider types (replacing `getSocialLoginProviders()`).
+- Added `dukt\social\events\RegisterLoginProviderTypesEvent`.
+
+### Fixed
+- Fixed a bug where login providers were not sorted alphabetically.
+- Fixed with the setting pages’ doc title.
+
+### Improved
+- Improved instructions for login provider settings. 
+- Now using the `craft\web\twig\variables\CraftVariable`’s `init` event to register Social’s variable class, replacing the now-deprecated `defineComponents`.
+- Removed `dukt\social\Plugin::getSocialLoginProviders()`.
+- Replaced tabs with nav for the plugin’s settings navigation.
+- Renamed “General” settings nav item to “Settings“.
+
+
 ## 2.0.0-beta.1 - 2017-09-06
 
 ### Added
