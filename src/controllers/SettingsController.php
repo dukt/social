@@ -37,6 +37,6 @@ class SettingsController extends Controller
         $accounts = Social::$plugin->getLoginAccounts()->getLoginAccounts();
         $variables['totalAccounts'] = count($accounts);
 
-        return $this->renderTemplate('social/settings/_general', $variables);
+        return $this->renderTemplate('social/settings/settings', $variables);
     }
 }

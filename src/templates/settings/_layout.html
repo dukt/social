@@ -10,12 +10,18 @@
         { label: "Settings"|t('social'), url: url('settings') },
     ] %}
 
-    {% set tabs = {
+    {% set navItems = {
         loginProviders: { label: "Login Providers"|t('social'), url: url('settings/social/loginproviders') },
         settings: { label: "Settings"|t('social'), url: url('settings/social/settings') },
     } %}
 
-	{% set docTitle = tabs[selectedTab].label~' - '~title %}
+	{% set docTitle = navItems[selectedNavItem].label~' - '~title %}
+
+	{% block sidebar %}
+        <nav>
+			{% include "_includes/nav" with { items: navItems, selectedItem: selectedNavItem } only %}
+        </nav>
+	{% endblock %}
 
 {% else %}
 
