@@ -34,6 +34,10 @@ class LoginProvidersController extends Controller
      */
     public function actionIndex()
     {
+        if(Craft::$app->getEdition() !== Craft::Pro) {
+            return $this->renderTemplate('social/settings/_pro-requirement');
+        }
+
         Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
 
         $variables['loginProviders'] = Social::$plugin->getLoginProviders()->getLoginProviders(false);
@@ -51,6 +55,10 @@ class LoginProvidersController extends Controller
      */
     public function actionEdit($handle)
     {
+        if(Craft::$app->getEdition() !== Craft::Pro) {
+            return $this->renderTemplate('social/settings/_pro-requirement');
+        }
+
         $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($handle, false, true);
 
         if ($loginProvider) {

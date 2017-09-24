@@ -4,32 +4,19 @@
 
 {% set docsUrl = 'https://dukt.net/social/docs' %}
 
-{% if CraftEdition == CraftPro %}
+{% set crumbs = [
+    { label: "Settings"|t('social'), url: url('settings') },
+] %}
 
-    {% set crumbs = [
-        { label: "Settings"|t('social'), url: url('settings') },
-    ] %}
+{% set navItems = {
+    loginProviders: { label: "Login Providers"|t('social'), url: url('settings/social/loginproviders') },
+    settings: { label: "Settings"|t('social'), url: url('settings/social/settings') },
+} %}
 
-    {% set navItems = {
-        loginProviders: { label: "Login Providers"|t('social'), url: url('settings/social/loginproviders') },
-        settings: { label: "Settings"|t('social'), url: url('settings/social/settings') },
-    } %}
+{% set docTitle = navItems[selectedNavItem].label~' - '~title %}
 
-	{% set docTitle = navItems[selectedNavItem].label~' - '~title %}
-
-	{% block sidebar %}
-        <nav>
-			{% include "_includes/nav" with { items: navItems, selectedItem: selectedNavItem } only %}
-        </nav>
-	{% endblock %}
-
-{% else %}
-
-    {% set content %}
-
-        <h2>{{ "Craft Pro required"|t('social') }}</h2>
-        <p>{{ 'Social Login plugin requires {link} unlimited user accounts feature.'|t({link:'<a href="https://craftcms.com/pricing">Craft Pro</a>'})|raw }}</p>
-
-    {% endset %}
-
-{% endif %}
+{% block sidebar %}
+    <nav>
+        {% include "_includes/nav" with { items: navItems, selectedItem: selectedNavItem } only %}
+    </nav>
+{% endblock %}

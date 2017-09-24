@@ -1,0 +1,16 @@
+{% extends "_layouts/cp" %}
+
+{% set title = "Social Settings"|t('social') %}
+
+{% set docsUrl = 'https://dukt.net/social/docs' %}
+
+{% set crumbs = [
+{ label: "Settings"|t('social'), url: url('settings') },
+] %}
+
+{% set content %}
+
+	<h2>{{ "Craft Pro required"|t('social') }}</h2>
+	<p>{{ 'Social Login plugin requires {link}.'|t({link:'<a href="https://craftcms.com/pricing">Craft Pro</a>'})|raw }}</p>
+
+{% endset %}

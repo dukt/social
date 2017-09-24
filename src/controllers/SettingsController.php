@@ -31,6 +31,10 @@ class SettingsController extends Controller
      */
     public function actionSettings()
     {
+        if(Craft::$app->getEdition() !== Craft::Pro) {
+            return $this->renderTemplate('social/settings/_pro-requirement');
+        }
+
         $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $variables['settings'] = $plugin->getSettings();
 
