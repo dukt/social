@@ -10,7 +10,6 @@ namespace dukt\social\services;
 use Craft;
 use dukt\social\base\LoginProvider;
 use dukt\social\events\RegisterLoginProviderTypesEvent;
-use dukt\social\Plugin;
 use yii\base\Component;
 use Dukt\Social\Base\LoginProviderInterface;
 
