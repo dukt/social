@@ -142,7 +142,7 @@ class LoginProviders extends Component
     }
 
     /**
-     * Get login provider types.
+     * Returns login provider types.
      *
      * @return array
      */
