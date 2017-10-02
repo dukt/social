@@ -111,13 +111,13 @@ class SocialPlugin extends BasePlugin
 		return 'https://dukt.net/craft/social/docs/';
 	}
 
-	/**
-	 * Get Release Feed URL
-	 */
-	public function getReleaseFeedUrl()
-	{
-		return 'https://dukt.net/craft/social/updates.json';
-	}
+    /**
+     * Get release feed URL
+     */
+    public function getReleaseFeedUrl()
+    {
+        return 'https://raw.githubusercontent.com/dukt/social/v1/releases.json';
+    }
 
 	/**
 	 * Get Settings URL
