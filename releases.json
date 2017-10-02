@@ -1,0 +1,89 @@
+[
+  {
+    "version": "1.2.4",
+    "downloadUrl": "https://github.com/dukt/social/archive/1.2.4.zip",
+    "date": "2017-01-13T11:00:00-02:00",
+    "notes": [
+      "[Added] Added `docsUrl` to settings pages.",
+      "[Added] Added `Social_InstallController`.",
+      "[Added] Added `SocialTrait`.",
+      "[Improved] Checking plugin requirements from `Social_ProviderModel::getOauthProvider()` and `Social_LoginAccountModel::getOauthProvider()`.",
+      "[Improved] Improved installation process.",
+      "[Improved] Removed `Social_Plugin.",
+      "[Improved] Removed `Social_PluginController`."
+    ]
+  },
+  {
+    "version": "1.2.3",
+    "downloadUrl": "https://github.com/dukt/social/archive/1.2.3.zip",
+    "date": "2016-11-08T11:00:00-02:00",
+    "notes": [
+      "[Improved] The plugin now requires OAuth 2.0.2.",
+      "[Improved] Removed `bio` from profile variables.",
+      "[Improved] Removed `bio` from API requested profile fields.",
+      "[Improved] The plugin is now using Facebook API v2.8."
+    ]
+  },
+  {
+    "version": "1.2.2",
+    "downloadUrl": "https://github.com/dukt/social/archive/1.2.2.zip",
+    "date": "2016-09-02T11:00:00-02:00",
+    "notes": [
+      "[Improved] Removed references to the old userContentMapping config for Auto-Fill Profile instructions in the settings.",
+      "[Improved] Improved exception handling for SocialController::actionLogin().",
+      "[Improved] Improved namespaces for SocialUserIdentity.",
+      "[Improved] Removed SocialController::_connect().",
+      "[Improved] SocialController’s private methods and properties have been refactored."
+    ]
+  },
+  {
+    "version": "1.2.1",
+    "downloadUrl": "https://github.com/dukt/social/archive/1.2.1.zip",
+    "date": "2016-06-17T11:00:00-02:00",
+    "notes": [
+      "[Improved] The account attributes array is now passed by reference to the `social_loginAccounts.onBeforeRegister` to actually give other plugins a chance to modify it."
+    ]
+  },
+  {
+    "version": "1.2.0",
+    "downloadUrl": "https://github.com/dukt/social/archive/1.2.0.zip",
+    "date": "2016-06-08T11:00:00-02:00",
+    "notes": [
+      "[Added] Added a `lockDomains` config to lock social registration based on domain names.",
+      "[Fixed] Fixed a bug where the Google::getProfile() was returning an empty `photoUrl` attribute."
+    ]
+  },
+  {
+    "version": "1.1.0",
+    "downloadUrl": "https://github.com/dukt/social/archive/1.1.0.zip",
+    "date": "2016-06-02T11:00:00-02:00",
+    "notes": [
+      "[Added] Added `addLoginAccountActions` hook to allow plugins to add Social_LoginAccount element actions.",
+      "[Added] Added `getLoginAccountTableAttributeHtml` hook to allow plugins to customize table cells in the Social_LoginAccount element index.",
+      "[Added] Added ISocial_Provider interface.",
+      "[Added] Added logging of errors when a user couldn’t be created.",
+      "[Added] Added SocialPlugin::getDescription().",
+      "[Added] Facebook now supports `locationId` and `locationName` fields.",
+      "[Fixed] Fixed breadcrumbs and links in Edit Login Provider template.",
+      "[Fixed] Fixed bug when trying to delete login accounts by user ID.",
+      "[Fixed] Fixed bug with passing in a model into the userContent templates instead of an array of variables.",
+      "[Fixed] Fixed photoUrl, isDefaultPicture and coverPhotoUrl for Facebook login provider.",
+      "[Improved] Changed user mapping format.",
+      "[Improved] Fill `username` and `email` even if `autoFillProfile` is set to `false`.",
+      "[Improved] Improved login error handling for login with a not configured provider.",
+      "[Improved] Logging template errors while mapping attributes as warnings instead of errors now.",
+      "[Improved] Login Accounts are now elemental.",
+      "[Improved] Moved settings from CP section to plugin settings.",
+      "[Improved] Moved Show CP Section setting from config file to the settings in the CP.",
+      "[Improved] Removed legacy code that queried for the freshly saved user again.",
+      "[Improved] Removed tokenId attribute from Social_LoginAccount models and records.",
+      "[Improved] Renamed `profileFieldsMapping` by `userContentMapping`.",
+      "[Improved] Renamed getAccount() to getProfile() for login providers. Each provider is now responsible for providing a profile.",
+      "[Improved] Renamed getRemoteAccount() to getRemoteProfile() for login providers.",
+      "[Improved] Requiring BaseProvider earlier as other plugins might need to use it before getSocialLoginProviders() gets called for Social plugin.",
+      "[Improved] Requiring ISocial_Provider and BaseProvider from SocialPlugin::init().",
+      "[Improved] Social plugin requires OAuth 2.0+.",
+      "[Improved] Switched to using `setContentFromPost()` to give field types a chance to prepare the values."
+    ]
+  }
+]
