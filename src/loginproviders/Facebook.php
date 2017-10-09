@@ -8,6 +8,7 @@
 namespace dukt\social\loginproviders;
 
 use dukt\social\base\LoginProvider;
+use dukt\social\helpers\SocialHelper;
 use GuzzleHttp\Client;
 use dukt\social\models\Token;
 
@@ -80,6 +81,27 @@ class Facebook extends LoginProvider
             'locationId' => (isset($remoteProfile['location']['id']) ? $remoteProfile['location']['id'] : null),
             'locationName' => (isset($remoteProfile['location']['name']) ? $remoteProfile['location']['name'] : null),
         ];
+    }
+
+    /**
+     * Get the redirect URI.
+     *
+     * @return string
+     */
+    public function getRedirectUri()
+    {
+        $url = SocialHelper::siteActionUrl('social/login-accounts/callback');
+        $parsedUrl = parse_url($url);
+
+        if (isset($parsedUrl['query'])) {
+            parse_str($parsedUrl['query'], $query);
+
+            $query = http_build_query($query);
+
+            return $parsedUrl['scheme'].'://'.$parsedUrl['host'].$parsedUrl['path'].'?'.$query;
+        }
+
+        return $url;
     }
 
     // Protected Methods

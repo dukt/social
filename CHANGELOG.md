@@ -1,6 +1,11 @@
 Changelog
 ===================
 
+## 2.0.0-beta.3 - Unreleased
+
+### Fixed
+- Fixed a bug where the redirect URL was not properly encoded for Facebook.
+
 ## 2.0.0-beta.2 - 2017-09-24
 
 ### Added
