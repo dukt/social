@@ -167,7 +167,7 @@ class Facebook extends LoginProvider
 
         if ($token) {
 
-            $headers['Authorization'] = 'Bearer '.$token->getToken();
+            $headers['Authorization'] = 'Bearer '.$token->token;
         }
 
         $options = [

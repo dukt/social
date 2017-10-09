@@ -5,6 +5,7 @@ Changelog
 
 ### Fixed
 - Fixed a bug where the redirect URL was not properly encoded for Facebook.
+- Fixed a bug where Facebook’s OAuth token couldn’t be retrieved.
 
 ## 2.0.0-beta.2 - 2017-09-24
 
