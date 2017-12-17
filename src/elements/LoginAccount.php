@@ -171,7 +171,7 @@ class LoginAccount extends Element
 
         $attributes = $socialLoginProvider->getProfile($token);
 
-        $socialUid = $attributes['id'];
+        $socialUid = (string) $attributes['id'];
 
         return $this->socialUid === $socialUid;
     }
