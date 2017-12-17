@@ -1,6 +1,19 @@
 Changelog
 ===================
 
+## 2.0.0-beta.4 - Unreleased
+
+### Added
+- Added Craft license.
+
+### Improved
+- Updated plugin icon.
+
+### Fixed
+- Fixed a bug that would make the Users edit page crash when user is connected to a disabled or uninstalled login providers.
+- Fixed login buttons on the login form.
+- Fixed login accounts pane’s styles on the Users edit page.
+
 ## 2.0.0-beta.3 - 2017-10-09
 
 ### Fixed
