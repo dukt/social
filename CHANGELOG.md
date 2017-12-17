@@ -6,8 +6,9 @@ Changelog
 ### Added
 - Added Craft license.
 
-### Improved
-- Updated plugin icon.
+### Changed
+- Updated the plugin’s icon.
+- Updated to require craftcms/cms `^3.0.0-RC1`.
 
 ### Fixed
 - Fixed a bug that would make the Users edit page crash when user is connected to a disabled or uninstalled login providers.
