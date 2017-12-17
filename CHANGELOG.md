@@ -1,7 +1,7 @@
 Changelog
 ===================
 
-## 2.0.0-beta.5 - Unreleased
+## 2.0.0-beta.5 - 2017-12-17
 
 ### Improved
 - Make sure the social UID is a string when authenticating.
