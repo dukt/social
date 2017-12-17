@@ -12,7 +12,7 @@
                 {% for loginProvider in loginProviders %}
                     {% set connected = false %}
                     {% for account in loginAccounts %}
-                        {% if loginProvider.handle == account.getLoginProvider().handle %}
+                        {% if account.getLoginProvider() and loginProvider.handle == account.getLoginProvider().handle %}
                             {% set connected = true %}
                         {% endif %}
                     {% endfor %}
