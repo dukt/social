@@ -7,7 +7,7 @@
 .socialthumb { display: inline-block; }
 .socialthumb img { width: 30px; vertical-align: middle; }
 
-.pane .provider {
+#loginAccounts .provider {
     padding-top: 7px;
     padding-bottom: 7px;
 }

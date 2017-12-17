@@ -239,10 +239,9 @@ class Plugin extends \craft\base\Plugin
      */
     private function initLoginAccountsUserPane()
     {
-        Craft::$app->getView()->hook('cp.users.edit.right-pane', function(&$context) {
-            if ($context['account']) {
-                $context['user'] = $context['account'];
-                $context['loginAccounts'] = $this->loginAccounts->getLoginAccountsByUserId($context['account']->id);
+        Craft::$app->getView()->hook('cp.users.edit.details', function(&$context) {
+            if ($context['user']) {
+                $context['loginAccounts'] = $this->loginAccounts->getLoginAccountsByUserId($context['user']->id);
                 $context['loginProviders'] = $this->loginProviders->getLoginProviders();
 
                 Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
