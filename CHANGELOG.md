@@ -1,7 +1,7 @@
 Changelog
 ===================
 
-## 2.0.0-beta.4 - Unreleased
+## 2.0.0-beta.4 - 2017-12-17
 
 ### Added
 - Added Craft license.
