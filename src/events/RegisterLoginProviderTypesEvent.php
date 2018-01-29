@@ -1,7 +1,7 @@
 <?php
 /**
  * @link      https://dukt.net/social/
- * @copyright Copyright (c) 2017, Dukt
+ * @copyright Copyright (c) 2018, Dukt
  * @license   https://dukt.net/social/docs/license
  */
 
