@@ -38,5 +38,6 @@ return [
 	//        'gender' => '{{ gender }}',
 	//        'profileUrl' => '{{ link }}',
 	//    ],
+    //    'apiVersion' => 'v2.12',
 	//],
 ];

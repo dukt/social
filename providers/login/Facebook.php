@@ -47,8 +47,15 @@ class Facebook extends BaseProvider
 	public function getRemoteProfile($token)
 	{
 		$oauthProvider = $this->getOauthProvider();
+        $providerConfig = \Craft\craft()->config->get($this->getHandle(), 'social');
 
-		$client = new Client('https://graph.facebook.com/v2.8');
+        $apiVersion = 'v2.12';
+
+        if(!empty($providerConfig['apiVersion'])) {
+            $apiVersion = $providerConfig['apiVersion'];
+        }
+
+		$client = new Client('https://graph.facebook.com/'.$apiVersion);
 		$client->addSubscriber($oauthProvider->getSubscriber($token));
 
 		$fields = implode(',', [
