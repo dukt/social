@@ -32,7 +32,7 @@ class LoginAccount extends ActiveRecord
      */
     public static function tableName(): string
     {
-        return 'social_login_accounts';
+        return '{{%social_login_accounts}}';
     }
 
     /**

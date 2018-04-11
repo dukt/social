@@ -14,6 +14,7 @@ use craft\events\RegisterElementTableAttributesEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\SetElementTableAttributeHtmlEvent;
 use craft\helpers\UrlHelper;
+use craft\services\Plugins;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use dukt\social\base\PluginTrait;
@@ -124,7 +125,12 @@ class Plugin extends \craft\base\Plugin
             }
         });
 
-        $this->initCpSocialLogin();
+        Event::on(
+            Plugins::class,
+            Plugins::EVENT_AFTER_LOAD_PLUGINS,
+            function() {
+                $this->initCpSocialLogin();
+        });
         $this->initLoginAccountsUserPane();
     }
 
