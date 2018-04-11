@@ -119,7 +119,7 @@ class Facebook extends LoginProvider
         $config = [
             'clientId' => $providerInfos['clientId'],
             'clientSecret' => $providerInfos['clientSecret'],
-            'graphApiVersion' => $providerInfos['graphApiVersion'] ?? 'v2.8',
+            'graphApiVersion' => $providerInfos['graphApiVersion'] ?? 'v2.12',
             'redirectUri' => $this->getRedirectUri(),
         ];
 
