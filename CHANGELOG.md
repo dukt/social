@@ -1,6 +1,9 @@
 Changelog
 ===================
 
+## Unreleased
+- Fixed a bug where new users couldn’t be assign to the default user group defined in the plugin’s settings.
+
 ## 2.0.0-beta.5 - 2017-12-17
 
 ### Improved

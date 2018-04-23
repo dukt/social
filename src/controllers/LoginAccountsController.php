@@ -586,7 +586,7 @@ class LoginAccountsController extends Controller
 
         // save groups
         if (!empty($settings['defaultGroup'])) {
-            Craft::$app->userGroups->assignUserToGroups($newUser->id, [$settings['defaultGroup']]);
+            Craft::$app->users->assignUserToGroups($newUser->id, [$settings['defaultGroup']]);
         }
 
         Craft::$app->elements->saveElement($newUser);
