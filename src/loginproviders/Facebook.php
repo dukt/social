@@ -26,7 +26,7 @@ class Facebook extends LoginProvider
     /**
      * @inheritdoc
      */
-    public function getName()
+    public function getName(): string
     {
         return 'Facebook';
     }
@@ -88,7 +88,7 @@ class Facebook extends LoginProvider
      *
      * @return string
      */
-    public function getRedirectUri()
+    public function getRedirectUri(): string
     {
         $url = SocialHelper::siteActionUrl('social/login-accounts/callback');
         $parsedUrl = parse_url($url);
@@ -112,7 +112,7 @@ class Facebook extends LoginProvider
      *
      * @return \League\OAuth2\Client\Provider\Facebook
      */
-    protected function getOauthProvider()
+    protected function getOauthProvider(): \League\OAuth2\Client\Provider\Facebook
     {
         $providerInfos = $this->getInfos();
 
@@ -161,7 +161,7 @@ class Facebook extends LoginProvider
      *
      * @return Client
      */
-    private function getClient(Token $token)
+    private function getClient(Token $token): Client
     {
         $headers = [];
 

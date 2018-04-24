@@ -10,6 +10,7 @@ namespace dukt\social\controllers;
 use Craft;
 use craft\web\Controller;
 use dukt\social\Plugin as Social;
+use yii\web\Response;
 
 /**
  * The SettingsController class is a controller that handles various settings related tasks.
@@ -27,10 +28,10 @@ class SettingsController extends Controller
     /**
      * General settings.
      *
-     * @return \yii\web\Response
+     * @return Response
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionSettings()
+    public function actionSettings(): Response
     {
         if(Craft::$app->getEdition() !== Craft::Pro) {
             return $this->renderTemplate('social/settings/_pro-requirement');

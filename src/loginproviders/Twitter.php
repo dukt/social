@@ -24,7 +24,7 @@ class Twitter extends LoginProvider
     /**
      * @inheritdoc
      */
-    public function getName()
+    public function getName(): string
     {
         return 'Twitter';
     }
@@ -32,7 +32,7 @@ class Twitter extends LoginProvider
     /**
      * @inheritdoc
      */
-    public function oauthVersion()
+    public function oauthVersion(): int
     {
         return 1;
     }
@@ -74,7 +74,7 @@ class Twitter extends LoginProvider
      *
      * @return \League\OAuth1\Client\Server\Twitter
      */
-    protected function getOauthProvider()
+    protected function getOauthProvider(): \League\OAuth1\Client\Server\Twitter
     {
         $providerInfos = $this->getInfos();
 

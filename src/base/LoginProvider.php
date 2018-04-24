@@ -75,7 +75,7 @@ abstract class LoginProvider implements LoginProviderInterface
      *
      * @return bool
      */
-    public function isConfigured()
+    public function isConfigured(): bool
     {
         $infos = $this->getInfos();
 
@@ -91,7 +91,7 @@ abstract class LoginProvider implements LoginProviderInterface
      *
      * @return int
      */
-    public function oauthVersion()
+    public function oauthVersion(): int
     {
         return 2;
     }
@@ -131,7 +131,7 @@ abstract class LoginProvider implements LoginProviderInterface
      *
      * @return string
      */
-    public function getHandle()
+    public function getHandle(): string
     {
         $class = $this->getClass();
 
@@ -145,7 +145,7 @@ abstract class LoginProvider implements LoginProviderInterface
      *
      * @return string
      */
-    public function getClass()
+    public function getClass(): string
     {
         $nsClass = get_class($this);
 
@@ -169,6 +169,7 @@ abstract class LoginProvider implements LoginProviderInterface
      */
     public function getDefaultScope()
     {
+        return null;
     }
 
     /**
@@ -178,6 +179,7 @@ abstract class LoginProvider implements LoginProviderInterface
      */
     public function getDefaultAuthorizationOptions()
     {
+        return null;
     }
 
     /**
@@ -219,7 +221,7 @@ abstract class LoginProvider implements LoginProviderInterface
      *
      * @return bool
      */
-    public function getIsEnabled()
+    public function getIsEnabled(): bool
     {
         // get plugin settings
         $settings = Plugin::$plugin->getSettings();
@@ -237,7 +239,7 @@ abstract class LoginProvider implements LoginProviderInterface
      *
      * @return string
      */
-    public function getRedirectUri()
+    public function getRedirectUri(): string
     {
         return SocialHelper::siteActionUrl('social/login-accounts/callback');
     }
@@ -265,7 +267,7 @@ abstract class LoginProvider implements LoginProviderInterface
      *
      * @return Response
      */
-    private function oauth1Connect()
+    private function oauth1Connect(): Response
     {
         // OAuth provider
         $provider = $this->getOauthProvider();
@@ -287,7 +289,7 @@ abstract class LoginProvider implements LoginProviderInterface
      *
      * @return Response
      */
-    private function oauth2Connect()
+    private function oauth2Connect(): Response
     {
         $provider = $this->getOauthProvider();
 
@@ -312,7 +314,7 @@ abstract class LoginProvider implements LoginProviderInterface
      *
      * @return array
      */
-    private function oauth1Callback()
+    private function oauth1Callback(): array
     {
         $provider = $this->getOauthProvider();
 
@@ -336,7 +338,7 @@ abstract class LoginProvider implements LoginProviderInterface
      *
      * @return array
      */
-    private function oauth2Callback()
+    private function oauth2Callback(): array
     {
         $provider = $this->getOauthProvider();
 

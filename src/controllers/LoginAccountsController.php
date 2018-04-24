@@ -19,6 +19,7 @@ use dukt\social\models\Token;
 use dukt\social\elements\LoginAccount;
 use Exception;
 use yii\base\Event;
+use yii\web\Response;
 
 /**
  * The LoginAccountsController class is a controller that handles various login account related tasks.
@@ -66,10 +67,10 @@ class LoginAccountsController extends Controller
     /**
      * Login Accounts Index.
      *
-     * @return \yii\web\Response
+     * @return Response
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionIndex()
+    public function actionIndex(): Response
     {
         Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
 
@@ -81,11 +82,11 @@ class LoginAccountsController extends Controller
      *
      * @param $userId
      *
-     * @return \yii\web\Response
+     * @return Response
      * @throws HttpException
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionEdit($userId)
+    public function actionEdit($userId): Response
     {
         $user = Craft::$app->users->getUserById($userId);
 
@@ -107,12 +108,12 @@ class LoginAccountsController extends Controller
     /**
      * Delete login account.
      *
-     * @return \yii\web\Response
+     * @return Response
      * @throws \Throwable
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\web\BadRequestHttpException
      */
-    public function actionDeleteLoginAccount()
+    public function actionDeleteLoginAccount(): Response
     {
         $this->requirePostRequest();
         $this->requireAcceptsJson();
@@ -127,11 +128,11 @@ class LoginAccountsController extends Controller
     /**
      * Login.
      *
-     * @return \yii\web\Response
+     * @return Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Throwable
      */
-    public function actionLogin()
+    public function actionLogin(): Response
     {
         Craft::$app->getSession()->set('social.loginControllerUrl', Craft::$app->getRequest()->getAbsoluteUrl());
 
@@ -209,9 +210,9 @@ class LoginAccountsController extends Controller
     /**
      * OAuth callback.
      *
-     * @return \yii\web\Response
+     * @return Response
      */
-    public function actionCallback()
+    public function actionCallback(): Response
     {
         Craft::$app->getSession()->set('social.callback', true);
 
@@ -240,11 +241,11 @@ class LoginAccountsController extends Controller
     /**
      * Connect a login account (link).
      *
-     * @return \yii\web\Response
+     * @return Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Throwable
      */
-    public function actionConnectLoginAccount()
+    public function actionConnectLoginAccount(): Response
     {
         return $this->actionLogin();
     }
@@ -252,11 +253,11 @@ class LoginAccountsController extends Controller
     /**
      * Disconnect a login account (unlink).
      *
-     * @return \yii\web\Response
+     * @return Response
      * @throws \Throwable
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionDisconnectLoginAccount()
+    public function actionDisconnectLoginAccount(): Response
     {
         $handle = Craft::$app->getRequest()->getParam('provider');
 
@@ -274,14 +275,14 @@ class LoginAccountsController extends Controller
     /**
      * Change photo.
      *
-     * @return \yii\web\Response
+     * @return Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \craft\errors\ImageException
      * @throws \craft\errors\VolumeException
      * @throws \yii\base\Exception
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionChangePhoto()
+    public function actionChangePhoto(): Response
     {
         $userId = Craft::$app->getRequest()->getParam('userId');
         $photoUrl = Craft::$app->getRequest()->getParam('photoUrl');
@@ -353,13 +354,13 @@ class LoginAccountsController extends Controller
      * @param Token $token
      * @param       $craftUser
      *
-     * @return \yii\web\Response
+     * @return Response
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      * @throws \yii\base\InvalidConfigException
      */
-    private function linkAccountFromToken(Token $token, $craftUser)
+    private function linkAccountFromToken(Token $token, $craftUser): Response
     {
         $this->_cleanSession();
 
@@ -479,7 +480,7 @@ class LoginAccountsController extends Controller
      * @throws \yii\base\Exception
      * @throws \yii\base\InvalidConfigException
      */
-    private function registerUser($attributes, $providerHandle)
+    private function registerUser($attributes, $providerHandle): User
     {
         if (empty($attributes['email'])) {
             throw new Exception("Email address not provided.");
@@ -640,10 +641,10 @@ class LoginAccountsController extends Controller
      * @param Token        $token
      * @param bool         $registrationMode
      *
-     * @return \yii\web\Response
+     * @return Response
      * @throws Exception
      */
-    private function login(User $craftUser, LoginAccount $account, Token $token, $registrationMode = false)
+    private function login(User $craftUser, LoginAccount $account, Token $token, $registrationMode = false): Response
     {
         $this->_cleanSession();
 

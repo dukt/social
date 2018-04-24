@@ -11,7 +11,7 @@ use Craft;
 use dukt\social\base\LoginProvider;
 use dukt\social\events\RegisterLoginProviderTypesEvent;
 use yii\base\Component;
-use Dukt\Social\Base\LoginProviderInterface;
+use dukt\social\base\LoginProviderInterface;
 
 /**
  * The LoginProviders service provides APIs for managing login providers in Craft.
@@ -41,7 +41,7 @@ class LoginProviders extends Component
      *
      * @return bool
      */
-    public function disableLoginProvider($handle)
+    public function disableLoginProvider($handle): bool
     {
         $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $settings = $plugin->getSettings();
@@ -64,7 +64,7 @@ class LoginProviders extends Component
      *
      * @return bool
      */
-    public function enableLoginProvider($handle)
+    public function enableLoginProvider($handle): bool
     {
         $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $settings = $plugin->getSettings();
@@ -106,7 +106,7 @@ class LoginProviders extends Component
      *
      * @return array
      */
-    public function getLoginProviders($enabledOnly = true)
+    public function getLoginProviders($enabledOnly = true): array
     {
         return $this->_getLoginProviders($enabledOnly);
     }
@@ -121,7 +121,7 @@ class LoginProviders extends Component
      *
      * @return array
      */
-    private function _getLoginProviders($enabledOnly)
+    private function _getLoginProviders($enabledOnly): array
     {
         $loginProviderTypes = $this->_getLoginProviderTypes();
 
@@ -146,7 +146,7 @@ class LoginProviders extends Component
      *
      * @return array
      */
-    private function _getLoginProviderTypes()
+    private function _getLoginProviderTypes(): array
     {
         $loginProviderTypes = [
             'dukt\social\loginproviders\Facebook',
@@ -172,7 +172,7 @@ class LoginProviders extends Component
      *
      * @return LoginProviderInterface
      */
-    private function _createLoginProvider($socialLoginProviderType)
+    private function _createLoginProvider($socialLoginProviderType): LoginProviderInterface
     {
         return new $socialLoginProviderType;
     }

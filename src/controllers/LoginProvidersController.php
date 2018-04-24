@@ -12,6 +12,7 @@ use craft\web\Controller;
 use dukt\social\web\assets\social\SocialAsset;
 use dukt\social\Plugin as Social;
 use yii\web\HttpException;
+use yii\web\Response;
 
 /**
  * The LoginProvidersController class is a controller that handles various login provider related tasks.
@@ -30,10 +31,10 @@ class LoginProvidersController extends Controller
     /**
      * Login Providers index.
      *
-     * @return \yii\web\Response
+     * @return Response
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionIndex()
+    public function actionIndex(): Response
     {
         if(Craft::$app->getEdition() !== Craft::Pro) {
             return $this->renderTemplate('social/settings/_pro-requirement');
@@ -51,11 +52,11 @@ class LoginProvidersController extends Controller
      *
      * @param $handle
      *
-     * @return \yii\web\Response
+     * @return Response
      * @throws HttpException
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionEdit($handle)
+    public function actionEdit($handle): Response
     {
         if(Craft::$app->getEdition() !== Craft::Pro) {
             return $this->renderTemplate('social/settings/_pro-requirement');
@@ -77,11 +78,11 @@ class LoginProvidersController extends Controller
     /**
      * Enable login provider.
      *
-     * @return \yii\web\Response
+     * @return Response
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\web\BadRequestHttpException
      */
-    public function actionEnableLoginProvider()
+    public function actionEnableLoginProvider(): Response
     {
         $this->requirePostRequest();
         $loginProvider = Craft::$app->getRequest()->getRequiredBodyParam('loginProvider');
@@ -98,11 +99,11 @@ class LoginProvidersController extends Controller
     /**
      * Disable login provider.
      *
-     * @return \yii\web\Response
+     * @return Response
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\web\BadRequestHttpException
      */
-    public function actionDisableLoginProvider()
+    public function actionDisableLoginProvider(): Response
     {
         $this->requirePostRequest();
         $loginProvider = Craft::$app->getRequest()->getRequiredBodyParam('loginProvider');

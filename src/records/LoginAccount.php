@@ -40,7 +40,7 @@ class LoginAccount extends ActiveRecord
      *
      * @return array
      */
-    public function defineRelations()
+    public function defineRelations(): array
     {
         return [
             'element' => [static::BELONGS_TO, 'ElementRecord', 'id', 'onDelete' => static::CASCADE, 'required' => true],
@@ -53,7 +53,7 @@ class LoginAccount extends ActiveRecord
      *
      * @return array
      */
-    public function defineIndexes()
+    public function defineIndexes(): array
     {
         return [
             ['columns' => ['providerHandle', 'socialUid'], 'unique' => true]
@@ -68,7 +68,7 @@ class LoginAccount extends ActiveRecord
      *
      * @return array
      */
-    public function defineAttributes()
+    public function defineAttributes(): array
     {
         return [
             'providerHandle' => [AttributeType::String, 'required' => true],

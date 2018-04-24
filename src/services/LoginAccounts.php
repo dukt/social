@@ -90,7 +90,7 @@ class LoginAccounts extends Component
      * @param string $providerHandle
      * @param string $socialUid
      *
-     * @return LoginAccount
+     * @return LoginAccount|null
      */
     public function getLoginAccountByUid($providerHandle, $socialUid)
     {
@@ -151,7 +151,7 @@ class LoginAccounts extends Component
                 }
             } catch (\Exception $e) {
                 if ($transaction !== null) {
-                    $transaction->rollback();
+                    $transaction->rollBack();
                 }
 
                 throw $e;
@@ -171,7 +171,7 @@ class LoginAccounts extends Component
      * @return bool
      * @throws \Throwable
      */
-    public function deleteLoginAccountByProvider($providerHandle)
+    public function deleteLoginAccountByProvider($providerHandle): bool
     {
         $loginAccount = $this->getLoginAccountByLoginProvider($providerHandle);
 
@@ -186,7 +186,7 @@ class LoginAccounts extends Component
      * @return bool
      * @throws \Throwable
      */
-    public function deleteLoginAccountById($id)
+    public function deleteLoginAccountById($id): bool
     {
         $loginAccount = $this->getLoginAccountById($id);
 
@@ -201,7 +201,7 @@ class LoginAccounts extends Component
      * @return bool
      * @throws \Throwable
      */
-    public function deleteLoginAccount(LoginAccount $loginAccount)
+    public function deleteLoginAccount(LoginAccount $loginAccount): bool
     {
         Craft::$app->elements->deleteElement($loginAccount);
 
@@ -216,7 +216,7 @@ class LoginAccounts extends Component
      *
      * @return string
      */
-    public function getLoginUrl($providerHandle, array $params = [])
+    public function getLoginUrl($providerHandle, array $params = []): string
     {
         $params['provider'] = $providerHandle;
 
@@ -230,7 +230,7 @@ class LoginAccounts extends Component
      *
      * @return string
      */
-    public function getLoginAccountConnectUrl($handle)
+    public function getLoginAccountConnectUrl($handle): string
     {
         return UrlHelper::actionUrl('social/login-accounts/connect-login-account', [
             'provider' => $handle
@@ -244,7 +244,7 @@ class LoginAccounts extends Component
      *
      * @return string
      */
-    public function getLoginAccountDisconnectUrl($handle)
+    public function getLoginAccountDisconnectUrl($handle): string
     {
         return UrlHelper::actionUrl('social/login-accounts/disconnect-login-account', [
             'provider' => $handle
@@ -254,10 +254,10 @@ class LoginAccounts extends Component
     /**
      * Save a remote photo.
      *
-     * @param string    $photoUrl
+     * @param           $photoUrl
      * @param UserModel $user
      *
-     * @return bool
+     * @return bool|void
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \craft\errors\ImageException
      * @throws \craft\errors\VolumeException
@@ -277,7 +277,7 @@ class LoginAccounts extends Component
             'save_to' => $tempPath.$filename
         ]);
 
-        if ($response->getStatusCode() != 200) {
+        if ($response->getStatusCode() !== 200) {
             return;
         }
 

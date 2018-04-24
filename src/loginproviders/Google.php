@@ -24,7 +24,7 @@ class Google extends LoginProvider
     /**
      * @inheritdoc
      */
-    public function getName()
+    public function getName(): string
     {
         return 'Google';
     }
@@ -87,7 +87,7 @@ class Google extends LoginProvider
      *
      * @return \Dukt\OAuth2\Client\Provider\Google
      */
-    protected function getOauthProvider()
+    protected function getOauthProvider(): \Dukt\OAuth2\Client\Provider\Google
     {
         $providerInfos = $this->getInfos();
 
