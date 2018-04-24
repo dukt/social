@@ -455,8 +455,11 @@ class LoginAccountsController extends Controller
      * @param $providerHandle
      *
      * @return User
+     * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
+     * @throws \craft\errors\ImageException
+     * @throws \craft\errors\VolumeException
      * @throws \yii\base\Exception
      * @throws \yii\base\InvalidConfigException
      */
