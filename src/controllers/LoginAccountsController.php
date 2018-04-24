@@ -108,6 +108,7 @@ class LoginAccountsController extends Controller
      * Delete login account.
      *
      * @return \yii\web\Response
+     * @throws \Throwable
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\web\BadRequestHttpException
      */
@@ -127,6 +128,8 @@ class LoginAccountsController extends Controller
      * Login.
      *
      * @return \yii\web\Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Throwable
      */
     public function actionLogin()
     {
@@ -238,6 +241,8 @@ class LoginAccountsController extends Controller
      * Connect a login account (link).
      *
      * @return \yii\web\Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Throwable
      */
     public function actionConnectLoginAccount()
     {
@@ -248,6 +253,7 @@ class LoginAccountsController extends Controller
      * Disconnect a login account (unlink).
      *
      * @return \yii\web\Response
+     * @throws \Throwable
      * @throws \yii\base\InvalidConfigException
      */
     public function actionDisconnectLoginAccount()
@@ -269,6 +275,10 @@ class LoginAccountsController extends Controller
      * Change photo.
      *
      * @return \yii\web\Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \craft\errors\ImageException
+     * @throws \craft\errors\VolumeException
+     * @throws \yii\base\Exception
      * @throws \yii\base\InvalidConfigException
      */
     public function actionChangePhoto()
@@ -318,8 +328,11 @@ class LoginAccountsController extends Controller
      * @param Token $token
      *
      * @return null|\yii\web\Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
+     * @throws \craft\errors\ImageException
+     * @throws \craft\errors\VolumeException
      * @throws \yii\base\Exception
      * @throws \yii\base\InvalidConfigException
      */
@@ -398,8 +411,11 @@ class LoginAccountsController extends Controller
      * @param Token $token
      *
      * @return null
+     * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
+     * @throws \craft\errors\ImageException
+     * @throws \craft\errors\VolumeException
      * @throws \yii\base\Exception
      * @throws \yii\base\InvalidConfigException
      */
