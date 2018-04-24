@@ -24,6 +24,7 @@ return [
         'facebook' => [
             'clientId' => 'OAUTH_CLIENT_ID',
             'clientSecret' => 'OAUTH_CLIENT_SECRET',
+            // 'graphApiVersion' => 'v2.12',
             'userMapping' => [
                 'firstName' => '{{ firstName }}',
                 'lastName' => '{{ lastName }}',
