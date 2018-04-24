@@ -25,13 +25,18 @@ abstract class LoginProvider implements LoginProviderInterface
     // Public Methods
     // =========================================================================
 
+    /**
+     * Use the login provider’s name as the string representation.
+     *
+     * @return string
+     */
     public function __toString()
     {
         return $this->getName();
     }
 
     /**
-     * Get provider infos
+     * Get provider infos.
      *
      * @return mixed
      */
@@ -46,9 +51,9 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
-     * Get API Manager URL
+     * Get API Manager URL.
      *
-     * @return string
+     * @return string|null
      */
     public function getManagerUrl()
     {
@@ -56,9 +61,9 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
-     * Get Scope Docs URL
+     * Get Scope Docs URL.
      *
-     * @return string
+     * @return string|null
      */
     public function getScopeDocsUrl()
     {
@@ -66,7 +71,7 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
-     * Is login provider configured
+     * Checks if the login provider is configured.
      *
      * @return bool
      */
@@ -82,7 +87,7 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
-     * OAuth version
+     * OAuth version.
      *
      * @return int
      */
@@ -92,7 +97,7 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
-     * OAuth Connect
+     * OAuth connect.
      *
      * @return null
      */
@@ -107,7 +112,7 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
-     * OAuth Callback
+     * OAuth callback.
      *
      * @return array
      */
@@ -169,16 +174,16 @@ abstract class LoginProvider implements LoginProviderInterface
     /**
      * Get the default authorization options.
      *
-     * @return mixed
+     * @return array|null
      */
     public function getDefaultAuthorizationOptions()
     {
     }
 
     /**
-     * Returns the `scope` from login provider class by default, or the `scope` overridden by the config
+     * Returns the `scope` from login provider class by default, or the `scope` overridden by the config.
      *
-     * @return mixed
+     * @return array|null
      */
     public function getScope()
     {
@@ -193,9 +198,9 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
-     * Returns the `authorizationOptions` from login provider class by default, or `authorizationOptions` overridden by the config
+     * Returns the `authorizationOptions` from login provider class by default, or `authorizationOptions` overridden by the config.
      *
-     * @return mixed
+     * @return array|null
      */
     public function getAuthorizationOptions()
     {
@@ -256,7 +261,7 @@ abstract class LoginProvider implements LoginProviderInterface
     // =========================================================================
 
     /**
-     * OAuth 1 Connect
+     * OAuth 1 connect.
      *
      * @return Response
      */
@@ -278,7 +283,7 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
-     * OAuth 2 Connect
+     * OAuth 2 connect.
      *
      * @return Response
      */
@@ -303,7 +308,7 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
-     * OAuth 1 Callback
+     * OAuth 1 callback.
      *
      * @return array
      */
@@ -327,7 +332,7 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
-     * OAuth 2 Callback
+     * OAuth 2 callback.
      *
      * @return array
      */

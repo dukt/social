@@ -21,6 +21,7 @@ trait PluginTrait
      * Returns the loginAccounts service.
      *
      * @return \dukt\social\services\LoginAccounts The loginAccounts service
+     * @throws \yii\base\InvalidConfigException
      */
     public function getLoginAccounts()
     {
@@ -32,6 +33,7 @@ trait PluginTrait
      * Returns the loginProviders service.
      *
      * @return \dukt\social\services\LoginProviders The loginProviders service
+     * @throws \yii\base\InvalidConfigException
      */
     public function getLoginProviders()
     {

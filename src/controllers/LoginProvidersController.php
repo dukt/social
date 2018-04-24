@@ -31,6 +31,7 @@ class LoginProvidersController extends Controller
      * Login Providers index.
      *
      * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionIndex()
     {
@@ -46,12 +47,13 @@ class LoginProvidersController extends Controller
     }
 
     /**
-     * Edit Login Provider
+     * Edit login provider.
      *
-     * @param string $handle Login provider’s handle
+     * @param $handle
      *
+     * @return \yii\web\Response
      * @throws HttpException
-     * @return null
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionEdit($handle)
     {
@@ -73,9 +75,11 @@ class LoginProvidersController extends Controller
     }
 
     /**
-     * Enable Login Provider
+     * Enable login provider.
      *
-     * @return null
+     * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\web\BadRequestHttpException
      */
     public function actionEnableLoginProvider()
     {
@@ -92,9 +96,11 @@ class LoginProvidersController extends Controller
     }
 
     /**
-     * Disable Login Provider
+     * Disable login provider.
      *
-     * @return null
+     * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\web\BadRequestHttpException
      */
     public function actionDisableLoginProvider()
     {

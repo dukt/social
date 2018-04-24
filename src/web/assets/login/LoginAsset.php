@@ -15,6 +15,9 @@ use craft\web\assets\cp\CpAsset;
  */
 class LoginAsset extends AssetBundle
 {
+    /**
+     * @inheritdoc
+     */
     public function init()
     {
         $this->sourcePath = __DIR__.'/dist';

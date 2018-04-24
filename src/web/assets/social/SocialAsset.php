@@ -15,6 +15,9 @@ use craft\web\assets\cp\CpAsset;
  */
 class SocialAsset extends AssetBundle
 {
+    /**
+     * @inheritdoc
+     */
     public function init()
     {
         $this->sourcePath = __DIR__.'/dist';

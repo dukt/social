@@ -64,9 +64,10 @@ class LoginAccountsController extends Controller
     // =========================================================================
 
     /**
-     * Login Accounts Index
+     * Login Accounts Index.
      *
-     * @return null
+     * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionIndex()
     {
@@ -76,12 +77,13 @@ class LoginAccountsController extends Controller
     }
 
     /**
-     * Edit User's Login Accounts
+     * Edit login accounts.
      *
-     * @param int $userId The user ID
+     * @param $userId
      *
+     * @return \yii\web\Response
      * @throws HttpException
-     * @return null
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionEdit($userId)
     {
@@ -103,9 +105,11 @@ class LoginAccountsController extends Controller
     }
 
     /**
-     * Delete Login Account
+     * Delete login account.
      *
-     * @return null
+     * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\web\BadRequestHttpException
      */
     public function actionDeleteLoginAccount()
     {
@@ -120,10 +124,9 @@ class LoginAccountsController extends Controller
     }
 
     /**
-     * Login
+     * Login.
      *
-     * @return null
-     * @throws Exception
+     * @return \yii\web\Response
      */
     public function actionLogin()
     {
@@ -203,7 +206,7 @@ class LoginAccountsController extends Controller
     /**
      * OAuth callback.
      *
-     * @return null
+     * @return \yii\web\Response
      */
     public function actionCallback()
     {
@@ -232,9 +235,9 @@ class LoginAccountsController extends Controller
     }
 
     /**
-     * Connect a login account (link)
+     * Connect a login account (link).
      *
-     * @return null
+     * @return \yii\web\Response
      */
     public function actionConnectLoginAccount()
     {
@@ -242,9 +245,10 @@ class LoginAccountsController extends Controller
     }
 
     /**
-     * Disconnect a login account (unlink)
+     * Disconnect a login account (unlink).
      *
-     * @return null
+     * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionDisconnectLoginAccount()
     {
@@ -262,9 +266,10 @@ class LoginAccountsController extends Controller
     }
 
     /**
-     * Change Photo
+     * Change photo.
      *
-     * @return null
+     * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionChangePhoto()
     {
@@ -290,7 +295,8 @@ class LoginAccountsController extends Controller
      *
      * @param $loginProviderHandle
      *
-     * @return mixed
+     * @return array|null
+     * @throws \yii\base\InvalidConfigException
      */
     private function oauthConnect($loginProviderHandle)
     {
@@ -307,11 +313,15 @@ class LoginAccountsController extends Controller
     }
 
     /**
-     * Connect (register, login, link) a user from token
+     * Connect (register, login, link) a user from token.
      *
      * @param Token $token
      *
-     * @return null
+     * @return null|\yii\web\Response
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
      */
     private function connectUserFromToken(Token $token)
     {
@@ -325,13 +335,16 @@ class LoginAccountsController extends Controller
     }
 
     /**
-     * Link account from token
+     * Link account from token.
      *
-     * @param Token  $token
-     * @param object $craftUser The logged-in user object
+     * @param Token $token
+     * @param       $craftUser
      *
-     * @return null
-     * @throws Exception
+     * @return \yii\web\Response
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
      */
     private function linkAccountFromToken(Token $token, $craftUser)
     {
@@ -380,12 +393,15 @@ class LoginAccountsController extends Controller
     }
 
     /**
-     * Register or login user from an OAuth token
+     * Register or login user from an OAuth token.
      *
      * @param Token $token
      *
      * @return null
-     * @throws Exception
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
      */
     private function registerOrLoginFromToken(Token $token)
     {
@@ -435,11 +451,14 @@ class LoginAccountsController extends Controller
     /**
      * Register a user.
      *
-     * @param array  $attributes Attributes of the user we want to register
-     * @param string $providerHandle
+     * @param $attributes
+     * @param $providerHandle
      *
-     * @throws Exception
-     * @return User|null
+     * @return User
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
      */
     private function registerUser($attributes, $providerHandle)
     {
@@ -595,14 +614,14 @@ class LoginAccountsController extends Controller
     }
 
     /**
-     * Login user from login account
+     * Login user from login account.
      *
      * @param User         $craftUser
      * @param LoginAccount $account
      * @param Token        $token
      * @param bool         $registrationMode
      *
-     * @return null
+     * @return \yii\web\Response
      * @throws Exception
      */
     private function login(User $craftUser, LoginAccount $account, Token $token, $registrationMode = false)
@@ -642,9 +661,7 @@ class LoginAccountsController extends Controller
     }
 
     /**
-     * Clean session variables
-     *
-     * @return null
+     * Clean session variables.
      */
     private function _cleanSession()
     {

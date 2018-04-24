@@ -10,6 +10,7 @@ namespace dukt\social\elements;
 use Craft;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
+use craft\elements\User;
 use craft\helpers\Html;
 use dukt\social\elements\db\LoginAccountQuery;
 use dukt\social\Plugin as Social;
@@ -161,9 +162,12 @@ class LoginAccount extends Element
     }
 
     /**
-     * @param $token
+     * Authenticate.
+     *
+     * @param Token $token
      *
      * @return bool
+     * @throws \yii\base\InvalidConfigException
      */
     public function authenticate(Token $token): bool
     {
@@ -177,7 +181,10 @@ class LoginAccount extends Element
     }
 
     /**
+     * Get login provider.
+     *
      * @return \dukt\social\base\LoginProvider|null
+     * @throws \yii\base\InvalidConfigException
      */
     public function getLoginProvider()
     {
@@ -187,7 +194,9 @@ class LoginAccount extends Element
     }
 
     /**
-     * @return mixed
+     * Get user.
+     *
+     * @return User|null
      */
     public function getUser()
     {

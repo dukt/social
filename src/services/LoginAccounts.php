@@ -102,8 +102,10 @@ class LoginAccounts extends Component
      *
      * @param LoginAccount $account
      *
-     * @throws Exception
      * @return bool
+     * @throws LoginAccountNotFoundException
+     * @throws \Throwable
+     * @throws \yii\db\Exception
      */
     public function saveLoginAccount(LoginAccount $account)
     {
@@ -167,6 +169,7 @@ class LoginAccounts extends Component
      * @param $providerHandle
      *
      * @return bool
+     * @throws \Throwable
      */
     public function deleteLoginAccountByProvider($providerHandle)
     {
@@ -181,6 +184,7 @@ class LoginAccounts extends Component
      * @param int $id
      *
      * @return bool
+     * @throws \Throwable
      */
     public function deleteLoginAccountById($id)
     {
@@ -195,6 +199,7 @@ class LoginAccounts extends Component
      * @param LoginAccount $loginAccount
      *
      * @return bool
+     * @throws \Throwable
      */
     public function deleteLoginAccount(LoginAccount $loginAccount)
     {
@@ -253,7 +258,10 @@ class LoginAccounts extends Component
      * @param UserModel $user
      *
      * @return bool
-     * @throws Exception
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \craft\errors\ImageException
+     * @throws \craft\errors\VolumeException
+     * @throws \yii\base\Exception
      */
     public function saveRemotePhoto($photoUrl, UserModel $user)
     {

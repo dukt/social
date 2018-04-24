@@ -27,7 +27,8 @@ class SettingsController extends Controller
     /**
      * General settings.
      *
-     * @return null
+     * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionSettings()
     {

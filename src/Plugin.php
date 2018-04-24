@@ -145,6 +145,8 @@ class Plugin extends \craft\base\Plugin
     }
 
     /**
+     * Get settings response.
+     *
      * @return string
      */
     public function getSettingsResponse()
@@ -209,6 +211,7 @@ class Plugin extends \craft\base\Plugin
      * Social login for the control panel.
      *
      * @return null
+     * @throws \yii\base\InvalidConfigException
      */
     private function initCpSocialLogin()
     {
