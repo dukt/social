@@ -10,7 +10,7 @@ Changelog
 - Updated default Graph API version to v2.12.
 
 ### Fixed
-- Fixed a bug where new users couldn’t be assign to the default user group defined in the plugin’s settings.
+- Fixed a bug where new users couldn’t be assigned to the default user group defined in the plugin’s settings.
 - Fixed a bug where table prefix was not taken into account for LoginAccount records.
 - Fixed a bug where CP Social Login could be initialized before third party plugin had a chance to register login providers.
 
