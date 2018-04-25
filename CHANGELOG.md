@@ -1,7 +1,7 @@
 Changelog
 ===================
 
-## Unreleased
+## 2.0.0-beta.6 - 2018-04-25
 
 ### Added
 - Facebook’s Graph API version can now be configured with a `graphApiVersion` login provider config.
