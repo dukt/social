@@ -12,7 +12,7 @@ use craft\base\Model;
 /**
  * Token model class.
  *
- * @author Dukt <support@dukt.net>
+ * @author  Dukt <support@dukt.net>
  * @since   2.0
  */
 class Token extends Model

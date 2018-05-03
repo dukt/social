@@ -13,7 +13,7 @@ use dukt\social\models\Token;
 /**
  * Twitter represents the Twitter login provider.
  *
- * @author Dukt <support@dukt.net>
+ * @author  Dukt <support@dukt.net>
  * @since   1.0
  */
 class Twitter extends LoginProvider

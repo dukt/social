@@ -19,7 +19,7 @@ use yii\web\Response;
  *
  * Note that all actions in the controller require an authenticated Craft session via [[allowAnonymous]].
  *
- * @author Dukt <support@dukt.net>
+ * @author  Dukt <support@dukt.net>
  * @since   1.0
  */
 class LoginProvidersController extends Controller
@@ -36,7 +36,7 @@ class LoginProvidersController extends Controller
      */
     public function actionIndex(): Response
     {
-        if(Craft::$app->getEdition() !== Craft::Pro) {
+        if (Craft::$app->getEdition() !== Craft::Pro) {
             return $this->renderTemplate('social/settings/_pro-requirement');
         }
 
@@ -58,7 +58,7 @@ class LoginProvidersController extends Controller
      */
     public function actionEdit($handle): Response
     {
-        if(Craft::$app->getEdition() !== Craft::Pro) {
+        if (Craft::$app->getEdition() !== Craft::Pro) {
             return $this->renderTemplate('social/settings/_pro-requirement');
         }
 

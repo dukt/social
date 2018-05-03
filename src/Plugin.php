@@ -27,7 +27,7 @@ use yii\base\Event;
 /**
  * Social plugin class.
  *
- * @author Dukt <support@dukt.net>
+ * @author  Dukt <support@dukt.net>
  * @since   1.0
  */
 class Plugin extends \craft\base\Plugin
@@ -130,7 +130,7 @@ class Plugin extends \craft\base\Plugin
             Plugins::EVENT_AFTER_LOAD_PLUGINS,
             function() {
                 $this->initCpSocialLogin();
-        });
+            });
         $this->initLoginAccountsUserPane();
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace dukt\social\elements\db;
 
 use craft\elements\db\ElementQuery;

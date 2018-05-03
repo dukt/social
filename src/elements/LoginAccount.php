@@ -20,7 +20,7 @@ use dukt\social\models\Token;
 /**
  * LoginAccount represents a login account element.
  *
- * @property int $userId
+ * @property int    $userId
  * @property string $providerHandle
  * @property string $socialUid
  *
@@ -175,7 +175,7 @@ class LoginAccount extends Element
 
         $attributes = $socialLoginProvider->getProfile($token);
 
-        $socialUid = (string) $attributes['id'];
+        $socialUid = (string)$attributes['id'];
 
         return $this->socialUid === $socialUid;
     }

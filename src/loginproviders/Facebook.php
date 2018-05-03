@@ -15,7 +15,7 @@ use dukt\social\models\Token;
 /**
  * Facebook represents the Facebook login provider.
  *
- * @author Dukt <support@dukt.net>
+ * @author  Dukt <support@dukt.net>
  * @since   1.0
  */
 class Facebook extends LoginProvider

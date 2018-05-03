@@ -18,7 +18,7 @@ use dukt\social\base\LoginProviderInterface;
  *
  * An instance of the LoginProviders service is globally accessible in Craft via [[Plugin::loginProviders `Plugin::getInstance()->getLoginProviders()`]].
  *
- * @author Dukt <support@dukt.net>
+ * @author  Dukt <support@dukt.net>
  * @since   1.0
  */
 class LoginProviders extends Component

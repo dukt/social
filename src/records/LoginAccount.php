@@ -12,12 +12,12 @@ use craft\db\ActiveRecord;
 /**
  * Class LoginAccount record.
  *
- * @property int       $id              ID
- * @property int       $userId          User ID
- * @property string    $providerHandle  Provider handle
- * @property string    $socialUid       Social UID
+ * @property int    $id              ID
+ * @property int    $userId          User ID
+ * @property string $providerHandle  Provider handle
+ * @property string $socialUid       Social UID
  *
- * @author Dukt <support@dukt.net>
+ * @author  Dukt <support@dukt.net>
  * @since   1.0
  */
 class LoginAccount extends ActiveRecord

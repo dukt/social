@@ -26,7 +26,7 @@ use yii\web\Response;
  *
  * Note that all actions in the controller, except [[actionLogin]], [[actionCallback]], require an authenticated Craft session via [[allowAnonymous]].
  *
- * @author Dukt <support@dukt.net>
+ * @author  Dukt <support@dukt.net>
  * @since   1.0
  */
 class LoginAccountsController extends Controller
@@ -320,6 +320,7 @@ class LoginAccountsController extends Controller
         }
 
         Craft::$app->getSession()->remove('social.callback');
+
         return $loginProvider->oauthCallback();
     }
 
@@ -507,8 +508,8 @@ class LoginAccountsController extends Controller
 
         $user = Craft::$app->users->getUserByUsernameOrEmail($attributes['email']);
 
-        if($user) {
-            if(Social::$plugin->getSettings()->allowEmailMatch !== true) {
+        if ($user) {
+            if (Social::$plugin->getSettings()->allowEmailMatch !== true) {
                 throw new Exception("An account already exists with this email: ".$attributes['email']);
             }
 

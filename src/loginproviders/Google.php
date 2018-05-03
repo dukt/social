@@ -13,7 +13,7 @@ use dukt\social\models\Token;
 /**
  * Google represents the Google login provider.
  *
- * @author Dukt <support@dukt.net>
+ * @author  Dukt <support@dukt.net>
  * @since   1.0
  */
 class Google extends LoginProvider
