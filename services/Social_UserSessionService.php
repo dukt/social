@@ -75,4 +75,23 @@ class Social_UserSessionService extends UserSessionService
 			return $this->_identity->errorCode;
 		}
 	}
+
+
+    /**
+     * @inheritdoc
+     */
+    public function getLoginErrorMessage($errorCode)
+    {
+        return Craft::t('Couldn’t authenticate.');
+
+        switch ($errorCode) {
+            case SocialUserIdentity::ERROR_UNKNOWN_IDENTITY:
+                {
+                    $error = Craft::t('Couldn’t authenticate.');
+                    break;
+                }
+        }
+
+        return $error;
+    }
 }

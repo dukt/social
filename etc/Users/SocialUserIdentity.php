@@ -75,6 +75,7 @@ class SocialUserIdentity extends UserIdentity
         }
         else
         {
+            $this->errorCode = static::ERROR_UNKNOWN_IDENTITY;
             return false;
         }
 	}

@@ -363,7 +363,7 @@ class SocialController extends BaseController
 		else
 		{
 			$errorCode = craft()->social_userSession->getLoginErrorCode();
-			$errorMessage = craft()->social_userSession->getLoginErrorMessage($errorCode, $account->user->username);
+			$errorMessage = craft()->social_userSession->getLoginErrorMessage($errorCode);
 
 			craft()->userSession->setError($errorMessage);
 
