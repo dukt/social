@@ -44,7 +44,7 @@ class Facebook extends BaseProvider
 		];
 	}
 
-	public function getRemoteProfile($token)
+	public function getRemoteProfile(Oauth_TokenModel $token)
 	{
 		$oauthProvider = $this->getOauthProvider();
         $providerConfig = \Craft\craft()->config->get($this->getHandle(), 'social');
