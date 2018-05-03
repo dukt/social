@@ -653,31 +653,44 @@ class LoginAccountsController extends Controller
         }
 
         if (!$account->authenticate($token)) {
-            throw new Exception("Couldn’t authenticate account.");
+            return $this->_handleLoginFailure();
         }
 
-
-        // Success
-
-        if (Craft::$app->getUser()->login($craftUser)) {
-            if ($registrationMode) {
-                Craft::$app->getSession()->setNotice(Craft::t('social', 'Account created.'));
-            } else {
-                Craft::$app->getSession()->setNotice(Craft::t('social', 'Logged in.'));
-            }
-
-            return $this->redirect($this->redirect);
+        if (!Craft::$app->getUser()->login($craftUser)) {
+            return $this->_handleLoginFailure();
         }
 
+        return $this->_handleSuccessfulLogin($registrationMode);
+    }
 
-        // Error
-
-        $errorCode = Social::$plugin->getUserSession()->getLoginErrorCode();
-        $errorMessage = Social::$plugin->getUserSession()->getLoginErrorMessage($errorCode, $account->user->username);
-
-        Craft::$app->getSession()->setError($errorMessage);
+    /**
+     * Handles a failed login attempt.
+     *
+     * @return Response
+     */
+    private function _handleLoginFailure(): Response
+    {
+        Craft::$app->getSession()->setError(Craft::t('social', 'Couldn’t authenticate.'));
 
         return $this->redirect($this->originUrl);
+    }
+
+    /**
+     * Redirects the user after a successful login attempt.
+     *
+     * @param bool $registrationMode
+     *
+     * @return Response
+     */
+    private function _handleSuccessfulLogin(bool $registrationMode): Response
+    {
+        if ($registrationMode) {
+            Craft::$app->getSession()->setNotice(Craft::t('social', 'Account created.'));
+        } else {
+            Craft::$app->getSession()->setNotice(Craft::t('social', 'Logged in.'));
+        }
+
+        return $this->redirect($this->redirect);
     }
 
     /**
