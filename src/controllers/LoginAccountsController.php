@@ -157,9 +157,7 @@ class LoginAccountsController extends Controller
                 throw new Exception("Social login is disabled");
             }
 
-            if (Craft::$app->getEdition() != Craft::Pro) {
-                throw new Exception("Craft Pro is required");
-            }
+            Craft::$app->requireEdition(Craft::Pro);
 
             $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($providerHandle);
 
