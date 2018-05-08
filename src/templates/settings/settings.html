@@ -16,7 +16,7 @@
         {{ forms.lightswitchField({
             first: true,
             label: 'Enable Social Login'|t('social'),
-            instructions: "When disabled, users will not be able to social login & register."|t('social'),
+            instructions: "When enabled, users can social login and register."|t('social'),
             name: 'settings[enableSocialLogin]',
             on:   settings.enableSocialLogin,
             toggle: 'enable-sociallogin'
@@ -26,7 +26,7 @@
 
             {{ forms.lightswitchField({
                 label: 'Enable Social Registration'|t('social'),
-                instructions: "When disabled, users will not able to register with a social service, but will still be able to social login to an existing account."|t('social'),
+                instructions: "When disabled, users will not able to register with a social service, but they will still be able to social login to an existing account."|t('social'),
                 name: 'settings[enableSocialRegistration]',
                 on:   settings.enableSocialRegistration,
                 toggle: 'enable-socialregistration'
