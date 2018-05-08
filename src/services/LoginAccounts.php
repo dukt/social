@@ -9,13 +9,13 @@ namespace dukt\social\services;
 
 use Craft;
 use craft\helpers\FileHelper;
+use dukt\social\errors\ImageTypeException;
 use dukt\social\errors\LoginAccountNotFoundException;
 use dukt\social\helpers\SocialHelper;
 use yii\base\Component;
 use craft\elements\User as UserModel;
 use dukt\social\elements\LoginAccount;
 use dukt\social\records\LoginAccount as LoginAccountRecord;
-use Exception;
 use craft\helpers\UrlHelper;
 
 /**
@@ -115,7 +115,7 @@ class LoginAccounts extends Component
             $accountRecord = $this->_getLoginAccountRecordById($account->id);
 
             if (!$accountRecord) {
-                throw new Exception(Craft::t('social', 'No social user exists with the ID “{id}”', ['id' => $account->id]));
+                throw new LoginAccountNotFoundException(Craft::t('social', 'No social user exists with the ID “{id}”', ['id' => $account->id]));
             }
         } else {
             $accountRecord = new LoginAccount;
@@ -299,10 +299,10 @@ class LoginAccounts extends Component
                     break;
 
                 default:
-                    throw new \Exception('Image type “'.$contentTypes[0].'” not supported');
+                    throw new ImageTypeException('Image type “'.$contentTypes[0].'” not supported');
             }
         } else {
-            throw new \Exception('Image type not supported');
+            throw new ImageTypeException('Image type not supported');
         }
 
         rename($tempPath.$filename, $tempPath.$filename.'.'.$extension);
