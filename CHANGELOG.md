@@ -4,7 +4,6 @@ Changelog
 ## Unreleased
 
 ### Changed
-- Improved login success and failure handling.
 - Require Pro edition only when registering a user.
 - Email matching social registration is not subject to domain locking anymore.
 - Improved login and registration exception handling.
