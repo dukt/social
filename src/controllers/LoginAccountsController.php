@@ -90,19 +90,19 @@ class LoginAccountsController extends Controller
     {
         $user = Craft::$app->users->getUserById($userId);
 
-        if ($user) {
-            $loginAccounts = Social::$plugin->getLoginAccounts()->getLoginAccountsByUserId($user->id);
-
-            Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
-
-            return $this->renderTemplate('social/loginaccounts/_edit', [
-                'userId' => $userId,
-                'user' => $user,
-                'loginAccounts' => $loginAccounts
-            ]);
-        } else {
+        if (!$user) {
             throw new HttpException(404);
         }
+        
+        $loginAccounts = Social::$plugin->getLoginAccounts()->getLoginAccountsByUserId($user->id);
+
+        Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
+
+        return $this->renderTemplate('social/loginaccounts/_edit', [
+            'userId' => $userId,
+            'user' => $user,
+            'loginAccounts' => $loginAccounts
+        ]);
     }
 
     /**
