@@ -1,7 +1,7 @@
 Changelog
 ===================
 
-## Unreleased
+## 2.0.0-beta.7 - 2018-05-08
 
 ### Changed
 - Require Pro edition only when registering a user.
