@@ -531,7 +531,7 @@ class LoginAccountsController extends Controller
                 'account' => &$attributes,
             ]));
         }
-        
+
         $loginProviderConfig = Plugin::$plugin->getLoginProviderConfig($providerHandle);
 
         $userMapping = null;
