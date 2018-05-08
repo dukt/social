@@ -4,9 +4,9 @@ Changelog
 ## 2.0.0-beta.7 - 2018-05-08
 
 ### Changed
-- Require Pro edition only when registering a user.
-- Email matching social registration is not subject to domain locking anymore.
 - Improved login and registration exception handling.
+- Email matching social registration is not subject to domain locking anymore.
+- Require Pro edition only when registering a user.
 
 ## 2.0.0-beta.6 - 2018-04-25
 
