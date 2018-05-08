@@ -484,7 +484,7 @@ class LoginAccountsController extends Controller
         }
 
 
-        // Existing user with matching email
+        // Existing user matching email registration
 
         $user = Craft::$app->users->getUserByUsernameOrEmail($attributes['email']);
 
