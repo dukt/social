@@ -531,9 +531,7 @@ class LoginAccountsController extends Controller
                 'account' => &$attributes,
             ]));
         }
-
-        $variables = $attributes;
-
+        
         $loginProviderConfig = Plugin::$plugin->getLoginProviderConfig($providerHandle);
 
         $userMapping = null;
@@ -556,9 +554,9 @@ class LoginAccountsController extends Controller
 
                     if (array_key_exists($attribute, $newUser->getAttributes())) {
                         try {
-                            $newUser->{$attribute} = Craft::$app->getView()->renderString($template, $variables);
+                            $newUser->{$attribute} = Craft::$app->getView()->renderString($template, $attributes);
                         } catch (\Exception $e) {
-                            Craft::warning('Could not map:'.print_r([$attribute, $template, $variables, $e->getMessage()], true), __METHOD__);
+                            Craft::warning('Could not map:'.print_r([$attribute, $template, $attributes, $e->getMessage()], true), __METHOD__);
                         }
                     }
                 } else {
@@ -567,9 +565,9 @@ class LoginAccountsController extends Controller
                     // Check to make sure custom field exists for user profile
                     if (isset($newUser->{$fieldHandle})) {
                         try {
-                            $userContent[$fieldHandle] = Craft::$app->getView()->renderString($template, $variables);
+                            $userContent[$fieldHandle] = Craft::$app->getView()->renderString($template, $attributes);
                         } catch (\Exception $e) {
-                            Craft::warning('Could not map:'.print_r([$template, $variables, $e->getMessage()], true), __METHOD__);
+                            Craft::warning('Could not map:'.print_r([$template, $attributes, $e->getMessage()], true), __METHOD__);
                         }
                     }
                 }
@@ -605,10 +603,10 @@ class LoginAccountsController extends Controller
 
             if (isset($userMapping['photoUrl'])) {
                 try {
-                    $photoUrl = Craft::$app->getView()->renderString($userMapping['photoUrl'], $variables);
+                    $photoUrl = Craft::$app->getView()->renderString($userMapping['photoUrl'], $attributes);
                     $photoUrl = html_entity_decode($photoUrl);
                 } catch (\Exception $e) {
-                    Craft::warning('Could not map:'.print_r(['photoUrl', $userMapping['photoUrl'], $variables, $e->getMessage()], true), __METHOD__);
+                    Craft::warning('Could not map:'.print_r(['photoUrl', $userMapping['photoUrl'], $attributes, $e->getMessage()], true), __METHOD__);
                 }
             } else {
                 if (!empty($attributes['photoUrl'])) {
