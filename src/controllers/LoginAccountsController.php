@@ -479,12 +479,36 @@ class LoginAccountsController extends Controller
      */
     private function registerUser($attributes, $providerHandle): User
     {
-        Craft::$app->requireEdition(Craft::Pro);
-        
         if (empty($attributes['email'])) {
             throw new Exception("Email address not provided.");
         }
 
+
+        // Existing user with matching email
+
+        $user = Craft::$app->users->getUserByUsernameOrEmail($attributes['email']);
+
+        if ($user) {
+            if (Social::$plugin->getSettings()->allowEmailMatch !== true) {
+                throw new Exception("An account already exists with this email: ".$attributes['email']);
+            }
+
+            return $user;
+        }
+
+
+        // Register a new user
+
+        Craft::$app->requireEdition(Craft::Pro);
+
+        $socialPlugin = Craft::$app->getPlugins()->getPlugin('social');
+        $settings = $socialPlugin->getSettings();
+
+        if (!$settings['enableSocialRegistration']) {
+            throw new Exception("Social registration is disabled.");
+        }
+
+        // Lock domains
         $lockDomains = Social::$plugin->getSettings()->lockDomains;
 
         if (count($lockDomains) > 0) {
@@ -501,32 +525,7 @@ class LoginAccountsController extends Controller
             }
         }
 
-
-        // Existing user
-
-        $user = Craft::$app->users->getUserByUsernameOrEmail($attributes['email']);
-
-        if ($user) {
-            if (Social::$plugin->getSettings()->allowEmailMatch !== true) {
-                throw new Exception("An account already exists with this email: ".$attributes['email']);
-            }
-
-            return $user;
-        }
-
-
-        // Register new user
-
-        $socialPlugin = Craft::$app->getPlugins()->getPlugin('social');
-        $settings = $socialPlugin->getSettings();
-
-        if (!$settings['enableSocialRegistration']) {
-            throw new Exception("Social registration is disabled.");
-        }
-
-
         // Fire a 'beforeRegister' event
-
         if ($this->hasEventHandlers(self::EVENT_BEFORE_REGISTER)) {
             $this->trigger(self::EVENT_BEFORE_REGISTER, new Event([
                 'account' => &$attributes,
