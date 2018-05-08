@@ -19,7 +19,6 @@ use yii\web\HttpException;
 use craft\elements\User;
 use dukt\social\models\Token;
 use dukt\social\elements\LoginAccount;
-use Exception;
 use yii\base\Event;
 use yii\web\Response;
 
@@ -642,7 +641,7 @@ class LoginAccountsController extends Controller
      * @param bool         $registrationMode
      *
      * @return Response
-     * @throws Exception
+     * @throws \yii\base\InvalidConfigException
      */
     private function login(User $craftUser, LoginAccount $account, Token $token, $registrationMode = false): Response
     {
