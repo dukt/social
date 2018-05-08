@@ -9,6 +9,8 @@ namespace dukt\social\controllers;
 
 use Craft;
 use craft\web\Controller;
+use dukt\social\errors\LoginException;
+use dukt\social\errors\RegistrationException;
 use dukt\social\Plugin;
 use dukt\social\web\assets\social\SocialAsset;
 use dukt\social\Plugin as Social;
@@ -93,7 +95,7 @@ class LoginAccountsController extends Controller
         if (!$user) {
             throw new HttpException(404);
         }
-        
+
         $loginAccounts = Social::$plugin->getLoginAccounts()->getLoginAccountsByUserId($user->id);
 
         Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
@@ -154,13 +156,13 @@ class LoginAccountsController extends Controller
 
         try {
             if (!$pluginSettings['enableSocialLogin']) {
-                throw new Exception("Social login is disabled");
+                throw new LoginException('Social login is disabled');
             }
 
             $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($providerHandle);
 
             if (!$loginProvider) {
-                throw new Exception("Login provider is not configured");
+                throw new LoginException('Login provider is not configured');
             }
 
             if ($response = $this->oauthConnect($providerHandle)) {
@@ -176,7 +178,7 @@ class LoginAccountsController extends Controller
                     return $this->connectUserFromToken($token);
                 }
 
-                throw new \Exception($response['errorMsg']);
+                throw new LoginException($response['errorMsg']);
             }
         } catch (BadResponseException $e) {
             $response = $e->getResponse();
@@ -186,7 +188,7 @@ class LoginAccountsController extends Controller
             if ($json) {
                 $errorMsg = $json['error']['message'];
             } else {
-                $errorMsg = "Couldn’t login.";
+                $errorMsg = 'Couldn’t login.';
             }
 
             Craft::error((string)$response, __METHOD__);
@@ -385,7 +387,7 @@ class LoginAccountsController extends Controller
                 return $this->redirect($this->redirect);
             }
 
-            throw new Exception("This UID is already associated with another user. Disconnect from your current session and retry.");
+            throw new LoginException('This UID is already associated with another user. Disconnect from your current session and retry.');
         }
 
 
@@ -439,7 +441,7 @@ class LoginAccountsController extends Controller
                 return $this->login($craftUser, $account, $token);
             }
 
-            throw new Exception("Social account exists but Craft user doesn't");
+            throw new LoginException('Social account exists but Craft user doesn’t');
         }
 
 
@@ -459,7 +461,7 @@ class LoginAccountsController extends Controller
             return $this->login($craftUser, $account, $token, true);
         }
 
-        throw new Exception("Craft user couldn’t be created.");
+        throw new RegistrationException('Craft user couldn’t be created.');
     }
 
     /**
@@ -469,18 +471,20 @@ class LoginAccountsController extends Controller
      * @param $providerHandle
      *
      * @return User
+     * @throws RegistrationException
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \craft\errors\ImageException
      * @throws \craft\errors\VolumeException
+     * @throws \craft\errors\WrongEditionException
      * @throws \yii\base\Exception
      * @throws \yii\base\InvalidConfigException
      */
     private function registerUser($attributes, $providerHandle): User
     {
         if (empty($attributes['email'])) {
-            throw new Exception("Email address not provided.");
+            throw new RegistrationException('Email address not provided.');
         }
 
 
@@ -490,7 +494,7 @@ class LoginAccountsController extends Controller
 
         if ($user) {
             if (Social::$plugin->getSettings()->allowEmailMatch !== true) {
-                throw new Exception("An account already exists with this email: ".$attributes['email']);
+                throw new RegistrationException('An account already exists with this email: '.$attributes['email']);
             }
 
             return $user;
@@ -505,7 +509,7 @@ class LoginAccountsController extends Controller
         $settings = $socialPlugin->getSettings();
 
         if (!$settings['enableSocialRegistration']) {
-            throw new Exception("Social registration is disabled.");
+            throw new RegistrationException('Social registration is disabled.');
         }
 
         // Lock domains
@@ -521,7 +525,7 @@ class LoginAccountsController extends Controller
             }
 
             if ($domainRejected) {
-                throw new Exception("Couldn’t register with this email (domain is not allowed): ".$attributes['email']);
+                throw new RegistrationException('Couldn’t register with this email (domain is not allowed): '.$attributes['email']);
             }
         }
 
@@ -594,7 +598,7 @@ class LoginAccountsController extends Controller
 
         if (!Craft::$app->elements->saveElement($newUser)) {
             Craft::error('There was a problem creating the user:'.print_r($newUser->getErrors(), true), __METHOD__);
-            throw new Exception("Craft user couldn’t be created.");
+            throw new RegistrationException('Craft user couldn’t be created.');
         }
 
         // save remote photo
