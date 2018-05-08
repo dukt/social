@@ -157,8 +157,6 @@ class LoginAccountsController extends Controller
                 throw new Exception("Social login is disabled");
             }
 
-            Craft::$app->requireEdition(Craft::Pro);
-
             $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($providerHandle);
 
             if (!$loginProvider) {
@@ -481,6 +479,8 @@ class LoginAccountsController extends Controller
      */
     private function registerUser($attributes, $providerHandle): User
     {
+        Craft::$app->requireEdition(Craft::Pro);
+        
         if (empty($attributes['email'])) {
             throw new Exception("Email address not provided.");
         }
