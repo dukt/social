@@ -614,31 +614,54 @@ class LoginAccountsController extends Controller
             foreach ($userMapping as $key => $template) {
                 // Check whether they try to set an attribute or a custom field
                 if (in_array($key, $userModelAttributes)) {
-                    $attribute = $key;
-
-                    if (array_key_exists($attribute, $newUser->getAttributes())) {
-                        try {
-                            $newUser->{$attribute} = Craft::$app->getView()->renderString($template, $attributes);
-                        } catch (\Exception $e) {
-                            Craft::warning('Could not map:'.print_r([$attribute, $template, $attributes, $e->getMessage()], true), __METHOD__);
-                        }
-                    }
+                    $this->fillUserAttribute($newUser, $key, $template, $attributes);
                 } else {
-                    $fieldHandle = $key;
-
-                    // Check to make sure custom field exists for user profile
-                    if (isset($newUser->{$fieldHandle})) {
-                        try {
-                            $userContent[$fieldHandle] = Craft::$app->getView()->renderString($template, $attributes);
-                        } catch (\Exception $e) {
-                            Craft::warning('Could not map:'.print_r([$template, $attributes, $e->getMessage()], true), __METHOD__);
-                        }
-                    }
+                    $this->fillUserFieldValue($newUser, $userContent, $key, $template, $attributes);
                 }
             }
 
             foreach ($userContent as $field => $value) {
                 $newUser->setFieldValue($field, $value);
+            }
+        }
+    }
+
+    /**
+     * @param User $newUser
+     * @param      $key
+     * @param      $template
+     * @param      $attributes
+     */
+    private function fillUserAttribute(User &$newUser, $key, $template, $attributes)
+    {
+        $attribute = $key;
+
+        if (array_key_exists($attribute, $newUser->getAttributes())) {
+            try {
+                $newUser->{$attribute} = Craft::$app->getView()->renderString($template, $attributes);
+            } catch (\Exception $e) {
+                Craft::warning('Could not map:'.print_r([$attribute, $template, $attributes, $e->getMessage()], true), __METHOD__);
+            }
+        }
+    }
+
+    /**
+     * @param User  $newUser
+     * @param array $userContent
+     * @param       $key
+     * @param       $template
+     * @param       $attributes
+     */
+    private function fillUserFieldValue(User &$newUser, array &$userContent, $key, $template, $attributes)
+    {
+        $fieldHandle = $key;
+
+        // Check to make sure custom field exists for user profile
+        if (isset($newUser->{$fieldHandle})) {
+            try {
+                $userContent[$fieldHandle] = Craft::$app->getView()->renderString($template, $attributes);
+            } catch (\Exception $e) {
+                Craft::warning('Could not map:'.print_r([$template, $attributes, $e->getMessage()], true), __METHOD__);
             }
         }
     }
