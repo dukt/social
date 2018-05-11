@@ -507,26 +507,9 @@ class LoginAccountsController extends Controller
         $socialPlugin = Craft::$app->getPlugins()->getPlugin('social');
         $settings = $socialPlugin->getSettings();
 
-        if (!$settings['enableSocialRegistration']) {
-            throw new RegistrationException('Social registration is disabled.');
-        }
+        $this->checkRegistrationEnabled($settings);
+        $this->checkLockedDomains($attributes);
 
-        // Lock domains
-        $lockDomains = Social::$plugin->getSettings()->lockDomains;
-
-        if (count($lockDomains) > 0) {
-            $domainRejected = true;
-
-            foreach ($lockDomains as $lockDomain) {
-                if (strpos($attributes['email'], '@'.$lockDomain) !== false) {
-                    $domainRejected = false;
-                }
-            }
-
-            if ($domainRejected) {
-                throw new RegistrationException('Couldn’t register with this email (domain is not allowed): '.$attributes['email']);
-            }
-        }
 
         // Fire a 'beforeRegister' event
         if ($this->hasEventHandlers(self::EVENT_BEFORE_REGISTER)) {
@@ -535,13 +518,7 @@ class LoginAccountsController extends Controller
             ]));
         }
 
-        $loginProviderConfig = Plugin::$plugin->getLoginProviderConfig($providerHandle);
-
-        $userMapping = null;
-
-        if (isset($loginProviderConfig['userMapping'])) {
-            $userMapping = $loginProviderConfig['userMapping'];
-        }
+        $userMapping = $this->getUserMapping($providerHandle);
 
         $newUser = new User();
 
@@ -549,16 +526,7 @@ class LoginAccountsController extends Controller
             $this->fillProfile($newUser, $userMapping, $attributes);
         }
 
-
-        // fill default email and username if not already done
-
-        if (!$newUser->email) {
-            $newUser->email = $attributes['email'];
-        }
-
-        if (!$newUser->username) {
-            $newUser->username = $attributes['email'];
-        }
+        $this->fillUserFields($newUser, $attributes);
 
 
         // save user
@@ -581,6 +549,43 @@ class LoginAccountsController extends Controller
         Craft::$app->elements->saveElement($newUser);
 
         return $newUser;
+    }
+
+    private function getUserMapping(string $providerHandle)
+    {
+        $loginProviderConfig = Plugin::$plugin->getLoginProviderConfig($providerHandle);
+
+        if (isset($loginProviderConfig['userMapping'])) {
+            return $loginProviderConfig['userMapping'];
+        }
+
+        return null;
+    }
+
+    private function checkRegistrationEnabled($settings)
+    {
+        if (!$settings['enableSocialRegistration']) {
+            throw new RegistrationException('Social registration is disabled.');
+        }
+    }
+
+    private function checkLockedDomains($attributes)
+    {
+        $lockDomains = Social::$plugin->getSettings()->lockDomains;
+
+        if (\count($lockDomains) > 0) {
+            $domainRejected = true;
+
+            foreach ($lockDomains as $lockDomain) {
+                if (strpos($attributes['email'], '@'.$lockDomain) !== false) {
+                    $domainRejected = false;
+                }
+            }
+
+            if ($domainRejected) {
+                throw new RegistrationException('Couldn’t register with this email (domain is not allowed): '.$attributes['email']);
+            }
+        }
     }
 
     /**
@@ -612,6 +617,21 @@ class LoginAccountsController extends Controller
 
         if ($photoUrl) {
             Social::$plugin->getLoginAccounts()->saveRemotePhoto($photoUrl, $newUser);
+        }
+    }
+
+    /**
+     * @param User  $user
+     * @param array $attributes
+     */
+    private function fillUserFields(User &$newUser, array $attributes)
+    {
+        if (!$newUser->email) {
+            $newUser->email = $attributes['email'];
+        }
+
+        if (!$newUser->username) {
+            $newUser->username = $attributes['email'];
         }
     }
 
