@@ -543,11 +543,72 @@ class LoginAccountsController extends Controller
             $userMapping = $loginProviderConfig['userMapping'];
         }
 
-        $userModelAttributes = ['email', 'username', 'firstName', 'lastName', 'preferredLocale', 'weekStartDay'];
-
         $newUser = new User();
 
-        if ($settings['autoFillProfile'] && is_array($userMapping)) {
+        if ($settings['autoFillProfile']) {
+            $this->fillProfile($newUser, $userMapping, $attributes);
+        }
+
+
+        // fill default email and username if not already done
+
+        if (!$newUser->email) {
+            $newUser->email = $attributes['email'];
+        }
+
+        if (!$newUser->username) {
+            $newUser->username = $attributes['email'];
+        }
+
+
+        // save user
+
+        if (!Craft::$app->elements->saveElement($newUser)) {
+            Craft::error('There was a problem creating the user:'.print_r($newUser->getErrors(), true), __METHOD__);
+            throw new RegistrationException('Craft user couldn’t be created.');
+        }
+
+        // save remote photo
+        if ($settings['autoFillProfile']) {
+            $photoUrl = false;
+
+            if (isset($userMapping['photoUrl'])) {
+                try {
+                    $photoUrl = html_entity_decode(Craft::$app->getView()->renderString($userMapping['photoUrl'], $attributes));
+                } catch (\Exception $e) {
+                    Craft::warning('Could not map:'.print_r(['photoUrl', $userMapping['photoUrl'], $attributes, $e->getMessage()], true), __METHOD__);
+                }
+            } else {
+                if (!empty($attributes['photoUrl'])) {
+                    $photoUrl = $attributes['photoUrl'];
+                }
+            }
+
+            if ($photoUrl) {
+                Social::$plugin->getLoginAccounts()->saveRemotePhoto($photoUrl, $newUser);
+            }
+        }
+
+        // save groups
+        if (!empty($settings['defaultGroup'])) {
+            Craft::$app->users->assignUserToGroups($newUser->id, [$settings['defaultGroup']]);
+        }
+
+        Craft::$app->elements->saveElement($newUser);
+
+        return $newUser;
+    }
+
+    /**
+     * @param User $newUser
+     * @param      $userMapping
+     * @param      $attributes
+     */
+    private function fillProfile(User &$newUser, $userMapping, $attributes)
+    {
+        $userModelAttributes = ['email', 'username', 'firstName', 'lastName', 'preferredLocale', 'weekStartDay'];
+
+        if (is_array($userMapping)) {
             $userContent = [];
 
             foreach ($userMapping as $key => $template) {
@@ -580,56 +641,6 @@ class LoginAccountsController extends Controller
                 $newUser->setFieldValue($field, $value);
             }
         }
-
-
-        // fill default email and username if not already done
-
-        if (!$newUser->email) {
-            $newUser->email = $attributes['email'];
-        }
-
-        if (!$newUser->username) {
-            $newUser->username = $attributes['email'];
-        }
-
-
-        // save user
-
-        if (!Craft::$app->elements->saveElement($newUser)) {
-            Craft::error('There was a problem creating the user:'.print_r($newUser->getErrors(), true), __METHOD__);
-            throw new RegistrationException('Craft user couldn’t be created.');
-        }
-
-        // save remote photo
-        if ($settings['autoFillProfile']) {
-            $photoUrl = false;
-
-            if (isset($userMapping['photoUrl'])) {
-                try {
-                    $photoUrl = Craft::$app->getView()->renderString($userMapping['photoUrl'], $attributes);
-                    $photoUrl = html_entity_decode($photoUrl);
-                } catch (\Exception $e) {
-                    Craft::warning('Could not map:'.print_r(['photoUrl', $userMapping['photoUrl'], $attributes, $e->getMessage()], true), __METHOD__);
-                }
-            } else {
-                if (!empty($attributes['photoUrl'])) {
-                    $photoUrl = $attributes['photoUrl'];
-                }
-            }
-
-            if ($photoUrl) {
-                Social::$plugin->getLoginAccounts()->saveRemotePhoto($photoUrl, $newUser);
-            }
-        }
-
-        // save groups
-        if (!empty($settings['defaultGroup'])) {
-            Craft::$app->users->assignUserToGroups($newUser->id, [$settings['defaultGroup']]);
-        }
-
-        Craft::$app->elements->saveElement($newUser);
-
-        return $newUser;
     }
 
     /**
