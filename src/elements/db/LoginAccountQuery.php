@@ -192,38 +192,26 @@ class LoginAccountQuery extends ElementQuery
             'social_login_accounts.socialUid',
         ]);
 
-        if ($this->userId) {
-            $this->subQuery->andWhere(Db::parseParam('social_login_accounts.userId', $this->userId));
-        }
-
-        if ($this->providerHandle) {
-            $this->subQuery->andWhere(Db::parseParam('social_login_accounts.providerHandle', $this->providerHandle));
-        }
-
-        if ($this->socialUid) {
-            $this->subQuery->andWhere(Db::parseParam('social_login_accounts.socialUid', $this->socialUid));
-        }
-
-        if ($this->email) {
-            $this->subQuery->andWhere(Db::parseParam('users.email', $this->email));
-        }
-
-        if ($this->username) {
-            $this->subQuery->andWhere(Db::parseParam('users.username', $this->username));
-        }
-
-        if ($this->firstName) {
-            $this->subQuery->andWhere(Db::parseParam('users.firstName', $this->firstName));
-        }
-
-        if ($this->lastName) {
-            $this->subQuery->andWhere(Db::parseParam('users.lastName', $this->lastName));
-        }
-
-        if ($this->lastLoginDate) {
-            $this->subQuery->andWhere(Db::parseParam('users.lastLoginDate', $this->lastLoginDate));
-        }
+        $this->addWhere('userId', 'social_login_accounts.userId');
+        $this->addWhere('providerHandle', 'social_login_accounts.providerHandle');
+        $this->addWhere('socialUid', 'social_login_accounts.socialUid');
+        $this->addWhere('email', 'users.email');
+        $this->addWhere('username', 'users.username');
+        $this->addWhere('firstName', 'users.firstName');
+        $this->addWhere('lastName', 'users.lastName');
+        $this->addWhere('lastLoginDate', 'users.lastLoginDate');
 
         return parent::beforePrepare();
+    }
+
+    /**
+     * @param string $property
+     * @param string  $column
+     */
+    private function addWhere(string $property, string $column)
+    {
+        if ($this->{$property}) {
+            $this->subQuery->andWhere(Db::parseParam($column, $this->{$property}));
+        }
     }
 }
