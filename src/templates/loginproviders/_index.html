@@ -23,7 +23,7 @@
                                 <img src="{{ loginProvider.getIconUrl() }}" width="32" height="32" />
                             </div>
                             <div class="label">
-								{{ loginProvider.name }}
+                                {{ loginProvider.name }}
                             </div>
                         </div>
                     </th>
@@ -38,13 +38,13 @@
                             {{ csrfInput() }}
 
                             {% if loginProvider.isConfigured %}
-								{% if loginProvider.isEnabled  %}
+                                {% if loginProvider.isEnabled  %}
                                     <span class="status on"></span> {{ "Enabled"|t('social') }} 
                                     <input type="button" value="{{ 'Disable'|t('social') }}" class="btn small formsubmit" data-action="social/login-providers/disable-login-provider">
                                 {% else %}
                                     <span class="status"></span> {{ "Disabled"|t('social') }} 
                                     <input type="button" value="{{ 'Enable'|t('social') }}" class="btn small formsubmit" data-action="social/login-providers/enable-login-provider">
-								{% endif %}
+                                {% endif %}
                             {% else %}
                                 <span class="status"></span> {{ "Not configured"|t('social') }} 
                             {% endif %}
