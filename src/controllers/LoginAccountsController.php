@@ -570,23 +570,7 @@ class LoginAccountsController extends Controller
 
         // save remote photo
         if ($settings['autoFillProfile']) {
-            $photoUrl = false;
-
-            if (isset($userMapping['photoUrl'])) {
-                try {
-                    $photoUrl = html_entity_decode(Craft::$app->getView()->renderString($userMapping['photoUrl'], $attributes));
-                } catch (\Exception $e) {
-                    Craft::warning('Could not map:'.print_r(['photoUrl', $userMapping['photoUrl'], $attributes, $e->getMessage()], true), __METHOD__);
-                }
-            } else {
-                if (!empty($attributes['photoUrl'])) {
-                    $photoUrl = $attributes['photoUrl'];
-                }
-            }
-
-            if ($photoUrl) {
-                Social::$plugin->getLoginAccounts()->saveRemotePhoto($photoUrl, $newUser);
-            }
+            $this->saveRemotePhoto($newUser, $userMapping, $attributes);
         }
 
         // save groups
@@ -597,6 +581,38 @@ class LoginAccountsController extends Controller
         Craft::$app->elements->saveElement($newUser);
 
         return $newUser;
+    }
+
+    /**
+     * @param User $newUser
+     * @param      $userMapping
+     * @param      $attributes
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \craft\errors\ImageException
+     * @throws \craft\errors\VolumeException
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
+     */
+    private function saveRemotePhoto(User &$newUser, $userMapping, $attributes)
+    {
+        $photoUrl = false;
+
+        if (isset($userMapping['photoUrl'])) {
+            try {
+                $photoUrl = html_entity_decode(Craft::$app->getView()->renderString($userMapping['photoUrl'], $attributes));
+            } catch (\Exception $e) {
+                Craft::warning('Could not map:'.print_r(['photoUrl', $userMapping['photoUrl'], $attributes, $e->getMessage()], true), __METHOD__);
+            }
+        } else {
+            if (!empty($attributes['photoUrl'])) {
+                $photoUrl = $attributes['photoUrl'];
+            }
+        }
+
+        if ($photoUrl) {
+            Social::$plugin->getLoginAccounts()->saveRemotePhoto($photoUrl, $newUser);
+        }
     }
 
     /**
