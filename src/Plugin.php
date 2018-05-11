@@ -235,7 +235,7 @@ class Plugin extends \craft\base\Plugin
 
                 Craft::$app->getView()->registerAssetBundle(LoginAsset::class);
 
-                Craft::$app->getView()->registerJs("var socialLoginForm = new Craft.SocialLoginForm(".json_encode($jsLoginProviders).", ".json_encode($error).");");
+                Craft::$app->getView()->registerJs('var socialLoginForm = new Craft.SocialLoginForm('.json_encode($jsLoginProviders).', '.json_encode($error).');');
             }
         }
     }

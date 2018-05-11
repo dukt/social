@@ -66,7 +66,7 @@ class Google extends LoginProvider
         $photoUrl = $remoteProfile->getAvatar();
 
         if (strpos($photoUrl, '?') !== false) {
-            $photoUrl = substr($photoUrl, 0, strpos($photoUrl, "?"));
+            $photoUrl = substr($photoUrl, 0, strpos($photoUrl, '?'));
         }
 
         return [
@@ -92,8 +92,8 @@ class Google extends LoginProvider
         $providerInfos = $this->getInfos();
 
         $config = [
-            'clientId' => (isset($providerInfos['clientId']) ? $providerInfos['clientId'] : ''),
-            'clientSecret' => (isset($providerInfos['clientSecret']) ? $providerInfos['clientSecret'] : ''),
+            'clientId' => $providerInfos['clientId'] ?? '',
+            'clientSecret' => $providerInfos['clientSecret'] ?? '',
             'redirectUri' => $this->getRedirectUri(),
         ];
 

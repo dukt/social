@@ -53,7 +53,7 @@ class Twitter extends LoginProvider
         $remoteProfile = $this->getRemoteProfile($token);
 
         $photoUrl = $remoteProfile->imageUrl;
-        $photoUrl = str_replace("_normal.", ".", $photoUrl);
+        $photoUrl = str_replace('_normal.', '.', $photoUrl);
 
         return [
             'id' => $remoteProfile->uid,
@@ -79,8 +79,8 @@ class Twitter extends LoginProvider
         $providerInfos = $this->getInfos();
 
         $config = [
-            'identifier' => (isset($providerInfos['clientId']) ? $providerInfos['clientId'] : ''),
-            'secret' => (isset($providerInfos['clientSecret']) ? $providerInfos['clientSecret'] : ''),
+            'identifier' => $providerInfos['clientId'] ?? '',
+            'secret' => $providerInfos['clientSecret'] ?? '',
         ];
 
         if (!isset($config['callback_uri'])) {

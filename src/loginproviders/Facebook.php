@@ -66,20 +66,20 @@ class Facebook extends LoginProvider
         $remoteProfile = $this->getRemoteProfile($token);
 
         return [
-            'id' => (isset($remoteProfile['id']) ? $remoteProfile['id'] : null),
-            'email' => (isset($remoteProfile['email']) ? $remoteProfile['email'] : null),
-            'firstName' => (isset($remoteProfile['first_name']) ? $remoteProfile['first_name'] : null),
-            'lastName' => (isset($remoteProfile['last_name']) ? $remoteProfile['last_name'] : null),
-            'photoUrl' => (isset($remoteProfile['picture']['data']['url']) ? $remoteProfile['picture']['data']['url'] : null),
-            'name' => (isset($remoteProfile['name']) ? $remoteProfile['name'] : null),
-            'hometown' => (isset($remoteProfile['hometown']) ? $remoteProfile['hometown'] : null),
-            'isDefaultPicture' => (isset($remoteProfile['picture']['data']['is_silhouette']) ? $remoteProfile['picture']['data']['is_silhouette'] : null),
-            'coverPhotoUrl' => (isset($remoteProfile['cover']['source']) ? $remoteProfile['cover']['source'] : null),
-            'gender' => (isset($remoteProfile['gender']) ? $remoteProfile['gender'] : null),
-            'locale' => (isset($remoteProfile['locale']) ? $remoteProfile['locale'] : null),
-            'link' => (isset($remoteProfile['link']) ? $remoteProfile['link'] : null),
-            'locationId' => (isset($remoteProfile['location']['id']) ? $remoteProfile['location']['id'] : null),
-            'locationName' => (isset($remoteProfile['location']['name']) ? $remoteProfile['location']['name'] : null),
+            'id' => $remoteProfile['id'] ?? null,
+            'email' => $remoteProfile['email'] ?? null,
+            'firstName' => $remoteProfile['first_name'] ?? null,
+            'lastName' => $remoteProfile['last_name'] ?? null,
+            'photoUrl' => $remoteProfile['picture']['data']['url'] ?? null,
+            'name' => $remoteProfile['name'] ?? null,
+            'hometown' => $remoteProfile['hometown'] ?? null,
+            'isDefaultPicture' => $remoteProfile['picture']['data']['is_silhouette'] ?? null,
+            'coverPhotoUrl' => $remoteProfile['cover']['source'] ?? null,
+            'gender' => $remoteProfile['gender'] ?? null,
+            'locale' => $remoteProfile['locale'] ?? null,
+            'link' => $remoteProfile['link'] ?? null,
+            'locationId' => $remoteProfile['location']['id'] ?? null,
+            'locationName' => $remoteProfile['location']['name'] ?? null,
         ];
     }
 
