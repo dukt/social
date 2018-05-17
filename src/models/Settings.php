@@ -56,6 +56,11 @@ class Settings extends Model
     public $enableSocialRegistration = true;
 
     /**
+     * @var array Login providers configuration
+     */
+    public $loginProviders = [];
+
+    /**
      * @var array Lock social registration to specific domains
      */
     public $lockDomains = [];
