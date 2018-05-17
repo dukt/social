@@ -41,6 +41,11 @@ class Settings extends Model
     public $enableCpLogin = false;
 
     /**
+     * @var array Enabled login providers
+     */
+    public $enabledLoginProviders = [];
+
+    /**
      * @var bool Enable social login
      */
     public $enableSocialLogin = true;
@@ -54,11 +59,6 @@ class Settings extends Model
      * @var array Lock social registration to specific domains
      */
     public $lockDomains = [];
-
-    /**
-     * @var array Enabled login providers
-     */
-    public $enabledLoginProviders = [];
 
     /**
      * @var bool Show CP section
