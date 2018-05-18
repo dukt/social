@@ -6,6 +6,9 @@ Changelog
 ### Added
 - Added `dukt\social\models\Settings::$loginProviders` property.
 
+### Changed
+- Typed `dukt\social\base\LoginProviderInterface::getName()`’s return to string.
+
 ## 2.0.0-beta.7 - 2018-05-08
 
 ### Changed

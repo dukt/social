@@ -25,7 +25,7 @@ interface LoginProviderInterface
      *
      * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Returns a profile from an OAuth token.
