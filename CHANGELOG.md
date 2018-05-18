@@ -1,7 +1,7 @@
 Changelog
 ===================
 
-## Unreleased
+## 2.0.0-beta.8 - 2018-05-18
 
 ### Added
 - Added `dukt\social\models\Settings::$loginProviders` property.
