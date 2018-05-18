@@ -14,5 +14,5 @@ Installation instructions can be found in the [Social 2 documentation](https://g
 
 ## Resources
 
-- [Social 2 Documentation](https://github.com/dukt/social-docs)
+- [Social 2 Documentation](https://docs.dukt.net/social/v2)
 - [Social 2 Plugin Overview](https://dukt.net/social)
