@@ -269,32 +269,6 @@ class LoginAccountsController extends Controller
         return $this->redirect($redirect);
     }
 
-    /**
-     * Change photo.
-     *
-     * @return Response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \craft\errors\ImageException
-     * @throws \craft\errors\VolumeException
-     * @throws \yii\base\Exception
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function actionChangePhoto(): Response
-    {
-        $userId = Craft::$app->getRequest()->getParam('userId');
-        $photoUrl = Craft::$app->getRequest()->getParam('photoUrl');
-
-        $user = Craft::$app->users->getUserById($userId);
-
-        Social::$plugin->getLoginAccounts()->saveRemotePhoto($photoUrl, $user);
-
-        // redirect
-        $referrer = Craft::$app->getRequest()->referrer;
-
-        return $this->redirect($referrer);
-    }
-
-
     // Private Methods
     // =========================================================================
 
