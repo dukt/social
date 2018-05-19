@@ -490,7 +490,7 @@ class LoginAccountsController extends Controller
 
         // Fill user profile
         if ($settings['autoFillProfile']) {
-            $this->fillProfile($newUser, $userMapping, $profile);
+            $this->fillUserFromProfile($newUser, $userMapping, $profile);
         }
 
         $this->fillUserFields($newUser, $profile);
@@ -626,7 +626,7 @@ class LoginAccountsController extends Controller
      * @param      $userMapping
      * @param      $profile
      */
-    private function fillProfile(User &$newUser, $userMapping, $profile)
+    private function fillUserFromProfile(User &$newUser, $userMapping, $profile)
     {
         $userModelAttributes = ['email', 'username', 'firstName', 'lastName', 'preferredLocale', 'weekStartDay'];
 
