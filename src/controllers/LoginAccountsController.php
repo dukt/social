@@ -174,7 +174,7 @@ class LoginAccountsController extends Controller
                     $token->providerHandle = $providerHandle;
                     $token->token = $response['token'];
 
-                    return $this->connectUserFromToken($token);
+                    return $this->connectUser($token);
                 }
 
                 throw new LoginException($response['errorMsg']);
@@ -309,7 +309,7 @@ class LoginAccountsController extends Controller
      * @throws \yii\base\Exception
      * @throws \yii\base\InvalidConfigException
      */
-    private function connectUserFromToken(Token $token)
+    private function connectUser(Token $token)
     {
         $craftUser = Craft::$app->getUser()->getIdentity();
 
