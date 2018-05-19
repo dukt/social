@@ -341,11 +341,8 @@ class LoginAccountsController extends Controller
         }
 
         $socialLoginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($token->providerHandle);
-
-        $attributes = $socialLoginProvider->getProfile($token);
-
-        $socialUid = $attributes['id'];
-
+        $profile = $socialLoginProvider->getProfile($token);
+        $socialUid = $profile['id'];
         $account = Social::$plugin->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
 
 
@@ -395,11 +392,8 @@ class LoginAccountsController extends Controller
     private function registerOrLoginFromToken(Token $token)
     {
         $socialLoginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($token->providerHandle);
-
-        $attributes = $socialLoginProvider->getProfile($token);
-
-        $socialUid = $attributes['id'];
-
+        $profile = $socialLoginProvider->getProfile($token);
+        $socialUid = $profile['id'];
         $account = Social::$plugin->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
 
 
@@ -420,7 +414,7 @@ class LoginAccountsController extends Controller
 
         // Register new user
 
-        $craftUser = $this->registerUser($attributes, $socialLoginProvider->getHandle());
+        $craftUser = $this->registerUser($profile, $socialLoginProvider->getHandle());
 
         if ($craftUser) {
             // Save social user
@@ -440,7 +434,7 @@ class LoginAccountsController extends Controller
     /**
      * Register a user.
      *
-     * @param $attributes
+     * @param $profile
      * @param $providerHandle
      *
      * @return User
@@ -454,20 +448,20 @@ class LoginAccountsController extends Controller
      * @throws \yii\base\Exception
      * @throws \yii\base\InvalidConfigException
      */
-    private function registerUser($attributes, $providerHandle): User
+    private function registerUser($profile, $providerHandle): User
     {
-        if (empty($attributes['email'])) {
+        if (empty($profile['email'])) {
             throw new RegistrationException('Email address not provided.');
         }
 
 
         // Registration of an existing user with a matching email
 
-        $user = Craft::$app->users->getUserByUsernameOrEmail($attributes['email']);
+        $user = Craft::$app->users->getUserByUsernameOrEmail($profile['email']);
 
         if ($user) {
             if (Social::$plugin->getSettings()->allowEmailMatch !== true) {
-                throw new RegistrationException('An account already exists with this email: '.$attributes['email']);
+                throw new RegistrationException('An account already exists with this email: '.$profile['email']);
             }
 
             return $user;
@@ -482,12 +476,12 @@ class LoginAccountsController extends Controller
         $settings = $socialPlugin->getSettings();
 
         $this->checkRegistrationEnabled($settings);
-        $this->checkLockedDomains($attributes);
+        $this->checkLockedDomains($profile);
 
         // Fire a 'beforeRegister' event
         if ($this->hasEventHandlers(self::EVENT_BEFORE_REGISTER)) {
             $this->trigger(self::EVENT_BEFORE_REGISTER, new Event([
-                'account' => &$attributes,
+                'account' => &$profile,
             ]));
         }
 
@@ -496,10 +490,10 @@ class LoginAccountsController extends Controller
 
         // Fill user profile
         if ($settings['autoFillProfile']) {
-            $this->fillProfile($newUser, $userMapping, $attributes);
+            $this->fillProfile($newUser, $userMapping, $profile);
         }
 
-        $this->fillUserFields($newUser, $attributes);
+        $this->fillUserFields($newUser, $profile);
 
         // Save user
         if (!Craft::$app->elements->saveElement($newUser)) {
@@ -509,7 +503,7 @@ class LoginAccountsController extends Controller
 
         // Save remote photo
         if ($settings['autoFillProfile']) {
-            $this->saveRemotePhoto($newUser, $userMapping, $attributes);
+            $this->saveRemotePhoto($newUser, $userMapping, $profile);
         }
 
         // Assign user to default group
@@ -557,11 +551,11 @@ class LoginAccountsController extends Controller
     /**
      * Check locked domains.
      *
-     * @param $attributes
+     * @param $profile
      *
      * @throws RegistrationException
      */
-    private function checkLockedDomains($attributes)
+    private function checkLockedDomains($profile)
     {
         $lockDomains = Social::$plugin->getSettings()->lockDomains;
 
@@ -569,13 +563,13 @@ class LoginAccountsController extends Controller
             $domainRejected = true;
 
             foreach ($lockDomains as $lockDomain) {
-                if (strpos($attributes['email'], '@'.$lockDomain) !== false) {
+                if (strpos($profile['email'], '@'.$lockDomain) !== false) {
                     $domainRejected = false;
                 }
             }
 
             if ($domainRejected) {
-                throw new RegistrationException('Couldn’t register with this email (domain is not allowed): '.$attributes['email']);
+                throw new RegistrationException('Couldn’t register with this email (domain is not allowed): '.$profile['email']);
             }
         }
     }
@@ -583,7 +577,7 @@ class LoginAccountsController extends Controller
     /**
      * @param User $newUser
      * @param      $userMapping
-     * @param      $attributes
+     * @param      $profile
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \craft\errors\ImageException
@@ -591,19 +585,19 @@ class LoginAccountsController extends Controller
      * @throws \yii\base\Exception
      * @throws \yii\base\InvalidConfigException
      */
-    private function saveRemotePhoto(User &$newUser, $userMapping, $attributes)
+    private function saveRemotePhoto(User &$newUser, $userMapping, $profile)
     {
         $photoUrl = false;
 
         if (isset($userMapping['photoUrl'])) {
             try {
-                $photoUrl = html_entity_decode(Craft::$app->getView()->renderString($userMapping['photoUrl'], $attributes));
+                $photoUrl = html_entity_decode(Craft::$app->getView()->renderString($userMapping['photoUrl'], $profile));
             } catch (\Exception $e) {
-                Craft::warning('Could not map:'.print_r(['photoUrl', $userMapping['photoUrl'], $attributes, $e->getMessage()], true), __METHOD__);
+                Craft::warning('Could not map:'.print_r(['photoUrl', $userMapping['photoUrl'], $profile, $e->getMessage()], true), __METHOD__);
             }
         } else {
-            if (!empty($attributes['photoUrl'])) {
-                $photoUrl = $attributes['photoUrl'];
+            if (!empty($profile['photoUrl'])) {
+                $photoUrl = $profile['photoUrl'];
             }
         }
 
@@ -614,25 +608,25 @@ class LoginAccountsController extends Controller
 
     /**
      * @param User  $newUser
-     * @param array $attributes
+     * @param array $profile
      */
-    private function fillUserFields(User &$newUser, array $attributes)
+    private function fillUserFields(User &$newUser, array $profile)
     {
         if (!$newUser->email) {
-            $newUser->email = $attributes['email'];
+            $newUser->email = $profile['email'];
         }
 
         if (!$newUser->username) {
-            $newUser->username = $attributes['email'];
+            $newUser->username = $profile['email'];
         }
     }
 
     /**
      * @param User $newUser
      * @param      $userMapping
-     * @param      $attributes
+     * @param      $profile
      */
-    private function fillProfile(User &$newUser, $userMapping, $attributes)
+    private function fillProfile(User &$newUser, $userMapping, $profile)
     {
         $userModelAttributes = ['email', 'username', 'firstName', 'lastName', 'preferredLocale', 'weekStartDay'];
 
@@ -642,9 +636,9 @@ class LoginAccountsController extends Controller
             foreach ($userMapping as $key => $template) {
                 // Check whether they try to set an attribute or a custom field
                 if (in_array($key, $userModelAttributes)) {
-                    $this->fillUserAttribute($newUser, $key, $template, $attributes);
+                    $this->fillUserAttribute($newUser, $key, $template, $profile);
                 } else {
-                    $this->fillUserFieldValue($newUser, $userContent, $key, $template, $attributes);
+                    $this->fillUserFieldValue($newUser, $userContent, $key, $template, $profile);
                 }
             }
 
@@ -658,17 +652,17 @@ class LoginAccountsController extends Controller
      * @param User $newUser
      * @param      $key
      * @param      $template
-     * @param      $attributes
+     * @param      $profile
      */
-    private function fillUserAttribute(User &$newUser, $key, $template, $attributes)
+    private function fillUserAttribute(User &$newUser, $key, $template, $profile)
     {
         $attribute = $key;
 
         if (array_key_exists($attribute, $newUser->getAttributes())) {
             try {
-                $newUser->{$attribute} = Craft::$app->getView()->renderString($template, $attributes);
+                $newUser->{$attribute} = Craft::$app->getView()->renderString($template, $profile);
             } catch (\Exception $e) {
-                Craft::warning('Could not map:'.print_r([$attribute, $template, $attributes, $e->getMessage()], true), __METHOD__);
+                Craft::warning('Could not map:'.print_r([$attribute, $template, $profile, $e->getMessage()], true), __METHOD__);
             }
         }
     }
@@ -678,18 +672,18 @@ class LoginAccountsController extends Controller
      * @param array $userContent
      * @param       $key
      * @param       $template
-     * @param       $attributes
+     * @param       $profile
      */
-    private function fillUserFieldValue(User &$newUser, array &$userContent, $key, $template, $attributes)
+    private function fillUserFieldValue(User &$newUser, array &$userContent, $key, $template, $profile)
     {
         $fieldHandle = $key;
 
         // Check to make sure custom field exists for user profile
         if (isset($newUser->{$fieldHandle})) {
             try {
-                $userContent[$fieldHandle] = Craft::$app->getView()->renderString($template, $attributes);
+                $userContent[$fieldHandle] = Craft::$app->getView()->renderString($template, $profile);
             } catch (\Exception $e) {
-                Craft::warning('Could not map:'.print_r([$template, $attributes, $e->getMessage()], true), __METHOD__);
+                Craft::warning('Could not map:'.print_r([$template, $profile, $e->getMessage()], true), __METHOD__);
             }
         }
     }
