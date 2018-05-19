@@ -28,7 +28,7 @@
 
     {{ forms.textField({
         readonly: true,
-        instructions: "Set <code>loginProviders."~loginProvider.handle~".clientId</code> in <code>config/social.php</code>.",
+        instructions: "Set the `loginProviders.{loginProviderHandle}.clientId` config in your `config/social.php` file."|t('social', {loginProviderHandle: loginProvider.handle}),
         placeholder: "{loginProvider} Client ID"|t('social', { loginProvider: loginProvider.name }),
         label: "Client ID"|t('social'),
         name: 'settings[oauthClientId]',
@@ -37,7 +37,7 @@
 
     {{ forms.textField({
         readonly: true,
-        instructions: "Set <code>loginProviders."~loginProvider.handle~".clientSecret</code> in <code>config/social.php</code>.",
+        instructions: "Set the `loginProviders.{loginProviderHandle}.clientSecret` config in your `config/social.php` file."|t('social', {loginProviderHandle: loginProvider.handle}),
         placeholder: "{loginProvider} Client Secret"|t('social', { loginProvider: loginProvider.name }),
         label: "Client Secret"|t('social'),
         name: 'settings[oauthClientSecret]',
