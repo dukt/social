@@ -484,7 +484,6 @@ class LoginAccountsController extends Controller
         $this->checkRegistrationEnabled($settings);
         $this->checkLockedDomains($attributes);
 
-
         // Fire a 'beforeRegister' event
         if ($this->hasEventHandlers(self::EVENT_BEFORE_REGISTER)) {
             $this->trigger(self::EVENT_BEFORE_REGISTER, new Event([
@@ -492,9 +491,8 @@ class LoginAccountsController extends Controller
             ]));
         }
 
-        $userMapping = $this->getUserMapping($providerHandle);
-
         $newUser = new User();
+        $userMapping = $this->getUserMapping($providerHandle);
 
         // Fill user profile
         if ($settings['autoFillProfile']) {
