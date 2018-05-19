@@ -595,10 +595,8 @@ class LoginAccountsController extends Controller
             } catch (\Exception $e) {
                 Craft::warning('Could not map:'.print_r(['photoUrl', $userMapping['photoUrl'], $profile, $e->getMessage()], true), __METHOD__);
             }
-        } else {
-            if (!empty($profile['photoUrl'])) {
-                $photoUrl = $profile['photoUrl'];
-            }
+        } elseif (!empty($profile['photoUrl'])) {
+            $photoUrl = $profile['photoUrl'];
         }
 
         if ($photoUrl) {
