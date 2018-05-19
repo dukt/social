@@ -414,7 +414,7 @@ class LoginAccountsController extends Controller
                 return $this->login($craftUser, $account, $token);
             }
 
-            throw new LoginException('Social account exists but Craft user doesn’t');
+            throw new LoginException('Social account exists but Craft user doesn’t.');
         }
 
 
