@@ -461,7 +461,7 @@ class LoginAccountsController extends Controller
         }
 
 
-        // Existing user matching email registration
+        // Registration of an existing user with a matching email
 
         $user = Craft::$app->users->getUserByUsernameOrEmail($attributes['email']);
 
@@ -496,26 +496,25 @@ class LoginAccountsController extends Controller
 
         $newUser = new User();
 
+        // Fill user profile
         if ($settings['autoFillProfile']) {
             $this->fillProfile($newUser, $userMapping, $attributes);
         }
 
         $this->fillUserFields($newUser, $attributes);
 
-
-        // save user
-
+        // Save user
         if (!Craft::$app->elements->saveElement($newUser)) {
             Craft::error('There was a problem creating the user:'.print_r($newUser->getErrors(), true), __METHOD__);
             throw new RegistrationException('Craft user couldn’t be created.');
         }
 
-        // save remote photo
+        // Save remote photo
         if ($settings['autoFillProfile']) {
             $this->saveRemotePhoto($newUser, $userMapping, $attributes);
         }
 
-        // save groups
+        // Assign user to default group
         if (!empty($settings['defaultGroup'])) {
             Craft::$app->users->assignUserToGroups($newUser->id, [$settings['defaultGroup']]);
         }
@@ -525,6 +524,13 @@ class LoginAccountsController extends Controller
         return $newUser;
     }
 
+    /**
+     * Get user mapping for a given provider.
+     *
+     * @param string $providerHandle
+     *
+     * @return null
+     */
     private function getUserMapping(string $providerHandle)
     {
         $loginProviderConfig = Plugin::$plugin->getLoginProviderConfig($providerHandle);
@@ -536,6 +542,13 @@ class LoginAccountsController extends Controller
         return null;
     }
 
+    /**
+     * Check if social registration is enabled.
+     *
+     * @param $settings
+     *
+     * @throws RegistrationException
+     */
     private function checkRegistrationEnabled($settings)
     {
         if (!$settings['enableSocialRegistration']) {
@@ -543,6 +556,13 @@ class LoginAccountsController extends Controller
         }
     }
 
+    /**
+     * Check locked domains.
+     *
+     * @param $attributes
+     *
+     * @throws RegistrationException
+     */
     private function checkLockedDomains($attributes)
     {
         $lockDomains = Social::$plugin->getSettings()->lockDomains;
