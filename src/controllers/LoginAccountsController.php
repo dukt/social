@@ -621,7 +621,7 @@ class LoginAccountsController extends Controller
     }
 
     /**
-     * @param User  $user
+     * @param User  $newUser
      * @param array $attributes
      */
     private function fillUserFields(User &$newUser, array $attributes)
