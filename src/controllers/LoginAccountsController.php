@@ -414,7 +414,7 @@ class LoginAccountsController extends Controller
 
         // Register new user
 
-        $craftUser = $this->registerUser($profile, $socialLoginProvider->getHandle());
+        $craftUser = $this->registerUser($socialLoginProvider->getHandle(), $profile);
 
         if ($craftUser) {
             // Save social user
@@ -434,8 +434,8 @@ class LoginAccountsController extends Controller
     /**
      * Register a user.
      *
+     * @param string $providerHandle
      * @param $profile
-     * @param $providerHandle
      *
      * @return User
      * @throws RegistrationException
@@ -448,7 +448,7 @@ class LoginAccountsController extends Controller
      * @throws \yii\base\Exception
      * @throws \yii\base\InvalidConfigException
      */
-    private function registerUser($profile, $providerHandle): User
+    private function registerUser(string $providerHandle, $profile): User
     {
         if (empty($profile['email'])) {
             throw new RegistrationException('Email address not provided.');
@@ -486,14 +486,10 @@ class LoginAccountsController extends Controller
         }
 
         $newUser = new User();
-        $userMapping = $this->getUserMapping($providerHandle);
+        $userMapping = Plugin::getInstance()->getLoginProviders()->getUserMapping($providerHandle);
 
-        // Fill user profile
-        if ($settings['autoFillProfile']) {
-            $this->fillUserFromProfile($newUser, $userMapping, $profile);
-        }
-
-        $this->fillUserFields($newUser, $profile);
+        // Fill user
+        $this->fillUser($providerHandle, $newUser, $profile);
 
         // Save user
         if (!Craft::$app->elements->saveElement($newUser)) {
@@ -503,7 +499,7 @@ class LoginAccountsController extends Controller
 
         // Save remote photo
         if ($settings['autoFillProfile']) {
-            $this->saveRemotePhoto($newUser, $userMapping, $profile);
+            $this->saveRemotePhoto($providerHandle, $newUser, $profile);
         }
 
         // Assign user to default group
@@ -517,21 +513,33 @@ class LoginAccountsController extends Controller
     }
 
     /**
-     * Get user mapping for a given provider.
-     *
      * @param string $providerHandle
+     * @param User   $newUser
+     * @param        $profile
      *
-     * @return null
+     * @throws \yii\base\InvalidConfigException
      */
-    private function getUserMapping(string $providerHandle)
+    private function fillUser(string $providerHandle, User &$newUser, $profile)
     {
-        $loginProviderConfig = Plugin::$plugin->getLoginProviderConfig($providerHandle);
+        $socialPlugin = Craft::$app->getPlugins()->getPlugin('social');
+        $settings = $socialPlugin->getSettings();
+        $userMapping = Plugin::getInstance()->getLoginProviders()->getUserMapping($providerHandle);
 
-        if (isset($loginProviderConfig['userMapping'])) {
-            return $loginProviderConfig['userMapping'];
+        $userModelAttributes = ['email', 'username', 'firstName', 'lastName', 'preferredLocale', 'weekStartDay'];
+
+        foreach ($userMapping as $attribute => $template) {
+            // Only fill other fields than `email` and `username` when `autoFillProfile` is true
+            if(!$settings['autoFillProfile'] && ($attribute !== 'email' || $attribute !== 'username')) {
+                continue;
+            }
+
+            // Check whether they try to set an attribute or a custom field
+            if (\in_array($attribute, $userModelAttributes, true)) {
+                $this->fillUserAttribute($newUser, $attribute, $template, $profile);
+            } else {
+                $this->fillUserCustomFieldValue($newUser, $attribute, $template, $profile);
+            }
         }
-
-        return null;
     }
 
     /**
@@ -575,9 +583,9 @@ class LoginAccountsController extends Controller
     }
 
     /**
-     * @param User $newUser
-     * @param      $userMapping
-     * @param      $profile
+     * @param string $providerHandle
+     * @param User   $newUser
+     * @param        $profile
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \craft\errors\ImageException
@@ -585,9 +593,10 @@ class LoginAccountsController extends Controller
      * @throws \yii\base\Exception
      * @throws \yii\base\InvalidConfigException
      */
-    private function saveRemotePhoto(User &$newUser, $userMapping, $profile)
+    private function saveRemotePhoto(string $providerHandle, User &$newUser, $profile)
     {
         $photoUrl = false;
+        $userMapping = Plugin::getInstance()->getLoginProviders()->getUserMapping($providerHandle);
 
         if (isset($userMapping['photoUrl'])) {
             try {
@@ -605,57 +614,13 @@ class LoginAccountsController extends Controller
     }
 
     /**
-     * @param User  $newUser
-     * @param array $profile
-     */
-    private function fillUserFields(User &$newUser, array $profile)
-    {
-        if (!$newUser->email) {
-            $newUser->email = $profile['email'];
-        }
-
-        if (!$newUser->username) {
-            $newUser->username = $profile['email'];
-        }
-    }
-
-    /**
      * @param User $newUser
-     * @param      $userMapping
-     * @param      $profile
-     */
-    private function fillUserFromProfile(User &$newUser, $userMapping, $profile)
-    {
-        $userModelAttributes = ['email', 'username', 'firstName', 'lastName', 'preferredLocale', 'weekStartDay'];
-
-        if (is_array($userMapping)) {
-            $userContent = [];
-
-            foreach ($userMapping as $key => $template) {
-                // Check whether they try to set an attribute or a custom field
-                if (in_array($key, $userModelAttributes)) {
-                    $this->fillUserAttribute($newUser, $key, $template, $profile);
-                } else {
-                    $this->fillUserFieldValue($newUser, $userContent, $key, $template, $profile);
-                }
-            }
-
-            foreach ($userContent as $field => $value) {
-                $newUser->setFieldValue($field, $value);
-            }
-        }
-    }
-
-    /**
-     * @param User $newUser
-     * @param      $key
+     * @param      $attribute
      * @param      $template
      * @param      $profile
      */
-    private function fillUserAttribute(User &$newUser, $key, $template, $profile)
+    private function fillUserAttribute(User &$newUser, $attribute, $template, $profile)
     {
-        $attribute = $key;
-
         if (array_key_exists($attribute, $newUser->getAttributes())) {
             try {
                 $newUser->{$attribute} = Craft::$app->getView()->renderString($template, $profile);
@@ -667,19 +632,17 @@ class LoginAccountsController extends Controller
 
     /**
      * @param User  $newUser
-     * @param array $userContent
-     * @param       $key
+     * @param       $attribute
      * @param       $template
      * @param       $profile
      */
-    private function fillUserFieldValue(User &$newUser, array &$userContent, $key, $template, $profile)
+    private function fillUserCustomFieldValue(User &$newUser, $attribute, $template, $profile)
     {
-        $fieldHandle = $key;
-
         // Check to make sure custom field exists for user profile
-        if (isset($newUser->{$fieldHandle})) {
+        if (isset($newUser->{$attribute})) {
             try {
-                $userContent[$fieldHandle] = Craft::$app->getView()->renderString($template, $profile);
+                $value = Craft::$app->getView()->renderString($template, $profile);
+                $newUser->setFieldValue($attribute, $value);
             } catch (\Exception $e) {
                 Craft::warning('Could not map:'.print_r([$template, $profile, $e->getMessage()], true), __METHOD__);
             }

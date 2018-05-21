@@ -10,6 +10,7 @@ namespace dukt\social\services;
 use Craft;
 use dukt\social\base\LoginProvider;
 use dukt\social\events\RegisterLoginProviderTypesEvent;
+use dukt\social\Plugin;
 use yii\base\Component;
 use dukt\social\base\LoginProviderInterface;
 
@@ -109,6 +110,29 @@ class LoginProviders extends Component
     public function getLoginProviders($enabledOnly = true): array
     {
         return $this->_getLoginProviders($enabledOnly);
+    }
+
+    /**
+     * Get user mapping for a given provider.
+     *
+     * @param string $providerHandle
+     *
+     * @return array
+     */
+    public function getUserMapping(string $providerHandle): array
+    {
+        $loginProviderConfig = Plugin::$plugin->getLoginProviderConfig($providerHandle);
+
+        $userMapping = [
+            'email' => '{{ email }}',
+            'username' => '{{ email }}',
+        ];
+
+        if (isset($loginProviderConfig['userMapping'])) {
+            $userMapping = array_merge($userMapping, $loginProviderConfig['userMapping']);
+        }
+
+        return $userMapping;
     }
 
     // Private Methods
