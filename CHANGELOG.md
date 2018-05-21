@@ -1,5 +1,10 @@
 Changelog
 ===================
+## Unreleased
+
+### Changed
+- Reworked the way user fields are being mapped and filled on registration.
+- Removed unused `dukt\social\controllers\LoginAccountsController::actionChangePhoto()` method.
 
 ## 2.0.0-beta.8 - 2018-05-18
 
