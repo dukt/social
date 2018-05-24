@@ -2,6 +2,9 @@ Changelog
 ===================
 ## Unreleased
 
+### Added
+- User mapping configuration is now displayed on login providers’ settings page.
+
 ### Changed
 - Reworked the way user fields are being mapped and filled on registration.
 - Removed unused `dukt\social\controllers\LoginAccountsController::actionChangePhoto()` method.
