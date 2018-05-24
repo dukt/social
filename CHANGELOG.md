@@ -1,6 +1,7 @@
 Changelog
 ===================
-## Unreleased
+
+## 2.0.0-beta.9 - 2018-05-24
 
 ### Added
 - User mapping configuration is now displayed on login providers’ settings page.
