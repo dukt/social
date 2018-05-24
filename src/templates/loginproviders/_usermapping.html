@@ -1,0 +1,31 @@
+{% extends "social/loginproviders/_layout" %}
+{% import "_includes/forms" as forms %}
+
+{% set selectedTab = 'userMapping' %}
+
+{% set content %}
+
+    <h2>{{ 'User Mapping'|t('social') }}</h2>
+
+    <table class="data fullwidth">
+        <thead>
+        <tr>
+            <th>User Field Handle</th>
+            <th>Template</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for userFieldHandle, template in userMapping %}
+            <tr>
+                <td><code>{{ userFieldHandle }}</code></td>
+                <td><code>{{ template }}</code></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="buttons">
+        <a href="#" class="btn">Test User Mapping</a>
+    </div>
+
+{% endset %}

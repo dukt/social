@@ -82,7 +82,8 @@ class Plugin extends \craft\base\Plugin
 
                 'settings/social' => 'social/login-providers/index',
                 'settings/social/loginproviders' => 'social/login-providers/index',
-                'settings/social/loginproviders/<handle:{handle}>' => 'social/login-providers/edit',
+                'settings/social/loginproviders/<handle:{handle}>' => 'social/login-providers/oauth',
+                'settings/social/loginproviders/<handle:{handle}>/usermapping' => 'social/login-providers/user-mapping',
                 'settings/social/settings' => 'social/settings/settings',
             ];
 

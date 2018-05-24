@@ -1,0 +1,14 @@
+{% extends "_layouts/cp" %}
+
+{% set title = loginProvider.name %}
+
+{% set crumbs = [
+    { label: "Settings"|t('social'), url: url('settings') },
+    { label: "Social"|t('social'), url: url('settings/social') },
+    { label: "Login Providers"|t('social'), url: url('settings/social/loginproviders') },
+] %}
+
+{% set tabs = {
+    oauth: { label: "OAuth"|t, url: url('settings/social/loginproviders/'~loginProvider.handle) },
+    userMapping: { label: "User Mapping"|t, url: url('settings/social/loginproviders/'~loginProvider.handle~'/usermapping') },
+} %}

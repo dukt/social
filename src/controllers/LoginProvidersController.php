@@ -48,7 +48,7 @@ class LoginProvidersController extends Controller
     }
 
     /**
-     * Edit login provider.
+     * Login provider’s OAuth settings.
      *
      * @param $handle
      *
@@ -56,19 +56,51 @@ class LoginProvidersController extends Controller
      * @throws HttpException
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionEdit($handle): Response
+    public function actionOauth($handle): Response
     {
         if (Craft::$app->getEdition() !== Craft::Pro) {
             return $this->renderTemplate('social/settings/_pro-requirement');
         }
 
         $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($handle, false, true);
+        $userMapping = Social::$plugin->getLoginProviders()->getUserMapping($handle);
 
         if ($loginProvider) {
-            return $this->renderTemplate('social/loginproviders/_edit', [
+            return $this->renderTemplate('social/loginproviders/_oauth', [
                 'handle' => $handle,
                 'infos' => $loginProvider->getInfos(),
-                'loginProvider' => $loginProvider
+                'loginProvider' => $loginProvider,
+                'userMapping' => $userMapping,
+            ]);
+        }
+
+        throw new HttpException(404);
+    }
+
+    /**
+     * Login provider’s user mapping.
+     *
+     * @param $handle
+     *
+     * @return Response
+     * @throws HttpException
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function actionUserMapping($handle): Response
+    {
+        if (Craft::$app->getEdition() !== Craft::Pro) {
+            return $this->renderTemplate('social/settings/_pro-requirement');
+        }
+
+        $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($handle, false, true);
+        $userMapping = Social::$plugin->getLoginProviders()->getUserMapping($handle);
+
+        if ($loginProvider) {
+            return $this->renderTemplate('social/loginproviders/_usermapping', [
+                'handle' => $handle,
+                'infos' => $loginProvider->getInfos(),
+                'loginProvider' => $loginProvider,
+                'userMapping' => $userMapping,
             ]);
         }
 

@@ -1,17 +1,9 @@
-{% extends "_layouts/cp" %}
+{% extends "social/loginproviders/_layout" %}
 {% import "_includes/forms" as forms %}
-
-{% set title = loginProvider.name %}
-
-{% set crumbs = [
-    { label: "Settings"|t('social'), url: url('settings') },
-    { label: "Social"|t('social'), url: url('settings/social') },
-    { label: "Login Providers"|t('social'), url: url('settings/social/loginproviders') },
-] %}
 
 {% set content %}
 
-    <h2 class="first">{{ '1. Create the OAuth application'|t('social') }}</h2>
+    <h2>{{ 'Step 1: Create the OAuth application'|t('social') }}</h2>
 
     <p>{{ 'Go to the {link}, create a new application or configure an existing one using the following settings:'|t('social', {link: '<a href="'~loginProvider.managerUrl~'">'~'{loginProvider} API Console'|t('social', { loginProvider: loginProvider.name })~'</a>'})|raw }}</p>
 
@@ -21,7 +13,7 @@
         value: loginProvider.getRedirectUri()
     }) }}
 
-    <h2>{{ '2. Configure the OAuth client'|t('social') }}</h2>
+    <h2>{{ 'Step 2: Configure the OAuth client'|t('social') }}</h2>
 
     <p>{{ '{loginProvider} will provide you with a client ID and secret for your application.'|t('social', { loginProvider: loginProvider.name }) }}</p>
     <p>{{ 'Copy the client ID & client secret from the {link}, and paste them in your <code>config/social.php</code> file.'|t('social', { link: '<a href="'~loginProvider.managerUrl~'">'~'{loginProvider} API Console'|t('social', { loginProvider: loginProvider.name })~'</a>'})|raw }}</p>
