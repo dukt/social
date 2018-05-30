@@ -43,10 +43,11 @@ class SocialVariable
     /**
      * Get the login URL
      *
-     * @param $providerHandle
-     * @param array  $params
+     * @param       $providerHandle
+     * @param array $params
      *
      * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function getLoginUrl($providerHandle, array $params = [])
     {
@@ -59,6 +60,7 @@ class SocialVariable
      * @param string $loginProviderHandle
      *
      * @return LoginAccount|null
+     * @throws \yii\base\InvalidConfigException
      */
     public function getLoginAccountByLoginProvider($loginProviderHandle)
     {
@@ -71,6 +73,7 @@ class SocialVariable
      * @param string $providerHandle
      *
      * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function getLoginAccountConnectUrl($providerHandle)
     {
@@ -83,6 +86,7 @@ class SocialVariable
      * @param string $providerHandle
      *
      * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function getLoginAccountDisconnectUrl($providerHandle)
     {
@@ -95,6 +99,7 @@ class SocialVariable
      * @param bool|true $enabledOnly
      *
      * @return array
+     * @throws \yii\base\InvalidConfigException
      */
     public function getLoginProviders($enabledOnly = true)
     {
