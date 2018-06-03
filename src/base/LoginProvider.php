@@ -85,6 +85,7 @@ abstract class LoginProvider implements LoginProviderInterface
      * OAuth connect.
      *
      * @return null
+     * @throws \yii\base\InvalidConfigException
      */
     public function oauthConnect()
     {
