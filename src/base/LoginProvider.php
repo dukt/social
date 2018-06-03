@@ -35,23 +35,39 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
-     * Get API Manager URL.
+     * Get the class name, stripping all the namespaces.
      *
-     * @return string|null
+     * For example, "dukt\social\loginproviders\Google" becomes "Google"
+     *
+     * @return string
      */
-    public function getManagerUrl()
+    public function getClass(): string
     {
-        return null;
+        $nsClass = get_class($this);
+
+        return substr($nsClass, strrpos($nsClass, "\\") + 1);
     }
 
     /**
-     * Get Scope Docs URL.
+     * Get the provider handle.
      *
-     * @return string|null
+     * @return string
      */
-    public function getScopeDocsUrl()
+    public function getHandle(): string
     {
-        return null;
+        $class = $this->getClass();
+
+        return strtolower($class);
+    }
+
+    /**
+     * Get the icon URL.
+     *
+     * @return mixed
+     */
+    public function getIconUrl()
+    {
+        return Craft::$app->assetManager->getPublishedUrl('@dukt/social/icons/'.$this->getHandle().'.svg', true);
     }
 
     /**
@@ -69,6 +85,26 @@ abstract class LoginProvider implements LoginProviderInterface
         }
 
         return false;
+    }
+
+    /**
+     * Get API Manager URL.
+     *
+     * @return string|null
+     */
+    public function getManagerUrl()
+    {
+        return null;
+    }
+
+    /**
+     * Get Scope Docs URL.
+     *
+     * @return string|null
+     */
+    public function getScopeDocsUrl()
+    {
+        return null;
     }
 
     /**
@@ -110,42 +146,6 @@ abstract class LoginProvider implements LoginProviderInterface
             case 2:
                 return $this->oauth2Callback();
         }
-    }
-
-    /**
-     * Get the provider handle.
-     *
-     * @return string
-     */
-    public function getHandle(): string
-    {
-        $class = $this->getClass();
-
-        return strtolower($class);
-    }
-
-    /**
-     * Get the class name, stripping all the namespaces.
-     *
-     * For example, "dukt\social\loginproviders\Google" becomes "Google"
-     *
-     * @return string
-     */
-    public function getClass(): string
-    {
-        $nsClass = get_class($this);
-
-        return substr($nsClass, strrpos($nsClass, "\\") + 1);
-    }
-
-    /**
-     * Get the icon URL.
-     *
-     * @return mixed
-     */
-    public function getIconUrl()
-    {
-        return Craft::$app->assetManager->getPublishedUrl('@dukt/social/icons/'.$this->getHandle().'.svg', true);
     }
 
     /**
