@@ -56,9 +56,14 @@ class Settings extends Model
     public $enableSocialRegistration = true;
 
     /**
-     * @var array Defines the OAuth client ID, secret, scope, authorization options and user mapping for login providers.
+     * @var array Defines the OAuth client ID, secret, scope, authorization options.
      */
-    public $loginProviders = [];
+    public $oauthProviders = [];
+
+    /**
+     * @var array Defines the  user mapping for login providers.
+     */
+    public $userMappings = [];
 
     /**
      * @var array Lock social registration to specific domains

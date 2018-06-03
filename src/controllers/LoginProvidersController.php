@@ -9,6 +9,7 @@ namespace dukt\social\controllers;
 
 use Craft;
 use craft\web\Controller;
+use dukt\social\Plugin;
 use dukt\social\web\assets\social\SocialAsset;
 use dukt\social\Plugin as Social;
 use yii\web\HttpException;
@@ -63,14 +64,12 @@ class LoginProvidersController extends Controller
         }
 
         $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($handle, false, true);
-        $userMapping = Social::$plugin->getLoginProviders()->getUserMapping($handle);
+        $oauthProviderConfig = Social::getInstance()->getOauthProviderConfig($handle);
 
         if ($loginProvider) {
             return $this->renderTemplate('social/loginproviders/_oauth', [
-                'handle' => $handle,
-                'infos' => $loginProvider->getInfos(),
                 'loginProvider' => $loginProvider,
-                'userMapping' => $userMapping,
+                'oauthProviderConfig' => $oauthProviderConfig,
             ]);
         }
 
@@ -97,8 +96,6 @@ class LoginProvidersController extends Controller
 
         if ($loginProvider) {
             return $this->renderTemplate('social/loginproviders/_usermapping', [
-                'handle' => $handle,
-                'infos' => $loginProvider->getInfos(),
                 'loginProvider' => $loginProvider,
                 'userMapping' => $userMapping,
             ]);
@@ -147,5 +144,39 @@ class LoginProvidersController extends Controller
         }
 
         return $this->redirectToPostedUrl();
+    }
+
+    public function actionSaveOauthProvider()
+    {
+        $this->requirePostRequest();
+        $request = Craft::$app->getRequest();
+
+        $handle = $request->getBodyParam('handle');
+        $settings = (array) Plugin::getInstance()->getSettings();
+        $oauthProviders = $settings['oauthProviders'];
+
+        $oauthProviders[$handle] = [
+            'clientId' => $request->getBodyParam('clientId'),
+            'clientSecret' => $request->getBodyParam('clientSecret'),
+        ];
+
+        $settings['oauthProviders'] = $oauthProviders;
+
+        $plugin = Craft::$app->getPlugins()->getPlugin('social');
+
+        if (Craft::$app->getPlugins()->savePluginSettings($plugin, $settings)) {
+            Craft::$app->getSession()->setNotice(Craft::t('analytics', 'Provider saved.'));
+
+            return $this->redirectToPostedUrl();
+        }
+
+        Craft::$app->getSession()->setError(Craft::t('analytics', 'Couldn’t save provider.'));
+
+        // Send the plugin back to the template
+        Craft::$app->getUrlManager()->setRouteParams([
+            'plugin' => $plugin
+        ]);
+
+        return null;
     }
 }

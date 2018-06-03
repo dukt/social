@@ -121,15 +121,13 @@ class LoginProviders extends Component
      */
     public function getUserMapping(string $providerHandle): array
     {
-        $loginProviderConfig = Plugin::$plugin->getLoginProviderConfig($providerHandle);
-
         $userMapping = [
             'email' => '{{ email }}',
             'username' => '{{ email }}',
         ];
 
-        if (isset($loginProviderConfig['userMapping'])) {
-            $userMapping = array_merge($userMapping, $loginProviderConfig['userMapping']);
+        if(isset(Plugin::getInstance()->getSettings()->userMappings[$providerHandle])) {
+            $userMapping = array_merge($userMapping, Plugin::getInstance()->getSettings()->userMappings[$providerHandle]);
         }
 
         return $userMapping;

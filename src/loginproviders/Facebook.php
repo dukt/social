@@ -9,6 +9,7 @@ namespace dukt\social\loginproviders;
 
 use dukt\social\base\LoginProvider;
 use dukt\social\helpers\SocialHelper;
+use dukt\social\Plugin;
 use GuzzleHttp\Client;
 use dukt\social\models\Token;
 
@@ -111,19 +112,27 @@ class Facebook extends LoginProvider
      * @inheritdoc
      *
      * @return \League\OAuth2\Client\Provider\Facebook
+     * @throws \yii\base\InvalidConfigException
      */
     protected function getOauthProvider(): \League\OAuth2\Client\Provider\Facebook
     {
-        $providerInfos = $this->getInfos();
-
-        $config = [
-            'clientId' => $providerInfos['clientId'],
-            'clientSecret' => $providerInfos['clientSecret'],
-            'graphApiVersion' => $providerInfos['graphApiVersion'] ?? 'v2.12',
-            'redirectUri' => $this->getRedirectUri(),
-        ];
+        $config = $this->getOauthProviderConfig();
 
         return new \League\OAuth2\Client\Provider\Facebook($config);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getOauthProviderConfig()
+    {
+        $config = parent::getOauthProviderConfig();
+
+        if(empty($config['graphApiVersion'])) {
+            $config['graphApiVersion'] = 'v2.12';
+        }
+
+        return $config;
     }
 
     /**

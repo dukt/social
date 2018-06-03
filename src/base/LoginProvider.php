@@ -11,7 +11,6 @@ use Craft;
 use craft\web\Response;
 use dukt\social\helpers\SocialHelper;
 use dukt\social\models\Token;
-use dukt\social\Plugin as Social;
 use dukt\social\Plugin;
 
 /**
@@ -33,21 +32,6 @@ abstract class LoginProvider implements LoginProviderInterface
     public function __toString()
     {
         return $this->getName();
-    }
-
-    /**
-     * Get provider infos.
-     *
-     * @return mixed
-     */
-    public function getInfos()
-    {
-        $handle = $this->getHandle();
-        $loginProvidersConfig = Social::$plugin->getLoginProviderConfig($handle);
-
-        if ($loginProvidersConfig) {
-            return $loginProvidersConfig;
-        }
     }
 
     /**
@@ -74,12 +58,13 @@ abstract class LoginProvider implements LoginProviderInterface
      * Checks if the login provider is configured.
      *
      * @return bool
+     * @throws \yii\base\InvalidConfigException
      */
     public function isConfigured(): bool
     {
-        $infos = $this->getInfos();
+        $config = $this->getOauthProviderConfig();
 
-        if (!empty($infos['clientId'])) {
+        if (!empty($config['clientId'])) {
             return true;
         }
 
@@ -186,11 +171,12 @@ abstract class LoginProvider implements LoginProviderInterface
      * Returns the `scope` from login provider class by default, or the `scope` overridden by the config.
      *
      * @return array|null
+     * @throws \yii\base\InvalidConfigException
      */
     public function getScope()
     {
         $providerHandle = $this->getHandle();
-        $config = Plugin::$plugin->getLoginProviderConfig($providerHandle);
+        $config = Plugin::$plugin->getOauthProviderConfig($providerHandle);
 
         if (isset($config['scope'])) {
             return $config['scope'];
@@ -203,11 +189,12 @@ abstract class LoginProvider implements LoginProviderInterface
      * Returns the `authorizationOptions` from login provider class by default, or `authorizationOptions` overridden by the config.
      *
      * @return array|null
+     * @throws \yii\base\InvalidConfigException
      */
     public function getAuthorizationOptions()
     {
         $providerHandle = $this->getHandle();
-        $config = Plugin::$plugin->getLoginProviderConfig($providerHandle);
+        $config = Plugin::$plugin->getOauthProviderConfig($providerHandle);
 
         if (isset($config['authorizationOptions'])) {
             return $config['authorizationOptions'];
@@ -242,6 +229,15 @@ abstract class LoginProvider implements LoginProviderInterface
     public function getRedirectUri(): string
     {
         return SocialHelper::siteActionUrl('social/login-accounts/callback');
+    }
+
+    /**
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getOauthProviderConfig()
+    {
+        return Plugin::getInstance()->getOauthProviderConfig($this->getHandle());
     }
 
     // Protected Methods

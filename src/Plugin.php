@@ -148,19 +148,28 @@ class Plugin extends \craft\base\Plugin
     }
 
     /**
-     * Returns login provider config.
+     * Get OAuth provider config.
      *
      * @param $handle
      *
-     * @return mixed
+     * @return array
+     * @throws \yii\base\InvalidConfigException
      */
-    public function getLoginProviderConfig($handle)
+    public function getOauthProviderConfig($handle)
     {
-        $config = Craft::$app->getConfig()->getConfigFromFile('social');
-
-        if (isset($config['loginProviders'][$handle])) {
-            return $config['loginProviders'][$handle];
+        if(!isset($this->getSettings()->oauthProviders[$handle])) {
+            return [];
         }
+
+        $config = $this->getSettings()->oauthProviders[$handle];
+
+        $provider = $this->getLoginProviders()->getLoginProvider($handle);
+
+        if ($provider) {
+            $config['redirectUri'] = $provider->getRedirectUri();
+        }
+
+        return $config;
     }
 
     /**

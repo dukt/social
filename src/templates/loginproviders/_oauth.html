@@ -2,38 +2,45 @@
 {% import "_includes/forms" as forms %}
 
 {% set content %}
+    <form method="post">
+        {{ csrfInput() }}
+        <input type="hidden" name="action" value="social/login-providers/save-oauth-provider">
+        <input type="hidden" name="redirect" value="{{ 'settings/social/loginproviders'|hash }}">
+        <input type="hidden" name="handle" value="{{ loginProvider.handle }}">
 
-    <h2>{{ 'Step 1: Create the OAuth application'|t('social') }}</h2>
+        <h2>{{ 'Step 1: Create the OAuth application'|t('social') }}</h2>
 
-    <p>{{ 'Go to the {link}, create a new application or configure an existing one using the following settings:'|t('social', {link: '<a href="'~loginProvider.managerUrl~'">'~'{loginProvider} API Console'|t('social', { loginProvider: loginProvider.name })~'</a>'})|raw }}</p>
+        <p>{{ 'Go to the {link}, create a new application or configure an existing one using the following settings:'|t('social', {link: '<a href="'~loginProvider.managerUrl~'">'~'{loginProvider} API Console'|t('social', { loginProvider: loginProvider.name })~'</a>'})|raw }}</p>
 
-    {{ forms.textField({
-        readonly: true,
-        label: "Redirect URI"|t('social'),
-        value: loginProvider.getRedirectUri()
-    }) }}
+        {{ forms.textField({
+            readonly: true,
+            label: "Redirect URI"|t('social'),
+            value: loginProvider.getRedirectUri()
+        }) }}
 
-    <h2>{{ 'Step 2: Configure the OAuth client'|t('social') }}</h2>
+        <h2>{{ 'Step 2: Configure the OAuth client'|t('social') }}</h2>
 
-    <p>{{ '{loginProvider} will provide you with a client ID and secret for your application.'|t('social', { loginProvider: loginProvider.name }) }}</p>
-    <p>{{ 'Copy the client ID & client secret from the {link}, and paste them in your <code>config/social.php</code> file.'|t('social', { link: '<a href="'~loginProvider.managerUrl~'">'~'{loginProvider} API Console'|t('social', { loginProvider: loginProvider.name })~'</a>'})|raw }}</p>
+        <p>{{ '{loginProvider} will provide you with a client ID and secret for your application.'|t('social', { loginProvider: loginProvider.name }) }}</p>
+        <p>{{ 'Copy the client ID & client secret from the {link}, and paste them in your <code>config/social.php</code> file.'|t('social', { link: '<a href="'~loginProvider.managerUrl~'">'~'{loginProvider} API Console'|t('social', { loginProvider: loginProvider.name })~'</a>'})|raw }}</p>
 
-    {{ forms.textField({
-        readonly: true,
-        instructions: "Set the `loginProviders.{loginProviderHandle}.clientId` config in your `config/social.php` file."|t('social', {loginProviderHandle: loginProvider.handle}),
-        placeholder: "{loginProvider} Client ID"|t('social', { loginProvider: loginProvider.name }),
-        label: "Client ID"|t('social'),
-        name: 'settings[oauthClientId]',
-        value: loginProvider.infos.clientId ?? '',
-    }) }}
+        {{ forms.textField({
+            instructions: "Set the `loginProviders.{loginProviderHandle}.clientId` config in your `config/social.php` file."|t('social', {loginProviderHandle: loginProvider.handle}),
+            placeholder: "{loginProvider} Client ID"|t('social', { loginProvider: loginProvider.name }),
+            label: "Client ID"|t('social'),
+            name: 'clientId',
+            value: oauthProviderConfig.clientId ?? '',
+        }) }}
 
-    {{ forms.textField({
-        readonly: true,
-        instructions: "Set the `loginProviders.{loginProviderHandle}.clientSecret` config in your `config/social.php` file."|t('social', {loginProviderHandle: loginProvider.handle}),
-        placeholder: "{loginProvider} Client Secret"|t('social', { loginProvider: loginProvider.name }),
-        label: "Client Secret"|t('social'),
-        name: 'settings[oauthClientSecret]',
-        value: loginProvider.infos.clientSecret ?? '',
-    }) }}
+        {{ forms.textField({
+            instructions: "Set the `loginProviders.{loginProviderHandle}.clientSecret` config in your `config/social.php` file."|t('social', {loginProviderHandle: loginProvider.handle}),
+            placeholder: "{loginProvider} Client Secret"|t('social', { loginProvider: loginProvider.name }),
+            label: "Client Secret"|t('social'),
+            name: 'clientSecret',
+            value: oauthProviderConfig.clientSecret ?? '',
+        }) }}
 
+        <div class="buttons">
+            <input type="submit" class="btn submit" value="{{ 'Save'|t('social') }}" />
+        </div>
+    </form>
 {% endset %}

@@ -73,19 +73,20 @@ class Twitter extends LoginProvider
      * Returns the login provider’s OAuth provider.
      *
      * @return \League\OAuth1\Client\Server\Twitter
+     * @throws \yii\base\InvalidConfigException
      */
     protected function getOauthProvider(): \League\OAuth1\Client\Server\Twitter
     {
-        $providerInfos = $this->getInfos();
+        $config = $this->getOauthProviderConfig();
 
-        $config = [
-            'identifier' => $providerInfos['clientId'] ?? '',
-            'secret' => $providerInfos['clientSecret'] ?? '',
-        ];
+        $config['identifier'] = $providerInfos['clientId'] ?? '';
+        unset($config['clientId']);
 
-        if (!isset($config['callback_uri'])) {
-            $config['callback_uri'] = $this->getRedirectUri();
-        }
+        $config['secret'] = $providerInfos['clientSecret'] ?? '';
+        unset($config['clientSecret']);
+
+        $config['callback_uri'] = $providerInfos['redirectUri'] ?? '';
+        unset($config['redirectUri']);
 
         return new \League\OAuth1\Client\Server\Twitter($config);
     }
