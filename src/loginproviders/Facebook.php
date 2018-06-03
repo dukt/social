@@ -9,7 +9,6 @@ namespace dukt\social\loginproviders;
 
 use dukt\social\base\LoginProvider;
 use dukt\social\helpers\SocialHelper;
-use dukt\social\Plugin;
 use GuzzleHttp\Client;
 use dukt\social\models\Token;
 
