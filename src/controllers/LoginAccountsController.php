@@ -486,7 +486,6 @@ class LoginAccountsController extends Controller
         }
 
         $newUser = new User();
-        $userMapping = Plugin::getInstance()->getLoginProviders()->getUserMapping($providerHandle);
 
         // Fill user
         $this->fillUser($providerHandle, $newUser, $profile);
