@@ -307,10 +307,6 @@ class LoginAccounts extends Component
 
         rename($tempPath.$filename, $tempPath.$filename.'.'.$extension);
 
-        if ($user->photoId) {
-            Craft::$app->users->deleteUserPhoto($user);
-        }
-
         $image = Craft::$app->images->loadImage($tempPath.$filename.'.'.$extension);
         $imageWidth = $image->getWidth();
         $imageHeight = $image->getHeight();
