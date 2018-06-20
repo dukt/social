@@ -166,7 +166,7 @@ abstract class LoginProvider implements LoginProviderInterface
         $loginProviderConfig = $this->getLoginProviderConfig();
 
         if (isset($loginProviderConfig['oauthScope'])) {
-            $oauthScope = $this->mergeArrayValues($oauthScope, $oauthProviderConfig['scope']);
+            $oauthScope = $this->mergeArrayValues($oauthScope, $loginProviderConfig['oauthScope']);
         }
 
         return $oauthScope;
