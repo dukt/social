@@ -69,16 +69,13 @@ class Google extends LoginProvider
         ];
     }
 
-    // Protected Methods
-    // =========================================================================
-
     /**
      * Returns the login provider’s OAuth provider.
      *
      * @return \Dukt\OAuth2\Client\Provider\Google
      * @throws \yii\base\InvalidConfigException
      */
-    protected function getOauthProvider(): \Dukt\OAuth2\Client\Provider\Google
+    public function getOauthProvider(): \Dukt\OAuth2\Client\Provider\Google
     {
         $config = $this->getOauthProviderConfig();
 

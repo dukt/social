@@ -113,6 +113,19 @@ class Facebook extends LoginProvider
         return $config;
     }
 
+    /**
+     * @inheritdoc
+     *
+     * @return \League\OAuth2\Client\Provider\Facebook
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getOauthProvider(): \League\OAuth2\Client\Provider\Facebook
+    {
+        $config = $this->getOauthProviderConfig();
+
+        return new \League\OAuth2\Client\Provider\Facebook($config['options']);
+    }
+
     // Protected Methods
     // =========================================================================
 
@@ -156,19 +169,6 @@ class Facebook extends LoginProvider
             'username' => '{{ profile.getEmail() }}',
             'photo' => '{{ profile.getPictureUrl() }}',
         ];
-    }
-
-    /**
-     * @inheritdoc
-     *
-     * @return \League\OAuth2\Client\Provider\Facebook
-     * @throws \yii\base\InvalidConfigException
-     */
-    protected function getOauthProvider(): \League\OAuth2\Client\Provider\Facebook
-    {
-        $config = $this->getOauthProviderConfig();
-
-        return new \League\OAuth2\Client\Provider\Facebook($config['options']);
     }
 
     // Private Methods

@@ -26,4 +26,11 @@ interface LoginProviderInterface
      * @return string
      */
     public function getName(): string;
+
+    /**
+     * Returns the OAuth provider instance.
+     *
+     * @return mixed
+     */
+    public function getOauthProvider();
 }
