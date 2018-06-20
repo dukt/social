@@ -1,13 +1,13 @@
 {% extends "social/loginproviders/_layout" %}
 {% import "_includes/forms" as forms %}
 
-{% set selectedTab = 'userMapping' %}
+{% set selectedTab = 'userFieldMapping' %}
 
 {% set content %}
 
-    <h2>{{ 'User Mapping'|t('social') }}</h2>
+    <h2>{{ 'User Field Mapping'|t('social') }}</h2>
 
-    {% if loginProvider.getUserMapping()|length %}
+    {% if loginProvider.getUserFieldMapping()|length %}
         <table class="data fullwidth">
             <thead>
             <tr>
@@ -16,7 +16,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for userFieldHandle, template in loginProvider.getUserMapping() %}
+            {% for userFieldHandle, template in loginProvider.getUserFieldMapping() %}
                 <tr>
                     <td><code>{{ userFieldHandle }}</code></td>
                     <td><code>{{ template }}</code></td>

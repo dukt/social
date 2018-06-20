@@ -161,7 +161,7 @@ class Facebook extends LoginProvider
     /**
      * @inheritdoc
      */
-    protected function getDefaultUserMapping(): array
+    protected function getDefaultUserFieldMapping(): array
     {
         return [
             'id' => '{{ profile.getId() }}',

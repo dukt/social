@@ -77,7 +77,7 @@ class LoginProvidersController extends Controller
     }
 
     /**
-     * Login provider’s user mapping.
+     * Login provider’s user field mapping.
      *
      * @param $handle
      *
@@ -85,7 +85,7 @@ class LoginProvidersController extends Controller
      * @throws HttpException
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionUserMapping($handle): Response
+    public function actionUserFieldMapping($handle): Response
     {
         if (Craft::$app->getEdition() !== Craft::Pro) {
             return $this->renderTemplate('social/settings/_pro-requirement');
@@ -94,7 +94,7 @@ class LoginProvidersController extends Controller
         $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($handle, false, true);
 
         if ($loginProvider) {
-            return $this->renderTemplate('social/loginproviders/_usermapping', [
+            return $this->renderTemplate('social/loginproviders/_user-field-mapping', [
                 'loginProvider' => $loginProvider,
             ]);
         }

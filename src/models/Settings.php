@@ -66,9 +66,9 @@ class Settings extends Model
     public $oauthProviders = [];
 
     /**
-     * @var array Defines the  user mapping for login providers.
+     * @var array Defines the  user field mapping for login providers.
      */
-    public $userMappings = [];
+    public $userFieldMappings = [];
 
     /**
      * @var array Lock social registration to specific domains

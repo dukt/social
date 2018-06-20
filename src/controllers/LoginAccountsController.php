@@ -343,8 +343,8 @@ class LoginAccountsController extends Controller
 
         $socialLoginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($token->providerHandle);
         $profile = $socialLoginProvider->getProfile($token);
-        $userMapping = $socialLoginProvider->getUserMapping();
-        $socialUid = Craft::$app->getView()->renderString($userMapping['id'], ['profile' => $profile]);
+        $userFieldMapping = $socialLoginProvider->getUserFieldMapping();
+        $socialUid = Craft::$app->getView()->renderString($userFieldMapping['id'], ['profile' => $profile]);
         $account = Social::$plugin->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
 
 
@@ -395,8 +395,8 @@ class LoginAccountsController extends Controller
     {
         $socialLoginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($token->providerHandle);
         $profile = $socialLoginProvider->getProfile($token);
-        $userMapping = $socialLoginProvider->getUserMapping();
-        $socialUid = Craft::$app->getView()->renderString($userMapping['id'], ['profile' => $profile]);
+        $userFieldMapping = $socialLoginProvider->getUserFieldMapping();
+        $socialUid = Craft::$app->getView()->renderString($userFieldMapping['id'], ['profile' => $profile]);
         $account = Social::$plugin->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
 
 
@@ -454,8 +454,8 @@ class LoginAccountsController extends Controller
     private function registerUser(string $providerHandle, $profile): User
     {
         $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($providerHandle);
-        $userMapping = $loginProvider->getUserMapping();
-        $email = Craft::$app->getView()->renderString($userMapping['email'], ['profile' => $profile]);
+        $userFieldMapping = $loginProvider->getUserFieldMapping();
+        $email = Craft::$app->getView()->renderString($userFieldMapping['email'], ['profile' => $profile]);
 
         if (empty($email)) {
             throw new RegistrationException('Email address not provided.');
@@ -530,11 +530,11 @@ class LoginAccountsController extends Controller
         $socialPlugin = Craft::$app->getPlugins()->getPlugin('social');
         $settings = $socialPlugin->getSettings();
         $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($providerHandle);
-        $userMapping = $loginProvider->getUserMapping();
+        $userFieldMapping = $loginProvider->getUserFieldMapping();
 
         $userModelAttributes = ['email', 'username', 'firstName', 'lastName', 'preferredLocale', 'weekStartDay'];
 
-        foreach ($userMapping as $attribute => $template) {
+        foreach ($userFieldMapping as $attribute => $template) {
             // Only fill other fields than `email` and `username` when `autoFillProfile` is true
             if(!$settings['autoFillProfile'] && ($attribute !== 'email' || $attribute !== 'username')) {
                 continue;
@@ -604,13 +604,13 @@ class LoginAccountsController extends Controller
     {
         $photoUrl = false;
         $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($providerHandle);
-        $userMapping = $loginProvider->getUserMapping();
+        $userFieldMapping = $loginProvider->getUserFieldMapping();
 
-        if (isset($userMapping['photo'])) {
+        if (isset($userFieldMapping['photo'])) {
             try {
-                $photoUrl = html_entity_decode(Craft::$app->getView()->renderString($userMapping['photo'], ['profile' => $profile]));
+                $photoUrl = html_entity_decode(Craft::$app->getView()->renderString($userFieldMapping['photo'], ['profile' => $profile]));
             } catch (\Exception $e) {
-                Craft::warning('Could not map:'.print_r(['photo', $userMapping['photo'], $profile, $e->getMessage()], true), __METHOD__);
+                Craft::warning('Could not map:'.print_r(['photo', $userFieldMapping['photo'], $profile, $e->getMessage()], true), __METHOD__);
             }
         }
 

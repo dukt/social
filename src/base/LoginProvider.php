@@ -236,20 +236,20 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
-     * Get user mapping.
+     * Get user field mapping.
      *
      * @return array
      */
-    public function getUserMapping(): array
+    public function getUserFieldMapping(): array
     {
-        $userMapping = $this->getDefaultUserMapping();
+        $userFieldMapping = $this->getDefaultUserFieldMapping();
         $loginProviderConfig = Plugin::getInstance()->getLoginProviderConfig($this->getHandle());
 
-        if(isset($loginProviderConfig['userMapping'])) {
-            $userMapping = array_merge($userMapping, $loginProviderConfig['userMapping']);
+        if(isset($loginProviderConfig['userFieldMapping'])) {
+            $userFieldMapping = array_merge($userFieldMapping, $loginProviderConfig['userFieldMapping']);
         }
 
-        return $userMapping;
+        return $userFieldMapping;
     }
 
     /**
@@ -303,11 +303,11 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
-     * Get default user mapping.
+     * Get default user field mapping.
      *
      * @return array
      */
-    protected function getDefaultUserMapping(): array
+    protected function getDefaultUserFieldMapping(): array
     {
         return [];
     }

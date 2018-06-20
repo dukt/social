@@ -59,7 +59,7 @@ class Google extends LoginProvider
     /**
      * @inheritdoc
      */
-    public function getDefaultUserMapping(): array
+    public function getDefaultUserFieldMapping(): array
     {
         return [
             'id' => '{{ profile.getId() }}',

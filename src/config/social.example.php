@@ -19,13 +19,13 @@ return [
         'google' => [
             'clientId' => 'OAUTH_CLIENT_ID',
             'clientSecret' => 'OAUTH_CLIENT_SECRET',
-            'userMapping' => [],
+            'userFieldMapping' => [],
         ],
         'facebook' => [
             'clientId' => 'OAUTH_CLIENT_ID',
             'clientSecret' => 'OAUTH_CLIENT_SECRET',
             // 'graphApiVersion' => 'v2.12',
-            'userMapping' => [
+            'userFieldMapping' => [
                 'firstName' => '{{ firstName }}',
                 'lastName' => '{{ lastName }}',
                 'location' => '{{ locationName }}',
@@ -36,7 +36,7 @@ return [
         'twitter' => [
             'clientId' => 'OAUTH_CLIENT_ID',
             'clientSecret' => 'OAUTH_CLIENT_SECRET',
-            'userMapping' => [
+            'userFieldMapping' => [
                 'location' => '{{ location }}',
                 'profileUrl' => '{{ nickname }}',
             ],
