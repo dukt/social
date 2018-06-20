@@ -8,9 +8,9 @@ Changelog
 - Additional profile fields can now be requested when registering users with Facebook
 - Added a `oauthProviders` config.
 - Added `dukt\social\base\LoginProvider::getProfileFields()`.
-- Added `dukt\social\base\LoginProvider::getUserMapping()`.
+- Added `dukt\social\base\LoginProvider::getUserFieldMapping()`.
 - Added `dukt\social\base\LoginProvider::getDefaultProfileFields()`.
-- Added `dukt\social\base\LoginProvider::getDefaultUserMapping()`.
+- Added `dukt\social\base\LoginProvider::getDefaultUserFieldMapping()`.
 - Added `dukt\social\base\LoginProvider::getLoginProviderConfig()`.
 - Added `dukt\social\Plugin::getLoginProviderConfig()`.
 - Added `dukt\social\base\LoginProviderInterface::getOauthProvider()`.
