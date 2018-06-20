@@ -13,6 +13,7 @@ Changelog
 - Added `dukt\social\base\LoginProvider::getDefaultUserMapping()`.
 - Added `dukt\social\base\LoginProvider::getLoginProviderConfig()`.
 - Added `dukt\social\Plugin::getLoginProviderConfig()`.
+- Added `dukt\social\base\LoginProviderInterface::getOauthProvider()`.
 
 ### Changed
 - Login providers now return a specific OAuth 1 or 2 profile object instead of an array of data.
