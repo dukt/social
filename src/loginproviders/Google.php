@@ -32,7 +32,7 @@ class Google extends LoginProvider
     /**
      * @inheritdoc
      */
-    public function getDefaultOauthScope()
+    public function getDefaultOauthScope(): array
     {
         return [
             'https://www.googleapis.com/auth/userinfo.profile',
