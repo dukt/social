@@ -92,12 +92,10 @@ class LoginProvidersController extends Controller
         }
 
         $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($handle, false, true);
-        $userMapping = Social::$plugin->getLoginProviders()->getUserMapping($handle);
 
         if ($loginProvider) {
             return $this->renderTemplate('social/loginproviders/_usermapping', [
                 'loginProvider' => $loginProvider,
-                'userMapping' => $userMapping,
             ]);
         }
 

@@ -15,7 +15,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for userFieldHandle, template in userMapping %}
+        {% for userFieldHandle, template in loginProvider.getUserMapping() %}
             <tr>
                 <td><code>{{ userFieldHandle }}</code></td>
                 <td><code>{{ template }}</code></td>

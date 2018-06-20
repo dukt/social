@@ -80,7 +80,7 @@ abstract class LoginProvider implements LoginProviderInterface
     {
         $config = $this->getOauthProviderConfig();
 
-        if (!empty($config['clientId'])) {
+        if (!empty($config['options']['clientId'])) {
             return true;
         }
 
@@ -149,59 +149,45 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
-     * Get the default scope.
-     *
-     * @return array|null
-     */
-    public function getDefaultScope()
-    {
-        return null;
-    }
-
-    /**
-     * Get the default authorization options.
-     *
-     * @return array|null
-     */
-    public function getDefaultAuthorizationOptions()
-    {
-        return null;
-    }
-
-    /**
      * Returns the `scope` from login provider class by default, or the `scope` overridden by the config.
      *
      * @return array|null
-     * @throws \yii\base\InvalidConfigException
      */
-    public function getScope()
+    public function getOauthScope()
     {
-        $providerHandle = $this->getHandle();
-        $config = Plugin::$plugin->getOauthProviderConfig($providerHandle);
+        $oauthScope = $this->getDefaultOauthScope();
 
-        if (isset($config['scope'])) {
-            return $config['scope'];
+        $oauthProviderConfig = $this->getLoginProviderConfig();
+
+        if (isset($oauthProviderConfig['scope'])) {
+            $oauthScope = $this->mergeArrayValues($oauthScope, $oauthProviderConfig['scope']);
         }
 
-        return $this->getDefaultScope();
+        $loginProviderConfig = $this->getLoginProviderConfig();
+
+        if (isset($loginProviderConfig['oauthScope'])) {
+            $oauthScope = $this->mergeArrayValues($oauthScope, $oauthProviderConfig['scope']);
+        }
+
+        return $oauthScope;
     }
 
     /**
-     * Returns the `authorizationOptions` from login provider class by default, or `authorizationOptions` overridden by the config.
+     * Returns the OAuth authorization options for this provider.
      *
      * @return array|null
      * @throws \yii\base\InvalidConfigException
      */
-    public function getAuthorizationOptions()
+    public function getOauthAuthorizationOptions()
     {
-        $providerHandle = $this->getHandle();
-        $config = Plugin::$plugin->getOauthProviderConfig($providerHandle);
+        $authorizationOptions = $this->getDefaultOauthAuthorizationOptions();
+        $config = $this->getOauthProviderConfig();
 
         if (isset($config['authorizationOptions'])) {
-            return $config['authorizationOptions'];
+            $authorizationOptions = array_merge($authorizationOptions, $config['authorizationOptions']);
         }
 
-        return $this->getDefaultAuthorizationOptions();
+        return $authorizationOptions;
     }
 
     /**
@@ -233,27 +219,118 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
+     * Get profile fields.
+     *
      * @return array
-     * @throws \yii\base\InvalidConfigException
      */
-    public function getOauthProviderConfig()
+    public function getProfileFields(): array
     {
-        return Plugin::getInstance()->getOauthProviderConfig($this->getHandle());
+        $profileFields = $this->getDefaultProfileFields();
+        $loginProviderConfig = Plugin::getInstance()->getLoginProviderConfig($this->getHandle());
+
+        if(isset($loginProviderConfig['profileFields'])) {
+            $profileFields = $this->mergeArrayValues($profileFields, $loginProviderConfig['profileFields']);
+        }
+
+        return $profileFields;
+    }
+
+    /**
+     * Get user mapping.
+     *
+     * @return array
+     */
+    public function getUserMapping(): array
+    {
+        $userMapping = $this->getDefaultUserMapping();
+        $loginProviderConfig = Plugin::getInstance()->getLoginProviderConfig($this->getHandle());
+
+        if(isset($loginProviderConfig['userMapping'])) {
+            $userMapping = array_merge($userMapping, $loginProviderConfig['userMapping']);
+        }
+
+        return $userMapping;
+    }
+
+    /**
+     * Returns a profile from an OAuth token.
+     *
+     * @param Token $token
+     *
+     * @return array|null
+     */
+    public function getProfile(Token $token)
+    {
+        $profile = $this->getOauthProvider()->getResourceOwner($token->token);
+
+        if(!$profile) {
+            return null;
+        }
+
+        return $profile;
     }
 
     // Protected Methods
     // =========================================================================
 
     /**
-     * Returns the remote profile.
+     * Get the default authorization options.
      *
-     * @param $token
-     *
-     * @return array|null
+     * @return array
      */
-    protected function getRemoteProfile(Token $token)
+    protected function getDefaultOauthAuthorizationOptions(): array
     {
-        return $this->getOauthProvider()->getResourceOwner($token->token);
+        return [];
+    }
+
+    /**
+     * Get the default scope.
+     *
+     * @return array
+     */
+    protected function getDefaultOauthScope(): array
+    {
+        return [];
+    }
+
+    /**
+     * Get default profile fields.
+     * @return array
+     */
+    protected function getDefaultProfileFields(): array
+    {
+        return [];
+    }
+
+    /**
+     * Get default user mapping.
+     *
+     * @return array
+     */
+    protected function getDefaultUserMapping(): array
+    {
+        return [];
+    }
+
+    /**
+     * Get OAuth provider config.
+     *
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     */
+    protected function getOauthProviderConfig(): array
+    {
+        return Plugin::getInstance()->getOauthProviderConfig($this->getHandle());
+    }
+
+    /**
+     * Get login provider config.
+     *
+     * @return array
+     */
+    protected function getLoginProviderConfig(): array
+    {
+        return Plugin::getInstance()->getLoginProviderConfig($this->getHandle());
     }
 
     // Private Methods
@@ -293,8 +370,8 @@ abstract class LoginProvider implements LoginProviderInterface
 
         Craft::$app->getSession()->set('social.oauthState', $provider->getState());
 
-        $scope = $this->getScope();
-        $options = $this->getAuthorizationOptions();
+        $scope = $this->getOauthScope();
+        $options = $this->getOauthAuthorizationOptions();
 
         if (!is_array($options)) {
             $options = [];
@@ -351,5 +428,32 @@ abstract class LoginProvider implements LoginProviderInterface
             'success' => true,
             'token' => $token
         ];
+    }
+
+    /**
+     * Merge scope.
+     *
+     * @param array $array
+     * @param array $array2
+     *
+     * @return array
+     */
+    private function mergeArrayValues(array $array, array $array2): array
+    {
+        foreach($array2 as $value2) {
+            $addValue = true;
+
+            foreach($array as $value) {
+                if($value === $value2) {
+                    $addValue = false;
+                }
+            }
+
+            if($addValue) {
+                $array[] = $value2;
+            }
+        }
+
+        return $array;
     }
 }

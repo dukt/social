@@ -173,9 +173,10 @@ class LoginAccount extends Element
     {
         $socialLoginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($token->providerHandle);
 
-        $attributes = $socialLoginProvider->getProfile($token);
+        $profile = $socialLoginProvider->getProfile($token);
 
-        $socialUid = (string)$attributes['id'];
+        $userMapping = $socialLoginProvider->getUserMapping();
+        $socialUid = Craft::$app->getView()->renderString($userMapping['id'], ['profile' => $profile]);
 
         return $this->socialUid === $socialUid;
     }

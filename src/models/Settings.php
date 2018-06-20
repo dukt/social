@@ -56,6 +56,11 @@ class Settings extends Model
     public $enableSocialRegistration = true;
 
     /**
+     * @var array Defines the login providers.
+     */
+    public $loginProviders = [];
+
+    /**
      * @var array Defines the OAuth client ID, secret, scope, authorization options.
      */
     public $oauthProviders = [];

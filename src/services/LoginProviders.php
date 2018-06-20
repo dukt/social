@@ -112,27 +112,6 @@ class LoginProviders extends Component
         return $this->_getLoginProviders($enabledOnly);
     }
 
-    /**
-     * Get user mapping for a given provider.
-     *
-     * @param string $providerHandle
-     *
-     * @return array
-     */
-    public function getUserMapping(string $providerHandle): array
-    {
-        $userMapping = [
-            'email' => '{{ email }}',
-            'username' => '{{ email }}',
-        ];
-
-        if(isset(Plugin::getInstance()->getSettings()->userMappings[$providerHandle])) {
-            $userMapping = array_merge($userMapping, Plugin::getInstance()->getSettings()->userMappings[$providerHandle]);
-        }
-
-        return $userMapping;
-    }
-
     // Private Methods
     // =========================================================================
 

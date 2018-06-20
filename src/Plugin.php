@@ -162,11 +162,10 @@ class Plugin extends \craft\base\Plugin
         }
 
         $config = $this->getSettings()->oauthProviders[$handle];
-
         $provider = $this->getLoginProviders()->getLoginProvider($handle);
 
-        if ($provider) {
-            $config['redirectUri'] = $provider->getRedirectUri();
+        if ($provider && !isset($config['options']['redirectUri'])) {
+            $config['options']['redirectUri'] = $provider->getRedirectUri();
         }
 
         return $config;

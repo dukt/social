@@ -11,6 +11,7 @@ use dukt\social\base\LoginProvider;
 use dukt\social\helpers\SocialHelper;
 use GuzzleHttp\Client;
 use dukt\social\models\Token;
+use League\OAuth2\Client\Provider\FacebookUser;
 
 /**
  * Facebook represents the Facebook login provider.
@@ -34,17 +35,6 @@ class Facebook extends LoginProvider
     /**
      * @inheritdoc
      */
-    public function getDefaultScope()
-    {
-        return [
-            'email',
-            'user_location',
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function getManagerUrl()
     {
         return 'https://developers.facebook.com/apps';
@@ -63,24 +53,29 @@ class Facebook extends LoginProvider
      */
     public function getProfile(Token $token)
     {
-        $remoteProfile = $this->getRemoteProfile($token);
+        $client = $this->getClient($token);
 
-        return [
-            'id' => $remoteProfile['id'] ?? null,
-            'email' => $remoteProfile['email'] ?? null,
-            'firstName' => $remoteProfile['first_name'] ?? null,
-            'lastName' => $remoteProfile['last_name'] ?? null,
-            'photoUrl' => $remoteProfile['picture']['data']['url'] ?? null,
-            'name' => $remoteProfile['name'] ?? null,
-            'hometown' => $remoteProfile['hometown'] ?? null,
-            'isDefaultPicture' => $remoteProfile['picture']['data']['is_silhouette'] ?? null,
-            'coverPhotoUrl' => $remoteProfile['cover']['source'] ?? null,
-            'gender' => $remoteProfile['gender'] ?? null,
-            'locale' => $remoteProfile['locale'] ?? null,
-            'link' => $remoteProfile['link'] ?? null,
-            'locationId' => $remoteProfile['location']['id'] ?? null,
-            'locationName' => $remoteProfile['location']['name'] ?? null,
+        $fields = implode(',', $this->getProfileFields());
+
+        $options = [
+            'query' => [
+                'fields' => $fields
+            ]
         ];
+
+        $response = $client->request('GET', '/me', $options);
+
+        if (!$response) {
+            return null;
+        }
+
+        $data = json_decode($response->getBody(), true);
+
+        if (!$data) {
+            return null;
+        }
+
+        return new FacebookUser($data);
     }
 
     /**
@@ -104,8 +99,64 @@ class Facebook extends LoginProvider
         return $url;
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function getOauthProviderConfig(): array
+    {
+        $config = parent::getOauthProviderConfig();
+
+        if (empty($config['graphApiVersion'])) {
+            $config['graphApiVersion'] = 'v2.12';
+        }
+
+        return $config;
+    }
+
     // Protected Methods
     // =========================================================================
+
+    /**
+     * @inheritdoc
+     */
+    protected function getDefaultOauthScope(): array
+    {
+        return [
+            'email',
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getDefaultProfileFields(): array
+    {
+        return [
+            'id',
+            'name',
+            'first_name',
+            'last_name',
+            'email',
+            'picture.type(large){url,is_silhouette}',
+            'cover{source}',
+            'gender',
+            'locale',
+            'link',
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getDefaultUserMapping(): array
+    {
+        return [
+            'id' => '{{ profile.getId() }}',
+            'email' => '{{ profile.getEmail() }}',
+            'username' => '{{ profile.getEmail() }}',
+            'photo' => '{{ profile.getPictureUrl() }}',
+        ];
+    }
 
     /**
      * @inheritdoc
@@ -117,46 +168,7 @@ class Facebook extends LoginProvider
     {
         $config = $this->getOauthProviderConfig();
 
-        return new \League\OAuth2\Client\Provider\Facebook($config);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getOauthProviderConfig()
-    {
-        $config = parent::getOauthProviderConfig();
-
-        if(empty($config['graphApiVersion'])) {
-            $config['graphApiVersion'] = 'v2.12';
-        }
-
-        return $config;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function getRemoteProfile(Token $token)
-    {
-        $client = $this->getClient($token);
-
-        $fields = implode(',', [
-            'id', 'name', 'first_name', 'last_name',
-            'email', 'hometown', 'picture.type(large){url,is_silhouette}',
-            'cover{source}', 'gender', 'locale', 'link',
-            'location',
-        ]);
-
-        $options = [
-            'query' => [
-                'fields' => $fields
-            ]
-        ];
-
-        $response = $client->request('GET', '/me', $options);
-
-        return json_decode($response->getBody(), true);
+        return new \League\OAuth2\Client\Provider\Facebook($config['options']);
     }
 
     // Private Methods

@@ -32,7 +32,7 @@ class Google extends LoginProvider
     /**
      * @inheritdoc
      */
-    public function getDefaultScope()
+    public function getDefaultOauthScope()
     {
         return [
             'https://www.googleapis.com/auth/userinfo.profile',
@@ -59,23 +59,13 @@ class Google extends LoginProvider
     /**
      * @inheritdoc
      */
-    public function getProfile(Token $token)
+    public function getDefaultUserMapping(): array
     {
-        $remoteProfile = $this->getRemoteProfile($token);
-
-        $photoUrl = $remoteProfile->getAvatar();
-
-        if (strpos($photoUrl, '?') !== false) {
-            $photoUrl = substr($photoUrl, 0, strpos($photoUrl, '?'));
-        }
-
         return [
-            'id' => $remoteProfile->getId(),
-            'email' => $remoteProfile->getEmail(),
-            'name' => $remoteProfile->getName(),
-            'firstName' => $remoteProfile->getFirstName(),
-            'lastName' => $remoteProfile->getLastName(),
-            'photoUrl' => $photoUrl,
+            'id' => '{{ profile.getId() }}',
+            'email' => '{{ profile.getEmail() }}',
+            'username' => '{{ profile.getEmail() }}',
+            'photo' => '{{ profile.getAvatar() }}',
         ];
     }
 
@@ -92,6 +82,6 @@ class Google extends LoginProvider
     {
         $config = $this->getOauthProviderConfig();
 
-        return new \Dukt\OAuth2\Client\Provider\Google($config);
+        return new \Dukt\OAuth2\Client\Provider\Google($config['options']);
     }
 }

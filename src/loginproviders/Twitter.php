@@ -50,19 +50,28 @@ class Twitter extends LoginProvider
      */
     public function getProfile(Token $token)
     {
-        $remoteProfile = $this->getRemoteProfile($token);
+        $profile = $this->getOauthProvider()->getUserDetails($token->token);
 
-        $photoUrl = $remoteProfile->imageUrl;
-        $photoUrl = str_replace('_normal.', '.', $photoUrl);
+        if(!$profile) {
+            return null;
+        }
 
+        $profile = (array) $profile;
+        $profile['id'] = $profile['uid'];
+
+        return $profile;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDefaultUserMapping(): array
+    {
         return [
-            'id' => $remoteProfile->uid,
-            'email' => $remoteProfile->email,
-            'photoUrl' => $photoUrl,
-            'nickname' => $remoteProfile->nickname,
-            'name' => $remoteProfile->name,
-            'location' => $remoteProfile->location,
-            'description' => $remoteProfile->description,
+            'id' => '{{ profile.uid }}',
+            'email' => '{{ profile.email }}',
+            'username' => '{{ profile.email }}',
+            'photo' => '{{ profile.imageUrl|replace("_normal.", ".") }}',
         ];
     }
 
@@ -79,23 +88,15 @@ class Twitter extends LoginProvider
     {
         $config = $this->getOauthProviderConfig();
 
-        $config['identifier'] = $providerInfos['clientId'] ?? '';
-        unset($config['clientId']);
+        $config['identifier'] = $config['options']['clientId'] ?? '';
+        unset($config['options']['clientId']);
 
-        $config['secret'] = $providerInfos['clientSecret'] ?? '';
-        unset($config['clientSecret']);
+        $config['secret'] = $config['options']['clientSecret'] ?? '';
+        unset($config['options']['clientSecret']);
 
-        $config['callback_uri'] = $providerInfos['redirectUri'] ?? '';
-        unset($config['redirectUri']);
+        $config['callback_uri'] = $config['options']['redirectUri'] ?? '';
+        unset($config['options']['redirectUri']);
 
         return new \League\OAuth1\Client\Server\Twitter($config);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function getRemoteProfile(Token $token)
-    {
-        return $this->getOauthProvider()->getUserDetails($token->token);
     }
 }
