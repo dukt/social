@@ -106,8 +106,8 @@ class Facebook extends LoginProvider
     {
         $config = parent::getOauthProviderConfig();
 
-        if (empty($config['graphApiVersion'])) {
-            $config['graphApiVersion'] = 'v2.12';
+        if (empty($config['options']['graphApiVersion'])) {
+            $config['options']['graphApiVersion'] = 'v2.12';
         }
 
         return $config;
