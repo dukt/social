@@ -173,6 +173,22 @@ class Plugin extends \craft\base\Plugin
     }
 
     /**
+     * Get login provider config.
+     *
+     * @param $handle
+     *
+     * @return array
+     */
+    public function getLoginProviderConfig($handle)
+    {
+        if(!isset($this->getSettings()->loginProviders[$handle])) {
+            return [];
+        }
+
+        return $this->getSettings()->loginProviders[$handle];
+    }
+
+    /**
      * Has CP Section.
      *
      * @return bool
