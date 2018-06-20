@@ -21,7 +21,7 @@
         <h2>{{ 'Step 2: Configure the OAuth client'|t('social') }}</h2>
 
         <p>{{ '{loginProvider} will provide you with a client ID and secret for your application.'|t('social', { loginProvider: loginProvider.name }) }}</p>
-        <p>{{ 'Copy the client ID & client secret from the {link}, and paste them in your <code>config/social.php</code> file.'|t('social', { link: '<a href="'~loginProvider.managerUrl~'">'~'{loginProvider} API Console'|t('social', { loginProvider: loginProvider.name })~'</a>'})|raw }}</p>
+        <p>{{ 'Copy the client ID & client secret from the {link}, paste them below, and save.'|t('social', { link: '<a href="'~loginProvider.managerUrl~'">'~'{loginProvider} API Console'|t('social', { loginProvider: loginProvider.name })~'</a>'})|raw }}</p>
 
         {{ forms.textField({
             instructions: "Set the `loginProviders.{loginProviderHandle}.clientId` config in your `config/social.php` file."|t('social', {loginProviderHandle: loginProvider.handle}),
@@ -43,4 +43,9 @@
             <input type="submit" class="btn submit" value="{{ 'Save'|t('social') }}" />
         </div>
     </form>
+
+    <hr>
+
+    <p><em>{{ 'Check the {link} for more details on how to setup OAuth.'|t('social', { link: '<a href="https://docs.dukt.net/social/v2/login-providers.html#oauth-configuration" target="_blank">documentation</a>'})|raw }}</em></p>
+
 {% endset %}
