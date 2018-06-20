@@ -154,8 +154,10 @@ class LoginProvidersController extends Controller
         $oauthProviders = $settings['oauthProviders'];
 
         $oauthProviders[$handle] = [
-            'clientId' => $request->getBodyParam('clientId'),
-            'clientSecret' => $request->getBodyParam('clientSecret'),
+            'options' => [
+                'clientId' => $request->getBodyParam('clientId'),
+                'clientSecret' => $request->getBodyParam('clientSecret'),
+            ]
         ];
 
         $settings['oauthProviders'] = $oauthProviders;

@@ -28,7 +28,7 @@
             placeholder: "{loginProvider} Client ID"|t('social', { loginProvider: loginProvider.name }),
             label: "Client ID"|t('social'),
             name: 'clientId',
-            value: oauthProviderConfig.clientId ?? '',
+            value: oauthProviderConfig.options.clientId ?? '',
         }) }}
 
         {{ forms.textField({
@@ -36,7 +36,7 @@
             placeholder: "{loginProvider} Client Secret"|t('social', { loginProvider: loginProvider.name }),
             label: "Client Secret"|t('social'),
             name: 'clientSecret',
-            value: oauthProviderConfig.clientSecret ?? '',
+            value: oauthProviderConfig.options.clientSecret ?? '',
         }) }}
 
         <div class="buttons">
