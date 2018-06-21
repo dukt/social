@@ -107,7 +107,7 @@ class Facebook extends LoginProvider
         $config = parent::getOauthProviderConfig();
 
         if (empty($config['options']['graphApiVersion'])) {
-            $config['options']['graphApiVersion'] = 'v2.12';
+            $config['options']['graphApiVersion'] = 'v3.0';
         }
 
         return $config;
@@ -191,7 +191,7 @@ class Facebook extends LoginProvider
         }
 
         $options = [
-            'base_uri' => 'https://graph.facebook.com/v2.8',
+            'base_uri' => 'https://graph.facebook.com/',
             'headers' => $headers
         ];
 

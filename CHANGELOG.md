@@ -21,6 +21,7 @@ Changelog
 - Login providers now return a specific OAuth 1 or 2 profile object instead of an array of data.
 - OAuth options, scope and authorization options can now be customized for OAuth providers using the `oauthProviders` config.
 - OAuth scope, profile fields and user field mapping can now be customized for login providers using the `loginProviders` config.
+- Updated Facebook Graph API version to `v3.0`.
 - Removed `dukt\social\base\LoginProvider::getRemoteProfile()`.
 - Removed `dukt\social\base\LoginProviderInterface::getProfile()`.
 - Removed `dukt\social\services\LoginProviders::getUserMapping()`.
