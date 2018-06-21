@@ -4,30 +4,30 @@ Changelog
 ## Unreleased
 
 # Added
-- OAuth provider credentials can now be saved from the control panel.
 - Additional profile fields can now be requested when registering users with Facebook
-- Added a `oauthProviders` config.
-- Added `dukt\social\base\LoginProvider::getProfileFields()`.
-- Added `dukt\social\base\LoginProvider::getUserFieldMapping()`.
+- OAuth provider credentials can now be saved from the control panel.
 - Added `dukt\social\base\LoginProvider::getDefaultProfileFields()`.
 - Added `dukt\social\base\LoginProvider::getLoginProviderConfig()`.
-- Added `dukt\social\Plugin::getLoginProviderConfig()`.
-- Added `dukt\social\base\LoginProviderInterface::getOauthProvider()`.
+- Added `dukt\social\base\LoginProvider::getProfileFields()`.
+- Added `dukt\social\base\LoginProvider::getUserFieldMapping()`.
 - Added `dukt\social\base\LoginProviderInterface::getDefaultUserFieldMapping()`.
+- Added `dukt\social\base\LoginProviderInterface::getOauthProvider()`.
+- Added `dukt\social\Plugin::getLoginProviderConfig()`.
+- Added a `oauthProviders` config.
 
 ### Changed
-- Login providers now return a specific OAuth 1 or 2 profile object instead of an array of data.
-- OAuth scope, profile fields and user field mapping can now be customized for login providers using the `loginProviders` config.
-- OAuth options, scope and authorization options can now be customized for OAuth providers using the `oauthProviders` config.
 - Changed the `loginProviders` config.
 - Don't delete the existing user photo before replacing it in `dukt\social\services\LoginAccounts::saveRemotePhoto()` since `craft\services\Users::saveUserPhoto()` already handles that.
-- Removed `dukt\social\base\LoginProviderInterface::getProfile()`.
+- Login providers now return a specific OAuth 1 or 2 profile object instead of an array of data.
+- OAuth options, scope and authorization options can now be customized for OAuth providers using the `oauthProviders` config.
+- OAuth scope, profile fields and user field mapping can now be customized for login providers using the `loginProviders` config.
 - Removed `dukt\social\base\LoginProvider::getRemoteProfile()`.
+- Removed `dukt\social\base\LoginProviderInterface::getProfile()`.
+- Removed `dukt\social\services\LoginProviders::getUserMapping()`.
+- Renamed `dukt\social\base\LoginProvider::getAuthorizationOptions()` to `dukt\social\base\LoginProvider::getOauthAuthorizationOptions()`.
+- Renamed `dukt\social\base\LoginProvider::getDefaultAuthorizationOptions()` to `dukt\social\base\LoginProvider::getDefaultOauthAuthorizationOptions()`.
 - Renamed `dukt\social\base\LoginProvider::getDefaultScope()` to `dukt\social\base\LoginProvider::getDefaultOauthScope()`.
 - Renamed `dukt\social\base\LoginProvider::getScope()` to `dukt\social\base\LoginProvider::getOauthScope()`.
-- Renamed `dukt\social\base\LoginProvider::getDefaultAuthorizationOptions()` to `dukt\social\base\LoginProvider::getDefaultOauthAuthorizationOptions()`.
-- Renamed `dukt\social\base\LoginProvider::getAuthorizationOptions()` to `dukt\social\base\LoginProvider::getOauthAuthorizationOptions()`.
-- Removed `dukt\social\services\LoginProviders::getUserMapping()`.
 
 ## 2.0.0-beta.9 - 2018-05-24
 
