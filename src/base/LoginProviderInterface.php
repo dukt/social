@@ -33,4 +33,11 @@ interface LoginProviderInterface
      * @return mixed
      */
     public function getOauthProvider();
+
+    /**
+     * Returns the default user field mapping.
+     *
+     * @return array
+     */
+    public function getDefaultUserFieldMapping(): array;
 }

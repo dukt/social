@@ -303,16 +303,6 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
-     * Get default user field mapping.
-     *
-     * @return array
-     */
-    protected function getDefaultUserFieldMapping(): array
-    {
-        return [];
-    }
-
-    /**
      * Get OAuth provider config.
      *
      * @return array

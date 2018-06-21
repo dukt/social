@@ -126,6 +126,19 @@ class Facebook extends LoginProvider
         return new \League\OAuth2\Client\Provider\Facebook($config['options']);
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function getDefaultUserFieldMapping(): array
+    {
+        return [
+            'id' => '{{ profile.getId() }}',
+            'email' => '{{ profile.getEmail() }}',
+            'username' => '{{ profile.getEmail() }}',
+            'photo' => '{{ profile.getPictureUrl() }}',
+        ];
+    }
+
     // Protected Methods
     // =========================================================================
 
@@ -155,19 +168,6 @@ class Facebook extends LoginProvider
             'gender',
             'locale',
             'link',
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function getDefaultUserFieldMapping(): array
-    {
-        return [
-            'id' => '{{ profile.getId() }}',
-            'email' => '{{ profile.getEmail() }}',
-            'username' => '{{ profile.getEmail() }}',
-            'photo' => '{{ profile.getPictureUrl() }}',
         ];
     }
 
