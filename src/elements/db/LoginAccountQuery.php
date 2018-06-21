@@ -206,7 +206,7 @@ class LoginAccountQuery extends ElementQuery
 
     /**
      * @param string $property
-     * @param string  $column
+     * @param string $column
      */
     private function addWhere(string $property, string $column)
     {

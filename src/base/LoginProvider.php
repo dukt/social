@@ -228,7 +228,7 @@ abstract class LoginProvider implements LoginProviderInterface
         $profileFields = $this->getDefaultProfileFields();
         $loginProviderConfig = Plugin::getInstance()->getLoginProviderConfig($this->getHandle());
 
-        if(isset($loginProviderConfig['profileFields'])) {
+        if (isset($loginProviderConfig['profileFields'])) {
             $profileFields = $this->mergeArrayValues($profileFields, $loginProviderConfig['profileFields']);
         }
 
@@ -245,7 +245,7 @@ abstract class LoginProvider implements LoginProviderInterface
         $userFieldMapping = $this->getDefaultUserFieldMapping();
         $loginProviderConfig = Plugin::getInstance()->getLoginProviderConfig($this->getHandle());
 
-        if(isset($loginProviderConfig['userFieldMapping'])) {
+        if (isset($loginProviderConfig['userFieldMapping'])) {
             $userFieldMapping = array_merge($userFieldMapping, $loginProviderConfig['userFieldMapping']);
         }
 
@@ -263,7 +263,7 @@ abstract class LoginProvider implements LoginProviderInterface
     {
         $profile = $this->getOauthProvider()->getResourceOwner($token->token);
 
-        if(!$profile) {
+        if (!$profile) {
             return null;
         }
 
@@ -295,6 +295,7 @@ abstract class LoginProvider implements LoginProviderInterface
 
     /**
      * Get default profile fields.
+     *
      * @return array
      */
     protected function getDefaultProfileFields(): array
@@ -430,16 +431,16 @@ abstract class LoginProvider implements LoginProviderInterface
      */
     private function mergeArrayValues(array $array, array $array2): array
     {
-        foreach($array2 as $value2) {
+        foreach ($array2 as $value2) {
             $addValue = true;
 
-            foreach($array as $value) {
-                if($value === $value2) {
+            foreach ($array as $value) {
+                if ($value === $value2) {
                     $addValue = false;
                 }
             }
 
-            if($addValue) {
+            if ($addValue) {
                 $array[] = $value2;
             }
         }

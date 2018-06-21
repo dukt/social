@@ -52,11 +52,11 @@ class Twitter extends LoginProvider
     {
         $profile = $this->getOauthProvider()->getUserDetails($token->token);
 
-        if(!$profile) {
+        if (!$profile) {
             return null;
         }
 
-        $profile = (array) $profile;
+        $profile = (array)$profile;
         $profile['id'] = $profile['uid'];
 
         return $profile;

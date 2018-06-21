@@ -438,7 +438,7 @@ class LoginAccountsController extends Controller
      * Register a user.
      *
      * @param string $providerHandle
-     * @param $profile
+     * @param        $profile
      *
      * @return User
      * @throws RegistrationException
@@ -536,7 +536,7 @@ class LoginAccountsController extends Controller
 
         foreach ($userFieldMapping as $attribute => $template) {
             // Only fill other fields than `email` and `username` when `autoFillProfile` is true
-            if(!$settings['autoFillProfile'] && ($attribute !== 'email' || $attribute !== 'username')) {
+            if (!$settings['autoFillProfile'] && ($attribute !== 'email' || $attribute !== 'username')) {
                 continue;
             }
 

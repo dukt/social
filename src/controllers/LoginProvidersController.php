@@ -150,7 +150,7 @@ class LoginProvidersController extends Controller
         $request = Craft::$app->getRequest();
 
         $handle = $request->getBodyParam('handle');
-        $settings = (array) Plugin::getInstance()->getSettings();
+        $settings = (array)Plugin::getInstance()->getSettings();
         $oauthProviders = $settings['oauthProviders'];
 
         $oauthProviders[$handle] = [

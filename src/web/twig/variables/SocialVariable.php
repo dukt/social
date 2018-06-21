@@ -15,7 +15,7 @@ use dukt\social\Plugin as Social;
 /**
  * Class SocialVariable variable.
  *
- * @author Dukt <support@dukt.net>
+ * @author  Dukt <support@dukt.net>
  * @since   1.0
  */
 class SocialVariable

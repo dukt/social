@@ -157,7 +157,7 @@ class Plugin extends \craft\base\Plugin
      */
     public function getOauthProviderConfig($handle)
     {
-        if(!isset($this->getSettings()->oauthProviders[$handle])) {
+        if (!isset($this->getSettings()->oauthProviders[$handle])) {
             return [];
         }
 
@@ -180,7 +180,7 @@ class Plugin extends \craft\base\Plugin
      */
     public function getLoginProviderConfig($handle)
     {
-        if(!isset($this->getSettings()->loginProviders[$handle])) {
+        if (!isset($this->getSettings()->loginProviders[$handle])) {
             return [];
         }
 
