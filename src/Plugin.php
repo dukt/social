@@ -155,13 +155,9 @@ class Plugin extends \craft\base\Plugin
      * @return array
      * @throws \yii\base\InvalidConfigException
      */
-    public function getOauthProviderConfig($handle)
+    public function getOauthProviderConfig($handle): array
     {
-        if (!isset($this->getSettings()->oauthProviders[$handle])) {
-            return [];
-        }
-
-        $config = $this->getSettings()->oauthProviders[$handle];
+        $config = $this->getConfig('oauthProviders', $handle);
         $provider = $this->getLoginProviders()->getLoginProvider($handle);
 
         if ($provider && !isset($config['options']['redirectUri'])) {
@@ -180,11 +176,7 @@ class Plugin extends \craft\base\Plugin
      */
     public function getLoginProviderConfig($handle)
     {
-        if (!isset($this->getSettings()->loginProviders[$handle])) {
-            return [];
-        }
-
-        return $this->getSettings()->loginProviders[$handle];
+        return $this->getConfig('loginProviders', $handle);
     }
 
     /**
@@ -282,5 +274,30 @@ class Plugin extends \craft\base\Plugin
                 return Craft::$app->getView()->renderTemplate('social/_components/users/login-accounts-pane', $context);
             }
         });
+    }
+
+    /**
+     * Get config for OAuth and login providers.
+     *
+     * @param $key
+     * @param $providerHandle
+     *
+     * @return array
+     */
+    private function getConfig($key, $providerHandle)
+    {
+        $configSettings = Craft::$app->config->getConfigFromFile($this->id);
+
+        if (isset($configSettings[$key][$providerHandle])) {
+            return $configSettings[$key][$providerHandle];
+        }
+
+        $storedSettings = Craft::$app->plugins->getStoredPluginInfo($this->id)['settings'];
+
+        if (isset($storedSettings[$key][$providerHandle])) {
+            return $storedSettings[$key][$providerHandle];
+        }
+
+        return [];
     }
 }
