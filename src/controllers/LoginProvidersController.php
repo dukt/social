@@ -144,6 +144,12 @@ class LoginProvidersController extends Controller
         return $this->redirectToPostedUrl();
     }
 
+    /**
+     * Saves an OAuth provider.
+     *
+     * @return null|Response
+     * @throws \yii\web\BadRequestHttpException
+     */
     public function actionSaveOauthProvider()
     {
         $this->requirePostRequest();
