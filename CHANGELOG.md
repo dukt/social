@@ -13,14 +13,12 @@ Changelog
 - Added `dukt\social\base\LoginProviderInterface::getDefaultUserFieldMapping()`.
 - Added `dukt\social\base\LoginProviderInterface::getOauthProvider()`.
 - Added `dukt\social\Plugin::getLoginProviderConfig()`.
-- Added a `oauthProviders` config.
 
 ### Changed
 - Changed the `loginProviders` config.
 - Don't delete the existing user photo before replacing it in `dukt\social\services\LoginAccounts::saveRemotePhoto()` since `craft\services\Users::saveUserPhoto()` already handles that.
 - Login providers now return a specific OAuth 1 or 2 profile object instead of an array of data.
-- OAuth options, scope and authorization options can now be customized for OAuth providers using the `oauthProviders` config.
-- OAuth scope, profile fields and user field mapping can now be customized for login providers using the `loginProviders` config.
+- User field mapping, profile fields and OAuth scope can now be customized using the `loginProviders` config.
 - Updated Facebook Graph API version to `v3.0`.
 - Removed `dukt\social\base\LoginProvider::getRemoteProfile()`.
 - Removed `dukt\social\base\LoginProviderInterface::getProfile()`.

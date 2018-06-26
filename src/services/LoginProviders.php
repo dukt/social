@@ -44,8 +44,7 @@ class LoginProviders extends Component
      */
     public function disableLoginProvider($handle): bool
     {
-        $plugin = Craft::$app->getPlugins()->getPlugin('social');
-        $settings = $plugin->getSettings();
+        $settings = Plugin::getInstance()->getSettings();
 
         $enabledLoginProviders = $settings->enabledLoginProviders;
 
@@ -55,7 +54,7 @@ class LoginProviders extends Component
 
         $settings->enabledLoginProviders = $enabledLoginProviders;
 
-        return Craft::$app->getPlugins()->savePluginSettings($plugin, $settings->getAttributes());
+        return Plugin::getInstance()->savePluginSettings($settings->getAttributes());
     }
 
     /**
@@ -78,7 +77,7 @@ class LoginProviders extends Component
 
         $settings->enabledLoginProviders = $enabledLoginProviders;
 
-        return Craft::$app->getPlugins()->savePluginSettings($plugin, $settings->getAttributes());
+        return Plugin::getInstance()->savePluginSettings($settings->getAttributes());
     }
 
     /**

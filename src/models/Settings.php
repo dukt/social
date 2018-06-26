@@ -17,7 +17,7 @@ use craft\base\Model;
  */
 class Settings extends Model
 {
-    // Public Properties
+    // Properties
     // =========================================================================
 
     /**
@@ -61,16 +61,6 @@ class Settings extends Model
     public $loginProviders = [];
 
     /**
-     * @var array Defines the OAuth client ID, secret, scope, authorization options.
-     */
-    public $oauthProviders = [];
-
-    /**
-     * @var array Defines the  user field mapping for login providers.
-     */
-    public $userFieldMappings = [];
-
-    /**
      * @var array Lock social registration to specific domains
      */
     public $lockDomains = [];
@@ -79,4 +69,18 @@ class Settings extends Model
      * @var bool Show CP section
      */
     public $showCpSection = false;
+
+    // Public Methods
+    // =========================================================================
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['allowEmailMatch', 'autoFillProfile', 'enableCpLogin', 'enableSocialLogin', 'enableSocialRegistration', 'showCpSection'], 'boolean'],
+            [['defaultGroup'], 'number', 'integerOnly' => true],
+        ];
+    }
 }

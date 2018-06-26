@@ -151,25 +151,19 @@ abstract class LoginProvider implements LoginProviderInterface
     /**
      * Returns the `scope` from login provider class by default, or the `scope` overridden by the config.
      *
-     * @return array|null
+     * @return array
+     * @throws \yii\base\InvalidConfigException
      */
     public function getOauthScope()
     {
-        $oauthScope = $this->getDefaultOauthScope();
-
-        $oauthProviderConfig = $this->getLoginProviderConfig();
+        $scope = $this->getDefaultOauthScope();
+        $oauthProviderConfig = $this->getOauthProviderConfig();
 
         if (isset($oauthProviderConfig['scope'])) {
-            $oauthScope = $this->mergeArrayValues($oauthScope, $oauthProviderConfig['scope']);
+            $scope = $this->mergeArrayValues($scope, $oauthProviderConfig['scope']);
         }
 
-        $loginProviderConfig = $this->getLoginProviderConfig();
-
-        if (isset($loginProviderConfig['oauthScope'])) {
-            $oauthScope = $this->mergeArrayValues($oauthScope, $loginProviderConfig['oauthScope']);
-        }
-
-        return $oauthScope;
+        return $scope;
     }
 
     /**

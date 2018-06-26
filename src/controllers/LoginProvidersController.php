@@ -156,32 +156,21 @@ class LoginProvidersController extends Controller
         $request = Craft::$app->getRequest();
 
         $handle = $request->getBodyParam('handle');
-        $settings = (array)Plugin::getInstance()->getSettings();
-        $oauthProviders = $settings['oauthProviders'];
 
-        $oauthProviders[$handle] = [
+        $settings = [
             'options' => [
                 'clientId' => $request->getBodyParam('clientId'),
                 'clientSecret' => $request->getBodyParam('clientSecret'),
             ]
         ];
 
-        $settings['oauthProviders'] = $oauthProviders;
-
-        $plugin = Craft::$app->getPlugins()->getPlugin('social');
-
-        if (Craft::$app->getPlugins()->savePluginSettings($plugin, $settings)) {
+        if (Plugin::getInstance()->saveLoginProviderSettings($handle, $settings)) {
             Craft::$app->getSession()->setNotice(Craft::t('analytics', 'Provider saved.'));
 
             return $this->redirectToPostedUrl();
         }
 
         Craft::$app->getSession()->setError(Craft::t('analytics', 'Couldn’t save provider.'));
-
-        // Send the plugin back to the template
-        Craft::$app->getUrlManager()->setRouteParams([
-            'plugin' => $plugin
-        ]);
 
         return null;
     }

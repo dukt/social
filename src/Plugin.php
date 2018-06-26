@@ -157,7 +157,12 @@ class Plugin extends \craft\base\Plugin
      */
     public function getOauthProviderConfig($handle): array
     {
-        $config = $this->getConfig('oauthProviders', $handle);
+        $config = [
+            'options' => $this->getOauthConfigItem($handle, 'options'),
+            'scope' => $this->getOauthConfigItem($handle, 'scope'),
+            'authorizationOptions' => $this->getOauthConfigItem($handle, 'authorizationOptions'),
+        ];
+
         $provider = $this->getLoginProviders()->getLoginProvider($handle);
 
         if ($provider && !isset($config['options']['redirectUri'])) {
@@ -176,7 +181,13 @@ class Plugin extends \craft\base\Plugin
      */
     public function getLoginProviderConfig($handle)
     {
-        return $this->getConfig('loginProviders', $handle);
+        $configSettings = Craft::$app->config->getConfigFromFile($this->id);
+
+        if(isset($configSettings['loginProviders'][$handle])) {
+            return $configSettings['loginProviders'][$handle];
+        }
+
+        return [];
     }
 
     /**
@@ -207,6 +218,60 @@ class Plugin extends \craft\base\Plugin
         }
 
         return true;
+    }
+
+    /**
+     * Save plugin settings.
+     *
+     * @param array $settings
+     *
+     * @return bool
+     */
+    public function savePluginSettings(array $settings, Plugin $plugin = null)
+    {
+        if (!$plugin) {
+            $plugin = Craft::$app->getPlugins()->getPlugin('social');
+
+            if ($plugin === null) {
+                throw new NotFoundHttpException('Plugin not found');
+            }
+        }
+
+        $storedSettings = Craft::$app->plugins->getStoredPluginInfo('social')['settings'];
+
+        $settings['loginProviders'] = [];
+
+        if(isset($storedSettings['loginProviders'])) {
+            $settings['loginProviders'] = $storedSettings['loginProviders'];
+        }
+
+        return Craft::$app->getPlugins()->savePluginSettings($plugin, $settings);
+    }
+
+    /**
+     * Save login provider settings.
+     *
+     * @param $handle
+     * @param $providerSettings
+     *
+     * @return bool
+     */
+    public function saveLoginProviderSettings($handle, $providerSettings)
+    {
+        $settings = (array)Plugin::getInstance()->getSettings();
+        $storedSettings = Craft::$app->plugins->getStoredPluginInfo('social')['settings'];
+
+        $settings['loginProviders'] = [];
+
+        if(isset($storedSettings['loginProviders'])) {
+            $settings['loginProviders'] = $storedSettings['loginProviders'];
+        }
+
+        $settings['loginProviders'][$handle] = $providerSettings;
+
+        $plugin = Craft::$app->getPlugins()->getPlugin('social');
+
+        return Craft::$app->getPlugins()->savePluginSettings($plugin, $settings);
     }
 
     // Protected Methods
@@ -277,25 +342,24 @@ class Plugin extends \craft\base\Plugin
     }
 
     /**
-     * Get config for OAuth and login providers.
-     *
-     * @param $key
-     * @param $providerHandle
+     * Get OAuth config item
+     * @param string $providerHandle
+     * @param string $key
      *
      * @return array
      */
-    private function getConfig($key, $providerHandle)
+    private function getOauthConfigItem(string $providerHandle, string $key): array
     {
         $configSettings = Craft::$app->config->getConfigFromFile($this->id);
 
-        if (isset($configSettings[$key][$providerHandle])) {
-            return $configSettings[$key][$providerHandle];
+        if (isset($configSettings['loginProviders'][$providerHandle]['oauth'][$key])) {
+            return $configSettings['loginProviders'][$providerHandle]['oauth'][$key];
         }
 
         $storedSettings = Craft::$app->plugins->getStoredPluginInfo($this->id)['settings'];
 
-        if (isset($storedSettings[$key][$providerHandle])) {
-            return $storedSettings[$key][$providerHandle];
+        if (isset($storedSettings['loginProviders'][$providerHandle]['oauth'][$key])) {
+            return $storedSettings['loginProviders'][$providerHandle]['oauth'][$key];
         }
 
         return [];
