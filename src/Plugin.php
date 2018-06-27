@@ -46,11 +46,6 @@ class Plugin extends \craft\base\Plugin
     public $hasCpSettings = true;
 
     /**
-     * @var bool
-     */
-    public $hasCpSection = false;
-
-    /**
      * @var \dukt\social\Plugin The plugin instance.
      */
     public static $plugin;
@@ -65,8 +60,6 @@ class Plugin extends \craft\base\Plugin
     {
         parent::init();
         self::$plugin = $this;
-
-        $this->hasCpSection = $this->hasCpSection();
 
         $this->setComponents([
             'loginAccounts' => \dukt\social\services\LoginAccounts::class,
@@ -132,6 +125,7 @@ class Plugin extends \craft\base\Plugin
             function() {
                 $this->initCpSocialLogin();
             });
+
         $this->initLoginAccountsUserPane();
     }
 
@@ -188,22 +182,6 @@ class Plugin extends \craft\base\Plugin
         }
 
         return [];
-    }
-
-    /**
-     * Has CP Section.
-     *
-     * @return bool
-     */
-    public function hasCpSection()
-    {
-        $settings = $this->getSettings();
-
-        if ($settings['showCpSection']) {
-            return true;
-        }
-
-        return false;
     }
 
     /**

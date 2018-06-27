@@ -65,11 +65,6 @@ class Settings extends Model
      */
     public $lockDomains = [];
 
-    /**
-     * @var bool Show CP section
-     */
-    public $showCpSection = false;
-
     // Public Methods
     // =========================================================================
 
@@ -79,7 +74,7 @@ class Settings extends Model
     public function rules()
     {
         return [
-            [['allowEmailMatch', 'autoFillProfile', 'enableCpLogin', 'enableSocialLogin', 'enableSocialRegistration', 'showCpSection'], 'boolean'],
+            [['allowEmailMatch', 'autoFillProfile', 'enableCpLogin', 'enableSocialLogin', 'enableSocialRegistration'], 'boolean'],
             [['defaultGroup'], 'number', 'integerOnly' => true],
         ];
     }
