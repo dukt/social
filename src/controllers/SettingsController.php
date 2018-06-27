@@ -41,7 +41,7 @@ class SettingsController extends Controller
         $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $variables['settings'] = $plugin->getSettings();
 
-        $accounts = Social::$plugin->getLoginAccounts()->getLoginAccounts();
+        $accounts = Social::getInstance()->getLoginAccounts()->getLoginAccounts();
         $variables['totalAccounts'] = count($accounts);
 
         return $this->renderTemplate('social/settings/settings', $variables);

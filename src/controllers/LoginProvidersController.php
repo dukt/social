@@ -43,7 +43,7 @@ class LoginProvidersController extends Controller
 
         Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
 
-        $variables['loginProviders'] = Social::$plugin->getLoginProviders()->getLoginProviders(false);
+        $variables['loginProviders'] = Social::getInstance()->getLoginProviders()->getLoginProviders(false);
 
         return $this->renderTemplate('social/loginproviders/_index', $variables);
     }
@@ -63,7 +63,7 @@ class LoginProvidersController extends Controller
             return $this->renderTemplate('social/settings/_pro-requirement');
         }
 
-        $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($handle, false, true);
+        $loginProvider = Social::getInstance()->getLoginProviders()->getLoginProvider($handle, false, true);
         $oauthProviderConfig = Social::getInstance()->getOauthProviderConfig($handle);
 
         if ($loginProvider) {
@@ -91,7 +91,7 @@ class LoginProvidersController extends Controller
             return $this->renderTemplate('social/settings/_pro-requirement');
         }
 
-        $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($handle, false, true);
+        $loginProvider = Social::getInstance()->getLoginProviders()->getLoginProvider($handle, false, true);
 
         if ($loginProvider) {
             return $this->renderTemplate('social/loginproviders/_user-field-mapping', [
@@ -114,7 +114,7 @@ class LoginProvidersController extends Controller
         $this->requirePostRequest();
         $loginProvider = Craft::$app->getRequest()->getRequiredBodyParam('loginProvider');
 
-        if (Social::$plugin->getLoginProviders()->enableLoginProvider($loginProvider)) {
+        if (Social::getInstance()->getLoginProviders()->enableLoginProvider($loginProvider)) {
             Craft::$app->getSession()->setNotice(Craft::t('social', 'Login provider enabled.'));
         } else {
             Craft::$app->getSession()->setError(Craft::t('social', 'Couldn’t enable login provider.'));
@@ -135,7 +135,7 @@ class LoginProvidersController extends Controller
         $this->requirePostRequest();
         $loginProvider = Craft::$app->getRequest()->getRequiredBodyParam('loginProvider');
 
-        if (Social::$plugin->getLoginProviders()->disableLoginProvider($loginProvider)) {
+        if (Social::getInstance()->getLoginProviders()->disableLoginProvider($loginProvider)) {
             Craft::$app->getSession()->setNotice(Craft::t('social', 'Login provider disabled.'));
         } else {
             Craft::$app->getSession()->setError(Craft::t('social', 'Couldn’t disable login provider.'));

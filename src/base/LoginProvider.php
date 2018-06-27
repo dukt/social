@@ -192,7 +192,7 @@ abstract class LoginProvider implements LoginProviderInterface
     public function getIsEnabled(): bool
     {
         // get plugin settings
-        $settings = Plugin::$plugin->getSettings();
+        $settings = Plugin::getInstance()->getSettings();
         $enabledLoginProviders = $settings->enabledLoginProviders;
 
         if (in_array($this->getHandle(), $enabledLoginProviders)) {

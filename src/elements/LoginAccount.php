@@ -56,7 +56,7 @@ class LoginAccount extends Element
             ]
         ];
 
-        $loginProviders = Social::$plugin->getLoginProviders()->getLoginProviders();
+        $loginProviders = Social::getInstance()->getLoginProviders()->getLoginProviders();
 
         if ($loginProviders) {
             $sources[] = ['heading' => Craft::t('social', 'Login Providers')];
@@ -171,7 +171,7 @@ class LoginAccount extends Element
      */
     public function authenticate(Token $token): bool
     {
-        $socialLoginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($token->providerHandle);
+        $socialLoginProvider = Social::getInstance()->getLoginProviders()->getLoginProvider($token->providerHandle);
 
         $profile = $socialLoginProvider->getProfile($token);
 
@@ -190,7 +190,7 @@ class LoginAccount extends Element
     public function getLoginProvider()
     {
         if ($this->providerHandle) {
-            return Social::$plugin->getLoginProviders()->getLoginProvider($this->providerHandle);
+            return Social::getInstance()->getLoginProviders()->getLoginProvider($this->providerHandle);
         }
     }
 

@@ -45,11 +45,6 @@ class Plugin extends \craft\base\Plugin
      */
     public $hasCpSettings = true;
 
-    /**
-     * @var \dukt\social\Plugin The plugin instance.
-     */
-    public static $plugin;
-
     // Public Methods
     // =========================================================================
 
@@ -59,7 +54,6 @@ class Plugin extends \craft\base\Plugin
     public function init()
     {
         parent::init();
-        self::$plugin = $this;
 
         $this->setComponents([
             'loginAccounts' => \dukt\social\services\LoginAccounts::class,
@@ -112,10 +106,10 @@ class Plugin extends \craft\base\Plugin
 
         Event::on(User::class, User::EVENT_AFTER_SAVE, function(ModelEvent $event) {
             $user = $event->sender;
-            $loginAccounts = Plugin::$plugin->getLoginAccounts()->getLoginAccountsByUserId($user->id);
+            $loginAccounts = Plugin::getInstance()->getLoginAccounts()->getLoginAccountsByUserId($user->id);
 
             foreach ($loginAccounts as $loginAccount) {
-                Plugin::$plugin->getLoginAccounts()->saveLoginAccount($loginAccount);
+                Plugin::getInstance()->getLoginAccounts()->saveLoginAccount($loginAccount);
             }
         });
 

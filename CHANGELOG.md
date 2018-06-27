@@ -23,6 +23,7 @@ Changelog
 - Removed `dukt\social\base\LoginProvider::getRemoteProfile()`.
 - Removed `dukt\social\base\LoginProviderInterface::getProfile()`.
 - Removed `dukt\social\models\Settings::$showCpSection`.
+- Removed `dukt\social\Plugin::$plugin`.
 - Removed `dukt\social\services\LoginProviders::getUserMapping()`.
 - Renamed `dukt\social\base\LoginProvider::getAuthorizationOptions()` to `dukt\social\base\LoginProvider::getOauthAuthorizationOptions()`.
 - Renamed `dukt\social\base\LoginProvider::getDefaultAuthorizationOptions()` to `dukt\social\base\LoginProvider::getDefaultOauthAuthorizationOptions()`.

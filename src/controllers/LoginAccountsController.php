@@ -95,7 +95,7 @@ class LoginAccountsController extends Controller
             throw new HttpException(404);
         }
 
-        $loginAccounts = Social::$plugin->getLoginAccounts()->getLoginAccountsByUserId($user->id);
+        $loginAccounts = Social::getInstance()->getLoginAccounts()->getLoginAccountsByUserId($user->id);
 
         Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
 
@@ -121,7 +121,7 @@ class LoginAccountsController extends Controller
 
         $loginAccountId = Craft::$app->getRequest()->getRequiredBodyParam('id');
 
-        Social::$plugin->getLoginAccounts()->deleteLoginAccountById($loginAccountId);
+        Social::getInstance()->getLoginAccounts()->deleteLoginAccountById($loginAccountId);
 
         return $this->asJson(['success' => true]);
     }
@@ -158,7 +158,7 @@ class LoginAccountsController extends Controller
                 throw new LoginException('Social login is disabled');
             }
 
-            $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($providerHandle);
+            $loginProvider = Social::getInstance()->getLoginProviders()->getLoginProvider($providerHandle);
 
             if (!$loginProvider) {
                 throw new LoginException('Login provider is not configured');
@@ -260,7 +260,7 @@ class LoginAccountsController extends Controller
         $handle = Craft::$app->getRequest()->getParam('provider');
 
         // delete social user
-        Social::$plugin->getLoginAccounts()->deleteLoginAccountByProvider($handle);
+        Social::getInstance()->getLoginAccounts()->deleteLoginAccountByProvider($handle);
 
         Craft::$app->getSession()->setNotice(Craft::t('social', 'Login account disconnected.'));
 
@@ -283,7 +283,7 @@ class LoginAccountsController extends Controller
      */
     private function oauthConnect($loginProviderHandle)
     {
-        $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($loginProviderHandle);
+        $loginProvider = Social::getInstance()->getLoginProviders()->getLoginProvider($loginProviderHandle);
 
         Craft::$app->getSession()->set('social.loginProvider', $loginProviderHandle);
 
@@ -341,11 +341,11 @@ class LoginAccountsController extends Controller
             $this->redirect = $this->originUrl;
         }
 
-        $socialLoginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($token->providerHandle);
+        $socialLoginProvider = Social::getInstance()->getLoginProviders()->getLoginProvider($token->providerHandle);
         $profile = $socialLoginProvider->getProfile($token);
         $userFieldMapping = $socialLoginProvider->getUserFieldMapping();
         $socialUid = Craft::$app->getView()->renderString($userFieldMapping['id'], ['profile' => $profile]);
-        $account = Social::$plugin->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
+        $account = Social::getInstance()->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
 
 
         // Existing login account
@@ -393,11 +393,11 @@ class LoginAccountsController extends Controller
      */
     private function registerOrLoginFromToken(Token $token)
     {
-        $socialLoginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($token->providerHandle);
+        $socialLoginProvider = Social::getInstance()->getLoginProviders()->getLoginProvider($token->providerHandle);
         $profile = $socialLoginProvider->getProfile($token);
         $userFieldMapping = $socialLoginProvider->getUserFieldMapping();
         $socialUid = Craft::$app->getView()->renderString($userFieldMapping['id'], ['profile' => $profile]);
-        $account = Social::$plugin->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
+        $account = Social::getInstance()->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
 
 
         // Existing user
@@ -467,7 +467,7 @@ class LoginAccountsController extends Controller
         $user = Craft::$app->users->getUserByUsernameOrEmail($email);
 
         if ($user) {
-            if (Social::$plugin->getSettings()->allowEmailMatch !== true) {
+            if (Social::getInstance()->getSettings()->allowEmailMatch !== true) {
                 throw new RegistrationException('An account already exists with this email: '.$email);
             }
 
@@ -572,7 +572,7 @@ class LoginAccountsController extends Controller
      */
     private function checkLockedDomains($profile)
     {
-        $lockDomains = Social::$plugin->getSettings()->lockDomains;
+        $lockDomains = Social::getInstance()->getSettings()->lockDomains;
 
         if (\count($lockDomains) > 0) {
             $domainRejected = true;
@@ -615,7 +615,7 @@ class LoginAccountsController extends Controller
         }
 
         if ($photoUrl) {
-            Social::$plugin->getLoginAccounts()->saveRemotePhoto($photoUrl, $newUser);
+            Social::getInstance()->getLoginAccounts()->saveRemotePhoto($photoUrl, $newUser);
         }
     }
 
