@@ -9,7 +9,6 @@ namespace dukt\social\controllers;
 
 use Craft;
 use craft\web\Controller;
-use dukt\social\Plugin as Social;
 use dukt\social\Plugin;
 use yii\web\Response;
 
@@ -41,7 +40,7 @@ class SettingsController extends Controller
         $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $variables['settings'] = $plugin->getSettings();
 
-        $accounts = Social::getInstance()->getLoginAccounts()->getLoginAccounts();
+        $accounts = Plugin::getInstance()->getLoginAccounts()->getLoginAccounts();
         $variables['totalAccounts'] = count($accounts);
 
         return $this->renderTemplate('social/settings/settings', $variables);

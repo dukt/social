@@ -10,7 +10,7 @@ namespace dukt\social\web\twig\variables;
 use Craft;
 use dukt\social\elements\db\LoginAccountQuery;
 use dukt\social\elements\LoginAccount;
-use dukt\social\Plugin as Social;
+use dukt\social\Plugin;
 
 /**
  * Class SocialVariable variable.
@@ -51,7 +51,7 @@ class SocialVariable
      */
     public function getLoginUrl($providerHandle, array $params = [])
     {
-        return Social::getInstance()->getLoginAccounts()->getLoginUrl($providerHandle, $params);
+        return Plugin::getInstance()->getLoginAccounts()->getLoginUrl($providerHandle, $params);
     }
 
     /**
@@ -64,7 +64,7 @@ class SocialVariable
      */
     public function getLoginAccountByLoginProvider($loginProviderHandle)
     {
-        return Social::getInstance()->getLoginAccounts()->getLoginAccountByLoginProvider($loginProviderHandle);
+        return Plugin::getInstance()->getLoginAccounts()->getLoginAccountByLoginProvider($loginProviderHandle);
     }
 
     /**
@@ -77,7 +77,7 @@ class SocialVariable
      */
     public function getLoginAccountConnectUrl($providerHandle)
     {
-        return Social::getInstance()->getLoginAccounts()->getLoginAccountConnectUrl($providerHandle);
+        return Plugin::getInstance()->getLoginAccounts()->getLoginAccountConnectUrl($providerHandle);
     }
 
     /**
@@ -90,7 +90,7 @@ class SocialVariable
      */
     public function getLoginAccountDisconnectUrl($providerHandle)
     {
-        return Social::getInstance()->getLoginAccounts()->getLoginAccountDisconnectUrl($providerHandle);
+        return Plugin::getInstance()->getLoginAccounts()->getLoginAccountDisconnectUrl($providerHandle);
     }
 
     /**
@@ -103,6 +103,6 @@ class SocialVariable
      */
     public function getLoginProviders($enabledOnly = true)
     {
-        return Social::getInstance()->getLoginProviders()->getLoginProviders($enabledOnly);
+        return Plugin::getInstance()->getLoginProviders()->getLoginProviders($enabledOnly);
     }
 }

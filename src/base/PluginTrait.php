@@ -7,7 +7,7 @@
 
 namespace dukt\social\base;
 
-use dukt\social\Plugin as Social;
+use dukt\social\Plugin;
 
 /**
  * PluginTrait implements the common methods and properties for plugin classes.
@@ -25,7 +25,7 @@ trait PluginTrait
      */
     public function getLoginAccounts()
     {
-        /** @var Social $this */
+        /** @var Plugin $this */
         return $this->get('loginAccounts');
     }
 
@@ -37,7 +37,7 @@ trait PluginTrait
      */
     public function getLoginProviders()
     {
-        /** @var Social $this */
+        /** @var Plugin $this */
         return $this->get('loginProviders');
     }
 }

@@ -13,7 +13,6 @@ use dukt\social\errors\LoginException;
 use dukt\social\errors\RegistrationException;
 use dukt\social\Plugin;
 use dukt\social\web\assets\social\SocialAsset;
-use dukt\social\Plugin as Social;
 use GuzzleHttp\Exception\BadResponseException;
 use yii\web\HttpException;
 use craft\elements\User;
@@ -95,7 +94,7 @@ class LoginAccountsController extends Controller
             throw new HttpException(404);
         }
 
-        $loginAccounts = Social::getInstance()->getLoginAccounts()->getLoginAccountsByUserId($user->id);
+        $loginAccounts = Plugin::getInstance()->getLoginAccounts()->getLoginAccountsByUserId($user->id);
 
         Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
 
@@ -121,7 +120,7 @@ class LoginAccountsController extends Controller
 
         $loginAccountId = Craft::$app->getRequest()->getRequiredBodyParam('id');
 
-        Social::getInstance()->getLoginAccounts()->deleteLoginAccountById($loginAccountId);
+        Plugin::getInstance()->getLoginAccounts()->deleteLoginAccountById($loginAccountId);
 
         return $this->asJson(['success' => true]);
     }
@@ -158,7 +157,7 @@ class LoginAccountsController extends Controller
                 throw new LoginException('Social login is disabled');
             }
 
-            $loginProvider = Social::getInstance()->getLoginProviders()->getLoginProvider($providerHandle);
+            $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($providerHandle);
 
             if (!$loginProvider) {
                 throw new LoginException('Login provider is not configured');
@@ -260,7 +259,7 @@ class LoginAccountsController extends Controller
         $handle = Craft::$app->getRequest()->getParam('provider');
 
         // delete social user
-        Social::getInstance()->getLoginAccounts()->deleteLoginAccountByProvider($handle);
+        Plugin::getInstance()->getLoginAccounts()->deleteLoginAccountByProvider($handle);
 
         Craft::$app->getSession()->setNotice(Craft::t('social', 'Login account disconnected.'));
 
@@ -283,7 +282,7 @@ class LoginAccountsController extends Controller
      */
     private function oauthConnect($loginProviderHandle)
     {
-        $loginProvider = Social::getInstance()->getLoginProviders()->getLoginProvider($loginProviderHandle);
+        $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($loginProviderHandle);
 
         Craft::$app->getSession()->set('social.loginProvider', $loginProviderHandle);
 
@@ -341,11 +340,11 @@ class LoginAccountsController extends Controller
             $this->redirect = $this->originUrl;
         }
 
-        $socialLoginProvider = Social::getInstance()->getLoginProviders()->getLoginProvider($token->providerHandle);
+        $socialLoginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($token->providerHandle);
         $profile = $socialLoginProvider->getProfile($token);
         $userFieldMapping = $socialLoginProvider->getUserFieldMapping();
         $socialUid = Craft::$app->getView()->renderString($userFieldMapping['id'], ['profile' => $profile]);
-        $account = Social::getInstance()->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
+        $account = Plugin::getInstance()->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
 
 
         // Existing login account
@@ -393,11 +392,11 @@ class LoginAccountsController extends Controller
      */
     private function registerOrLoginFromToken(Token $token)
     {
-        $socialLoginProvider = Social::getInstance()->getLoginProviders()->getLoginProvider($token->providerHandle);
+        $socialLoginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($token->providerHandle);
         $profile = $socialLoginProvider->getProfile($token);
         $userFieldMapping = $socialLoginProvider->getUserFieldMapping();
         $socialUid = Craft::$app->getView()->renderString($userFieldMapping['id'], ['profile' => $profile]);
-        $account = Social::getInstance()->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
+        $account = Plugin::getInstance()->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
 
 
         // Existing user
@@ -467,7 +466,7 @@ class LoginAccountsController extends Controller
         $user = Craft::$app->users->getUserByUsernameOrEmail($email);
 
         if ($user) {
-            if (Social::getInstance()->getSettings()->allowEmailMatch !== true) {
+            if (Plugin::getInstance()->getSettings()->allowEmailMatch !== true) {
                 throw new RegistrationException('An account already exists with this email: '.$email);
             }
 
@@ -572,7 +571,7 @@ class LoginAccountsController extends Controller
      */
     private function checkLockedDomains($profile)
     {
-        $lockDomains = Social::getInstance()->getSettings()->lockDomains;
+        $lockDomains = Plugin::getInstance()->getSettings()->lockDomains;
 
         if (\count($lockDomains) > 0) {
             $domainRejected = true;
@@ -615,7 +614,7 @@ class LoginAccountsController extends Controller
         }
 
         if ($photoUrl) {
-            Social::getInstance()->getLoginAccounts()->saveRemotePhoto($photoUrl, $newUser);
+            Plugin::getInstance()->getLoginAccounts()->saveRemotePhoto($photoUrl, $newUser);
         }
     }
 

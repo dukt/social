@@ -13,7 +13,7 @@ use craft\elements\db\ElementQueryInterface;
 use craft\elements\User;
 use craft\helpers\Html;
 use dukt\social\elements\db\LoginAccountQuery;
-use dukt\social\Plugin as Social;
+use dukt\social\Plugin;
 use dukt\social\models\Token;
 
 
@@ -56,7 +56,7 @@ class LoginAccount extends Element
             ]
         ];
 
-        $loginProviders = Social::getInstance()->getLoginProviders()->getLoginProviders();
+        $loginProviders = Plugin::getInstance()->getLoginProviders()->getLoginProviders();
 
         if ($loginProviders) {
             $sources[] = ['heading' => Craft::t('social', 'Login Providers')];
@@ -171,7 +171,7 @@ class LoginAccount extends Element
      */
     public function authenticate(Token $token): bool
     {
-        $socialLoginProvider = Social::getInstance()->getLoginProviders()->getLoginProvider($token->providerHandle);
+        $socialLoginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($token->providerHandle);
 
         $profile = $socialLoginProvider->getProfile($token);
 
@@ -190,7 +190,7 @@ class LoginAccount extends Element
     public function getLoginProvider()
     {
         if ($this->providerHandle) {
-            return Social::getInstance()->getLoginProviders()->getLoginProvider($this->providerHandle);
+            return Plugin::getInstance()->getLoginProviders()->getLoginProvider($this->providerHandle);
         }
     }
 
