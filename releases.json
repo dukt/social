@@ -1,5 +1,14 @@
 [
   {
+    "version": "1.2.7",
+    "downloadUrl": "https://github.com/dukt/social/archive/1.2.7.zip",
+    "date": "2018-06-27T04:20:00-02:00",
+    "notes": [
+      "[Improved] Removed the `user_location` OAuth scope for the Facebook login provider.",
+      "[Improved] Removed `locationId` and `locationName` from Facebook’s profile response.",
+    ]
+  },
+  {
     "version": "1.2.6",
     "downloadUrl": "https://github.com/dukt/social/archive/1.2.6.zip",
     "date": "2018-05-03T12:20:00-02:00",
