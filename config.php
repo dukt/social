@@ -34,7 +34,6 @@ return [
 	//    'userMapping' => [
 	//        'firstName' => '{{ firstName }}',
 	//        'lastName' => '{{ lastName }}',
-	//        'location' => '{{ locationName }}',
 	//        'gender' => '{{ gender }}',
 	//        'profileUrl' => '{{ link }}',
 	//    ],

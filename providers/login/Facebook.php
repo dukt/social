@@ -40,7 +40,6 @@ class Facebook extends BaseProvider
 	{
 		return [
 			'email',
-			'user_location',
 		];
 	}
 
@@ -62,7 +61,6 @@ class Facebook extends BaseProvider
 			'id', 'name', 'first_name', 'last_name',
 			'email', 'hometown', 'picture.type(large){url,is_silhouette}',
 			'cover{source}', 'gender', 'locale', 'link',
-			'location',
 		]);
 
 		$request = $client->get('/me?fields='.$fields);
@@ -91,8 +89,6 @@ class Facebook extends BaseProvider
 			'gender' => (isset($remoteProfile['gender']) ? $remoteProfile['gender'] : null ),
 			'locale' => (isset($remoteProfile['locale']) ? $remoteProfile['locale'] : null ),
 			'link' => (isset($remoteProfile['link']) ? $remoteProfile['link'] : null ),
-			'locationId' => (isset($remoteProfile['location']['id']) ? $remoteProfile['location']['id'] : null ),
-			'locationName' => (isset($remoteProfile['location']['name']) ? $remoteProfile['location']['name'] : null ),
 		];
 	}
 }
