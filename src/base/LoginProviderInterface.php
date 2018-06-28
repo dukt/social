@@ -2,7 +2,7 @@
 /**
  * @link      https://dukt.net/social/
  * @copyright Copyright (c) 2018, Dukt
- * @license   https://dukt.net/social/docs/license
+ * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
 namespace dukt\social\base;
@@ -28,11 +28,16 @@ interface LoginProviderInterface
     public function getName(): string;
 
     /**
-     * Returns a profile from an OAuth token.
+     * Returns the OAuth provider instance.
      *
-     * @param Token $token
-     *
-     * @return array|null
+     * @return mixed
      */
-    public function getProfile(Token $token);
+    public function getOauthProvider();
+
+    /**
+     * Returns the default user field mapping.
+     *
+     * @return array
+     */
+    public function getDefaultUserFieldMapping(): array;
 }

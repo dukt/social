@@ -2,7 +2,7 @@
 /**
  * @link      https://dukt.net/social/
  * @copyright Copyright (c) 2018, Dukt
- * @license   https://dukt.net/social/docs/license
+ * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
 namespace dukt\social\loginproviders;
@@ -32,7 +32,7 @@ class Google extends LoginProvider
     /**
      * @inheritdoc
      */
-    public function getDefaultScope()
+    public function getDefaultOauthScope(): array
     {
         return [
             'https://www.googleapis.com/auth/userinfo.profile',
@@ -59,44 +59,26 @@ class Google extends LoginProvider
     /**
      * @inheritdoc
      */
-    public function getProfile(Token $token)
+    public function getDefaultUserFieldMapping(): array
     {
-        $remoteProfile = $this->getRemoteProfile($token);
-
-        $photoUrl = $remoteProfile->getAvatar();
-
-        if (strpos($photoUrl, '?') !== false) {
-            $photoUrl = substr($photoUrl, 0, strpos($photoUrl, '?'));
-        }
-
         return [
-            'id' => $remoteProfile->getId(),
-            'email' => $remoteProfile->getEmail(),
-            'name' => $remoteProfile->getName(),
-            'firstName' => $remoteProfile->getFirstName(),
-            'lastName' => $remoteProfile->getLastName(),
-            'photoUrl' => $photoUrl,
+            'id' => '{{ profile.getId() }}',
+            'email' => '{{ profile.getEmail() }}',
+            'username' => '{{ profile.getEmail() }}',
+            'photo' => '{{ profile.getAvatar() }}',
         ];
     }
-
-    // Protected Methods
-    // =========================================================================
 
     /**
      * Returns the login provider’s OAuth provider.
      *
      * @return \Dukt\OAuth2\Client\Provider\Google
+     * @throws \yii\base\InvalidConfigException
      */
-    protected function getOauthProvider(): \Dukt\OAuth2\Client\Provider\Google
+    public function getOauthProvider(): \Dukt\OAuth2\Client\Provider\Google
     {
-        $providerInfos = $this->getInfos();
+        $config = $this->getOauthProviderConfig();
 
-        $config = [
-            'clientId' => $providerInfos['clientId'] ?? '',
-            'clientSecret' => $providerInfos['clientSecret'] ?? '',
-            'redirectUri' => $this->getRedirectUri(),
-        ];
-
-        return new \Dukt\OAuth2\Client\Provider\Google($config);
+        return new \Dukt\OAuth2\Client\Provider\Google($config['options']);
     }
 }

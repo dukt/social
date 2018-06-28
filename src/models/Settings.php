@@ -2,7 +2,7 @@
 /**
  * @link      https://dukt.net/social/
  * @copyright Copyright (c) 2018, Dukt
- * @license   https://dukt.net/social/docs/license
+ * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
 namespace dukt\social\models;
@@ -17,7 +17,7 @@ use craft\base\Model;
  */
 class Settings extends Model
 {
-    // Public Properties
+    // Properties
     // =========================================================================
 
     /**
@@ -56,7 +56,7 @@ class Settings extends Model
     public $enableSocialRegistration = true;
 
     /**
-     * @var array Defines the OAuth client ID, secret, scope, authorization options and user mapping for login providers.
+     * @var array Defines the login providers.
      */
     public $loginProviders = [];
 
@@ -65,8 +65,17 @@ class Settings extends Model
      */
     public $lockDomains = [];
 
+    // Public Methods
+    // =========================================================================
+
     /**
-     * @var bool Show CP section
+     * @inheritdoc
      */
-    public $showCpSection = false;
+    public function rules()
+    {
+        return [
+            [['allowEmailMatch', 'autoFillProfile', 'enableCpLogin', 'enableSocialLogin', 'enableSocialRegistration'], 'boolean'],
+            [['defaultGroup'], 'number', 'integerOnly' => true],
+        ];
+    }
 }

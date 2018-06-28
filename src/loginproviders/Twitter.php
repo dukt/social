@@ -2,7 +2,7 @@
 /**
  * @link      https://dukt.net/social/
  * @copyright Copyright (c) 2018, Dukt
- * @license   https://dukt.net/social/docs/license
+ * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
 namespace dukt\social\loginproviders;
@@ -50,51 +50,50 @@ class Twitter extends LoginProvider
      */
     public function getProfile(Token $token)
     {
-        $remoteProfile = $this->getRemoteProfile($token);
+        $profile = $this->getOauthProvider()->getUserDetails($token->token);
 
-        $photoUrl = $remoteProfile->imageUrl;
-        $photoUrl = str_replace('_normal.', '.', $photoUrl);
-
-        return [
-            'id' => $remoteProfile->uid,
-            'email' => $remoteProfile->email,
-            'photoUrl' => $photoUrl,
-            'nickname' => $remoteProfile->nickname,
-            'name' => $remoteProfile->name,
-            'location' => $remoteProfile->location,
-            'description' => $remoteProfile->description,
-        ];
-    }
-
-    // Protected Methods
-    // =========================================================================
-
-    /**
-     * Returns the login provider’s OAuth provider.
-     *
-     * @return \League\OAuth1\Client\Server\Twitter
-     */
-    protected function getOauthProvider(): \League\OAuth1\Client\Server\Twitter
-    {
-        $providerInfos = $this->getInfos();
-
-        $config = [
-            'identifier' => $providerInfos['clientId'] ?? '',
-            'secret' => $providerInfos['clientSecret'] ?? '',
-        ];
-
-        if (!isset($config['callback_uri'])) {
-            $config['callback_uri'] = $this->getRedirectUri();
+        if (!$profile) {
+            return null;
         }
 
-        return new \League\OAuth1\Client\Server\Twitter($config);
+        $profile = (array)$profile;
+        $profile['id'] = $profile['uid'];
+
+        return $profile;
     }
 
     /**
      * @inheritdoc
      */
-    protected function getRemoteProfile(Token $token)
+    public function getDefaultUserFieldMapping(): array
     {
-        return $this->getOauthProvider()->getUserDetails($token->token);
+        return [
+            'id' => '{{ profile.uid }}',
+            'email' => '{{ profile.email }}',
+            'username' => '{{ profile.email }}',
+            'photo' => '{{ profile.imageUrl|replace("_normal.", ".") }}',
+        ];
+    }
+
+    /**
+     * Returns the login provider’s OAuth provider.
+     *
+     * @return \League\OAuth1\Client\Server\Twitter
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getOauthProvider(): \League\OAuth1\Client\Server\Twitter
+    {
+        $config = $this->getOauthProviderConfig();
+
+        $config['identifier'] = $config['options']['clientId'] ?? '';
+        unset($config['options']['clientId']);
+
+        $config['secret'] = $config['options']['clientSecret'] ?? '';
+        unset($config['options']['clientSecret']);
+
+        $config['callback_uri'] = $config['options']['redirectUri'] ?? '';
+        unset($config['options']['redirectUri']);
+
+        return new \League\OAuth1\Client\Server\Twitter($config);
     }
 }

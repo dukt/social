@@ -2,15 +2,15 @@
 /**
  * @link      https://dukt.net/social/
  * @copyright Copyright (c) 2018, Dukt
- * @license   https://dukt.net/social/docs/license
+ * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
 namespace dukt\social\controllers;
 
 use Craft;
 use craft\web\Controller;
+use dukt\social\Plugin;
 use dukt\social\web\assets\social\SocialAsset;
-use dukt\social\Plugin as Social;
 use yii\web\HttpException;
 use yii\web\Response;
 
@@ -42,7 +42,7 @@ class LoginProvidersController extends Controller
 
         Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
 
-        $variables['loginProviders'] = Social::$plugin->getLoginProviders()->getLoginProviders(false);
+        $variables['loginProviders'] = Plugin::getInstance()->getLoginProviders()->getLoginProviders(false);
 
         return $this->renderTemplate('social/loginproviders/_index', $variables);
     }
@@ -62,15 +62,13 @@ class LoginProvidersController extends Controller
             return $this->renderTemplate('social/settings/_pro-requirement');
         }
 
-        $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($handle, false, true);
-        $userMapping = Social::$plugin->getLoginProviders()->getUserMapping($handle);
+        $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($handle, false, true);
+        $oauthProviderConfig = Plugin::getInstance()->getOauthProviderConfig($handle);
 
         if ($loginProvider) {
             return $this->renderTemplate('social/loginproviders/_oauth', [
-                'handle' => $handle,
-                'infos' => $loginProvider->getInfos(),
                 'loginProvider' => $loginProvider,
-                'userMapping' => $userMapping,
+                'oauthProviderConfig' => $oauthProviderConfig,
             ]);
         }
 
@@ -78,7 +76,7 @@ class LoginProvidersController extends Controller
     }
 
     /**
-     * Login provider’s user mapping.
+     * Login provider’s user field mapping.
      *
      * @param $handle
      *
@@ -86,21 +84,17 @@ class LoginProvidersController extends Controller
      * @throws HttpException
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionUserMapping($handle): Response
+    public function actionUserFieldMapping($handle): Response
     {
         if (Craft::$app->getEdition() !== Craft::Pro) {
             return $this->renderTemplate('social/settings/_pro-requirement');
         }
 
-        $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($handle, false, true);
-        $userMapping = Social::$plugin->getLoginProviders()->getUserMapping($handle);
+        $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($handle, false, true);
 
         if ($loginProvider) {
-            return $this->renderTemplate('social/loginproviders/_usermapping', [
-                'handle' => $handle,
-                'infos' => $loginProvider->getInfos(),
+            return $this->renderTemplate('social/loginproviders/_user-field-mapping', [
                 'loginProvider' => $loginProvider,
-                'userMapping' => $userMapping,
             ]);
         }
 
@@ -119,7 +113,7 @@ class LoginProvidersController extends Controller
         $this->requirePostRequest();
         $loginProvider = Craft::$app->getRequest()->getRequiredBodyParam('loginProvider');
 
-        if (Social::$plugin->getLoginProviders()->enableLoginProvider($loginProvider)) {
+        if (Plugin::getInstance()->getLoginProviders()->enableLoginProvider($loginProvider)) {
             Craft::$app->getSession()->setNotice(Craft::t('social', 'Login provider enabled.'));
         } else {
             Craft::$app->getSession()->setError(Craft::t('social', 'Couldn’t enable login provider.'));
@@ -140,12 +134,43 @@ class LoginProvidersController extends Controller
         $this->requirePostRequest();
         $loginProvider = Craft::$app->getRequest()->getRequiredBodyParam('loginProvider');
 
-        if (Social::$plugin->getLoginProviders()->disableLoginProvider($loginProvider)) {
+        if (Plugin::getInstance()->getLoginProviders()->disableLoginProvider($loginProvider)) {
             Craft::$app->getSession()->setNotice(Craft::t('social', 'Login provider disabled.'));
         } else {
             Craft::$app->getSession()->setError(Craft::t('social', 'Couldn’t disable login provider.'));
         }
 
         return $this->redirectToPostedUrl();
+    }
+
+    /**
+     * Saves an OAuth provider.
+     *
+     * @return null|Response
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function actionSaveOauthProvider()
+    {
+        $this->requirePostRequest();
+        $request = Craft::$app->getRequest();
+
+        $handle = $request->getBodyParam('handle');
+
+        $settings = [
+            'options' => [
+                'clientId' => $request->getBodyParam('clientId'),
+                'clientSecret' => $request->getBodyParam('clientSecret'),
+            ]
+        ];
+
+        if (Plugin::getInstance()->saveLoginProviderSettings($handle, $settings)) {
+            Craft::$app->getSession()->setNotice(Craft::t('analytics', 'Provider saved.'));
+
+            return $this->redirectToPostedUrl();
+        }
+
+        Craft::$app->getSession()->setError(Craft::t('analytics', 'Couldn’t save provider.'));
+
+        return null;
     }
 }

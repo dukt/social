@@ -1,8 +1,14 @@
 {% if user.id == currentUser.id or currentUser.admin %}
-    <div class="meta">
+    <div class="meta social-login-accounts-pane">
         <div class="data">
 
             <h2>{{ "Login Accounts"|t('social') }}</h2>
+
+            {% if user.id == currentUser.id %}
+                <p>{{ 'Manage your login accounts.' }}</p>
+            {% else %}
+                <p>{{ 'Manage login accounts for this user.' }}</p>
+            {% endif %}
 
             <div id="nologinaccounts"{% if loginAccounts|length > 0 or loginProviders|length > 0 %} class="hidden"{% endif %}>
                 <p class="light">{{ "No login accounts."|t('social') }}</p>

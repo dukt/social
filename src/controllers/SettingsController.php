@@ -2,14 +2,14 @@
 /**
  * @link      https://dukt.net/social/
  * @copyright Copyright (c) 2018, Dukt
- * @license   https://dukt.net/social/docs/license
+ * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
 namespace dukt\social\controllers;
 
 use Craft;
 use craft\web\Controller;
-use dukt\social\Plugin as Social;
+use dukt\social\Plugin;
 use yii\web\Response;
 
 /**
@@ -40,9 +40,41 @@ class SettingsController extends Controller
         $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $variables['settings'] = $plugin->getSettings();
 
-        $accounts = Social::$plugin->getLoginAccounts()->getLoginAccounts();
+        $accounts = Plugin::getInstance()->getLoginAccounts()->getLoginAccounts();
         $variables['totalAccounts'] = count($accounts);
 
         return $this->renderTemplate('social/settings/settings', $variables);
+    }
+
+    /**
+     * Saves the settings.
+     *
+     * @return null|Response
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function actionSaveSettings()
+    {
+        $this->requirePostRequest();
+        $settings = Craft::$app->getRequest()->getBodyParam('settings', []);
+        $plugin = Craft::$app->getPlugins()->getPlugin('social');
+
+        if ($plugin === null) {
+            throw new NotFoundHttpException('Plugin not found');
+        }
+
+        if (!Plugin::getInstance()->savePluginSettings($settings, $plugin)) {
+            Craft::$app->getSession()->setError(Craft::t('app', 'Couldn’t save plugin settings.'));
+
+            // Send the plugin back to the template
+            Craft::$app->getUrlManager()->setRouteParams([
+                'plugin' => $plugin
+            ]);
+
+            return null;
+        }
+
+        Craft::$app->getSession()->setNotice(Craft::t('app', 'Plugin settings saved.'));
+
+        return $this->redirectToPostedUrl();
     }
 }
