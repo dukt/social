@@ -45,6 +45,11 @@ class Plugin extends \craft\base\Plugin
      */
     public $hasCpSettings = true;
 
+    /**
+     * @inheritdoc
+     */
+    public $minVersionRequired = '1.1.0';
+
     // Public Methods
     // =========================================================================
 

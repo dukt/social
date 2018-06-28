@@ -30,6 +30,9 @@ Changelog
 - Renamed `dukt\social\base\LoginProvider::getDefaultScope()` to `dukt\social\base\LoginProvider::getDefaultOauthScope()`.
 - Renamed `dukt\social\base\LoginProvider::getScope()` to `dukt\social\base\LoginProvider::getOauthScope()`.
 
+### Fixed
+- Fixed a bug where Social 1.1.0 was not required to update to Social 2.0+.
+
 ## 2.0.0-beta.9 - 2018-05-24
 
 ### Added
