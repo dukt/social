@@ -4,7 +4,7 @@ Changelog
 ## Unreleased
 
 # Added
-- Additional profile fields can now be requested when registering users with Facebook
+- Additional profile fields can now be requested when registering users with Facebook.
 - OAuth provider credentials can now be saved from the control panel.
 - Added `dukt\social\base\LoginProvider::getDefaultProfileFields()`.
 - Added `dukt\social\base\LoginProvider::getLoginProviderConfig()`.
@@ -15,7 +15,7 @@ Changelog
 - Added `dukt\social\Plugin::getLoginProviderConfig()`.
 
 ### Changed
-- Changed the `loginProviders` config.
+- The `loginProviders` config now defines the user field mapping, the profile fields and the OAuth configuration for login providers.
 - Don't delete the existing user photo before replacing it in `dukt\social\services\LoginAccounts::saveRemotePhoto()` since `craft\services\Users::saveUserPhoto()` already handles that.
 - Login providers now return a specific OAuth 1 or 2 profile object instead of an array of data.
 - User field mapping, profile fields and OAuth scope can now be customized using the `loginProviders` config.
