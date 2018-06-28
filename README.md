@@ -6,7 +6,7 @@ Let your visitors log into Craft CMS with web services like Facebook, Google, Tw
 
 ## Requirements
 
-This plugin requires Craft CMS 3.0.0-RC1 or later.
+This plugin requires Craft CMS 3.0.0 or later.
 
 ## How to install Social 2 Beta
 
