@@ -25,6 +25,7 @@ Changelog
 - Removed `dukt\social\models\Settings::$showCpSection`.
 - Removed `dukt\social\Plugin::$plugin`.
 - Removed `dukt\social\services\LoginProviders::getUserMapping()`.
+- Removed `dukt\social\Plugin::beforeUpdate()`.
 - Renamed `dukt\social\base\LoginProvider::getAuthorizationOptions()` to `dukt\social\base\LoginProvider::getOauthAuthorizationOptions()`.
 - Renamed `dukt\social\base\LoginProvider::getDefaultAuthorizationOptions()` to `dukt\social\base\LoginProvider::getDefaultOauthAuthorizationOptions()`.
 - Renamed `dukt\social\base\LoginProvider::getDefaultScope()` to `dukt\social\base\LoginProvider::getDefaultOauthScope()`.
