@@ -1,7 +1,7 @@
 Changelog
 ===================
 
-## Unreleased
+## 2.0.0-beta.10 - 2018-06-29
 
 # Added
 - Additional profile fields can now be requested when registering users with Facebook.
