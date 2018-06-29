@@ -2,7 +2,7 @@
 /**
  * @link      https://dukt.net/social/
  * @copyright Copyright (c) 2018, Dukt
- * @license   https://dukt.net/social/docs/license
+ * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
 namespace dukt\social\base;
@@ -11,7 +11,6 @@ use Craft;
 use craft\web\Response;
 use dukt\social\helpers\SocialHelper;
 use dukt\social\models\Token;
-use dukt\social\Plugin as Social;
 use dukt\social\Plugin;
 
 /**
@@ -36,18 +35,56 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
-     * Get provider infos.
+     * Get the class name, stripping all the namespaces.
+     *
+     * For example, "dukt\social\loginproviders\Google" becomes "Google"
+     *
+     * @return string
+     */
+    public function getClass(): string
+    {
+        $nsClass = get_class($this);
+
+        return substr($nsClass, strrpos($nsClass, "\\") + 1);
+    }
+
+    /**
+     * Get the provider handle.
+     *
+     * @return string
+     */
+    public function getHandle(): string
+    {
+        $class = $this->getClass();
+
+        return strtolower($class);
+    }
+
+    /**
+     * Get the icon URL.
      *
      * @return mixed
      */
-    public function getInfos()
+    public function getIconUrl()
     {
-        $handle = $this->getHandle();
-        $loginProvidersConfig = Social::$plugin->getLoginProviderConfig($handle);
+        return Craft::$app->assetManager->getPublishedUrl('@dukt/social/icons/'.$this->getHandle().'.svg', true);
+    }
 
-        if ($loginProvidersConfig) {
-            return $loginProvidersConfig;
+    /**
+     * Checks if the login provider is configured.
+     *
+     * @return bool
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function isConfigured(): bool
+    {
+        $config = $this->getOauthProviderConfig();
+
+        if (!empty($config['options']['clientId'])) {
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -71,22 +108,6 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
-     * Checks if the login provider is configured.
-     *
-     * @return bool
-     */
-    public function isConfigured(): bool
-    {
-        $infos = $this->getInfos();
-
-        if (!empty($infos['clientId'])) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * OAuth version.
      *
      * @return int
@@ -100,6 +121,7 @@ abstract class LoginProvider implements LoginProviderInterface
      * OAuth connect.
      *
      * @return null
+     * @throws \yii\base\InvalidConfigException
      */
     public function oauthConnect()
     {
@@ -127,93 +149,39 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
-     * Get the provider handle.
-     *
-     * @return string
-     */
-    public function getHandle(): string
-    {
-        $class = $this->getClass();
-
-        return strtolower($class);
-    }
-
-    /**
-     * Get the class name, stripping all the namespaces.
-     *
-     * For example, "dukt\social\loginproviders\Google" becomes "Google"
-     *
-     * @return string
-     */
-    public function getClass(): string
-    {
-        $nsClass = get_class($this);
-
-        return substr($nsClass, strrpos($nsClass, "\\") + 1);
-    }
-
-    /**
-     * Get the icon URL.
-     *
-     * @return mixed
-     */
-    public function getIconUrl()
-    {
-        return Craft::$app->assetManager->getPublishedUrl('@dukt/social/icons/'.$this->getHandle().'.svg', true);
-    }
-
-    /**
-     * Get the default scope.
-     *
-     * @return array|null
-     */
-    public function getDefaultScope()
-    {
-        return null;
-    }
-
-    /**
-     * Get the default authorization options.
-     *
-     * @return array|null
-     */
-    public function getDefaultAuthorizationOptions()
-    {
-        return null;
-    }
-
-    /**
      * Returns the `scope` from login provider class by default, or the `scope` overridden by the config.
      *
-     * @return array|null
+     * @return array
+     * @throws \yii\base\InvalidConfigException
      */
-    public function getScope()
+    public function getOauthScope()
     {
-        $providerHandle = $this->getHandle();
-        $config = Plugin::$plugin->getLoginProviderConfig($providerHandle);
+        $scope = $this->getDefaultOauthScope();
+        $oauthProviderConfig = $this->getOauthProviderConfig();
 
-        if (isset($config['scope'])) {
-            return $config['scope'];
+        if (isset($oauthProviderConfig['scope'])) {
+            $scope = $this->mergeArrayValues($scope, $oauthProviderConfig['scope']);
         }
 
-        return $this->getDefaultScope();
+        return $scope;
     }
 
     /**
-     * Returns the `authorizationOptions` from login provider class by default, or `authorizationOptions` overridden by the config.
+     * Returns the OAuth authorization options for this provider.
      *
      * @return array|null
+     * @throws \yii\base\InvalidConfigException
      */
-    public function getAuthorizationOptions()
+    public function getOauthAuthorizationOptions()
     {
-        $providerHandle = $this->getHandle();
-        $config = Plugin::$plugin->getLoginProviderConfig($providerHandle);
+        $authorizationOptions = $this->getDefaultOauthAuthorizationOptions();
+        $config = $this->getOauthProviderConfig();
 
         if (isset($config['authorizationOptions'])) {
-            return $config['authorizationOptions'];
+            $authorizationOptions = array_merge($authorizationOptions, $config['authorizationOptions']);
         }
 
-        return $this->getDefaultAuthorizationOptions();
+        return $authorizationOptions;
     }
 
     /**
@@ -224,7 +192,7 @@ abstract class LoginProvider implements LoginProviderInterface
     public function getIsEnabled(): bool
     {
         // get plugin settings
-        $settings = Plugin::$plugin->getSettings();
+        $settings = Plugin::getInstance()->getSettings();
         $enabledLoginProviders = $settings->enabledLoginProviders;
 
         if (in_array($this->getHandle(), $enabledLoginProviders)) {
@@ -244,19 +212,110 @@ abstract class LoginProvider implements LoginProviderInterface
         return SocialHelper::siteActionUrl('social/login-accounts/callback');
     }
 
+    /**
+     * Get profile fields.
+     *
+     * @return array
+     */
+    public function getProfileFields(): array
+    {
+        $profileFields = $this->getDefaultProfileFields();
+        $loginProviderConfig = Plugin::getInstance()->getLoginProviderConfig($this->getHandle());
+
+        if (isset($loginProviderConfig['profileFields'])) {
+            $profileFields = $this->mergeArrayValues($profileFields, $loginProviderConfig['profileFields']);
+        }
+
+        return $profileFields;
+    }
+
+    /**
+     * Get user field mapping.
+     *
+     * @return array
+     */
+    public function getUserFieldMapping(): array
+    {
+        $userFieldMapping = $this->getDefaultUserFieldMapping();
+        $loginProviderConfig = Plugin::getInstance()->getLoginProviderConfig($this->getHandle());
+
+        if (isset($loginProviderConfig['userFieldMapping'])) {
+            $userFieldMapping = array_merge($userFieldMapping, $loginProviderConfig['userFieldMapping']);
+        }
+
+        return $userFieldMapping;
+    }
+
+    /**
+     * Returns a profile from an OAuth token.
+     *
+     * @param Token $token
+     *
+     * @return array|null
+     */
+    public function getProfile(Token $token)
+    {
+        $profile = $this->getOauthProvider()->getResourceOwner($token->token);
+
+        if (!$profile) {
+            return null;
+        }
+
+        return $profile;
+    }
+
     // Protected Methods
     // =========================================================================
 
     /**
-     * Returns the remote profile.
+     * Get the default authorization options.
      *
-     * @param $token
-     *
-     * @return array|null
+     * @return array
      */
-    protected function getRemoteProfile(Token $token)
+    protected function getDefaultOauthAuthorizationOptions(): array
     {
-        return $this->getOauthProvider()->getResourceOwner($token->token);
+        return [];
+    }
+
+    /**
+     * Get the default scope.
+     *
+     * @return array
+     */
+    protected function getDefaultOauthScope(): array
+    {
+        return [];
+    }
+
+    /**
+     * Get default profile fields.
+     *
+     * @return array
+     */
+    protected function getDefaultProfileFields(): array
+    {
+        return [];
+    }
+
+    /**
+     * Get OAuth provider config.
+     *
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     */
+    protected function getOauthProviderConfig(): array
+    {
+        return Plugin::getInstance()->getOauthProviderConfig($this->getHandle());
+    }
+
+    /**
+     * Get login provider config.
+     *
+     * @return array
+     */
+    protected function getLoginProviderConfig(): array
+    {
+        return Plugin::getInstance()->getLoginProviderConfig($this->getHandle());
     }
 
     // Private Methods
@@ -288,6 +347,7 @@ abstract class LoginProvider implements LoginProviderInterface
      * OAuth 2 connect.
      *
      * @return Response
+     * @throws \yii\base\InvalidConfigException
      */
     private function oauth2Connect(): Response
     {
@@ -295,8 +355,8 @@ abstract class LoginProvider implements LoginProviderInterface
 
         Craft::$app->getSession()->set('social.oauthState', $provider->getState());
 
-        $scope = $this->getScope();
-        $options = $this->getAuthorizationOptions();
+        $scope = $this->getOauthScope();
+        $options = $this->getOauthAuthorizationOptions();
 
         if (!is_array($options)) {
             $options = [];
@@ -353,5 +413,32 @@ abstract class LoginProvider implements LoginProviderInterface
             'success' => true,
             'token' => $token
         ];
+    }
+
+    /**
+     * Merge scope.
+     *
+     * @param array $array
+     * @param array $array2
+     *
+     * @return array
+     */
+    private function mergeArrayValues(array $array, array $array2): array
+    {
+        foreach ($array2 as $value2) {
+            $addValue = true;
+
+            foreach ($array as $value) {
+                if ($value === $value2) {
+                    $addValue = false;
+                }
+            }
+
+            if ($addValue) {
+                $array[] = $value2;
+            }
+        }
+
+        return $array;
     }
 }

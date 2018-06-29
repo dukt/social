@@ -2,7 +2,7 @@
 /**
  * @link      https://dukt.net/social/
  * @copyright Copyright (c) 2018, Dukt
- * @license   https://dukt.net/social/docs/license
+ * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
 namespace dukt\social\controllers;
@@ -13,7 +13,6 @@ use dukt\social\errors\LoginException;
 use dukt\social\errors\RegistrationException;
 use dukt\social\Plugin;
 use dukt\social\web\assets\social\SocialAsset;
-use dukt\social\Plugin as Social;
 use GuzzleHttp\Exception\BadResponseException;
 use yii\web\HttpException;
 use craft\elements\User;
@@ -95,7 +94,7 @@ class LoginAccountsController extends Controller
             throw new HttpException(404);
         }
 
-        $loginAccounts = Social::$plugin->getLoginAccounts()->getLoginAccountsByUserId($user->id);
+        $loginAccounts = Plugin::getInstance()->getLoginAccounts()->getLoginAccountsByUserId($user->id);
 
         Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
 
@@ -121,7 +120,7 @@ class LoginAccountsController extends Controller
 
         $loginAccountId = Craft::$app->getRequest()->getRequiredBodyParam('id');
 
-        Social::$plugin->getLoginAccounts()->deleteLoginAccountById($loginAccountId);
+        Plugin::getInstance()->getLoginAccounts()->deleteLoginAccountById($loginAccountId);
 
         return $this->asJson(['success' => true]);
     }
@@ -158,7 +157,7 @@ class LoginAccountsController extends Controller
                 throw new LoginException('Social login is disabled');
             }
 
-            $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($providerHandle);
+            $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($providerHandle);
 
             if (!$loginProvider) {
                 throw new LoginException('Login provider is not configured');
@@ -190,13 +189,14 @@ class LoginAccountsController extends Controller
                 $errorMsg = 'Couldn’t login.';
             }
 
-            Craft::error((string)$response, __METHOD__);
+            Craft::error('Couldn’t login. '.$e->getTraceAsString(), __METHOD__);
             Craft::$app->getSession()->setFlash('error', $errorMsg);
             $this->_cleanSession();
 
             return $this->redirect($this->originUrl);
         } catch (\Exception $e) {
             $errorMsg = $e->getMessage();
+            Craft::error('Couldn’t login. '.$e->getTraceAsString(), __METHOD__);
             Craft::$app->getSession()->setFlash('error', $errorMsg);
             $this->_cleanSession();
 
@@ -259,7 +259,7 @@ class LoginAccountsController extends Controller
         $handle = Craft::$app->getRequest()->getParam('provider');
 
         // delete social user
-        Social::$plugin->getLoginAccounts()->deleteLoginAccountByProvider($handle);
+        Plugin::getInstance()->getLoginAccounts()->deleteLoginAccountByProvider($handle);
 
         Craft::$app->getSession()->setNotice(Craft::t('social', 'Login account disconnected.'));
 
@@ -282,7 +282,7 @@ class LoginAccountsController extends Controller
      */
     private function oauthConnect($loginProviderHandle)
     {
-        $loginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($loginProviderHandle);
+        $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($loginProviderHandle);
 
         Craft::$app->getSession()->set('social.loginProvider', $loginProviderHandle);
 
@@ -340,10 +340,11 @@ class LoginAccountsController extends Controller
             $this->redirect = $this->originUrl;
         }
 
-        $socialLoginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($token->providerHandle);
+        $socialLoginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($token->providerHandle);
         $profile = $socialLoginProvider->getProfile($token);
-        $socialUid = $profile['id'];
-        $account = Social::$plugin->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
+        $userFieldMapping = $socialLoginProvider->getUserFieldMapping();
+        $socialUid = Craft::$app->getView()->renderString($userFieldMapping['id'], ['profile' => $profile]);
+        $account = Plugin::getInstance()->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
 
 
         // Existing login account
@@ -391,10 +392,11 @@ class LoginAccountsController extends Controller
      */
     private function registerOrLoginFromToken(Token $token)
     {
-        $socialLoginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($token->providerHandle);
+        $socialLoginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($token->providerHandle);
         $profile = $socialLoginProvider->getProfile($token);
-        $socialUid = $profile['id'];
-        $account = Social::$plugin->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
+        $userFieldMapping = $socialLoginProvider->getUserFieldMapping();
+        $socialUid = Craft::$app->getView()->renderString($userFieldMapping['id'], ['profile' => $profile]);
+        $account = Plugin::getInstance()->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
 
 
         // Existing user
@@ -435,7 +437,7 @@ class LoginAccountsController extends Controller
      * Register a user.
      *
      * @param string $providerHandle
-     * @param $profile
+     * @param        $profile
      *
      * @return User
      * @throws RegistrationException
@@ -450,18 +452,22 @@ class LoginAccountsController extends Controller
      */
     private function registerUser(string $providerHandle, $profile): User
     {
-        if (empty($profile['email'])) {
+        $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($providerHandle);
+        $userFieldMapping = $loginProvider->getUserFieldMapping();
+        $email = Craft::$app->getView()->renderString($userFieldMapping['email'], ['profile' => $profile]);
+
+        if (empty($email)) {
             throw new RegistrationException('Email address not provided.');
         }
 
 
         // Registration of an existing user with a matching email
 
-        $user = Craft::$app->users->getUserByUsernameOrEmail($profile['email']);
+        $user = Craft::$app->users->getUserByUsernameOrEmail($email);
 
         if ($user) {
-            if (Social::$plugin->getSettings()->allowEmailMatch !== true) {
-                throw new RegistrationException('An account already exists with this email: '.$profile['email']);
+            if (Plugin::getInstance()->getSettings()->allowEmailMatch !== true) {
+                throw new RegistrationException('An account already exists with this email: '.$email);
             }
 
             return $user;
@@ -486,7 +492,6 @@ class LoginAccountsController extends Controller
         }
 
         $newUser = new User();
-        $userMapping = Plugin::getInstance()->getLoginProviders()->getUserMapping($providerHandle);
 
         // Fill user
         $this->fillUser($providerHandle, $newUser, $profile);
@@ -523,13 +528,14 @@ class LoginAccountsController extends Controller
     {
         $socialPlugin = Craft::$app->getPlugins()->getPlugin('social');
         $settings = $socialPlugin->getSettings();
-        $userMapping = Plugin::getInstance()->getLoginProviders()->getUserMapping($providerHandle);
+        $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($providerHandle);
+        $userFieldMapping = $loginProvider->getUserFieldMapping();
 
         $userModelAttributes = ['email', 'username', 'firstName', 'lastName', 'preferredLocale', 'weekStartDay'];
 
-        foreach ($userMapping as $attribute => $template) {
+        foreach ($userFieldMapping as $attribute => $template) {
             // Only fill other fields than `email` and `username` when `autoFillProfile` is true
-            if(!$settings['autoFillProfile'] && ($attribute !== 'email' || $attribute !== 'username')) {
+            if (!$settings['autoFillProfile'] && ($attribute !== 'email' || $attribute !== 'username')) {
                 continue;
             }
 
@@ -565,7 +571,7 @@ class LoginAccountsController extends Controller
      */
     private function checkLockedDomains($profile)
     {
-        $lockDomains = Social::$plugin->getSettings()->lockDomains;
+        $lockDomains = Plugin::getInstance()->getSettings()->lockDomains;
 
         if (\count($lockDomains) > 0) {
             $domainRejected = true;
@@ -596,20 +602,19 @@ class LoginAccountsController extends Controller
     private function saveRemotePhoto(string $providerHandle, User &$newUser, $profile)
     {
         $photoUrl = false;
-        $userMapping = Plugin::getInstance()->getLoginProviders()->getUserMapping($providerHandle);
+        $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($providerHandle);
+        $userFieldMapping = $loginProvider->getUserFieldMapping();
 
-        if (isset($userMapping['photoUrl'])) {
+        if (isset($userFieldMapping['photo'])) {
             try {
-                $photoUrl = html_entity_decode(Craft::$app->getView()->renderString($userMapping['photoUrl'], $profile));
+                $photoUrl = html_entity_decode(Craft::$app->getView()->renderString($userFieldMapping['photo'], ['profile' => $profile]));
             } catch (\Exception $e) {
-                Craft::warning('Could not map:'.print_r(['photoUrl', $userMapping['photoUrl'], $profile, $e->getMessage()], true), __METHOD__);
+                Craft::warning('Could not map:'.print_r(['photo', $userFieldMapping['photo'], $profile, $e->getMessage()], true), __METHOD__);
             }
-        } elseif (!empty($profile['photoUrl'])) {
-            $photoUrl = $profile['photoUrl'];
         }
 
         if ($photoUrl) {
-            Social::$plugin->getLoginAccounts()->saveRemotePhoto($photoUrl, $newUser);
+            Plugin::getInstance()->getLoginAccounts()->saveRemotePhoto($photoUrl, $newUser);
         }
     }
 
@@ -623,7 +628,7 @@ class LoginAccountsController extends Controller
     {
         if (array_key_exists($attribute, $newUser->getAttributes())) {
             try {
-                $newUser->{$attribute} = Craft::$app->getView()->renderString($template, $profile);
+                $newUser->{$attribute} = Craft::$app->getView()->renderString($template, ['profile' => $profile]);
             } catch (\Exception $e) {
                 Craft::warning('Could not map:'.print_r([$attribute, $template, $profile, $e->getMessage()], true), __METHOD__);
             }
@@ -641,7 +646,7 @@ class LoginAccountsController extends Controller
         // Check to make sure custom field exists for user profile
         if (isset($newUser->{$attribute})) {
             try {
-                $value = Craft::$app->getView()->renderString($template, $profile);
+                $value = Craft::$app->getView()->renderString($template, ['profile' => $profile]);
                 $newUser->setFieldValue($attribute, $value);
             } catch (\Exception $e) {
                 Craft::warning('Could not map:'.print_r([$template, $profile, $e->getMessage()], true), __METHOD__);

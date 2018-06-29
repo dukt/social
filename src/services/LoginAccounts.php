@@ -2,7 +2,7 @@
 /**
  * @link      https://dukt.net/social/
  * @copyright Copyright (c) 2018, Dukt
- * @license   https://dukt.net/social/docs/license
+ * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
 namespace dukt\social\services;
@@ -306,10 +306,6 @@ class LoginAccounts extends Component
         }
 
         rename($tempPath.$filename, $tempPath.$filename.'.'.$extension);
-
-        if ($user->photoId) {
-            Craft::$app->users->deleteUserPhoto($user);
-        }
 
         $image = Craft::$app->images->loadImage($tempPath.$filename.'.'.$extension);
         $imageWidth = $image->getWidth();

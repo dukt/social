@@ -9,7 +9,7 @@
 
         {{ csrfInput() }}
 
-        <input type="hidden" name="action" value="plugins/save-plugin-settings">
+        <input type="hidden" name="action" value="social/settings/save-settings">
         <input type="hidden" name="pluginHandle" value="social">
         <input type="hidden" name="redirect" value="{{ 'settings/social/settings'|hash }}">
 
@@ -19,7 +19,8 @@
             instructions: "When enabled, users can social login and register."|t('social'),
             name: 'settings[enableSocialLogin]',
             on:   settings.enableSocialLogin,
-            toggle: 'enable-sociallogin'
+            toggle: 'enable-sociallogin',
+            errors: settings.getErrors('enableSocialLogin'),
         }) }}
 
         <div id="enable-sociallogin"{% if not settings.enableSocialLogin %} class="hidden"{% endif %}>
@@ -29,7 +30,8 @@
                 instructions: "When disabled, users will not able to register with a social service, but they will still be able to social login to an existing account."|t('social'),
                 name: 'settings[enableSocialRegistration]',
                 on:   settings.enableSocialRegistration,
-                toggle: 'enable-socialregistration'
+                toggle: 'enable-socialregistration',
+                errors: settings.getErrors('enableSocialRegistration'),
             }) }}
 
             <div id="enable-socialregistration"{% if not settings.enableSocialRegistration %} class="hidden"{% endif %}>
@@ -45,15 +47,17 @@
                         instructions: "Choose a user group that users will be added to when registering with a social service."|t('social'),
                         name: 'settings[defaultGroup]',
                         options: groups,
-                        value: (settings.defaultGroup is defined ? settings.defaultGroup : null)
+                        value: (settings.defaultGroup is defined ? settings.defaultGroup : null),
+                        errors: settings.getErrors('defaultGroup'),
                     }) }}
                 </div>
 
                 {{ forms.lightswitchField({
                     label: 'Auto-Fill Profile'|t('social'),
-                    instructions: "Automatically fills user fields when a user registers, based on `userMapping` config variables."|t('social'),
+                    instructions: "Automatically fills user fields when a user registers, based on `userFieldMapping` config variables."|t('social'),
                     name: 'settings[autoFillProfile]',
-                    on:   settings.autoFillProfile
+                    on:   settings.autoFillProfile,
+                    errors: settings.getErrors('autoFillProfile'),
                 }) }}
 
             </div>
@@ -62,17 +66,11 @@
                 label: 'Enable CP Social Login'|t('social'),
                 instructions: "Toggles the visibility of Social Login buttons on the Control Panel's login screen."|t('social'),
                 name: 'settings[enableCpLogin]',
-                on:   settings.enableCpLogin
+                on:   settings.enableCpLogin,
+                errors: settings.getErrors('enableCpLogin'),
             }) }}
 
         </div>
-
-        {{ forms.lightswitchField({
-            label: 'Show CP Section'|t('social'),
-            instructions: "Toggles the visibility of the Social Login menu item in the Control Panel sidebar."|t('social'),
-            name: 'settings[showCpSection]',
-            on:   settings.showCpSection
-        }) }}
 
         <div class="buttons">
             <input type="submit" class="btn submit force" value="{{ 'Save'|t('social') }}">

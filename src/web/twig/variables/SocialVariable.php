@@ -2,7 +2,7 @@
 /**
  * @link      https://dukt.net/social/
  * @copyright Copyright (c) 2018, Dukt
- * @license   https://dukt.net/social/docs/license
+ * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
 namespace dukt\social\web\twig\variables;
@@ -10,12 +10,12 @@ namespace dukt\social\web\twig\variables;
 use Craft;
 use dukt\social\elements\db\LoginAccountQuery;
 use dukt\social\elements\LoginAccount;
-use dukt\social\Plugin as Social;
+use dukt\social\Plugin;
 
 /**
  * Class SocialVariable variable.
  *
- * @author Dukt <support@dukt.net>
+ * @author  Dukt <support@dukt.net>
  * @since   1.0
  */
 class SocialVariable
@@ -43,14 +43,15 @@ class SocialVariable
     /**
      * Get the login URL
      *
-     * @param $providerHandle
-     * @param array  $params
+     * @param       $providerHandle
+     * @param array $params
      *
      * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function getLoginUrl($providerHandle, array $params = [])
     {
-        return Social::$plugin->getLoginAccounts()->getLoginUrl($providerHandle, $params);
+        return Plugin::getInstance()->getLoginAccounts()->getLoginUrl($providerHandle, $params);
     }
 
     /**
@@ -59,10 +60,11 @@ class SocialVariable
      * @param string $loginProviderHandle
      *
      * @return LoginAccount|null
+     * @throws \yii\base\InvalidConfigException
      */
     public function getLoginAccountByLoginProvider($loginProviderHandle)
     {
-        return Social::$plugin->getLoginAccounts()->getLoginAccountByLoginProvider($loginProviderHandle);
+        return Plugin::getInstance()->getLoginAccounts()->getLoginAccountByLoginProvider($loginProviderHandle);
     }
 
     /**
@@ -71,10 +73,11 @@ class SocialVariable
      * @param string $providerHandle
      *
      * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function getLoginAccountConnectUrl($providerHandle)
     {
-        return Social::$plugin->getLoginAccounts()->getLoginAccountConnectUrl($providerHandle);
+        return Plugin::getInstance()->getLoginAccounts()->getLoginAccountConnectUrl($providerHandle);
     }
 
     /**
@@ -83,10 +86,11 @@ class SocialVariable
      * @param string $providerHandle
      *
      * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function getLoginAccountDisconnectUrl($providerHandle)
     {
-        return Social::$plugin->getLoginAccounts()->getLoginAccountDisconnectUrl($providerHandle);
+        return Plugin::getInstance()->getLoginAccounts()->getLoginAccountDisconnectUrl($providerHandle);
     }
 
     /**
@@ -95,9 +99,10 @@ class SocialVariable
      * @param bool|true $enabledOnly
      *
      * @return array
+     * @throws \yii\base\InvalidConfigException
      */
     public function getLoginProviders($enabledOnly = true)
     {
-        return Social::$plugin->getLoginProviders()->getLoginProviders($enabledOnly);
+        return Plugin::getInstance()->getLoginProviders()->getLoginProviders($enabledOnly);
     }
 }

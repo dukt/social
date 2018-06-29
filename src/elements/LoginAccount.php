@@ -2,7 +2,7 @@
 /**
  * @link      https://dukt.net/social/
  * @copyright Copyright (c) 2018, Dukt
- * @license   https://dukt.net/social/docs/license
+ * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
 namespace dukt\social\elements;
@@ -13,7 +13,7 @@ use craft\elements\db\ElementQueryInterface;
 use craft\elements\User;
 use craft\helpers\Html;
 use dukt\social\elements\db\LoginAccountQuery;
-use dukt\social\Plugin as Social;
+use dukt\social\Plugin;
 use dukt\social\models\Token;
 
 
@@ -56,7 +56,7 @@ class LoginAccount extends Element
             ]
         ];
 
-        $loginProviders = Social::$plugin->getLoginProviders()->getLoginProviders();
+        $loginProviders = Plugin::getInstance()->getLoginProviders()->getLoginProviders();
 
         if ($loginProviders) {
             $sources[] = ['heading' => Craft::t('social', 'Login Providers')];
@@ -171,11 +171,12 @@ class LoginAccount extends Element
      */
     public function authenticate(Token $token): bool
     {
-        $socialLoginProvider = Social::$plugin->getLoginProviders()->getLoginProvider($token->providerHandle);
+        $socialLoginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($token->providerHandle);
 
-        $attributes = $socialLoginProvider->getProfile($token);
+        $profile = $socialLoginProvider->getProfile($token);
 
-        $socialUid = (string)$attributes['id'];
+        $userFieldMapping = $socialLoginProvider->getUserFieldMapping();
+        $socialUid = Craft::$app->getView()->renderString($userFieldMapping['id'], ['profile' => $profile]);
 
         return $this->socialUid === $socialUid;
     }
@@ -189,7 +190,7 @@ class LoginAccount extends Element
     public function getLoginProvider()
     {
         if ($this->providerHandle) {
-            return Social::$plugin->getLoginProviders()->getLoginProvider($this->providerHandle);
+            return Plugin::getInstance()->getLoginProviders()->getLoginProvider($this->providerHandle);
         }
     }
 

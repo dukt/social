@@ -1,6 +1,39 @@
 Changelog
 ===================
 
+## 2.0.0-beta.10 - 2018-06-29
+
+# Added
+- Additional profile fields can now be requested when registering users with Facebook.
+- OAuth provider credentials can now be saved from the control panel.
+- Added `dukt\social\base\LoginProvider::getDefaultProfileFields()`.
+- Added `dukt\social\base\LoginProvider::getLoginProviderConfig()`.
+- Added `dukt\social\base\LoginProvider::getProfileFields()`.
+- Added `dukt\social\base\LoginProvider::getUserFieldMapping()`.
+- Added `dukt\social\base\LoginProviderInterface::getDefaultUserFieldMapping()`.
+- Added `dukt\social\base\LoginProviderInterface::getOauthProvider()`.
+- Added `dukt\social\Plugin::getLoginProviderConfig()`.
+
+### Changed
+- The `loginProviders` config now defines the user field mapping, the profile fields and the OAuth configuration for login providers.
+- Don't delete the existing user photo before replacing it in `dukt\social\services\LoginAccounts::saveRemotePhoto()` since `craft\services\Users::saveUserPhoto()` already handles that.
+- Login providers now return a specific OAuth 1 or 2 profile object instead of an array of data.
+- User field mapping, profile fields and OAuth scope can now be customized using the `loginProviders` config.
+- Updated Facebook Graph API version to `v3.0`.
+- Removed `dukt\social\base\LoginProvider::getRemoteProfile()`.
+- Removed `dukt\social\base\LoginProviderInterface::getProfile()`.
+- Removed `dukt\social\models\Settings::$showCpSection`.
+- Removed `dukt\social\Plugin::$plugin`.
+- Removed `dukt\social\services\LoginProviders::getUserMapping()`.
+- Removed `dukt\social\Plugin::beforeUpdate()`.
+- Renamed `dukt\social\base\LoginProvider::getAuthorizationOptions()` to `dukt\social\base\LoginProvider::getOauthAuthorizationOptions()`.
+- Renamed `dukt\social\base\LoginProvider::getDefaultAuthorizationOptions()` to `dukt\social\base\LoginProvider::getDefaultOauthAuthorizationOptions()`.
+- Renamed `dukt\social\base\LoginProvider::getDefaultScope()` to `dukt\social\base\LoginProvider::getDefaultOauthScope()`.
+- Renamed `dukt\social\base\LoginProvider::getScope()` to `dukt\social\base\LoginProvider::getOauthScope()`.
+
+### Fixed
+- Fixed a bug where Social 1.1.0 was not required to update to Social 2.0+.
+
 ## 2.0.0-beta.9 - 2018-05-24
 
 ### Added
@@ -165,7 +198,7 @@ Changelog
 - Renamed `resources/images/defaultuser.svg` to `icons/defaultuser.svg`.
 
 ### Fixed
-- Fixed a bug where `\dukt\social\services\LoginAccounts::saveRemotePhoto()` was trying to remove a temp file that didn’t exist.
+- Fixed a bug where `dukt\social\services\LoginAccounts::saveRemotePhoto()` was trying to remove a temp file that didn’t exist.
 
 ## 1.2.4 - 2017-01-13
 

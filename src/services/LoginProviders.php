@@ -2,7 +2,7 @@
 /**
  * @link      https://dukt.net/social/
  * @copyright Copyright (c) 2018, Dukt
- * @license   https://dukt.net/social/docs/license
+ * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
 namespace dukt\social\services;
@@ -44,8 +44,7 @@ class LoginProviders extends Component
      */
     public function disableLoginProvider($handle): bool
     {
-        $plugin = Craft::$app->getPlugins()->getPlugin('social');
-        $settings = $plugin->getSettings();
+        $settings = Plugin::getInstance()->getSettings();
 
         $enabledLoginProviders = $settings->enabledLoginProviders;
 
@@ -55,7 +54,7 @@ class LoginProviders extends Component
 
         $settings->enabledLoginProviders = $enabledLoginProviders;
 
-        return Craft::$app->getPlugins()->savePluginSettings($plugin, $settings->getAttributes());
+        return Plugin::getInstance()->savePluginSettings($settings->getAttributes());
     }
 
     /**
@@ -78,7 +77,7 @@ class LoginProviders extends Component
 
         $settings->enabledLoginProviders = $enabledLoginProviders;
 
-        return Craft::$app->getPlugins()->savePluginSettings($plugin, $settings->getAttributes());
+        return Plugin::getInstance()->savePluginSettings($settings->getAttributes());
     }
 
     /**
@@ -110,29 +109,6 @@ class LoginProviders extends Component
     public function getLoginProviders($enabledOnly = true): array
     {
         return $this->_getLoginProviders($enabledOnly);
-    }
-
-    /**
-     * Get user mapping for a given provider.
-     *
-     * @param string $providerHandle
-     *
-     * @return array
-     */
-    public function getUserMapping(string $providerHandle): array
-    {
-        $loginProviderConfig = Plugin::$plugin->getLoginProviderConfig($providerHandle);
-
-        $userMapping = [
-            'email' => '{{ email }}',
-            'username' => '{{ email }}',
-        ];
-
-        if (isset($loginProviderConfig['userMapping'])) {
-            $userMapping = array_merge($userMapping, $loginProviderConfig['userMapping']);
-        }
-
-        return $userMapping;
     }
 
     // Private Methods
