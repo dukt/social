@@ -157,19 +157,21 @@ class LoginProvidersController extends Controller
         $handle = $request->getBodyParam('handle');
 
         $settings = [
-            'options' => [
-                'clientId' => $request->getBodyParam('clientId'),
-                'clientSecret' => $request->getBodyParam('clientSecret'),
+            'oauth' => [
+                'options' => [
+                    'clientId' => $request->getBodyParam('clientId'),
+                    'clientSecret' => $request->getBodyParam('clientSecret'),
+                ]
             ]
         ];
 
         if (Plugin::getInstance()->saveLoginProviderSettings($handle, $settings)) {
-            Craft::$app->getSession()->setNotice(Craft::t('analytics', 'Provider saved.'));
+            Craft::$app->getSession()->setNotice(Craft::t('social', 'Provider saved.'));
 
             return $this->redirectToPostedUrl();
         }
 
-        Craft::$app->getSession()->setError(Craft::t('analytics', 'Couldn’t save provider.'));
+        Craft::$app->getSession()->setError(Craft::t('social', 'Couldn’t save provider.'));
 
         return null;
     }

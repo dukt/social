@@ -1,6 +1,12 @@
 Changelog
 ===================
 
+## 2.0.0-beta.11 - 2018-08-24
+
+# Fixed
+- Fixed a bug where client ID and secret were not properly saved when saving them from the control panel. ([#11](https://github.com/dukt/social/issues/11))
+- Fixed a translation bug when saving a login provider's OAuth configuration. ([#14](https://github.com/dukt/social/pull/14))
+
 ## 2.0.0-beta.10 - 2018-06-29
 
 # Added
