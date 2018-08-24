@@ -30,6 +30,10 @@ class SocialAsset extends AssetBundle
             'social.css',
         ];
 
+        $this->js = [
+            'social.js',
+        ];
+
         parent::init();
     }
 }

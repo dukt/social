@@ -1,6 +1,11 @@
 Changelog
 ===================
 
+## Unreleased
+
+# Fixed
+- Fixed a bug that prevented a user’s login provider from getting unlinked.
+
 ## 2.0.0-beta.11 - 2018-08-24
 
 # Fixed

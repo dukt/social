@@ -261,6 +261,12 @@ class LoginAccountsController extends Controller
         // delete social user
         Plugin::getInstance()->getLoginAccounts()->deleteLoginAccountByProvider($handle);
 
+        if (Craft::$app->getRequest()->getAcceptsJson()) {
+            return $this->asJson([
+                'success' => true
+            ]);
+        }
+
         Craft::$app->getSession()->setNotice(Craft::t('social', 'Login account disconnected.'));
 
         // redirect
