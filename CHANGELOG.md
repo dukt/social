@@ -7,7 +7,7 @@ Changelog
 - Deleting a a login account now requires admin privileges.
 
 ### Fixed
-- Fixed a bug that prevented a user’s login provider from getting unlinked.
+- Fixed a bug that prevented a user’s login provider from getting disconnected.
 
 ## 2.0.0-beta.11 - 2018-08-24
 
