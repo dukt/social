@@ -1,17 +1,15 @@
-Craft.LoginAccountsPane = Craft.AdminTable.extend(
+var Social = {};
+
+Social.LoginAccountsPane = Craft.AdminTable.extend(
     {
         init: function(settings) {
             this.base(settings);
-            this.setSettings(settings, Craft.LoginAccountsPane.defaults);
+            this.setSettings(settings, Social.LoginAccountsPane.defaults);
         },
 
         confirmDeleteItem: function($row) {
             var name = this.getItemName($row);
             return confirm(Craft.t('app', this.settings.confirmDeleteMessage, {name: name}));
-        },
-        confirmDisconnectItem: function($row) {
-            var name = this.getItemName($row);
-            return confirm(Craft.t('app', this.settings.confirmDisconnectMessage, {name: name}));
         },
 
         handleDeleteBtnClick: function(event) {
@@ -25,7 +23,7 @@ Craft.LoginAccountsPane = Craft.AdminTable.extend(
             var $target = $(event.target);
 
             if($target.hasClass('disconnect')) {
-                if (this.confirmDisconnectItem($row)) {
+                if (this.confirmDeleteItem($row)) {
                     this.disconnectItem($row);
                 }
             } else {
@@ -91,7 +89,7 @@ Craft.LoginAccountsPane = Craft.AdminTable.extend(
             connectEnabledAttribute: 'data-connect-enabled',
             deleteAction: 'social/login-accounts/delete-login-account',
             disconnectAction: 'social/login-accounts/disconnect-login-account',
-            confirmDeleteMessage: Craft.t('social', 'Are you sure you want to unlink “{name}” login account?'),
-            confirmDisconnectMessage: Craft.t('social', 'Are you sure you want to disconnect “{name}” login account?'),
+            confirmDeleteMessage: Craft.t('social', 'Are you sure you want to disconnect “{name}”?'),
+            confirmDisconnectMessage: Craft.t('social', 'Are you sure you want to disconnect “{name}”?'),
         }
     });
