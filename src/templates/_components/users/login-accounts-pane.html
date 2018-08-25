@@ -1,7 +1,6 @@
 {% if user.id == currentUser.id or currentUser.admin %}
     <div class="meta social-login-accounts-pane">
         <div class="data">
-
             <h2>{{ "Login Accounts"|t('social') }}</h2>
 
             {% if user.id == currentUser.id %}
@@ -17,13 +16,27 @@
             <table id="loginAccounts" class="fullwidth">
                 {% for loginProvider in loginProviders %}
                     {% set connected = false %}
+                    {% set loginAccountId = null %}
                     {% for account in loginAccounts %}
                         {% if account.getLoginProvider() and loginProvider.handle == account.getLoginProvider().handle %}
                             {% set connected = true %}
+                            {% set loginAccountId = account.id %}
                         {% endif %}
                     {% endfor %}
 
-                    <tr>
+                    {% spaceless %}
+                    <tr
+                        {% if connected %}
+                            {% if loginAccountId %}
+                                data-id="{{ loginAccountId }}"
+                            {% endif %}
+
+                            data-provider="{{ loginProvider.handle }}"
+                            data-connect-enabled="{{ user.id == currentUser.id ? true : false }}"
+                            data-name="{{ loginProvider.name }}"
+                        {% endif %}
+                        >
+                    {% endspaceless %}
                         <td class="provider">
                             <div class="thumb">
                                 <img width="20" src="{{ loginProvider.getIconUrl() }}" class="social-icon social-{{ loginProvider.handle }}" />
@@ -34,15 +47,15 @@
                         <td class="thin">
                             {% if connected %}
                                 {% if user.id == currentUser.id %}
-                                    <a class="btn small" title="{{ 'Disconnect'|t('social') }}" href="{{craft.social.getLoginAccountDisconnectUrl(loginProvider.handle)}}">{{ 'Disconnect'|t('social') }}</a>
+                                    <a class="btn small delete disconnect" title="{{ 'Disconnect'|t('social') }}">{{ 'Disconnect'|t('social') }}</a>
                                 {% elseif currentUser.admin %}
-                                    <a class="btn small delete" title="{{ 'Delete'|t('social') }}">{{ 'Delete'|t('social') }}</a>
+                                    <a class="btn small delete" title="{{ 'Disconnect'|t('social') }}">{{ 'Disconnect'|t('social') }}</a>
                                 {% else %}
                                     <div class="btn small disabled">{{ 'Connected'|t('social') }}</div>
                                 {% endif %}
                             {% else %}
                                 {% if user.id == currentUser.id %}
-                                    <a class="btn small submit" href="{{ craft.social.loginUrl(loginProvider.handle) }}" data-provider="{{ loginProvider.handle }}">{{ 'Connect'|t('social') }}</a>
+                                    <a class="btn small submit" href="{{ craft.social.loginUrl(loginProvider.handle) }}">{{ 'Connect'|t('social') }}</a>
                                 {% else %}
                                     <div class="btn small submit disabled">{{ 'Connect'|t('social') }}</div>
                                 {% endif %}
@@ -51,16 +64,13 @@
                     </tr>
                 {% endfor %}
             </table>
-
         </div>
     </div>
 {% endif %}
 
 {% js %}
-var adminTable = new Craft.AdminTable({
-tableSelector: '#loginAccounts',
-noObjectsSelector: '#nologinaccounts',
-deleteAction: 'social/login-accounts/delete-login-account',
-confirmDeleteMessage: '{{ "Are you sure you want to unlink “{name}” login account?"|t('social') }}',
+var loginAccountsPane = new Social.LoginAccountsPane({
+    tableSelector: '#loginAccounts',
+    noObjectsSelector: '#nologinaccounts',
 });
 {% endjs %}

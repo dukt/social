@@ -1,15 +1,23 @@
 Changelog
 ===================
 
+## 2.0.0-beta.12 - 2018-08-25
+
+### Changed
+- Deleting a a login account now requires admin privileges.
+
+### Fixed
+- Fixed a bug that prevented a user’s login provider from getting disconnected.
+
 ## 2.0.0-beta.11 - 2018-08-24
 
-# Fixed
+### Fixed
 - Fixed a bug where client ID and secret were not properly saved when saving them from the control panel. ([#11](https://github.com/dukt/social/issues/11))
 - Fixed a translation bug when saving a login provider's OAuth configuration. ([#14](https://github.com/dukt/social/pull/14))
 
 ## 2.0.0-beta.10 - 2018-06-29
 
-# Added
+### Added
 - Additional profile fields can now be requested when registering users with Facebook.
 - OAuth provider credentials can now be saved from the control panel.
 - Added `dukt\social\base\LoginProvider::getDefaultProfileFields()`.
