@@ -49,7 +49,7 @@
                                 {% if user.id == currentUser.id %}
                                     <a class="btn small delete disconnect" title="{{ 'Disconnect'|t('social') }}">{{ 'Disconnect'|t('social') }}</a>
                                 {% elseif currentUser.admin %}
-                                    <a class="btn small delete" title="{{ 'Delete'|t('social') }}">{{ 'Delete'|t('social') }}</a>
+                                    <a class="btn small delete" title="{{ 'Disconnect'|t('social') }}">{{ 'Disconnect'|t('social') }}</a>
                                 {% else %}
                                     <div class="btn small disabled">{{ 'Connected'|t('social') }}</div>
                                 {% endif %}
