@@ -73,11 +73,4 @@ var loginAccountsPane = new Craft.LoginAccountsPane({
     tableSelector: '#loginAccounts',
     noObjectsSelector: '#nologinaccounts',
 });
-
-{#var adminTable = new Craft.AdminTable({
-tableSelector: '#loginAccounts',
-noObjectsSelector: '#nologinaccounts',
-deleteAction: 'social/login-accounts/delete-login-account',
-confirmDeleteMessage: '{{ "Are you sure you want to unlink “{name}” login account?"|t('social') }}',
-});#}
 {% endjs %}
