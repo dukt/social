@@ -117,6 +117,7 @@ class LoginAccountsController extends Controller
     {
         $this->requirePostRequest();
         $this->requireAcceptsJson();
+        $this->requireAdmin();
 
         $loginAccountId = Craft::$app->getRequest()->getRequiredBodyParam('id');
 

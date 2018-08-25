@@ -3,6 +3,9 @@ Changelog
 
 ## Unreleased
 
+### Changed
+- Deleting a a login account now requires admin privileges.
+
 # Fixed
 - Fixed a bug that prevented a user’s login provider from getting unlinked.
 
