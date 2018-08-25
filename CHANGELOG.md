@@ -1,7 +1,7 @@
 Changelog
 ===================
 
-## Unreleased
+## 2.0.0-beta.12 - 2018-08-25
 
 ### Changed
 - Deleting a a login account now requires admin privileges.
