@@ -489,7 +489,7 @@ class LoginAccountsController extends Controller
         $settings = $socialPlugin->getSettings();
 
         $this->checkRegistrationEnabled($settings);
-        $this->checkLockedDomains($profile);
+        $this->checkLockedDomains($email);
 
         // Fire a 'beforeRegister' event
         if ($this->hasEventHandlers(self::EVENT_BEFORE_REGISTER)) {
@@ -572,11 +572,11 @@ class LoginAccountsController extends Controller
     /**
      * Check locked domains.
      *
-     * @param $profile
+     * @param $email
      *
      * @throws RegistrationException
      */
-    private function checkLockedDomains($profile)
+    private function checkLockedDomains($email)
     {
         $lockDomains = Plugin::getInstance()->getSettings()->lockDomains;
 
@@ -584,13 +584,13 @@ class LoginAccountsController extends Controller
             $domainRejected = true;
 
             foreach ($lockDomains as $lockDomain) {
-                if (strpos($profile['email'], '@'.$lockDomain) !== false) {
+                if (strpos($email, '@'.$lockDomain) !== false) {
                     $domainRejected = false;
                 }
             }
 
             if ($domainRejected) {
-                throw new RegistrationException('Couldn’t register with this email (domain is not allowed): '.$profile['email']);
+                throw new RegistrationException('Couldn’t register with this email (domain is not allowed): '.$email);
             }
         }
     }

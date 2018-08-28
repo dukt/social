@@ -1,6 +1,11 @@
 Changelog
 ===================
 
+## 2.0.0-beta.13 - 2018-08-29
+
+### Fixed
+- Fixed a bug that prevented domain locking from working properly. ([#19](https://github.com/dukt/social/issues/19))
+
 ## 2.0.0-beta.12 - 2018-08-25
 
 ### Changed
