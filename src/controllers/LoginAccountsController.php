@@ -489,7 +489,7 @@ class LoginAccountsController extends Controller
         $settings = $socialPlugin->getSettings();
 
         $this->checkRegistrationEnabled($settings);
-        $this->checkLockedDomains($profile);
+        $this->checkLockedDomains($profile, $providerHandle);
 
         // Fire a 'beforeRegister' event
         if ($this->hasEventHandlers(self::EVENT_BEFORE_REGISTER)) {
@@ -573,24 +573,29 @@ class LoginAccountsController extends Controller
      * Check locked domains.
      *
      * @param $profile
+     * @param $providerHandle
      *
      * @throws RegistrationException
      */
-    private function checkLockedDomains($profile)
+    private function checkLockedDomains($profile, $providerHandle)
     {
         $lockDomains = Plugin::getInstance()->getSettings()->lockDomains;
+        
+        $socialLoginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($providerHandle);
+        $userFieldMapping = $socialLoginProvider->getUserFieldMapping();
+        $email = Craft::$app->getView()->renderString($userFieldMapping['email'], ['profile' => $profile]);
 
         if (\count($lockDomains) > 0) {
             $domainRejected = true;
 
             foreach ($lockDomains as $lockDomain) {
-                if (strpos($profile['email'], '@'.$lockDomain) !== false) {
+                if (strpos($email, '@'.$lockDomain) !== false) {
                     $domainRejected = false;
                 }
             }
 
             if ($domainRejected) {
-                throw new RegistrationException('Couldn’t register with this email (domain is not allowed): '.$profile['email']);
+                throw new RegistrationException('Couldn’t register with this email (domain is not allowed): '.$email);
             }
         }
     }
