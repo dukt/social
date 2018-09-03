@@ -222,6 +222,7 @@ class LoginAccountsController extends Controller
      * OAuth callback.
      *
      * @return Response
+     * @throws \craft\errors\MissingComponentException
      */
     public function actionCallback(): Response
     {
@@ -656,12 +657,13 @@ class LoginAccountsController extends Controller
     /**
      * Login user from login account.
      *
-     * @param User         $craftUser
+     * @param User $craftUser
      * @param LoginAccount $account
-     * @param Token        $token
-     * @param bool         $registrationMode
+     * @param Token $token
+     * @param bool $registrationMode
      *
      * @return Response
+     * @throws \craft\errors\MissingComponentException
      * @throws \yii\base\InvalidConfigException
      */
     private function login(User $craftUser, LoginAccount $account, Token $token, $registrationMode = false): Response
@@ -687,6 +689,7 @@ class LoginAccountsController extends Controller
      * Handles a failed login attempt.
      *
      * @return Response
+     * @throws \craft\errors\MissingComponentException
      */
     private function _handleLoginFailure(): Response
     {
@@ -701,6 +704,7 @@ class LoginAccountsController extends Controller
      * @param bool $registrationMode
      *
      * @return Response
+     * @throws \craft\errors\MissingComponentException
      */
     private function _handleSuccessfulLogin(bool $registrationMode): Response
     {

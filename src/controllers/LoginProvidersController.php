@@ -105,6 +105,7 @@ class LoginProvidersController extends Controller
      * Enable login provider.
      *
      * @return Response
+     * @throws \craft\errors\MissingComponentException
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\web\BadRequestHttpException
      */
@@ -126,6 +127,7 @@ class LoginProvidersController extends Controller
      * Disable login provider.
      *
      * @return Response
+     * @throws \craft\errors\MissingComponentException
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\web\BadRequestHttpException
      */
@@ -147,6 +149,7 @@ class LoginProvidersController extends Controller
      * Saves an OAuth provider.
      *
      * @return null|Response
+     * @throws \craft\errors\MissingComponentException
      * @throws \yii\web\BadRequestHttpException
      */
     public function actionSaveOauthProvider()

@@ -128,6 +128,7 @@ class Plugin extends \craft\base\Plugin
      *
      * @param array $settings
      *
+     * @param Plugin|null $plugin
      * @return bool
      */
     public function savePluginSettings(array $settings, Plugin $plugin = null)
@@ -195,6 +196,7 @@ class Plugin extends \craft\base\Plugin
      * Social login for the control panel.
      *
      * @return null
+     * @throws \craft\errors\MissingComponentException
      * @throws \yii\base\InvalidConfigException
      */
     private function initCpSocialLogin()

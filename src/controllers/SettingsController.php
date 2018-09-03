@@ -50,6 +50,7 @@ class SettingsController extends Controller
      * Saves the settings.
      *
      * @return null|Response
+     * @throws \craft\errors\MissingComponentException
      * @throws \yii\web\BadRequestHttpException
      */
     public function actionSaveSettings()
