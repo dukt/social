@@ -9,6 +9,7 @@ namespace dukt\social\base;
 
 use Craft;
 use craft\web\Response;
+use dukt\social\errors\LoginException;
 use dukt\social\helpers\SocialHelper;
 use dukt\social\models\Token;
 use dukt\social\Plugin;
@@ -121,6 +122,7 @@ abstract class LoginProvider implements LoginProviderInterface
      * OAuth connect.
      *
      * @return Response
+     * @throws LoginException
      * @throws \craft\errors\MissingComponentException
      * @throws \yii\base\InvalidConfigException
      */
@@ -132,12 +134,15 @@ abstract class LoginProvider implements LoginProviderInterface
             case 2:
                 return $this->oauth2Connect();
         }
+
+        throw new LoginException('OAuth version not supported');
     }
 
     /**
      * OAuth callback.
      *
      * @return array
+     * @throws LoginException
      * @throws \craft\errors\MissingComponentException
      */
     public function oauthCallback(): array
@@ -148,6 +153,8 @@ abstract class LoginProvider implements LoginProviderInterface
             case 2:
                 return $this->oauth2Callback();
         }
+
+        throw new LoginException('OAuth version not supported');
     }
 
     /**
