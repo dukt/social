@@ -47,4 +47,11 @@ interface LoginProviderInterface
      * @return Response
      */
     public function oauthConnect(): Response;
+
+    /**
+     * OAuth callback.
+     *
+     * @return array
+     */
+    public function oauthCallback(): array;
 }
