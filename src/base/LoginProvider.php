@@ -120,7 +120,7 @@ abstract class LoginProvider implements LoginProviderInterface
     /**
      * OAuth connect.
      *
-     * @return null
+     * @return Response
      * @throws \craft\errors\MissingComponentException
      * @throws \yii\base\InvalidConfigException
      */
