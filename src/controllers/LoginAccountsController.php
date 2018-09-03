@@ -284,7 +284,8 @@ class LoginAccountsController extends Controller
      *
      * @param $loginProviderHandle
      *
-     * @return array|null
+     * @return array|Response
+     * @throws \craft\errors\MissingComponentException
      * @throws \yii\base\InvalidConfigException
      */
     private function oauthConnect($loginProviderHandle)
