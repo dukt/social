@@ -290,21 +290,14 @@ class LoginAccount extends Element
     {
         switch ($attribute) {
             case 'username':
-                $user = $this->getUser();
-
-                return $user ? Craft::$app->getView()->renderTemplate('_elements/element', ['element' => $user]) : '';
+                return $this->_usernameTableAttributeHtml();
             case 'email':
-                $user = $this->getUser();
-
-                return $user ? Html::encodeParams('<a href="mailto:{email}">{email}</a>', ['email' => $user->email]) : '';
+                return $this->_emailTableAttributeHtml();
             case 'lastLoginDate':
-                $user = $this->getUser();
-
-                return Craft::$app->getFormatter()->asTime($user->lastLoginDate, 'short');
+                return $this->_lastLoginDateTableAttributeHtml();
             case 'loginProvider':
-                $loginProvider = $this->getLoginProvider();
+                return $this->_loginProviderTableAttributeHtml();
 
-                return $loginProvider ? Craft::$app->getView()->renderTemplate('social/loginaccounts/_element', ['loginProvider' => $loginProvider]) : '';
         }
 
         return parent::tableAttributeHtml($attribute);
@@ -338,5 +331,55 @@ class LoginAccount extends Element
         }
 
         parent::afterSave($isNew);
+    }
+
+
+    // Private Methods
+    // -------------------------------------------------------------------------
+
+    /**
+     * @return string
+     * @throws \Twig_Error_Loader
+     * @throws \yii\base\Exception
+     */
+    private function _usernameTableAttributeHtml()
+    {
+        $user = $this->getUser();
+
+        return $user ? Craft::$app->getView()->renderTemplate('_elements/element', ['element' => $user]) : '';
+    }
+
+    /**
+     * @return string
+     */
+    private function _emailTableAttributeHtml()
+    {
+        $user = $this->getUser();
+
+        return $user ? Html::encodeParams('<a href="mailto:{email}">{email}</a>', ['email' => $user->email]) : '';
+    }
+
+    /**
+     * @return string
+     * @throws \yii\base\InvalidConfigException
+     */
+    private function _lastLoginDateTableAttributeHtml()
+    {
+        $user = $this->getUser();
+
+        return Craft::$app->getFormatter()->asTime($user->lastLoginDate, 'short');
+    }
+
+    /**
+     * @return string
+     * @throws \Twig_Error_Loader
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
+     */
+    private function _loginProviderTableAttributeHtml()
+    {
+        $loginProvider = $this->getLoginProvider();
+
+        return $loginProvider ? Craft::$app->getView()->renderTemplate('social/loginaccounts/_element', ['loginProvider' => $loginProvider]) : '';
     }
 }
