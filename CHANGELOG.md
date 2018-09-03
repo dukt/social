@@ -5,6 +5,7 @@ Changelog
 
 ### Fixed
 - Fixed a bug where profile couldn’t be filled properly on user registration.
+- Fixed bug where too many arguments were passed to `\dukt\social\services\LoginProviders::getLoginProvider()` in `\dukt\social\controllers\LoginProvidersController::actionOauth()`.
 
 ## 2.0.0-beta.13 - 2018-08-29
 

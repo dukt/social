@@ -62,7 +62,7 @@ class LoginProvidersController extends Controller
             return $this->renderTemplate('social/settings/_pro-requirement');
         }
 
-        $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($handle, false, true);
+        $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($handle, false);
         $oauthProviderConfig = Plugin::getInstance()->getOauthProviderConfig($handle);
 
         if ($loginProvider) {
