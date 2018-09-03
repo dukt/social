@@ -163,7 +163,7 @@ abstract class LoginProvider implements LoginProviderInterface
      * @return array
      * @throws \yii\base\InvalidConfigException
      */
-    public function getOauthScope()
+    public function getOauthScope(): array
     {
         $scope = $this->getDefaultOauthScope();
         $oauthProviderConfig = $this->getOauthProviderConfig();
