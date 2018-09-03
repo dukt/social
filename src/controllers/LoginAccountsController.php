@@ -165,7 +165,8 @@ class LoginAccountsController extends Controller
             }
 
             if ($response = $this->oauthConnect($providerHandle)) {
-                if ($response && is_object($response) && !$response->data) {
+                $isObject = is_object($response);
+                if ($response && $isObject && !$response->data) {
                     return $response;
                 }
 
