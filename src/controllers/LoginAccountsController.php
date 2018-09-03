@@ -543,8 +543,10 @@ class LoginAccountsController extends Controller
 
         foreach ($userFieldMapping as $attribute => $template) {
             // Only fill other fields than `email` and `username` when `autoFillProfile` is true
-            if (!$settings['autoFillProfile'] && ($attribute !== 'email' || $attribute !== 'username')) {
-                continue;
+            if (!$settings['autoFillProfile']) {
+                if($attribute !== 'email' && $attribute !== 'username') {
+                    continue;
+                }
             }
 
             // Check whether they try to set an attribute or a custom field

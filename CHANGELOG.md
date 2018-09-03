@@ -1,6 +1,11 @@
 Changelog
 ===================
 
+## Unreleased
+
+### Fixed
+- Fixed a bug where profile couldn’t be filled properly on user registration.
+
 ## 2.0.0-beta.13 - 2018-08-29
 
 ### Fixed
