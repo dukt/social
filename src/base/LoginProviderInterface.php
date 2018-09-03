@@ -40,4 +40,11 @@ interface LoginProviderInterface
      * @return array
      */
     public function getDefaultUserFieldMapping(): array;
+
+    /**
+     * OAuth connect.
+     *
+     * @return Response
+     */
+    public function oauthConnect(): Response;
 }
