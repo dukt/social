@@ -7,7 +7,7 @@
 
 namespace dukt\social\base;
 
-use dukt\social\models\Token;
+use craft\web\Response;
 
 /**
  * LoginProviderInterface defines the common interface to be implemented by login provider classes.
