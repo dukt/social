@@ -167,10 +167,9 @@ class LoginAccountsController extends Controller
 
             // Redirect to login provider’s authorization page
 
-            $loginProviderHandle = $providerHandle;
-            $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($loginProviderHandle);
+            $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($providerHandle);
 
-            Craft::$app->getSession()->set('social.loginProvider', $loginProviderHandle);
+            Craft::$app->getSession()->set('social.loginProvider', $providerHandle);
 
             if (!Craft::$app->getSession()->get('social.callback')) {
                 return $loginProvider->oauthConnect();
@@ -193,7 +192,7 @@ class LoginAccountsController extends Controller
 
 
             // Unable to log the user in, throw an exception
-            
+
             throw new LoginException($callbackResponse['errorMsg']);
         } catch (BadResponseException $e) {
             $response = $e->getResponse();
