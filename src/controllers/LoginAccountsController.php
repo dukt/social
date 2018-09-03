@@ -164,22 +164,37 @@ class LoginAccountsController extends Controller
                 throw new LoginException('Login provider is not configured');
             }
 
-            if ($response = $this->oauthConnect($providerHandle)) {
-                $isObject = is_object($response);
-                if ($response && $isObject && !$response->data) {
-                    return $response;
-                }
 
-                if ($response['success']) {
-                    $token = new Token();
-                    $token->providerHandle = $providerHandle;
-                    $token->token = $response['token'];
+            // Redirect to login provider’s authorization page
 
-                    return $this->connectUser($token);
-                }
+            $loginProviderHandle = $providerHandle;
+            $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($loginProviderHandle);
 
-                throw new LoginException($response['errorMsg']);
+            Craft::$app->getSession()->set('social.loginProvider', $loginProviderHandle);
+
+            if (!Craft::$app->getSession()->get('social.callback')) {
+                return $loginProvider->oauthConnect();
             }
+
+
+            // Callback
+
+            Craft::$app->getSession()->remove('social.callback');
+
+            $callbackResponse = $loginProvider->oauthCallback();
+
+            if ($callbackResponse['success']) {
+                $token = new Token();
+                $token->providerHandle = $providerHandle;
+                $token->token = $callbackResponse['token'];
+
+                return $this->connectUser($token);
+            }
+
+
+            // Unable to log the user in, throw an exception
+            
+            throw new LoginException($callbackResponse['errorMsg']);
         } catch (BadResponseException $e) {
             $response = $e->getResponse();
             $body = $response->getBody();
@@ -279,30 +294,6 @@ class LoginAccountsController extends Controller
 
     // Private Methods
     // =========================================================================
-
-    /**
-     * OAuth connect.
-     *
-     * @param $loginProviderHandle
-     *
-     * @return array|Response
-     * @throws \craft\errors\MissingComponentException
-     * @throws \yii\base\InvalidConfigException
-     */
-    private function oauthConnect($loginProviderHandle)
-    {
-        $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($loginProviderHandle);
-
-        Craft::$app->getSession()->set('social.loginProvider', $loginProviderHandle);
-
-        if (!Craft::$app->getSession()->get('social.callback')) {
-            return $loginProvider->oauthConnect();
-        }
-
-        Craft::$app->getSession()->remove('social.callback');
-
-        return $loginProvider->oauthCallback();
-    }
 
     /**
      * Connect (register, login, link) a user from token.
