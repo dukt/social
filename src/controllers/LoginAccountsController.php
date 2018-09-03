@@ -144,12 +144,12 @@ class LoginAccountsController extends Controller
             Craft::$app->getSession()->set('social.originUrl', $this->originUrl);
         }
 
-        $this->redirect = Craft::$app->getRequest()->getParam('redirect');
+        $this->redirect = (string) Craft::$app->getRequest()->getParam('redirect');
 
 
         // Connect
 
-        $providerHandle = Craft::$app->getRequest()->getParam('provider');
+        $providerHandle = (string) Craft::$app->getRequest()->getParam('provider');
         $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $pluginSettings = $plugin->getSettings();
 
