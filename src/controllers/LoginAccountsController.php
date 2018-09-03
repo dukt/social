@@ -167,8 +167,6 @@ class LoginAccountsController extends Controller
 
             // Redirect to login provider’s authorization page
 
-            $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($providerHandle);
-
             Craft::$app->getSession()->set('social.loginProvider', $providerHandle);
 
             if (!Craft::$app->getSession()->get('social.callback')) {
