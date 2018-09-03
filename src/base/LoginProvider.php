@@ -124,7 +124,7 @@ abstract class LoginProvider implements LoginProviderInterface
      * @throws \craft\errors\MissingComponentException
      * @throws \yii\base\InvalidConfigException
      */
-    public function oauthConnect()
+    public function oauthConnect(): Response
     {
         switch ($this->oauthVersion()) {
             case 1:
@@ -140,7 +140,7 @@ abstract class LoginProvider implements LoginProviderInterface
      * @return array
      * @throws \craft\errors\MissingComponentException
      */
-    public function oauthCallback()
+    public function oauthCallback(): array
     {
         switch ($this->oauthVersion()) {
             case 1:
