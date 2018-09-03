@@ -42,9 +42,9 @@ class LoginProvidersController extends Controller
 
         Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
 
-        $variables['loginProviders'] = Plugin::getInstance()->getLoginProviders()->getLoginProviders(false);
-
-        return $this->renderTemplate('social/loginproviders/_index', $variables);
+        return $this->renderTemplate('social/loginproviders/_index', [
+            'loginProviders' => Plugin::getInstance()->getLoginProviders()->getLoginProviders(false)
+        ]);
     }
 
     /**
