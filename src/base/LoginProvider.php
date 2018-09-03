@@ -121,6 +121,7 @@ abstract class LoginProvider implements LoginProviderInterface
      * OAuth connect.
      *
      * @return null
+     * @throws \craft\errors\MissingComponentException
      * @throws \yii\base\InvalidConfigException
      */
     public function oauthConnect()
@@ -137,6 +138,7 @@ abstract class LoginProvider implements LoginProviderInterface
      * OAuth callback.
      *
      * @return array
+     * @throws \craft\errors\MissingComponentException
      */
     public function oauthCallback()
     {
@@ -325,6 +327,7 @@ abstract class LoginProvider implements LoginProviderInterface
      * OAuth 1 connect.
      *
      * @return Response
+     * @throws \craft\errors\MissingComponentException
      */
     private function oauth1Connect(): Response
     {
@@ -347,6 +350,7 @@ abstract class LoginProvider implements LoginProviderInterface
      * OAuth 2 connect.
      *
      * @return Response
+     * @throws \craft\errors\MissingComponentException
      * @throws \yii\base\InvalidConfigException
      */
     private function oauth2Connect(): Response
@@ -373,6 +377,7 @@ abstract class LoginProvider implements LoginProviderInterface
      * OAuth 1 callback.
      *
      * @return array
+     * @throws \craft\errors\MissingComponentException
      */
     private function oauth1Callback(): array
     {
