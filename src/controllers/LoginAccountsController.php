@@ -144,12 +144,12 @@ class LoginAccountsController extends Controller
             Craft::$app->getSession()->set('social.originUrl', $this->originUrl);
         }
 
-        $this->redirect = (string) Craft::$app->getRequest()->getParam('redirect');
+        $this->redirect = (string)Craft::$app->getRequest()->getParam('redirect');
 
 
         // Connect
 
-        $providerHandle = (string) Craft::$app->getRequest()->getParam('provider');
+        $providerHandle = (string)Craft::$app->getRequest()->getParam('provider');
         $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $pluginSettings = $plugin->getSettings();
 
@@ -203,14 +203,14 @@ class LoginAccountsController extends Controller
                 $errorMsg = 'Couldn’t login.';
             }
 
-            Craft::error('Couldn’t login. '.$e->getTraceAsString(), __METHOD__);
+            Craft::error('Couldn’t login. ' . $e->getTraceAsString(), __METHOD__);
             Craft::$app->getSession()->setFlash('error', $errorMsg);
             $this->_cleanSession();
 
             return $this->redirect($this->originUrl);
         } catch (\Exception $e) {
             $errorMsg = $e->getMessage();
-            Craft::error('Couldn’t login. '.$e->getTraceAsString(), __METHOD__);
+            Craft::error('Couldn’t login. ' . $e->getTraceAsString(), __METHOD__);
             Craft::$app->getSession()->setFlash('error', $errorMsg);
             $this->_cleanSession();
 
@@ -465,7 +465,7 @@ class LoginAccountsController extends Controller
 
         if ($user) {
             if (Plugin::getInstance()->getSettings()->allowEmailMatch !== true) {
-                throw new RegistrationException('An account already exists with this email: '.$email);
+                throw new RegistrationException('An account already exists with this email: ' . $email);
             }
 
             return $user;
@@ -496,7 +496,7 @@ class LoginAccountsController extends Controller
 
         // Save user
         if (!Craft::$app->elements->saveElement($newUser)) {
-            Craft::error('There was a problem creating the user:'.print_r($newUser->getErrors(), true), __METHOD__);
+            Craft::error('There was a problem creating the user:' . print_r($newUser->getErrors(), true), __METHOD__);
             throw new RegistrationException('Craft user couldn’t be created.');
         }
 
@@ -517,7 +517,7 @@ class LoginAccountsController extends Controller
 
     /**
      * @param string $providerHandle
-     * @param User   $newUser
+     * @param User $newUser
      * @param        $profile
      *
      * @throws \yii\base\InvalidConfigException
@@ -575,20 +575,20 @@ class LoginAccountsController extends Controller
             $domainRejected = true;
 
             foreach ($lockDomains as $lockDomain) {
-                if (strpos($email, '@'.$lockDomain) !== false) {
+                if (strpos($email, '@' . $lockDomain) !== false) {
                     $domainRejected = false;
                 }
             }
 
             if ($domainRejected) {
-                throw new RegistrationException('Couldn’t register with this email (domain is not allowed): '.$email);
+                throw new RegistrationException('Couldn’t register with this email (domain is not allowed): ' . $email);
             }
         }
     }
 
     /**
      * @param string $providerHandle
-     * @param User   $newUser
+     * @param User $newUser
      * @param        $profile
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
@@ -607,7 +607,7 @@ class LoginAccountsController extends Controller
             try {
                 $photoUrl = html_entity_decode(Craft::$app->getView()->renderString($userFieldMapping['photo'], ['profile' => $profile]));
             } catch (\Exception $e) {
-                Craft::warning('Could not map:'.print_r(['photo', $userFieldMapping['photo'], $profile, $e->getMessage()], true), __METHOD__);
+                Craft::warning('Could not map:' . print_r(['photo', $userFieldMapping['photo'], $profile, $e->getMessage()], true), __METHOD__);
             }
         }
 
@@ -628,13 +628,13 @@ class LoginAccountsController extends Controller
             try {
                 $newUser->{$attribute} = Craft::$app->getView()->renderString($template, ['profile' => $profile]);
             } catch (\Exception $e) {
-                Craft::warning('Could not map:'.print_r([$attribute, $template, $profile, $e->getMessage()], true), __METHOD__);
+                Craft::warning('Could not map:' . print_r([$attribute, $template, $profile, $e->getMessage()], true), __METHOD__);
             }
         }
     }
 
     /**
-     * @param User  $newUser
+     * @param User $newUser
      * @param       $attribute
      * @param       $template
      * @param       $profile
@@ -647,7 +647,7 @@ class LoginAccountsController extends Controller
                 $value = Craft::$app->getView()->renderString($template, ['profile' => $profile]);
                 $newUser->setFieldValue($attribute, $value);
             } catch (\Exception $e) {
-                Craft::warning('Could not map:'.print_r([$template, $profile, $e->getMessage()], true), __METHOD__);
+                Craft::warning('Could not map:' . print_r([$template, $profile, $e->getMessage()], true), __METHOD__);
             }
         }
     }

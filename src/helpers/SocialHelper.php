@@ -24,9 +24,9 @@ class SocialHelper
     /**
      * Returns a site action URL.
      *
-     * @param string            $path
+     * @param string $path
      * @param array|string|null $params
-     * @param string|null       $protocol The protocol to use (e.g. http, https). If empty, the protocol used for the current
+     * @param string|null $protocol The protocol to use (e.g. http, https). If empty, the protocol used for the current
      *                                    request will be used.
      *
      * @return string
@@ -43,7 +43,7 @@ class SocialHelper
         Craft::$app->getConfig()->getGeneral()->addTrailingSlashesToUrls = $addTrailingSlashesToUrls;
 
         // We don't want the CP trigger showing in the action URL.
-        $redirectUri = str_replace(Craft::$app->getConfig()->getGeneral()->cpTrigger.'/', '', $redirectUri);
+        $redirectUri = str_replace(Craft::$app->getConfig()->getGeneral()->cpTrigger . '/', '', $redirectUri);
 
         return $redirectUri;
     }

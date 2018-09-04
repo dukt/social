@@ -68,7 +68,7 @@ abstract class LoginProvider implements LoginProviderInterface
      */
     public function getIconUrl()
     {
-        return Craft::$app->assetManager->getPublishedUrl('@dukt/social/icons/'.$this->getHandle().'.svg', true);
+        return Craft::$app->assetManager->getPublishedUrl('@dukt/social/icons/' . $this->getHandle() . '.svg', true);
     }
 
     /**

@@ -93,7 +93,7 @@ class Facebook extends LoginProvider
 
             $query = http_build_query($query);
 
-            return $parsedUrl['scheme'].'://'.$parsedUrl['host'].$parsedUrl['path'].'?'.$query;
+            return $parsedUrl['scheme'] . '://' . $parsedUrl['host'] . $parsedUrl['path'] . '?' . $query;
         }
 
         return $url;
@@ -187,7 +187,7 @@ class Facebook extends LoginProvider
 
         if ($token) {
 
-            $headers['Authorization'] = 'Bearer '.$token->token;
+            $headers['Authorization'] = 'Bearer ' . $token->token;
         }
 
         $options = [

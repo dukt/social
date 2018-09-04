@@ -12,8 +12,8 @@ use craft\db\ActiveRecord;
 /**
  * Class LoginAccount record.
  *
- * @property int    $id              ID
- * @property int    $userId          User ID
+ * @property int $id              ID
+ * @property int $userId          User ID
  * @property string $providerHandle  Provider handle
  * @property string $socialUid       Social UID
  *

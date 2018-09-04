@@ -20,7 +20,7 @@ use dukt\social\models\Token;
 /**
  * LoginAccount represents a login account element.
  *
- * @property int    $userId
+ * @property int $userId
  * @property string $providerHandle
  * @property string $socialUid
  *
@@ -63,7 +63,7 @@ class LoginAccount extends Element
 
             foreach ($loginProviders as $loginProvider) {
                 $providerHandle = $loginProvider->getHandle();
-                $key = 'group:'.$providerHandle;
+                $key = 'group:' . $providerHandle;
 
                 $sources[] = [
                     'key' => $key,
@@ -295,7 +295,6 @@ class LoginAccount extends Element
                 return $this->_lastLoginDateTableAttributeHtml();
             case 'loginProvider':
                 return $this->_loginProviderTableAttributeHtml();
-
         }
 
         return parent::tableAttributeHtml($attribute);
