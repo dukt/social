@@ -162,7 +162,7 @@ class Plugin extends \craft\base\Plugin
      */
     public function saveLoginProviderSettings($handle, $providerSettings)
     {
-        $settings = (array) self::getInstance()->getSettings();
+        $settings = (array)self::getInstance()->getSettings();
         $storedSettings = Craft::$app->plugins->getStoredPluginInfo('social')['settings'];
 
         $settings['loginProviders'] = [];

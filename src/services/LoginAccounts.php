@@ -263,14 +263,14 @@ class LoginAccounts extends Component
     {
         $filename = 'photo';
 
-        $tempPath = Craft::$app->path->getTempPath().'/social/userphotos/'.$user->email.'/';
+        $tempPath = Craft::$app->path->getTempPath() . '/social/userphotos/' . $user->email . '/';
 
         FileHelper::createDirectory($tempPath);
 
         $client = new \GuzzleHttp\Client();
 
         $response = $client->request('GET', $photoUrl, [
-            'save_to' => $tempPath.$filename
+            'save_to' => $tempPath . $filename
         ]);
 
         if ($response->getStatusCode() !== 200) {
@@ -295,15 +295,15 @@ class LoginAccounts extends Component
                     break;
 
                 default:
-                    throw new ImageTypeException('Image type “'.$contentTypes[0].'” not supported');
+                    throw new ImageTypeException('Image type “' . $contentTypes[0] . '” not supported');
             }
         } else {
             throw new ImageTypeException('Image type not supported');
         }
 
-        rename($tempPath.$filename, $tempPath.$filename.'.'.$extension);
+        rename($tempPath . $filename, $tempPath . $filename . '.' . $extension);
 
-        $image = Craft::$app->images->loadImage($tempPath.$filename.'.'.$extension);
+        $image = Craft::$app->images->loadImage($tempPath . $filename . '.' . $extension);
         $imageWidth = $image->getWidth();
         $imageHeight = $image->getHeight();
 
@@ -312,7 +312,7 @@ class LoginAccounts extends Component
         $verticalMargin = ($imageHeight - $dimension) / 2;
         $image->crop($horizontalMargin, $imageWidth - $horizontalMargin, $verticalMargin, $imageHeight - $verticalMargin);
 
-        Craft::$app->users->saveUserPhoto($tempPath.$filename.'.'.$extension, $user, $filename.'.'.$extension);
+        Craft::$app->users->saveUserPhoto($tempPath . $filename . '.' . $extension, $user, $filename . '.' . $extension);
 
         return true;
     }

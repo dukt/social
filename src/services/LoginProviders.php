@@ -86,7 +86,7 @@ class LoginProviders extends Component
     /**
      * Get a login provider by handle.
      *
-     * @param string    $handle
+     * @param string $handle
      * @param bool|true $enabledOnly
      *
      * @return LoginProvider|LoginProviderInterface|null
