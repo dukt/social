@@ -201,10 +201,8 @@ class LoginAccount extends Element
      */
     public function getUser()
     {
-        if (!isset($this->_user)) {
-            if ($this->userId) {
-                $this->_user = Craft::$app->users->getUserById($this->userId);
-            }
+        if (!isset($this->_user) && $this->userId) {
+            $this->_user = Craft::$app->users->getUserById($this->userId);
         }
 
         return $this->_user;

@@ -522,7 +522,7 @@ class LoginAccountsController extends Controller
      *
      * @throws \yii\base\InvalidConfigException
      */
-    private function fillUser(string $providerHandle, User &$newUser, $profile)
+    private function fillUser(string $providerHandle, User $newUser, $profile)
     {
         $socialPlugin = Craft::$app->getPlugins()->getPlugin('social');
         $settings = $socialPlugin->getSettings();
@@ -533,10 +533,8 @@ class LoginAccountsController extends Controller
 
         foreach ($userFieldMapping as $attribute => $template) {
             // Only fill other fields than `email` and `username` when `autoFillProfile` is true
-            if (!$settings['autoFillProfile']) {
-                if($attribute !== 'email' && $attribute !== 'username') {
-                    continue;
-                }
+            if (!$settings['autoFillProfile'] && $attribute !== 'email' && $attribute !== 'username') {
+                continue;
             }
 
             // Check whether they try to set an attribute or a custom field
@@ -599,7 +597,7 @@ class LoginAccountsController extends Controller
      * @throws \yii\base\Exception
      * @throws \yii\base\InvalidConfigException
      */
-    private function saveRemotePhoto(string $providerHandle, User &$newUser, $profile)
+    private function saveRemotePhoto(string $providerHandle, User $newUser, $profile)
     {
         $photoUrl = false;
         $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($providerHandle);
@@ -624,7 +622,7 @@ class LoginAccountsController extends Controller
      * @param      $template
      * @param      $profile
      */
-    private function fillUserAttribute(User &$newUser, $attribute, $template, $profile)
+    private function fillUserAttribute(User $newUser, $attribute, $template, $profile)
     {
         if (array_key_exists($attribute, $newUser->getAttributes())) {
             try {
@@ -641,7 +639,7 @@ class LoginAccountsController extends Controller
      * @param       $template
      * @param       $profile
      */
-    private function fillUserCustomFieldValue(User &$newUser, $attribute, $template, $profile)
+    private function fillUserCustomFieldValue(User $newUser, $attribute, $template, $profile)
     {
         // Check to make sure custom field exists for user profile
         if (isset($newUser->{$attribute})) {

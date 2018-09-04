@@ -162,7 +162,7 @@ class Plugin extends \craft\base\Plugin
      */
     public function saveLoginProviderSettings($handle, $providerSettings)
     {
-        $settings = (array)Plugin::getInstance()->getSettings();
+        $settings = (array) self::getInstance()->getSettings();
         $storedSettings = Craft::$app->plugins->getStoredPluginInfo('social')['settings'];
 
         $settings['loginProviders'] = [];
@@ -201,29 +201,27 @@ class Plugin extends \craft\base\Plugin
      */
     private function initCpSocialLogin()
     {
-        if (!Craft::$app->getRequest()->getIsConsoleRequest() && $this->settings->enableCpLogin) {
-            if (Craft::$app->getRequest()->getIsCpRequest() && Craft::$app->getRequest()->getSegment(1) === 'login') {
+        if (!Craft::$app->getRequest()->getIsConsoleRequest() && $this->settings->enableCpLogin && Craft::$app->getRequest()->getIsCpRequest() && Craft::$app->getRequest()->getSegment(1) === 'login') {
 
-                $loginProviders = $this->loginProviders->getLoginProviders();
-                $jsLoginProviders = [];
+            $loginProviders = $this->loginProviders->getLoginProviders();
+            $jsLoginProviders = [];
 
-                foreach ($loginProviders as $loginProvider) {
-                    $jsLoginProvider = [
-                        'name' => $loginProvider->getName(),
-                        'handle' => $loginProvider->getHandle(),
-                        'url' => $this->getLoginAccounts()->getLoginUrl($loginProvider->getHandle()),
-                        'iconUrl' => $loginProvider->getIconUrl(),
-                    ];
+            foreach ($loginProviders as $loginProvider) {
+                $jsLoginProvider = [
+                    'name' => $loginProvider->getName(),
+                    'handle' => $loginProvider->getHandle(),
+                    'url' => $this->getLoginAccounts()->getLoginUrl($loginProvider->getHandle()),
+                    'iconUrl' => $loginProvider->getIconUrl(),
+                ];
 
-                    array_push($jsLoginProviders, $jsLoginProvider);
-                }
-
-                $error = Craft::$app->getSession()->getFlash('error');
-
-                Craft::$app->getView()->registerAssetBundle(LoginAsset::class);
-
-                Craft::$app->getView()->registerJs('var socialLoginForm = new Craft.SocialLoginForm(' . json_encode($jsLoginProviders) . ', ' . json_encode($error) . ');');
+                $jsLoginProviders[] = $jsLoginProvider;
             }
+
+            $error = Craft::$app->getSession()->getFlash('error');
+
+            Craft::$app->getView()->registerAssetBundle(LoginAsset::class);
+
+            Craft::$app->getView()->registerJs('var socialLoginForm = new Craft.SocialLoginForm(' . json_encode($jsLoginProviders) . ', ' . json_encode($error) . ');');
         }
     }
 
