@@ -506,7 +506,7 @@ class LoginAccountsController extends Controller
         }
 
         // Assign user to default group
-        if (!empty($settings['defaultGroup'])) {
+        if ($newUser->id && !empty($settings['defaultGroup'])) {
             Craft::$app->users->assignUserToGroups($newUser->id, [$settings['defaultGroup']]);
         }
 
