@@ -8,9 +8,9 @@
 namespace dukt\social\controllers;
 
 use Craft;
-use craft\web\Controller;
 use dukt\social\errors\LoginException;
 use dukt\social\errors\RegistrationException;
+use dukt\social\helpers\SocialHelper;
 use dukt\social\Plugin;
 use dukt\social\web\assets\social\SocialAsset;
 use GuzzleHttp\Exception\BadResponseException;
@@ -29,7 +29,7 @@ use yii\web\Response;
  * @author  Dukt <support@dukt.net>
  * @since   1.0
  */
-class LoginAccountsController extends Controller
+class LoginAccountsController extends BaseController
 {
     // Constants
     // =========================================================================
@@ -539,85 +539,9 @@ class LoginAccountsController extends Controller
 
             // Check whether they try to set an attribute or a custom field
             if (\in_array($attribute, $userModelAttributes, true)) {
-                $this->fillUserAttribute($newUser, $attribute, $template, $profile);
+                SocialHelper::fillUserAttribute($newUser, $attribute, $template, $profile);
             } else {
-                $this->fillUserCustomFieldValue($newUser, $attribute, $template, $profile);
-            }
-        }
-    }
-
-    /**
-     * Check if social registration is enabled.
-     *
-     * @param $settings
-     *
-     * @throws RegistrationException
-     */
-    private function checkRegistrationEnabled($settings)
-    {
-        if (!$settings['enableSocialRegistration']) {
-            throw new RegistrationException('Social registration is disabled.');
-        }
-    }
-
-    /**
-     * Check locked domains.
-     *
-     * @param $email
-     *
-     * @throws RegistrationException
-     */
-    private function checkLockedDomains($email)
-    {
-        $lockDomains = Plugin::getInstance()->getSettings()->lockDomains;
-
-        if (\count($lockDomains) > 0) {
-            $domainRejected = true;
-
-            foreach ($lockDomains as $lockDomain) {
-                if (strpos($email, '@' . $lockDomain) !== false) {
-                    $domainRejected = false;
-                }
-            }
-
-            if ($domainRejected) {
-                throw new RegistrationException('Couldn’t register with this email (domain is not allowed): ' . $email);
-            }
-        }
-    }
-
-    /**
-     * @param User $newUser
-     * @param      $attribute
-     * @param      $template
-     * @param      $profile
-     */
-    private function fillUserAttribute(User $newUser, $attribute, $template, $profile)
-    {
-        if (array_key_exists($attribute, $newUser->getAttributes())) {
-            try {
-                $newUser->{$attribute} = Craft::$app->getView()->renderString($template, ['profile' => $profile]);
-            } catch (\Exception $e) {
-                Craft::warning('Could not map:' . print_r([$attribute, $template, $profile, $e->getMessage()], true), __METHOD__);
-            }
-        }
-    }
-
-    /**
-     * @param User $newUser
-     * @param       $attribute
-     * @param       $template
-     * @param       $profile
-     */
-    private function fillUserCustomFieldValue(User $newUser, $attribute, $template, $profile)
-    {
-        // Check to make sure custom field exists for user profile
-        if (isset($newUser->{$attribute})) {
-            try {
-                $value = Craft::$app->getView()->renderString($template, ['profile' => $profile]);
-                $newUser->setFieldValue($attribute, $value);
-            } catch (\Exception $e) {
-                Craft::warning('Could not map:' . print_r([$template, $profile, $e->getMessage()], true), __METHOD__);
+                SocialHelper::fillUserCustomFieldValue($newUser, $attribute, $template, $profile);
             }
         }
     }
