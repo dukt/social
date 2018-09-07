@@ -251,7 +251,7 @@ class LoginAccounts extends Component
 
     /**
      * Saves a remote photo.
-     * 
+     *
      * @param string $providerHandle
      * @param User $newUser
      * @param $profile
