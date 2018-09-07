@@ -20,7 +20,7 @@ use yii\web\Response;
  * @author  Dukt <support@dukt.net>
  * @since   1.0
  */
-class SettingsController extends Controller
+class SettingsController extends BaseController
 {
     // Public Methods
     // =========================================================================

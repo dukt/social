@@ -22,7 +22,7 @@ use yii\web\Response;
  * @author  Dukt <support@dukt.net>
  * @since   1.0
  */
-class LoginProvidersController extends Controller
+class LoginProvidersController extends BaseController
 {
 
     // Public Methods
