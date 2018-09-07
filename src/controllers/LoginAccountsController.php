@@ -502,7 +502,7 @@ class LoginAccountsController extends Controller
 
         // Save remote photo
         if ($settings['autoFillProfile']) {
-            $this->saveRemotePhoto($providerHandle, $newUser, $profile);
+            Plugin::getInstance()->getLoginAccounts()->saveRemotePhoto($providerHandle, $newUser, $profile);
         }
 
         // Assign user to default group
@@ -583,36 +583,6 @@ class LoginAccountsController extends Controller
             if ($domainRejected) {
                 throw new RegistrationException('Couldn’t register with this email (domain is not allowed): ' . $email);
             }
-        }
-    }
-
-    /**
-     * @param string $providerHandle
-     * @param User $newUser
-     * @param        $profile
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \craft\errors\ImageException
-     * @throws \craft\errors\VolumeException
-     * @throws \yii\base\Exception
-     * @throws \yii\base\InvalidConfigException
-     */
-    private function saveRemotePhoto(string $providerHandle, User $newUser, $profile)
-    {
-        $photoUrl = false;
-        $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($providerHandle);
-        $userFieldMapping = $loginProvider->getUserFieldMapping();
-
-        if (isset($userFieldMapping['photo'])) {
-            try {
-                $photoUrl = html_entity_decode(Craft::$app->getView()->renderString($userFieldMapping['photo'], ['profile' => $profile]));
-            } catch (\Exception $e) {
-                Craft::warning('Could not map:' . print_r(['photo', $userFieldMapping['photo'], $profile, $e->getMessage()], true), __METHOD__);
-            }
-        }
-
-        if ($photoUrl) {
-            Plugin::getInstance()->getLoginAccounts()->saveRemotePhoto($photoUrl, $newUser);
         }
     }
 

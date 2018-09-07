@@ -8,10 +8,12 @@
 namespace dukt\social\services;
 
 use Craft;
+use craft\elements\User;
 use craft\helpers\FileHelper;
 use dukt\social\errors\ImageTypeException;
 use dukt\social\errors\LoginAccountNotFoundException;
 use dukt\social\helpers\SocialHelper;
+use dukt\social\Plugin;
 use yii\base\Component;
 use craft\elements\User as UserModel;
 use dukt\social\elements\LoginAccount;
@@ -248,6 +250,36 @@ class LoginAccounts extends Component
     }
 
     /**
+     * Saves a remote photo.
+     * 
+     * @param string $providerHandle
+     * @param User $newUser
+     * @param $profile
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \craft\errors\ImageException
+     * @throws \craft\errors\VolumeException
+     * @throws \yii\base\Exception
+     */
+    public function saveRemotePhoto(string $providerHandle, User $newUser, $profile)
+    {
+        $photoUrl = false;
+        $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($providerHandle);
+        $userFieldMapping = $loginProvider->getUserFieldMapping();
+
+        if (isset($userFieldMapping['photo'])) {
+            try {
+                $photoUrl = html_entity_decode(Craft::$app->getView()->renderString($userFieldMapping['photo'], ['profile' => $profile]));
+            } catch (\Exception $e) {
+                Craft::warning('Could not map:' . print_r(['photo', $userFieldMapping['photo'], $profile, $e->getMessage()], true), __METHOD__);
+            }
+        }
+
+        if ($photoUrl) {
+            $this->_saveRemotePhoto($photoUrl, $newUser);
+        }
+    }
+
+    /**
      * Save a remote photo.
      *
      * @param           $photoUrl
@@ -259,7 +291,7 @@ class LoginAccounts extends Component
      * @throws \craft\errors\VolumeException
      * @throws \yii\base\Exception
      */
-    public function saveRemotePhoto($photoUrl, UserModel $user)
+    private function _saveRemotePhoto($photoUrl, UserModel $user)
     {
         $filename = 'photo';
 
