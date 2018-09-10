@@ -3,6 +3,9 @@ Changelog
 
 ## Unreleased
 
+### Added
+- Added missing Craft 3 upgrade migration.
+
 ### Fixed
 - Fixed a bug where profile couldn’t be filled properly on user registration.
 - Fixed bug where too many arguments were passed to `\dukt\social\services\LoginProviders::getLoginProvider()` in `\dukt\social\controllers\LoginProvidersController::actionOauth()`.
