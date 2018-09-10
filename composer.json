@@ -1,7 +1,7 @@
 {
   "name": "dukt/social",
   "description": "Let your visitors log into Craft with web services like Facebook, Google, Twitter…",
-  "version": "2.0.0-beta.13",
+  "version": "2.0.0-beta.14",
   "type": "craft-plugin",
   "keywords": [
     "social login",
@@ -38,7 +38,7 @@
   "extra": {
     "name": "Social",
     "handle": "social",
-    "schemaVersion": "1.0.2",
+    "schemaVersion": "1.0.3",
     "documentationUrl": "https://docs.dukt.net/social/v2",
     "changelogUrl": "https://raw.githubusercontent.com/dukt/social/develop/CHANGELOG.md"
   }
