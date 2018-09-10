@@ -8,9 +8,9 @@
 namespace dukt\social\controllers;
 
 use Craft;
-use craft\web\Controller;
 use dukt\social\errors\LoginException;
 use dukt\social\errors\RegistrationException;
+use dukt\social\helpers\SocialHelper;
 use dukt\social\Plugin;
 use dukt\social\web\assets\social\SocialAsset;
 use GuzzleHttp\Exception\BadResponseException;
@@ -29,7 +29,7 @@ use yii\web\Response;
  * @author  Dukt <support@dukt.net>
  * @since   1.0
  */
-class LoginAccountsController extends Controller
+class LoginAccountsController extends BaseController
 {
     // Constants
     // =========================================================================
@@ -144,12 +144,12 @@ class LoginAccountsController extends Controller
             Craft::$app->getSession()->set('social.originUrl', $this->originUrl);
         }
 
-        $this->redirect = Craft::$app->getRequest()->getParam('redirect');
+        $this->redirect = (string)Craft::$app->getRequest()->getParam('redirect');
 
 
         // Connect
 
-        $providerHandle = Craft::$app->getRequest()->getParam('provider');
+        $providerHandle = (string)Craft::$app->getRequest()->getParam('provider');
         $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $pluginSettings = $plugin->getSettings();
 
@@ -164,21 +164,34 @@ class LoginAccountsController extends Controller
                 throw new LoginException('Login provider is not configured');
             }
 
-            if ($response = $this->oauthConnect($providerHandle)) {
-                if ($response && is_object($response) && !$response->data) {
-                    return $response;
-                }
 
-                if ($response['success']) {
-                    $token = new Token();
-                    $token->providerHandle = $providerHandle;
-                    $token->token = $response['token'];
+            // Redirect to login provider’s authorization page
 
-                    return $this->connectUser($token);
-                }
+            Craft::$app->getSession()->set('social.loginProvider', $providerHandle);
 
-                throw new LoginException($response['errorMsg']);
+            if (!Craft::$app->getSession()->get('social.callback')) {
+                return $loginProvider->oauthConnect();
             }
+
+
+            // Callback
+
+            Craft::$app->getSession()->remove('social.callback');
+
+            $callbackResponse = $loginProvider->oauthCallback();
+
+            if ($callbackResponse['success']) {
+                $token = new Token();
+                $token->providerHandle = $providerHandle;
+                $token->token = $callbackResponse['token'];
+
+                return $this->connectUser($token);
+            }
+
+
+            // Unable to log the user in, throw an exception
+
+            throw new LoginException($callbackResponse['errorMsg']);
         } catch (BadResponseException $e) {
             $response = $e->getResponse();
             $body = $response->getBody();
@@ -190,14 +203,14 @@ class LoginAccountsController extends Controller
                 $errorMsg = 'Couldn’t login.';
             }
 
-            Craft::error('Couldn’t login. '.$e->getTraceAsString(), __METHOD__);
+            Craft::error('Couldn’t login. ' . $e->getTraceAsString(), __METHOD__);
             Craft::$app->getSession()->setFlash('error', $errorMsg);
             $this->_cleanSession();
 
             return $this->redirect($this->originUrl);
         } catch (\Exception $e) {
             $errorMsg = $e->getMessage();
-            Craft::error('Couldn’t login. '.$e->getTraceAsString(), __METHOD__);
+            Craft::error('Couldn’t login. ' . $e->getTraceAsString(), __METHOD__);
             Craft::$app->getSession()->setFlash('error', $errorMsg);
             $this->_cleanSession();
 
@@ -209,6 +222,7 @@ class LoginAccountsController extends Controller
      * OAuth callback.
      *
      * @return Response
+     * @throws \craft\errors\MissingComponentException
      */
     public function actionCallback(): Response
     {
@@ -278,29 +292,6 @@ class LoginAccountsController extends Controller
 
     // Private Methods
     // =========================================================================
-
-    /**
-     * OAuth connect.
-     *
-     * @param $loginProviderHandle
-     *
-     * @return array|null
-     * @throws \yii\base\InvalidConfigException
-     */
-    private function oauthConnect($loginProviderHandle)
-    {
-        $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($loginProviderHandle);
-
-        Craft::$app->getSession()->set('social.loginProvider', $loginProviderHandle);
-
-        if (!Craft::$app->getSession()->get('social.callback')) {
-            return $loginProvider->oauthConnect();
-        }
-
-        Craft::$app->getSession()->remove('social.callback');
-
-        return $loginProvider->oauthCallback();
-    }
 
     /**
      * Connect (register, login, link) a user from token.
@@ -474,7 +465,7 @@ class LoginAccountsController extends Controller
 
         if ($user) {
             if (Plugin::getInstance()->getSettings()->allowEmailMatch !== true) {
-                throw new RegistrationException('An account already exists with this email: '.$email);
+                throw new RegistrationException('An account already exists with this email: ' . $email);
             }
 
             return $user;
@@ -505,17 +496,17 @@ class LoginAccountsController extends Controller
 
         // Save user
         if (!Craft::$app->elements->saveElement($newUser)) {
-            Craft::error('There was a problem creating the user:'.print_r($newUser->getErrors(), true), __METHOD__);
+            Craft::error('There was a problem creating the user:' . print_r($newUser->getErrors(), true), __METHOD__);
             throw new RegistrationException('Craft user couldn’t be created.');
         }
 
         // Save remote photo
         if ($settings['autoFillProfile']) {
-            $this->saveRemotePhoto($providerHandle, $newUser, $profile);
+            Plugin::getInstance()->getLoginAccounts()->saveRemotePhoto($providerHandle, $newUser, $profile);
         }
 
         // Assign user to default group
-        if (!empty($settings['defaultGroup'])) {
+        if ($newUser->id !== null && !empty($settings['defaultGroup'])) {
             Craft::$app->users->assignUserToGroups($newUser->id, [$settings['defaultGroup']]);
         }
 
@@ -526,12 +517,12 @@ class LoginAccountsController extends Controller
 
     /**
      * @param string $providerHandle
-     * @param User   $newUser
+     * @param User $newUser
      * @param        $profile
      *
      * @throws \yii\base\InvalidConfigException
      */
-    private function fillUser(string $providerHandle, User &$newUser, $profile)
+    private function fillUser(string $providerHandle, User $newUser, $profile)
     {
         $socialPlugin = Craft::$app->getPlugins()->getPlugin('social');
         $settings = $socialPlugin->getSettings();
@@ -542,121 +533,15 @@ class LoginAccountsController extends Controller
 
         foreach ($userFieldMapping as $attribute => $template) {
             // Only fill other fields than `email` and `username` when `autoFillProfile` is true
-            if (!$settings['autoFillProfile'] && ($attribute !== 'email' || $attribute !== 'username')) {
+            if (!$settings['autoFillProfile'] && $attribute !== 'email' && $attribute !== 'username') {
                 continue;
             }
 
             // Check whether they try to set an attribute or a custom field
             if (\in_array($attribute, $userModelAttributes, true)) {
-                $this->fillUserAttribute($newUser, $attribute, $template, $profile);
+                SocialHelper::fillUserAttribute($newUser, $attribute, $template, $profile);
             } else {
-                $this->fillUserCustomFieldValue($newUser, $attribute, $template, $profile);
-            }
-        }
-    }
-
-    /**
-     * Check if social registration is enabled.
-     *
-     * @param $settings
-     *
-     * @throws RegistrationException
-     */
-    private function checkRegistrationEnabled($settings)
-    {
-        if (!$settings['enableSocialRegistration']) {
-            throw new RegistrationException('Social registration is disabled.');
-        }
-    }
-
-    /**
-     * Check locked domains.
-     *
-     * @param $email
-     *
-     * @throws RegistrationException
-     */
-    private function checkLockedDomains($email)
-    {
-        $lockDomains = Plugin::getInstance()->getSettings()->lockDomains;
-
-        if (\count($lockDomains) > 0) {
-            $domainRejected = true;
-
-            foreach ($lockDomains as $lockDomain) {
-                if (strpos($email, '@'.$lockDomain) !== false) {
-                    $domainRejected = false;
-                }
-            }
-
-            if ($domainRejected) {
-                throw new RegistrationException('Couldn’t register with this email (domain is not allowed): '.$email);
-            }
-        }
-    }
-
-    /**
-     * @param string $providerHandle
-     * @param User   $newUser
-     * @param        $profile
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \craft\errors\ImageException
-     * @throws \craft\errors\VolumeException
-     * @throws \yii\base\Exception
-     * @throws \yii\base\InvalidConfigException
-     */
-    private function saveRemotePhoto(string $providerHandle, User &$newUser, $profile)
-    {
-        $photoUrl = false;
-        $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($providerHandle);
-        $userFieldMapping = $loginProvider->getUserFieldMapping();
-
-        if (isset($userFieldMapping['photo'])) {
-            try {
-                $photoUrl = html_entity_decode(Craft::$app->getView()->renderString($userFieldMapping['photo'], ['profile' => $profile]));
-            } catch (\Exception $e) {
-                Craft::warning('Could not map:'.print_r(['photo', $userFieldMapping['photo'], $profile, $e->getMessage()], true), __METHOD__);
-            }
-        }
-
-        if ($photoUrl) {
-            Plugin::getInstance()->getLoginAccounts()->saveRemotePhoto($photoUrl, $newUser);
-        }
-    }
-
-    /**
-     * @param User $newUser
-     * @param      $attribute
-     * @param      $template
-     * @param      $profile
-     */
-    private function fillUserAttribute(User &$newUser, $attribute, $template, $profile)
-    {
-        if (array_key_exists($attribute, $newUser->getAttributes())) {
-            try {
-                $newUser->{$attribute} = Craft::$app->getView()->renderString($template, ['profile' => $profile]);
-            } catch (\Exception $e) {
-                Craft::warning('Could not map:'.print_r([$attribute, $template, $profile, $e->getMessage()], true), __METHOD__);
-            }
-        }
-    }
-
-    /**
-     * @param User  $newUser
-     * @param       $attribute
-     * @param       $template
-     * @param       $profile
-     */
-    private function fillUserCustomFieldValue(User &$newUser, $attribute, $template, $profile)
-    {
-        // Check to make sure custom field exists for user profile
-        if (isset($newUser->{$attribute})) {
-            try {
-                $value = Craft::$app->getView()->renderString($template, ['profile' => $profile]);
-                $newUser->setFieldValue($attribute, $value);
-            } catch (\Exception $e) {
-                Craft::warning('Could not map:'.print_r([$template, $profile, $e->getMessage()], true), __METHOD__);
+                SocialHelper::fillUserCustomFieldValue($newUser, $attribute, $template, $profile);
             }
         }
     }
@@ -664,12 +549,13 @@ class LoginAccountsController extends Controller
     /**
      * Login user from login account.
      *
-     * @param User         $craftUser
+     * @param User $craftUser
      * @param LoginAccount $account
-     * @param Token        $token
-     * @param bool         $registrationMode
+     * @param Token $token
+     * @param bool $registrationMode
      *
      * @return Response
+     * @throws \craft\errors\MissingComponentException
      * @throws \yii\base\InvalidConfigException
      */
     private function login(User $craftUser, LoginAccount $account, Token $token, $registrationMode = false): Response
@@ -695,6 +581,7 @@ class LoginAccountsController extends Controller
      * Handles a failed login attempt.
      *
      * @return Response
+     * @throws \craft\errors\MissingComponentException
      */
     private function _handleLoginFailure(): Response
     {
@@ -709,6 +596,7 @@ class LoginAccountsController extends Controller
      * @param bool $registrationMode
      *
      * @return Response
+     * @throws \craft\errors\MissingComponentException
      */
     private function _handleSuccessfulLogin(bool $registrationMode): Response
     {

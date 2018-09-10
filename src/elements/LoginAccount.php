@@ -20,7 +20,7 @@ use dukt\social\models\Token;
 /**
  * LoginAccount represents a login account element.
  *
- * @property int    $userId
+ * @property int $userId
  * @property string $providerHandle
  * @property string $socialUid
  *
@@ -63,7 +63,7 @@ class LoginAccount extends Element
 
             foreach ($loginProviders as $loginProvider) {
                 $providerHandle = $loginProvider->getHandle();
-                $key = 'group:'.$providerHandle;
+                $key = 'group:' . $providerHandle;
 
                 $sources[] = [
                     'key' => $key,
@@ -201,10 +201,8 @@ class LoginAccount extends Element
      */
     public function getUser()
     {
-        if (!isset($this->_user)) {
-            if ($this->userId) {
-                $this->_user = Craft::$app->users->getUserById($this->userId);
-            }
+        if (!isset($this->_user) && $this->userId) {
+            $this->_user = Craft::$app->users->getUserById($this->userId);
         }
 
         return $this->_user;
@@ -290,21 +288,13 @@ class LoginAccount extends Element
     {
         switch ($attribute) {
             case 'username':
-                $user = $this->getUser();
-
-                return $user ? Craft::$app->getView()->renderTemplate('_elements/element', ['element' => $user]) : '';
+                return $this->_usernameTableAttributeHtml();
             case 'email':
-                $user = $this->getUser();
-
-                return $user ? Html::encodeParams('<a href="mailto:{email}">{email}</a>', ['email' => $user->email]) : '';
+                return $this->_emailTableAttributeHtml();
             case 'lastLoginDate':
-                $user = $this->getUser();
-
-                return Craft::$app->getFormatter()->asTime($user->lastLoginDate, 'short');
+                return $this->_lastLoginDateTableAttributeHtml();
             case 'loginProvider':
-                $loginProvider = $this->getLoginProvider();
-
-                return $loginProvider ? Craft::$app->getView()->renderTemplate('social/loginaccounts/_element', ['loginProvider' => $loginProvider]) : '';
+                return $this->_loginProviderTableAttributeHtml();
         }
 
         return parent::tableAttributeHtml($attribute);
@@ -338,5 +328,55 @@ class LoginAccount extends Element
         }
 
         parent::afterSave($isNew);
+    }
+
+
+    // Private Methods
+    // -------------------------------------------------------------------------
+
+    /**
+     * @return string
+     * @throws \Twig_Error_Loader
+     * @throws \yii\base\Exception
+     */
+    private function _usernameTableAttributeHtml()
+    {
+        $user = $this->getUser();
+
+        return $user ? Craft::$app->getView()->renderTemplate('_elements/element', ['element' => $user]) : '';
+    }
+
+    /**
+     * @return string
+     */
+    private function _emailTableAttributeHtml()
+    {
+        $user = $this->getUser();
+
+        return $user ? Html::encodeParams('<a href="mailto:{email}">{email}</a>', ['email' => $user->email]) : '';
+    }
+
+    /**
+     * @return string
+     * @throws \yii\base\InvalidConfigException
+     */
+    private function _lastLoginDateTableAttributeHtml()
+    {
+        $user = $this->getUser();
+
+        return Craft::$app->getFormatter()->asTime($user->lastLoginDate, 'short');
+    }
+
+    /**
+     * @return string
+     * @throws \Twig_Error_Loader
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
+     */
+    private function _loginProviderTableAttributeHtml()
+    {
+        $loginProvider = $this->getLoginProvider();
+
+        return $loginProvider ? Craft::$app->getView()->renderTemplate('social/loginaccounts/_element', ['loginProvider' => $loginProvider]) : '';
     }
 }

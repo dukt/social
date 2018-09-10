@@ -22,7 +22,7 @@ use yii\web\Response;
  * @author  Dukt <support@dukt.net>
  * @since   1.0
  */
-class LoginProvidersController extends Controller
+class LoginProvidersController extends BaseController
 {
 
     // Public Methods
@@ -42,9 +42,9 @@ class LoginProvidersController extends Controller
 
         Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
 
-        $variables['loginProviders'] = Plugin::getInstance()->getLoginProviders()->getLoginProviders(false);
-
-        return $this->renderTemplate('social/loginproviders/_index', $variables);
+        return $this->renderTemplate('social/loginproviders/_index', [
+            'loginProviders' => Plugin::getInstance()->getLoginProviders()->getLoginProviders(false)
+        ]);
     }
 
     /**
@@ -62,7 +62,7 @@ class LoginProvidersController extends Controller
             return $this->renderTemplate('social/settings/_pro-requirement');
         }
 
-        $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($handle, false, true);
+        $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($handle, false);
         $oauthProviderConfig = Plugin::getInstance()->getOauthProviderConfig($handle);
 
         if ($loginProvider) {
@@ -105,6 +105,7 @@ class LoginProvidersController extends Controller
      * Enable login provider.
      *
      * @return Response
+     * @throws \craft\errors\MissingComponentException
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\web\BadRequestHttpException
      */
@@ -126,6 +127,7 @@ class LoginProvidersController extends Controller
      * Disable login provider.
      *
      * @return Response
+     * @throws \craft\errors\MissingComponentException
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\web\BadRequestHttpException
      */
@@ -147,6 +149,7 @@ class LoginProvidersController extends Controller
      * Saves an OAuth provider.
      *
      * @return null|Response
+     * @throws \craft\errors\MissingComponentException
      * @throws \yii\web\BadRequestHttpException
      */
     public function actionSaveOauthProvider()

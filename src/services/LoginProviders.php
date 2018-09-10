@@ -13,6 +13,9 @@ use dukt\social\events\RegisterLoginProviderTypesEvent;
 use dukt\social\Plugin;
 use yii\base\Component;
 use dukt\social\base\LoginProviderInterface;
+use dukt\social\loginproviders\Facebook;
+use dukt\social\loginproviders\Twitter;
+use dukt\social\loginproviders\Google;
 
 /**
  * The LoginProviders service provides APIs for managing login providers in Craft.
@@ -48,7 +51,7 @@ class LoginProviders extends Component
 
         $enabledLoginProviders = $settings->enabledLoginProviders;
 
-        if (($key = array_search($handle, $enabledLoginProviders)) !== false) {
+        if (($key = array_search($handle, $enabledLoginProviders, true)) !== false) {
             unset($enabledLoginProviders[$key]);
         }
 
@@ -71,7 +74,7 @@ class LoginProviders extends Component
 
         $enabledLoginProviders = $settings->enabledLoginProviders;
 
-        if (!in_array($handle, $enabledLoginProviders)) {
+        if (!in_array($handle, $enabledLoginProviders, true)) {
             $enabledLoginProviders[] = $handle;
         }
 
@@ -83,7 +86,7 @@ class LoginProviders extends Component
     /**
      * Get a login provider by handle.
      *
-     * @param string    $handle
+     * @param string $handle
      * @param bool|true $enabledOnly
      *
      * @return LoginProvider|LoginProviderInterface|null
@@ -149,9 +152,9 @@ class LoginProviders extends Component
     private function _getLoginProviderTypes(): array
     {
         $loginProviderTypes = [
-            'dukt\social\loginproviders\Facebook',
-            'dukt\social\loginproviders\Google',
-            'dukt\social\loginproviders\Twitter',
+            Facebook::class,
+            Google::class,
+            Twitter::class,
         ];
 
         $eventName = self::EVENT_REGISTER_LOGIN_PROVIDER_TYPES;

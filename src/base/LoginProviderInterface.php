@@ -7,7 +7,7 @@
 
 namespace dukt\social\base;
 
-use dukt\social\models\Token;
+use craft\web\Response;
 
 /**
  * LoginProviderInterface defines the common interface to be implemented by login provider classes.
@@ -40,4 +40,18 @@ interface LoginProviderInterface
      * @return array
      */
     public function getDefaultUserFieldMapping(): array;
+
+    /**
+     * OAuth connect.
+     *
+     * @return Response
+     */
+    public function oauthConnect(): Response;
+
+    /**
+     * OAuth callback.
+     *
+     * @return array
+     */
+    public function oauthCallback(): array;
 }

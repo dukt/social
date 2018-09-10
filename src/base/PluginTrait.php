@@ -12,7 +12,7 @@ use dukt\social\Plugin;
 /**
  * PluginTrait implements the common methods and properties for plugin classes.
  *
- * @property \dukt\social\services\LoginAccounts  $loginAccounts      The loginAccounts service
+ * @property \dukt\social\services\LoginAccounts $loginAccounts      The loginAccounts service
  * @property \dukt\social\services\LoginProviders $loginProviders     The loginProviders service
  */
 trait PluginTrait

@@ -8,6 +8,7 @@
 namespace dukt\social\helpers;
 
 use Craft;
+use craft\elements\User;
 use craft\helpers\UrlHelper;
 
 /**
@@ -24,9 +25,9 @@ class SocialHelper
     /**
      * Returns a site action URL.
      *
-     * @param string            $path
+     * @param string $path
      * @param array|string|null $params
-     * @param string|null       $protocol The protocol to use (e.g. http, https). If empty, the protocol used for the current
+     * @param string|null $protocol The protocol to use (e.g. http, https). If empty, the protocol used for the current
      *                                    request will be used.
      *
      * @return string
@@ -43,8 +44,44 @@ class SocialHelper
         Craft::$app->getConfig()->getGeneral()->addTrailingSlashesToUrls = $addTrailingSlashesToUrls;
 
         // We don't want the CP trigger showing in the action URL.
-        $redirectUri = str_replace(Craft::$app->getConfig()->getGeneral()->cpTrigger.'/', '', $redirectUri);
+        $redirectUri = str_replace(Craft::$app->getConfig()->getGeneral()->cpTrigger . '/', '', $redirectUri);
 
         return $redirectUri;
+    }
+
+    /**
+     * @param User $newUser
+     * @param      $attribute
+     * @param      $template
+     * @param      $profile
+     */
+    public static function fillUserAttribute(User $newUser, $attribute, $template, $profile)
+    {
+        if (array_key_exists($attribute, $newUser->getAttributes())) {
+            try {
+                $newUser->{$attribute} = Craft::$app->getView()->renderString($template, ['profile' => $profile]);
+            } catch (\Exception $e) {
+                Craft::warning('Could not map:' . print_r([$attribute, $template, $profile, $e->getMessage()], true), __METHOD__);
+            }
+        }
+    }
+
+    /**
+     * @param User $newUser
+     * @param       $attribute
+     * @param       $template
+     * @param       $profile
+     */
+    public static function fillUserCustomFieldValue(User $newUser, $attribute, $template, $profile)
+    {
+        // Check to make sure custom field exists for user profile
+        if (isset($newUser->{$attribute})) {
+            try {
+                $value = Craft::$app->getView()->renderString($template, ['profile' => $profile]);
+                $newUser->setFieldValue($attribute, $value);
+            } catch (\Exception $e) {
+                Craft::warning('Could not map:' . print_r([$template, $profile, $e->getMessage()], true), __METHOD__);
+            }
+        }
     }
 }

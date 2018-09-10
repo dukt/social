@@ -20,7 +20,7 @@ use yii\web\Response;
  * @author  Dukt <support@dukt.net>
  * @since   1.0
  */
-class SettingsController extends Controller
+class SettingsController extends BaseController
 {
     // Public Methods
     // =========================================================================
@@ -50,6 +50,7 @@ class SettingsController extends Controller
      * Saves the settings.
      *
      * @return null|Response
+     * @throws \craft\errors\MissingComponentException
      * @throws \yii\web\BadRequestHttpException
      */
     public function actionSaveSettings()

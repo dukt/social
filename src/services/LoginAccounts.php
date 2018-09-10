@@ -8,10 +8,12 @@
 namespace dukt\social\services;
 
 use Craft;
+use craft\elements\User;
 use craft\helpers\FileHelper;
 use dukt\social\errors\ImageTypeException;
 use dukt\social\errors\LoginAccountNotFoundException;
 use dukt\social\helpers\SocialHelper;
+use dukt\social\Plugin;
 use yii\base\Component;
 use craft\elements\User as UserModel;
 use dukt\social\elements\LoginAccount;
@@ -113,10 +115,6 @@ class LoginAccounts extends Component
 
         if (!$isNewAccount) {
             $accountRecord = $this->_getLoginAccountRecordById($account->id);
-
-            if (!$accountRecord) {
-                throw new LoginAccountNotFoundException(Craft::t('social', 'No social user exists with the ID “{id}”', ['id' => $account->id]));
-            }
         } else {
             $accountRecord = new LoginAccount;
         }
@@ -252,6 +250,36 @@ class LoginAccounts extends Component
     }
 
     /**
+     * Saves a remote photo.
+     *
+     * @param string $providerHandle
+     * @param User $newUser
+     * @param $profile
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \craft\errors\ImageException
+     * @throws \craft\errors\VolumeException
+     * @throws \yii\base\Exception
+     */
+    public function saveRemotePhoto(string $providerHandle, User $newUser, $profile)
+    {
+        $photoUrl = false;
+        $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($providerHandle);
+        $userFieldMapping = $loginProvider->getUserFieldMapping();
+
+        if (isset($userFieldMapping['photo'])) {
+            try {
+                $photoUrl = html_entity_decode(Craft::$app->getView()->renderString($userFieldMapping['photo'], ['profile' => $profile]));
+            } catch (\Exception $e) {
+                Craft::warning('Could not map:' . print_r(['photo', $userFieldMapping['photo'], $profile, $e->getMessage()], true), __METHOD__);
+            }
+        }
+
+        if ($photoUrl) {
+            $this->_saveRemotePhoto($photoUrl, $newUser);
+        }
+    }
+
+    /**
      * Save a remote photo.
      *
      * @param           $photoUrl
@@ -263,18 +291,18 @@ class LoginAccounts extends Component
      * @throws \craft\errors\VolumeException
      * @throws \yii\base\Exception
      */
-    public function saveRemotePhoto($photoUrl, UserModel $user)
+    private function _saveRemotePhoto($photoUrl, UserModel $user)
     {
         $filename = 'photo';
 
-        $tempPath = Craft::$app->path->getTempPath().'/social/userphotos/'.$user->email.'/';
+        $tempPath = Craft::$app->path->getTempPath() . '/social/userphotos/' . $user->email . '/';
 
         FileHelper::createDirectory($tempPath);
 
         $client = new \GuzzleHttp\Client();
 
         $response = $client->request('GET', $photoUrl, [
-            'save_to' => $tempPath.$filename
+            'save_to' => $tempPath . $filename
         ]);
 
         if ($response->getStatusCode() !== 200) {
@@ -299,15 +327,15 @@ class LoginAccounts extends Component
                     break;
 
                 default:
-                    throw new ImageTypeException('Image type “'.$contentTypes[0].'” not supported');
+                    throw new ImageTypeException('Image type “' . $contentTypes[0] . '” not supported');
             }
         } else {
             throw new ImageTypeException('Image type not supported');
         }
 
-        rename($tempPath.$filename, $tempPath.$filename.'.'.$extension);
+        rename($tempPath . $filename, $tempPath . $filename . '.' . $extension);
 
-        $image = Craft::$app->images->loadImage($tempPath.$filename.'.'.$extension);
+        $image = Craft::$app->images->loadImage($tempPath . $filename . '.' . $extension);
         $imageWidth = $image->getWidth();
         $imageHeight = $image->getHeight();
 
@@ -316,7 +344,7 @@ class LoginAccounts extends Component
         $verticalMargin = ($imageHeight - $dimension) / 2;
         $image->crop($horizontalMargin, $imageWidth - $horizontalMargin, $verticalMargin, $imageHeight - $verticalMargin);
 
-        Craft::$app->users->saveUserPhoto($tempPath.$filename.'.'.$extension, $user, $filename.'.'.$extension);
+        Craft::$app->users->saveUserPhoto($tempPath . $filename . '.' . $extension, $user, $filename . '.' . $extension);
 
         return true;
     }

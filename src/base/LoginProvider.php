@@ -9,6 +9,7 @@ namespace dukt\social\base;
 
 use Craft;
 use craft\web\Response;
+use dukt\social\errors\LoginException;
 use dukt\social\helpers\SocialHelper;
 use dukt\social\models\Token;
 use dukt\social\Plugin;
@@ -67,7 +68,7 @@ abstract class LoginProvider implements LoginProviderInterface
      */
     public function getIconUrl()
     {
-        return Craft::$app->assetManager->getPublishedUrl('@dukt/social/icons/'.$this->getHandle().'.svg', true);
+        return Craft::$app->assetManager->getPublishedUrl('@dukt/social/icons/' . $this->getHandle() . '.svg', true);
     }
 
     /**
@@ -120,10 +121,12 @@ abstract class LoginProvider implements LoginProviderInterface
     /**
      * OAuth connect.
      *
-     * @return null
+     * @return Response
+     * @throws LoginException
+     * @throws \craft\errors\MissingComponentException
      * @throws \yii\base\InvalidConfigException
      */
-    public function oauthConnect()
+    public function oauthConnect(): Response
     {
         switch ($this->oauthVersion()) {
             case 1:
@@ -131,14 +134,18 @@ abstract class LoginProvider implements LoginProviderInterface
             case 2:
                 return $this->oauth2Connect();
         }
+
+        throw new LoginException('OAuth version not supported');
     }
 
     /**
      * OAuth callback.
      *
      * @return array
+     * @throws LoginException
+     * @throws \craft\errors\MissingComponentException
      */
-    public function oauthCallback()
+    public function oauthCallback(): array
     {
         switch ($this->oauthVersion()) {
             case 1:
@@ -146,6 +153,8 @@ abstract class LoginProvider implements LoginProviderInterface
             case 2:
                 return $this->oauth2Callback();
         }
+
+        throw new LoginException('OAuth version not supported');
     }
 
     /**
@@ -154,7 +163,7 @@ abstract class LoginProvider implements LoginProviderInterface
      * @return array
      * @throws \yii\base\InvalidConfigException
      */
-    public function getOauthScope()
+    public function getOauthScope(): array
     {
         $scope = $this->getDefaultOauthScope();
         $oauthProviderConfig = $this->getOauthProviderConfig();
@@ -192,10 +201,9 @@ abstract class LoginProvider implements LoginProviderInterface
     public function getIsEnabled(): bool
     {
         // get plugin settings
-        $settings = Plugin::getInstance()->getSettings();
-        $enabledLoginProviders = $settings->enabledLoginProviders;
+        $enabledLoginProviders = Plugin::getInstance()->getSettings()->enabledLoginProviders;
 
-        if (in_array($this->getHandle(), $enabledLoginProviders)) {
+        if (in_array($this->getHandle(), $enabledLoginProviders, true)) {
             return true;
         }
 
@@ -325,6 +333,7 @@ abstract class LoginProvider implements LoginProviderInterface
      * OAuth 1 connect.
      *
      * @return Response
+     * @throws \craft\errors\MissingComponentException
      */
     private function oauth1Connect(): Response
     {
@@ -347,6 +356,7 @@ abstract class LoginProvider implements LoginProviderInterface
      * OAuth 2 connect.
      *
      * @return Response
+     * @throws \craft\errors\MissingComponentException
      * @throws \yii\base\InvalidConfigException
      */
     private function oauth2Connect(): Response
@@ -373,6 +383,7 @@ abstract class LoginProvider implements LoginProviderInterface
      * OAuth 1 callback.
      *
      * @return array
+     * @throws \craft\errors\MissingComponentException
      */
     private function oauth1Callback(): array
     {
