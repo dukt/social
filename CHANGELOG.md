@@ -1,7 +1,7 @@
 Changelog
 ===================
 
-## Unreleased
+## 2.0.0-beta.14 - 2018-09-10
 
 ### Added
 - Added missing Craft 3 upgrade migration.
