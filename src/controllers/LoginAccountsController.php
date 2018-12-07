@@ -10,6 +10,7 @@ namespace dukt\social\controllers;
 use Craft;
 use dukt\social\errors\LoginException;
 use dukt\social\errors\RegistrationException;
+use dukt\social\events\LoginAccountsEvent;
 use dukt\social\helpers\SocialHelper;
 use dukt\social\Plugin;
 use dukt\social\web\assets\social\SocialAsset;
@@ -35,9 +36,14 @@ class LoginAccountsController extends BaseController
     // =========================================================================
 
     /**
-     * @event RegisterComponentTypesEvent The event that is triggered when registering element types.
+     * @event LoginAccountsEvent The event that is triggered before registering a user.
      */
     const EVENT_BEFORE_REGISTER = 'beforeRegister';
+
+    /**
+     * @event LoginAccountsEvent The event that is triggered after registering a user.
+     */
+    const EVENT_AFTER_REGISTER = 'afterRegister';
 
     // Properties
     // =========================================================================
@@ -484,8 +490,9 @@ class LoginAccountsController extends BaseController
 
         // Fire a 'beforeRegister' event
         if ($this->hasEventHandlers(self::EVENT_BEFORE_REGISTER)) {
-            $this->trigger(self::EVENT_BEFORE_REGISTER, new Event([
-                'account' => &$profile,
+            $this->trigger(self::EVENT_BEFORE_REGISTER, new LoginAccountsEvent([
+                'profile' => &$profile,
+                'provider' => $loginProvider,
             ]));
         }
 
@@ -511,6 +518,15 @@ class LoginAccountsController extends BaseController
         }
 
         Craft::$app->elements->saveElement($newUser);
+
+        // Fire a 'afterRegister' event
+        if ($this->hasEventHandlers(self::EVENT_AFTER_REGISTER)) {
+            $this->trigger(self::EVENT_AFTER_REGISTER, new LoginAccountsEvent([
+                'profile' => &$profile,
+                'provider' => $loginProvider,
+                'user' => &$newUser
+            ]));
+        }
 
         return $newUser;
     }
