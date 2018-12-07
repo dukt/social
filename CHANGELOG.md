@@ -1,13 +1,6 @@
 Changelog
 ===================
 
-## 1.0.0 - 2018-12-07
-
-### Added
-* LoginAccountEvent to add working events for before and after a user logs in
-
-# Original Change log:
-
 ## 2.0.0-beta.14 - 2018-09-10
 
 ### Added

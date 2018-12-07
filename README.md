@@ -22,4 +22,4 @@ Installation instructions can be found in the [Social 2 documentation](https://d
 ## Forked Changes to the plugin:
 
 ### Added
-* LoginAccountEvent to add working events for before and after a user logs in
+* LoginAccountEvent to add working hooks for before and after a user logs in

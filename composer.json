@@ -1,7 +1,7 @@
 {
-  "name": "adampatpattison/social",
+  "name": "dukt/social",
   "description": "Let your visitors log into Craft with web services like Facebook, Google, Twitter…",
-  "version": "1.0.0",
+  "version": "2.0.0-beta.14",
   "type": "craft-plugin",
   "keywords": [
     "social login",
@@ -14,18 +14,14 @@
     {
       "name": "Dukt",
       "homepage": "https://dukt.net/"
-    },
-    {
-      "name": "Adam 'Pat' Pattison",
-      "homepage": "https://www.adampatpattison.co.uk/"
     }
   ],
   "support": {
     "email": "support@dukt.net",
-    "issues": "https://github.com/adampatpattison/social/issues?state=open",
-    "source": "https://github.com/adampatpattison/social",
-    "docs": "https://github.com/adampatpattison/social",
-    "rss": "https://github.com/adampatpattison/social/commits/v2.atom"
+    "issues": "https://github.com/dukt/social/issues?state=open",
+    "source": "https://github.com/dukt/social",
+    "docs": "https://github.com/dukt/social",
+    "rss": "https://github.com/dukt/social/commits/v2.atom"
   },
   "require": {
     "craftcms/cms": "^3.0.0-RC1",
@@ -44,6 +40,6 @@
     "handle": "social",
     "schemaVersion": "1.0.3",
     "documentationUrl": "https://docs.dukt.net/social/v2",
-    "changelogUrl": "https://raw.githubusercontent.com/adampatpattison/social/develop/CHANGELOG.md"
+    "changelogUrl": "https://raw.githubusercontent.com/dukt/social/develop/CHANGELOG.md"
   }
 }
