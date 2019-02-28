@@ -233,7 +233,7 @@ class Plugin extends \craft\base\Plugin
     private function _initLoginAccountsUserPane()
     {
         Craft::$app->getView()->hook('cp.users.edit.details', function(&$context) {
-            if ($context['user']) {
+            if ($context['user'] && $context['user']->id) {
                 $context['loginAccounts'] = $this->loginAccounts->getLoginAccountsByUserId($context['user']->id);
                 $context['loginProviders'] = $this->loginProviders->getLoginProviders();
 

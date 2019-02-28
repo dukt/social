@@ -1,6 +1,11 @@
 Changelog
 ===================
 
+## Unreleased
+
+### Fixed
+- Fixed a bug where the login accounts user pane was showing up when trying to create a new user. ([#28](https://github.com/dukt/social/issues/28))
+
 ## 2.0.0-beta.14 - 2018-09-10
 
 ### Added
