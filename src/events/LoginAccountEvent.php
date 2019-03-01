@@ -15,7 +15,7 @@ use yii\base\Event;
  * @author Dukt <support@dukt.net>
  * @since  2.0
  */
-class LoginAccountsEvent extends Event
+class LoginAccountEvent extends Event
 {
     // Properties
     // =========================================================================

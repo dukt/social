@@ -10,7 +10,7 @@ namespace dukt\social\controllers;
 use Craft;
 use dukt\social\errors\LoginException;
 use dukt\social\errors\RegistrationException;
-use dukt\social\events\LoginAccountsEvent;
+use dukt\social\events\LoginAccountEvent;
 use dukt\social\helpers\SocialHelper;
 use dukt\social\Plugin;
 use dukt\social\web\assets\social\SocialAsset;
@@ -490,7 +490,7 @@ class LoginAccountsController extends BaseController
 
         // Fire a 'beforeRegister' event
         if ($this->hasEventHandlers(self::EVENT_BEFORE_REGISTER)) {
-            $this->trigger(self::EVENT_BEFORE_REGISTER, new LoginAccountsEvent([
+            $this->trigger(self::EVENT_BEFORE_REGISTER, new LoginAccountEvent([
                 'profile' => &$profile,
                 'provider' => $loginProvider,
             ]));
@@ -521,7 +521,7 @@ class LoginAccountsController extends BaseController
 
         // Fire a 'afterRegister' event
         if ($this->hasEventHandlers(self::EVENT_AFTER_REGISTER)) {
-            $this->trigger(self::EVENT_AFTER_REGISTER, new LoginAccountsEvent([
+            $this->trigger(self::EVENT_AFTER_REGISTER, new LoginAccountEvent([
                 'profile' => &$profile,
                 'provider' => $loginProvider,
                 'user' => &$newUser
