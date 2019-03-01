@@ -491,7 +491,7 @@ class LoginAccountsController extends BaseController
         if ($this->hasEventHandlers(self::EVENT_BEFORE_REGISTER)) {
             $this->trigger(self::EVENT_BEFORE_REGISTER, new LoginAccountEvent([
                 'profile' => $profile,
-                'provider' => $loginProvider,
+                'loginProvider' => $loginProvider,
             ]));
         }
 
@@ -522,7 +522,7 @@ class LoginAccountsController extends BaseController
         if ($this->hasEventHandlers(self::EVENT_AFTER_REGISTER)) {
             $this->trigger(self::EVENT_AFTER_REGISTER, new LoginAccountEvent([
                 'profile' => $profile,
-                'provider' => $loginProvider,
+                'loginProvider' => $loginProvider,
                 'user' => $newUser
             ]));
         }
