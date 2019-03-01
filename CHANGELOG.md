@@ -1,7 +1,8 @@
 Changelog
 ===================
 
-## Unreleased
+## 2.0.0-beta.14 - 2019-03-01
+
 ### Added
 - Added `dukt\social\controllers\LoginAccountsController::EVENT_AFTER_REGISTER` event handler after user registration. ([#25](https://github.com/dukt/social/pull/25), [#23](https://github.com/dukt/social/issues/23))
 
