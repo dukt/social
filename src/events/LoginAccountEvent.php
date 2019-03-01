@@ -23,7 +23,7 @@ class LoginAccountEvent extends Event
     /**
      * @var array The login provider.
      */
-    public $provider;
+    public $loginProvider;
 
     /**
      * @var array
