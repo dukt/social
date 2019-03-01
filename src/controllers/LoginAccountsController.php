@@ -19,7 +19,6 @@ use yii\web\HttpException;
 use craft\elements\User;
 use dukt\social\models\Token;
 use dukt\social\elements\LoginAccount;
-use yii\base\Event;
 use yii\web\Response;
 
 /**
