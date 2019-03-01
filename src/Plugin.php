@@ -1,7 +1,7 @@
 <?php
 /**
  * @link      https://dukt.net/social/
- * @copyright Copyright (c) 2018, Dukt
+ * @copyright Copyright (c) 2019, Dukt
  * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
@@ -233,7 +233,7 @@ class Plugin extends \craft\base\Plugin
     private function _initLoginAccountsUserPane()
     {
         Craft::$app->getView()->hook('cp.users.edit.details', function(&$context) {
-            if ($context['user']) {
+            if ($context['user'] && $context['user']->id) {
                 $context['loginAccounts'] = $this->loginAccounts->getLoginAccountsByUserId($context['user']->id);
                 $context['loginProviders'] = $this->loginProviders->getLoginProviders();
 
