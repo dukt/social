@@ -2,9 +2,12 @@ Changelog
 ===================
 
 ## Unreleased
+### Added
+- Added `dukt\social\controllers\LoginAccountsController::EVENT_AFTER_REGISTER` event handler after user registration. ([#25](https://github.com/dukt/social/pull/25), [#23](https://github.com/dukt/social/issues/23))
 
 ### Fixed
 - Fixed a bug where the login accounts user pane was showing up when trying to create a new user. ([#28](https://github.com/dukt/social/issues/28))
+- Fixed a bug where the `dukt\social\controllers\LoginAccountsController::EVENT_BEFORE_REGISTER` was not working properly. ([#25](https://github.com/dukt/social/pull/25))
 
 ## 2.0.0-beta.14 - 2018-09-10
 
