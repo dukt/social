@@ -70,15 +70,29 @@ class Google extends LoginProvider
     }
 
     /**
+     * @inheritdoc
+     */
+    public function getOauthProviderConfig(): array
+    {
+        $config = parent::getOauthProviderConfig();
+
+        if (empty($config['options']['useOidcMode'])) {
+            $config['options']['useOidcMode'] = true;
+        }
+
+        return $config;
+    }
+
+    /**
      * Returns the login provider’s OAuth provider.
      *
-     * @return \Dukt\OAuth2\Client\Provider\Google
+     * @return \League\OAuth2\Client\Provider\Google
      * @throws \yii\base\InvalidConfigException
      */
-    public function getOauthProvider(): \Dukt\OAuth2\Client\Provider\Google
+    public function getOauthProvider(): \League\OAuth2\Client\Provider\Google
     {
         $config = $this->getOauthProviderConfig();
 
-        return new \Dukt\OAuth2\Client\Provider\Google($config['options']);
+        return new \League\OAuth2\Client\Provider\Google($config['options']);
     }
 }

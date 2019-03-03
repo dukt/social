@@ -27,7 +27,7 @@
     "craftcms/cms": "^3.0.0-RC1",
     "league/oauth1-client": "1.7.0@dev",
     "league/oauth2-client": "^2.2",
-    "dukt/oauth2-google": "^2.0",
+    "league/oauth2-google": "^2.0",
     "league/oauth2-facebook": "^2.0"
   },
   "autoload": {
