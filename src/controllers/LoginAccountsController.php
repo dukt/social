@@ -36,12 +36,12 @@ class LoginAccountsController extends BaseController
     // =========================================================================
 
     /**
-     * @event LoginAccountsEvent The event that is triggered before registering a user.
+     * @event LoginAccountEvent The event that is triggered before registering a user.
      */
     const EVENT_BEFORE_REGISTER = 'beforeRegister';
 
     /**
-     * @event LoginAccountsEvent The event that is triggered after registering a user.
+     * @event LoginAccountEvent The event that is triggered after registering a user.
      */
     const EVENT_AFTER_REGISTER = 'afterRegister';
 
