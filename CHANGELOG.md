@@ -1,6 +1,17 @@
 Changelog
 ===================
 
+## 2.0.0 - 2019-03-04
+
+### Added
+- Added `dukt\social\controllers\LoginAccountsController::EVENT_AFTER_OAUTH_CALLBACK`. ([#22](https://github.com/dukt/social/issues/22))
+
+### Changed
+- Removed `dukt\social\services\LoginAccounts::saveLoginAccount()`. ([#26](https://github.com/dukt/social/issues/26))
+
+### Fixed
+- Fixed a bug where registering a user with a social account that was used for a soft-deleted user was throwing an error, preventing completion of the registration process. ([#6](https://github.com/dukt/social/issues/6))
+
 ## 2.0.0-beta.16 - 2019-03-03
 
 ### Changed
