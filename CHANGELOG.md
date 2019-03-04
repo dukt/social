@@ -1,7 +1,7 @@
 Changelog
 ===================
 
-## Unreleased
+## 2.0.0 - 2019-03-04
 
 ### Added
 - Added `dukt\social\controllers\LoginAccountsController::EVENT_AFTER_OAUTH_CALLBACK`. ([#22](https://github.com/dukt/social/issues/22))
