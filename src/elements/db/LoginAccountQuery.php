@@ -186,6 +186,9 @@ class LoginAccountQuery extends ElementQuery
         $this->query->leftJoin('{{%users}} users', '[[social_login_accounts.userId]] = [[users.id]]');
         $this->subQuery->leftJoin('{{%users}} users', '[[social_login_accounts.userId]] = [[users.id]]');
 
+        $this->subQuery->leftJoin('{{%elements}} elements_users', '[[social_login_accounts.userId]] = [[elements_users.id]]');
+        $this->subQuery->andWhere(['elements_users.dateDeleted' => null]);
+
         $this->query->select([
             'social_login_accounts.userId',
             'social_login_accounts.providerHandle',

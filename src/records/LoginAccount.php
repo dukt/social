@@ -48,18 +48,6 @@ class LoginAccount extends ActiveRecord
         ];
     }
 
-    /**
-     * Defines this model's database table indexes.
-     *
-     * @return array
-     */
-    public function defineIndexes(): array
-    {
-        return [
-            ['columns' => ['providerHandle', 'socialUid'], 'unique' => true]
-        ];
-    }
-
     // Protected Methods
     // =========================================================================
 
