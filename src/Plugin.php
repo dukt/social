@@ -352,7 +352,7 @@ class Plugin extends \craft\base\Plugin
             $loginAccounts = Plugin::getInstance()->getLoginAccounts()->getLoginAccountsByUserId($user->id);
 
             foreach ($loginAccounts as $loginAccount) {
-                Plugin::getInstance()->getLoginAccounts()->saveLoginAccount($loginAccount);
+                Craft::$app->elements->saveElement($loginAccount);
             }
         });
 

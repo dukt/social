@@ -100,68 +100,6 @@ class LoginAccounts extends Component
     }
 
     /**
-     * Saves a login account.
-     *
-     * @param LoginAccount $account
-     *
-     * @return bool
-     * @throws LoginAccountNotFoundException
-     * @throws \Throwable
-     * @throws \yii\db\Exception
-     */
-    public function saveLoginAccount(LoginAccount $account)
-    {
-        $isNewAccount = !$account->id;
-
-        if (!$isNewAccount) {
-            $accountRecord = $this->_getLoginAccountRecordById($account->id);
-        } else {
-            $accountRecord = new LoginAccount;
-        }
-
-        // populate
-        $accountRecord->userId = $account->userId;
-        $accountRecord->providerHandle = $account->providerHandle;
-        $accountRecord->socialUid = $account->socialUid;
-
-        // validate
-        $accountRecord->validate();
-
-        $account->addErrors($accountRecord->getErrors());
-
-        if (!$account->hasErrors()) {
-            $transaction = Craft::$app->getDb()->beginTransaction();
-
-            try {
-                if (Craft::$app->elements->saveElement($account)) {
-                    // Now that we have an element ID, save it on the other stuff
-                    if ($isNewAccount) {
-                        $accountRecord->id = $account->id;
-                    }
-
-                    $accountRecord->save(false);
-
-                    if ($transaction !== null) {
-                        $transaction->commit();
-                    }
-
-                    return true;
-                }
-            } catch (\Exception $e) {
-                if ($transaction !== null) {
-                    $transaction->rollBack();
-                }
-
-                throw $e;
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Deletes a social account by provider.
      *
      * @param $providerHandle
