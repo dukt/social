@@ -401,39 +401,38 @@ class LoginAccountsController extends BaseController
         $socialUid = Craft::$app->getView()->renderString($userFieldMapping['id'], ['profile' => $profile]);
         $account = Plugin::getInstance()->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
 
-
         // Existing user
-
         if ($account) {
             $craftUser = Craft::$app->users->getUserById($account->userId);
 
-            if ($craftUser) {
-                Craft::$app->elements->saveElement($account);
-
-                return $this->login($craftUser, $account, $token);
+            if (!$craftUser) {
+                throw new LoginException('Social account exists but Craft user doesn’t.');
             }
 
-            throw new LoginException('Social account exists but Craft user doesn’t.');
-        }
-
-
-        // Register new user
-
-        $craftUser = $this->registerUser($socialLoginProvider->getHandle(), $profile);
-
-        if ($craftUser) {
-            // Save social user
-            $account = new LoginAccount;
-            $account->userId = $craftUser->id;
-            $account->providerHandle = $socialLoginProvider->getHandle();
-            $account->socialUid = $socialUid;
-
+            // Save existing login account
             Craft::$app->elements->saveElement($account);
 
-            return $this->login($craftUser, $account, $token, true);
+            // Login
+            return $this->login($craftUser, $account, $token);
         }
 
-        throw new RegistrationException('Craft user couldn’t be created.');
+        // Register new user
+        $craftUser = $this->registerUser($socialLoginProvider->getHandle(), $profile);
+
+        if (!$craftUser) {
+            throw new RegistrationException('Craft user couldn’t be created.');
+        }
+
+        // Save new login account
+        $account = new LoginAccount;
+        $account->userId = $craftUser->id;
+        $account->providerHandle = $socialLoginProvider->getHandle();
+        $account->socialUid = $socialUid;
+
+        Craft::$app->elements->saveElement($account);
+
+        // Login
+        return $this->login($craftUser, $account, $token, true);
     }
 
     /**
