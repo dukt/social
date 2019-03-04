@@ -3,6 +3,9 @@ Changelog
 
 ## Unreleased
 
+### Added
+- Added `dukt\social\controllers\LoginAccountsController::EVENT_AFTER_OAUTH_CALLBACK`. ([#22](https://github.com/dukt/social/issues/22))
+
 ### Changed
 - Removed `dukt\social\services\LoginAccounts::saveLoginAccount()`. ([#26](https://github.com/dukt/social/issues/26))
 

@@ -11,6 +11,7 @@ use Craft;
 use dukt\social\errors\LoginException;
 use dukt\social\errors\RegistrationException;
 use dukt\social\events\LoginAccountEvent;
+use dukt\social\events\OauthTokenEvent;
 use dukt\social\helpers\SocialHelper;
 use dukt\social\Plugin;
 use dukt\social\web\assets\social\SocialAsset;
@@ -43,6 +44,11 @@ class LoginAccountsController extends BaseController
      * @event LoginAccountsEvent The event that is triggered after registering a user.
      */
     const EVENT_AFTER_REGISTER = 'afterRegister';
+
+    /**
+     * @event LoginAccountEvent The event that is triggered after the OAuth callback.
+     */
+    const EVENT_AFTER_OAUTH_CALLBACK = 'afterOauthCallback';
 
     // Properties
     // =========================================================================
@@ -189,6 +195,13 @@ class LoginAccountsController extends BaseController
                 $token = new Token();
                 $token->providerHandle = $providerHandle;
                 $token->token = $callbackResponse['token'];
+
+                // Fire a 'afterOauthCallback' event
+                if ($this->hasEventHandlers(self::EVENT_AFTER_OAUTH_CALLBACK)) {
+                    $this->trigger(self::EVENT_AFTER_OAUTH_CALLBACK, new OauthTokenEvent([
+                        'token' => $token,
+                    ]));
+                }
 
                 return $this->connectUser($token);
             }
