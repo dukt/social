@@ -1,6 +1,11 @@
 Changelog
 ===================
 
+## Unreleased
+
+### Added
+- Added a warning for Twitter redirect URIs containing unsupported query parameters.
+
 ## 2.0.0 - 2019-03-04
 
 ### Added
