@@ -6,6 +6,9 @@ Changelog
 ### Added
 - Added a warning for Twitter redirect URIs containing unsupported query parameters.
 
+### Changed
+- Social now requires Craft CMS 3.1+. ([#31](https://github.com/dukt/social/issues/31))
+
 ## 2.0.0 - 2019-03-04
 
 ### Added

@@ -24,7 +24,7 @@
     "rss": "https://github.com/dukt/social/commits/v2.atom"
   },
   "require": {
-    "craftcms/cms": "^3.0.0-RC1",
+    "craftcms/cms": "^3.1.0",
     "league/oauth1-client": "1.7.0@dev",
     "league/oauth2-client": "^2.2",
     "league/oauth2-google": "^3.0",
