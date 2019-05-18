@@ -102,7 +102,6 @@ class Install extends Migration
      */
     protected function createIndexes()
     {
-        $this->createIndex($this->db->getIndexName('{{%social_login_accounts}}', 'providerHandle,socialUid', true), '{{%social_login_accounts}}', 'providerHandle,socialUid', true);
     }
 
     /**
@@ -142,6 +141,5 @@ class Install extends Migration
      */
     protected function removeIndexes()
     {
-        $this->dropIndex($this->db->getIndexName('{{%social_login_accounts}}', 'providerHandle,socialUid', true), '{{%social_login_accounts}}');
     }
 }
