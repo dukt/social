@@ -411,6 +411,7 @@ class Plugin extends \craft\base\Plugin
             }
         });
 
+        // Initialize Social Login for CP after loading the plugins
         Event::on(Plugins::class, Plugins::EVENT_AFTER_LOAD_PLUGINS, function() {
             $this->initCpSocialLogin();
         });
