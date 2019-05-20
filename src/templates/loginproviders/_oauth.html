@@ -15,7 +15,8 @@
         {{ forms.textField({
             readonly: true,
             label: "Redirect URI"|t('social'),
-            value: loginProvider.getRedirectUri()
+            value: loginProvider.getRedirectUri(),
+            warning: loginProvider.getRedirectUriWarning()
         }) }}
 
         <h2>{{ 'Step 2: Configure the OAuth client'|t('social') }}</h2>

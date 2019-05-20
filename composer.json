@@ -1,7 +1,7 @@
 {
   "name": "dukt/social",
   "description": "Let your visitors log into Craft with web services like Facebook, Google, Twitter…",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "type": "craft-plugin",
   "keywords": [
     "social login",
@@ -24,7 +24,7 @@
     "rss": "https://github.com/dukt/social/commits/v2.atom"
   },
   "require": {
-    "craftcms/cms": "^3.0.0-RC1",
+    "craftcms/cms": "^3.1.0",
     "league/oauth1-client": "1.7.0@dev",
     "league/oauth2-client": "^2.2",
     "league/oauth2-google": "^3.0",

@@ -7,6 +7,7 @@
 
 namespace dukt\social\loginproviders;
 
+use Craft;
 use dukt\social\base\LoginProvider;
 use dukt\social\models\Token;
 
@@ -95,5 +96,23 @@ class Twitter extends LoginProvider
         unset($config['options']['redirectUri']);
 
         return new \League\OAuth1\Client\Server\Twitter($config);
+    }
+
+    /**
+     * Returns a warning for the OAuth redirect URI.
+     *
+     * @return string|null
+     */
+    public function getRedirectUriWarning()
+    {
+        $generalConfig = Craft::$app->getConfig()->getGeneral();
+
+        if ($generalConfig->usePathInfo) {
+            return null;
+        }
+
+        return Craft::t('social', 'Query parameters are not allowed in Twitter callback URLs. {link}.', [
+            'link' => '<a href="https://docs.dukt.net/social/v2/twitter.html#oauth-configuration">'.Craft::t('social', 'More information').'</a>'
+        ]);
     }
 }

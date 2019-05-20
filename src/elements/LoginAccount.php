@@ -39,7 +39,7 @@ class LoginAccount extends Element
      */
     public static function find(): ElementQueryInterface
     {
-        return new LoginAccountQuery(get_called_class());
+        return new LoginAccountQuery(static::class);
     }
 
     /**

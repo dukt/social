@@ -221,6 +221,16 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
+     * Returns a warning for the OAuth redirect URI.
+     *
+     * @return string|null
+     */
+    public function getRedirectUriWarning()
+    {
+        return null;
+    }
+
+    /**
      * Get profile fields.
      *
      * @return array
