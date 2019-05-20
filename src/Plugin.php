@@ -18,6 +18,7 @@ use craft\services\Plugins;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use dukt\social\base\PluginTrait;
+use dukt\social\elements\LoginAccount;
 use dukt\social\models\Settings;
 use dukt\social\web\assets\login\LoginAsset;
 use dukt\social\web\twig\variables\SocialVariable;
@@ -327,9 +328,13 @@ class Plugin extends \craft\base\Plugin
         Event::on(User::class, User::EVENT_SET_TABLE_ATTRIBUTE_HTML, function(SetElementTableAttributeHtmlEvent $event) {
             if ($event->attribute === 'loginAccounts') {
                 Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
+
                 $user = $event->sender;
 
-                $loginAccounts = $this->getLoginAccounts()->getLoginAccountsByUserId($user->Id);
+                $loginAccounts = LoginAccount::find()
+                    ->userId($user->id)
+                    ->trashed($user->trashed)
+                    ->all();
 
                 if ($loginAccounts) {
                     $event->html = Craft::$app->getView()->renderTemplate('social/_components/users/login-accounts-table-attribute', [
@@ -353,6 +358,56 @@ class Plugin extends \craft\base\Plugin
 
             foreach ($loginAccounts as $loginAccount) {
                 Craft::$app->elements->saveElement($loginAccount);
+            }
+        });
+
+        // Soft delete the related login accounts after deleting a user
+        Event::on(User::class, User::EVENT_AFTER_DELETE, function(Event $event) {
+            $user = $event->sender;
+
+            $loginAccounts = LoginAccount::find()
+                ->userId($user->id)
+                ->all();
+
+            foreach($loginAccounts as $loginAccount) {
+                Craft::$app->getElements()->deleteElement($loginAccount);
+            }
+        });
+
+        // Make sure there’s no duplicate login account before restoring the user
+        Event::on(User::class, User::EVENT_BEFORE_RESTORE, function(ModelEvent $event) {
+            $user = $event->sender;
+
+            // Get the login accounts of the user that’s being restored
+            $loginAccounts = LoginAccount::find()
+                ->userId($user->id)
+                ->trashed(true)
+                ->all();
+
+            $conflicts = false;
+
+            // Check that those login accounts don’t conflict with existing login accounts from other users
+            foreach ($loginAccounts as $loginAccount) {
+                // Check if there is another user with a login account using the same providerHandle/socialUid combo
+                $existingAccount = LoginAccount::find([
+                    'providerHandle' => $loginAccount['providerHandle'],
+                    'socialUid' => $loginAccount['socialUid']
+                ])->one();
+
+                if ($existingAccount) {
+                    $conflicts = true;
+                }
+            }
+
+            // Mark the event as invalid is there are conflicts
+            if ($conflicts) {
+                $event->isValid = false;
+                return false;
+            }
+
+            // Restore login account elements
+            foreach($loginAccounts as $loginAccount) {
+                Craft::$app->getElements()->restoreElement($loginAccount);
             }
         });
 
