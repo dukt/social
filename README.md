@@ -1,3 +1,5 @@
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+
 # Deprecated
 Social for Craft CMS 2 is no longer supported. The Craft 3 version of this plugin can be found here: [dukt/social](https://github.com/dukt/social) and can be installed via the Plugin Store in Craft’s control panel.
 
