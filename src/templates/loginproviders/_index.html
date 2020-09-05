@@ -4,59 +4,60 @@
 {% set selectedNavItem = 'loginProviders' %}
 
 {% set content %}
-
-    <table id="fields" class="data fullwidth collapsible">
-        <thead>
-            <tr>
-                <th scope="col">{{ "Name"|t('social') }}</th>
-                <th scope="col">{{ "Handle"|t('social') }}</th>
-                <th scope="col">{{ "Status"|t('social') }}</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            {% for loginProvider in loginProviders %}
+    <div class="tablepane">
+        <table id="fields" class="data fullwidth collapsible">
+            <thead>
                 <tr>
-                    <th>
-                        <div class="provider">
-                            <div class="thumb">
-                                <img src="{{ loginProvider.getIconUrl() }}" width="32" height="32" />
-                            </div>
-                            <div class="label">
-                                {{ loginProvider.name }}
-                            </div>
-                        </div>
-                    </th>
-
-                    <td class="light"><code>{{ loginProvider.handle }}</code></td>
-
-                    <td>
-                        <form method="post" accept-charset="UTF-8">
-
-                            <input type="hidden" name="loginProvider" value="{{ loginProvider.handle }}">
-
-                            {{ csrfInput() }}
-
-                            {% if loginProvider.isConfigured %}
-                                {% if loginProvider.isEnabled  %}
-                                    <span class="status on"></span> {{ "Enabled"|t('social') }} 
-                                    <input type="button" value="{{ 'Disable'|t('social') }}" class="btn small formsubmit" data-action="social/login-providers/disable-login-provider">
-                                {% else %}
-                                    <span class="status"></span> {{ "Disabled"|t('social') }} 
-                                    <input type="button" value="{{ 'Enable'|t('social') }}" class="btn small formsubmit" data-action="social/login-providers/enable-login-provider">
-                                {% endif %}
-                            {% else %}
-                                <span class="status"></span> {{ "Not configured"|t('social') }} 
-                            {% endif %}
-                        </form>
-
-                    </td>
-                    <td>
-                        <a href="{{ url('settings/social/loginproviders/'~loginProvider.handle) }}"><span class="icon settings"></span> {{ "Settings"|t('social') }}</a>
-                    </td>
+                    <th scope="col">{{ "Name"|t('social') }}</th>
+                    <th scope="col">{{ "Handle"|t('social') }}</th>
+                    <th scope="col">{{ "Status"|t('social') }}</th>
+                    <th scope="col"></th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
 
+            <tbody>
+                {% for loginProvider in loginProviders %}
+                    <tr>
+                        <th>
+                            <div class="provider">
+                                <div class="thumb">
+                                    <img src="{{ loginProvider.getIconUrl() }}" width="32" height="32" />
+                                </div>
+                                <div class="label">
+                                    {{ loginProvider.name }}
+                                </div>
+                            </div>
+                        </th>
+
+                        <td class="light"><code>{{ loginProvider.handle }}</code></td>
+
+                        <td>
+                            <form method="post" accept-charset="UTF-8">
+
+                                <input type="hidden" name="loginProvider" value="{{ loginProvider.handle }}">
+
+                                {{ csrfInput() }}
+
+                                {% if loginProvider.isConfigured %}
+                                    {% if loginProvider.isEnabled  %}
+                                        <span class="status on"></span> {{ "Enabled"|t('social') }} 
+                                        <input type="button" value="{{ 'Disable'|t('social') }}" class="btn small formsubmit" data-action="social/login-providers/disable-login-provider">
+                                    {% else %}
+                                        <span class="status"></span> {{ "Disabled"|t('social') }} 
+                                        <input type="button" value="{{ 'Enable'|t('social') }}" class="btn small formsubmit" data-action="social/login-providers/enable-login-provider">
+                                    {% endif %}
+                                {% else %}
+                                    <span class="status"></span> {{ "Not configured"|t('social') }} 
+                                {% endif %}
+                            </form>
+
+                        </td>
+                        <td>
+                            <a href="{{ url('settings/social/loginproviders/'~loginProvider.handle) }}"><span class="icon settings"></span> {{ "Settings"|t('social') }}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endset %}
