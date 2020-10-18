@@ -63,7 +63,7 @@ class LoginAccountsController extends BaseController
      *
      * @var string
      */
-    private $redirect;
+    private $redirectUrl;
 
     /**
      * URL where the login was initiated from.
@@ -155,7 +155,7 @@ class LoginAccountsController extends BaseController
             Craft::$app->getSession()->set('social.originUrl', $this->originUrl);
         }
 
-        $this->redirect = (string)Craft::$app->getRequest()->getParam('redirect');
+        $this->redirectUrl = (string)Craft::$app->getRequest()->getParam('redirect');
 
 
         // Connect
@@ -352,8 +352,8 @@ class LoginAccountsController extends BaseController
     {
         $this->_cleanSession();
 
-        if (!$this->redirect) {
-            $this->redirect = $this->originUrl;
+        if (!$this->redirectUrl) {
+            $this->redirectUrl = $this->originUrl;
         }
 
         $socialLoginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($token->providerHandle);
@@ -371,7 +371,7 @@ class LoginAccountsController extends BaseController
 
                 Craft::$app->getSession()->setNotice(Craft::t('social', 'Login account added.'));
 
-                return $this->redirect($this->redirect);
+                return $this->redirect($this->redirectUrl);
             }
 
             throw new LoginException('This UID is already associated with another user. Disconnect from your current session and retry.');
@@ -389,7 +389,7 @@ class LoginAccountsController extends BaseController
 
         Craft::$app->getSession()->setNotice(Craft::t('social', 'Login account added.'));
 
-        return $this->redirect($this->redirect);
+        return $this->redirect($this->redirectUrl);
     }
 
     /**
@@ -589,8 +589,8 @@ class LoginAccountsController extends BaseController
     {
         $this->_cleanSession();
 
-        if (!$this->redirect) {
-            $this->redirect = $this->originUrl;
+        if (!$this->redirectUrl) {
+            $this->redirectUrl = $this->originUrl;
         }
 
         if (!$account->authenticate($token)) {
@@ -633,7 +633,7 @@ class LoginAccountsController extends BaseController
             Craft::$app->getSession()->setNotice(Craft::t('social', 'Logged in.'));
         }
 
-        return $this->redirect($this->redirect);
+        return $this->redirect($this->redirectUrl);
     }
 
     /**
