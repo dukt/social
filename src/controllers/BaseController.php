@@ -49,7 +49,7 @@ abstract class BaseController extends Controller
     {
         $lockDomains = Plugin::getInstance()->getSettings()->lockDomains;
 
-        if (\count($lockDomains) > 0) {
+        if (is_array($lockDomains) && \count($lockDomains) > 0) {
             $domainRejected = true;
 
             foreach ($lockDomains as $lockDomain) {
