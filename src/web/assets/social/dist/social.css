@@ -12,6 +12,11 @@
     padding-bottom: 7px;
 }
 
+#details .social-login-accounts-pane.meta {
+	padding-top: 24px;
+	padding-bottom: 24px;
+}
+
 .social-login-accounts-pane h2 {
 	margin-bottom: 0;
 }

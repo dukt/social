@@ -4,6 +4,7 @@ Changelog
 ## Unreleased
 
 ### Fixed
+- Fixed the padding of the login account manager pane on the user edit page.
 - Fixed the styles of the plugin’s settings.
 
 ## 2.0.1 - 2019-05-20
