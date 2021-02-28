@@ -372,9 +372,6 @@ abstract class LoginProvider implements LoginProviderInterface
     private function oauth2Connect(): Response
     {
         $provider = $this->getOauthProvider();
-
-        Craft::$app->getSession()->set('social.oauthState', $provider->getState());
-
         $scope = $this->getOauthScope();
         $options = $this->getOauthAuthorizationOptions();
 
@@ -385,6 +382,11 @@ abstract class LoginProvider implements LoginProviderInterface
         $options['scope'] = $scope;
 
         $authorizationUrl = $provider->getAuthorizationUrl($options);
+
+
+        $state = $provider->getState();
+
+        Craft::$app->getSession()->set('social.oauth2State', $state);
 
         return Craft::$app->getResponse()->redirect($authorizationUrl);
     }
@@ -418,11 +420,22 @@ abstract class LoginProvider implements LoginProviderInterface
      * OAuth 2 callback.
      *
      * @return array
+     * @throws LoginException
+     * @throws \craft\errors\MissingComponentException
      */
     private function oauth2Callback(): array
     {
         $provider = $this->getOauthProvider();
 
+        // Check given state against previously stored one to mitigate CSRF attack
+        $sessionState = Craft::$app->getSession()->get('social.oauth2State');
+        $getState = Craft::$app->getRequest()->getParam('state');
+
+        if ($sessionState !== $getState) {
+            throw new LoginException('Invalid OAuth state.');
+        }
+
+        // Get the OAuth code
         $code = Craft::$app->getRequest()->getParam('code');
 
         // Try to get an access token (using the authorization code grant)

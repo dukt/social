@@ -6,6 +6,7 @@ Changelog
 ### Changed
 - Updated `league/oauth1-client` to 1.9.
 - Updated `league/oauth2-client` to 2.5.
+- Check the OAuth state to mitigate CSRF attacks.
 
 ### Fixed
 - Fixed a bug where checking for locked domains could throw an error.
