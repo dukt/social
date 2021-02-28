@@ -12,11 +12,11 @@ This plugin requires Craft CMS 3.0.0 or later.
 
 ## How to install Social 2 Beta
 
-Installation instructions can be found in the [Social 2 documentation](https://docs.dukt.net/social/v2/installation.html).
+Installation instructions can be found in the [Social 2 documentation](https://dukt.net/docs/social/v2/installation.html).
 
 ## Resources
 
-- [Social 2 Documentation](https://docs.dukt.net/social/v2)
+- [Social 2 Documentation](https://dukt.net/docs/social/v2)
 - [Social 2 Plugin Overview](https://dukt.net/social)
 
 ## Forked Changes to the plugin:

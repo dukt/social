@@ -39,7 +39,7 @@
     "name": "Social",
     "handle": "social",
     "schemaVersion": "1.0.3",
-    "documentationUrl": "https://docs.dukt.net/social/v2",
+    "documentationUrl": "https://dukt.net/docs/social/v2",
     "changelogUrl": "https://raw.githubusercontent.com/dukt/social/develop/CHANGELOG.md"
   }
 }
