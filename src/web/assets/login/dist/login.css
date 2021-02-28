@@ -1,5 +1,5 @@
-.social-login-buttons { margin-top: 14px; height: 32px; }
-.social-login-buttons a { display: inline-block; margin: 7px; width: 32px; }
+.social-login-buttons { margin-top: 14px; height: 32px; display: flex; justify-content: center; }
+.social-login-buttons a { margin: 7px; width: 32px; }
 .social-login-buttons a img { height: 32px; }
 #spinner { top: 102px !important; }
 #login-form .buttons { flex-direction: column; }

@@ -4,6 +4,7 @@ Changelog
 ## Unreleased
 
 ### Fixed
+- Fixed a bug where the social login buttons were not properly centered on the CP login page.
 - Fixed the padding of the login account manager pane on the user edit page.
 - Fixed the styles of the plugin’s settings.
 
