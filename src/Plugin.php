@@ -85,14 +85,14 @@ class Plugin extends \craft\base\Plugin
      * Get OAuth provider config.
      *
      * @param $handle
-     *
+     * @param bool $parse
      * @return array
      * @throws \yii\base\InvalidConfigException
      */
-    public function getOauthProviderConfig($handle): array
+    public function getOauthProviderConfig($handle, bool $parse = true): array
     {
         $config = [
-            'options' => $this->getOauthConfigItem($handle, 'options'),
+            'options' => $this->getOauthConfigItem($handle, 'options', $parse),
             'scope' => $this->getOauthConfigItem($handle, 'scope'),
             'authorizationOptions' => $this->getOauthConfigItem($handle, 'authorizationOptions'),
         ];
@@ -253,21 +253,39 @@ class Plugin extends \craft\base\Plugin
      *
      * @return array
      */
-    private function getOauthConfigItem(string $providerHandle, string $key): array
+    private function getOauthConfigItem(string $providerHandle, string $key, bool $parse = true): array
     {
         $configSettings = Craft::$app->config->getConfigFromFile($this->id);
 
         if (isset($configSettings['loginProviders'][$providerHandle]['oauth'][$key])) {
-            return $configSettings['loginProviders'][$providerHandle]['oauth'][$key];
+            return $this->parseOauthConfigItemEnv($key, $configSettings['loginProviders'][$providerHandle]['oauth'][$key], $parse);
         }
 
         $storedSettings = Craft::$app->plugins->getStoredPluginInfo($this->id)['settings'];
 
         if (isset($storedSettings['loginProviders'][$providerHandle]['oauth'][$key])) {
-            return $storedSettings['loginProviders'][$providerHandle]['oauth'][$key];
+            return $this->parseOauthConfigItemEnv($key, $storedSettings['loginProviders'][$providerHandle]['oauth'][$key], $parse);
         }
 
         return [];
+    }
+
+    /**
+     * Parse OAuth config item environment variables.
+     *
+     * @param string $key
+     * @param array $configItem
+     * @param bool $parse
+     * @return array
+     */
+    private function parseOauthConfigItemEnv(string $key, array $configItem, bool $parse = true): array
+    {
+        // Parse config item options environment variables
+        if ($parse && $key === 'options') {
+            return array_map('Craft::parseEnv', $configItem);
+        }
+
+        return $configItem;
     }
 
     /**

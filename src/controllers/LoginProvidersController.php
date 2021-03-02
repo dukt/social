@@ -63,7 +63,7 @@ class LoginProvidersController extends BaseController
         }
 
         $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($handle, false);
-        $oauthProviderConfig = Plugin::getInstance()->getOauthProviderConfig($handle);
+        $oauthProviderConfig = Plugin::getInstance()->getOauthProviderConfig($handle, false);
 
         if ($loginProvider) {
             return $this->renderTemplate('social/loginproviders/_oauth', [

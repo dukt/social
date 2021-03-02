@@ -156,7 +156,7 @@ class LoginAccounts extends Component
     {
         $params['provider'] = $providerHandle;
 
-        return SocialHelper::siteActionUrl('social/login-accounts/login', $params);
+        return UrlHelper::actionUrl('social/login-accounts/login', $params);
     }
 
     /**

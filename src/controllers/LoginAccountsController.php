@@ -146,16 +146,15 @@ class LoginAccountsController extends BaseController
      */
     public function actionLogin(): Response
     {
-        Craft::$app->getSession()->set('social.loginControllerUrl', Craft::$app->getRequest()->getAbsoluteUrl());
+        $isCpRequest = Craft::$app->getRequest()->getIsCpRequest();
 
-        $this->originUrl = Craft::$app->getSession()->get('social.originUrl');
+        Craft::$app->getSession()->set('social.isCpRequest', $isCpRequest);
 
-        if (!$this->originUrl) {
-            $this->originUrl = Craft::$app->getRequest()->referrer;
-            Craft::$app->getSession()->set('social.originUrl', $this->originUrl);
-        }
+        $this->originUrl = Craft::$app->getRequest()->referrer;
+        Craft::$app->getSession()->set('social.originUrl', $this->originUrl);
 
-        $this->redirectUrl = (string)Craft::$app->getRequest()->getParam('redirect');
+        $this->redirectUrl = Craft::$app->getRequest()->getParam('redirect');
+        Craft::$app->getSession()->set('social.redirectUrl', $this->redirectUrl);
 
 
         // Connect
@@ -180,36 +179,55 @@ class LoginAccountsController extends BaseController
 
             Craft::$app->getSession()->set('social.loginProvider', $providerHandle);
 
-            if (!Craft::$app->getSession()->get('social.callback')) {
-                return $loginProvider->oauthConnect();
-            }
+            return $loginProvider->oauthConnect();
+        } catch (\Exception $e) {
+            $errorMsg = $e->getMessage();
+            Craft::error('Couldn’t login. ' . $e->getTraceAsString(), __METHOD__);
+            $this->setError($errorMsg);
 
+            return $this->redirect($this->originUrl);
+        }
+    }
 
-            // Callback
+    /**
+     * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Throwable
+     * @throws \craft\errors\MissingComponentException
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function actionCallback(): Response
+    {
+        $this->originUrl = Craft::$app->getSession()->get('social.originUrl');
+        $this->redirectUrl = Craft::$app->getSession()->get('social.redirectUrl');
 
-            Craft::$app->getSession()->remove('social.callback');
+        if (!$this->redirectUrl) {
+            $this->redirectUrl = $this->originUrl;
+        }
 
+        $providerHandle = (string)Craft::$app->getSession()->get('social.loginProvider');
+        $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($providerHandle);
+
+        try {
             $callbackResponse = $loginProvider->oauthCallback();
 
-            if ($callbackResponse['success']) {
-                $token = new Token();
-                $token->providerHandle = $providerHandle;
-                $token->token = $callbackResponse['token'];
-
-                // Fire a 'afterOauthCallback' event
-                if ($this->hasEventHandlers(self::EVENT_AFTER_OAUTH_CALLBACK)) {
-                    $this->trigger(self::EVENT_AFTER_OAUTH_CALLBACK, new OauthTokenEvent([
-                        'token' => $token,
-                    ]));
-                }
-
-                return $this->connectUser($token);
+            if (!$callbackResponse['success']) {
+                // Unable to log the user in, throw an exception
+                throw new LoginException($callbackResponse['errorMsg']);
             }
 
+            $token = new Token();
+            $token->providerHandle = $providerHandle;
+            $token->token = $callbackResponse['token'];
 
-            // Unable to log the user in, throw an exception
+            // Fire a 'afterOauthCallback' event
+            if ($this->hasEventHandlers(self::EVENT_AFTER_OAUTH_CALLBACK)) {
+                $this->trigger(self::EVENT_AFTER_OAUTH_CALLBACK, new OauthTokenEvent([
+                    'token' => $token,
+                ]));
+            }
 
-            throw new LoginException($callbackResponse['errorMsg']);
+            return $this->connectUser($token);
         } catch (BadResponseException $e) {
             $response = $e->getResponse();
             $body = $response->getBody();
@@ -222,50 +240,16 @@ class LoginAccountsController extends BaseController
             }
 
             Craft::error('Couldn’t login. ' . $e->getTraceAsString(), __METHOD__);
-            Craft::$app->getSession()->setFlash('error', $errorMsg);
-            $this->_cleanSession();
+            $this->setError($errorMsg);
 
             return $this->redirect($this->originUrl);
         } catch (\Exception $e) {
             $errorMsg = $e->getMessage();
             Craft::error('Couldn’t login. ' . $e->getTraceAsString(), __METHOD__);
-            Craft::$app->getSession()->setFlash('error', $errorMsg);
-            $this->_cleanSession();
+            $this->setError($errorMsg);
 
             return $this->redirect($this->originUrl);
         }
-    }
-
-    /**
-     * OAuth callback.
-     *
-     * @return Response
-     * @throws \craft\errors\MissingComponentException
-     */
-    public function actionCallback(): Response
-    {
-        Craft::$app->getSession()->set('social.callback', true);
-
-        $url = Craft::$app->getSession()->get('social.loginControllerUrl');
-
-        if (strpos($url, '?') === false) {
-            $url .= '?';
-        } else {
-            $url .= '&';
-        }
-
-
-        // Pass the existing string containing oauth data to the next redirect
-
-        $queryParams = Craft::$app->getRequest()->getQueryParams();
-
-        if (isset($queryParams['p'])) {
-            unset($queryParams['p']);
-        }
-
-        $url .= http_build_query($queryParams);
-
-        return $this->redirect($url);
     }
 
     /**
@@ -300,7 +284,7 @@ class LoginAccountsController extends BaseController
             ]);
         }
 
-        Craft::$app->getSession()->setNotice(Craft::t('social', 'Login account disconnected.'));
+        $this->setNotice(Craft::t('social', 'Login account disconnected.'));
 
         // redirect
         $redirect = Craft::$app->getRequest()->referrer;
@@ -330,6 +314,9 @@ class LoginAccountsController extends BaseController
         $craftUser = Craft::$app->getUser()->getIdentity();
 
         if ($craftUser) {
+            // if the user is already linked to an account, stop there and redirect back to origin URL
+
+            // otherwise continue to link the account
             return $this->linkAccountFromToken($token, $craftUser);
         }
 
@@ -350,12 +337,6 @@ class LoginAccountsController extends BaseController
      */
     private function linkAccountFromToken(Token $token, $craftUser): Response
     {
-        $this->_cleanSession();
-
-        if (!$this->redirectUrl) {
-            $this->redirectUrl = $this->originUrl;
-        }
-
         $socialLoginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($token->providerHandle);
         $profile = $socialLoginProvider->getProfile($token);
         $userFieldMapping = $socialLoginProvider->getUserFieldMapping();
@@ -369,7 +350,7 @@ class LoginAccountsController extends BaseController
             if ($craftUser->id == $account->userId) {
                 Craft::$app->elements->saveElement($account);
 
-                Craft::$app->getSession()->setNotice(Craft::t('social', 'Login account added.'));
+                $this->setNotice(Craft::t('social', 'Logged in.'));
 
                 return $this->redirect($this->redirectUrl);
             }
@@ -387,7 +368,7 @@ class LoginAccountsController extends BaseController
 
         Craft::$app->getElements()->saveElement($account);
 
-        Craft::$app->getSession()->setNotice(Craft::t('social', 'Login account added.'));
+        $this->setNotice(Craft::t('social', 'Login account added.'));
 
         return $this->redirect($this->redirectUrl);
     }
@@ -587,12 +568,6 @@ class LoginAccountsController extends BaseController
      */
     private function login(User $craftUser, LoginAccount $account, Token $token, $registrationMode = false): Response
     {
-        $this->_cleanSession();
-
-        if (!$this->redirectUrl) {
-            $this->redirectUrl = $this->originUrl;
-        }
-
         if (!$account->authenticate($token)) {
             return $this->_handleLoginFailure();
         }
@@ -612,7 +587,7 @@ class LoginAccountsController extends BaseController
      */
     private function _handleLoginFailure(): Response
     {
-        Craft::$app->getSession()->setError(Craft::t('social', 'Couldn’t authenticate.'));
+        $this->setError(Craft::t('social', 'Couldn’t authenticate.'));
 
         return $this->redirect($this->originUrl);
     }
@@ -628,19 +603,50 @@ class LoginAccountsController extends BaseController
     private function _handleSuccessfulLogin(bool $registrationMode): Response
     {
         if ($registrationMode) {
-            Craft::$app->getSession()->setNotice(Craft::t('social', 'Account created.'));
+            $this->setNotice(Craft::t('social', 'Account created.'));
         } else {
-            Craft::$app->getSession()->setNotice(Craft::t('social', 'Logged in.'));
+            $this->setNotice(Craft::t('social', 'Logged in.'));
         }
 
         return $this->redirect($this->redirectUrl);
     }
 
     /**
-     * Clean session variables.
+     * Stores a notice in the user’s flash data.
+     *
+     * The message will be stored on the session, and can be retrieved by calling
+     * [[getFlash()|`getFlash('notice')`]] or [[getAllFlashes()]].
+     * Only one flash notice can be stored at a time.
+     *
+     * @param string $message The message.
      */
-    private function _cleanSession()
+    private function setNotice(string $message)
     {
-        Craft::$app->getSession()->remove('social.originUrl');
+        $session = Craft::$app->getSession();
+        if ($session->get('social.isCpRequest')) {
+            $session->setFlash('cp-notice', $message);
+        } else {
+            $session->setFlash('notice', $message);
+        }
+    }
+
+    /**
+     * Stores an error message in the user’s flash data.
+     *
+     * The message will be stored on the session, and can be retrieved by calling
+     * [[getFlash()|`getFlash('error')`]] or [[getAllFlashes()]].
+     * Only one flash error message can be stored at a time.
+     *
+     * @param string $message The message.
+     */
+    private function setError(string $message)
+    {
+        $session = Craft::$app->getSession();
+
+        if ($session->get('social.isCpRequest')) {
+            $session->setFlash('cp-error', $message);
+        } else {
+            $session->setFlash('error', $message);
+        }
     }
 }
