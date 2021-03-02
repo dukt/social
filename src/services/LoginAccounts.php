@@ -240,7 +240,7 @@ class LoginAccounts extends Component
         $client = new \GuzzleHttp\Client();
 
         $response = $client->request('GET', $photoUrl, [
-            'save_to' => $tempPath . $filename
+            'sink' => $tempPath . $filename
         ]);
 
         if ($response->getStatusCode() !== 200) {
