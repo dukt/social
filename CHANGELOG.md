@@ -1,7 +1,7 @@
 Changelog
 ===================
 
-## Unreleased
+## 2.0.2 - 2021-03-04
 
 ### Changed
 - Updated `league/oauth1-client` to 1.9.
