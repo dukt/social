@@ -1,7 +1,7 @@
 <?php
 /**
  * @link      https://dukt.net/social/
- * @copyright Copyright (c) 2019, Dukt
+ * @copyright Copyright (c) 2021, Dukt
  * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
@@ -63,7 +63,7 @@ class LoginProvidersController extends BaseController
         }
 
         $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($handle, false);
-        $oauthProviderConfig = Plugin::getInstance()->getOauthProviderConfig($handle);
+        $oauthProviderConfig = Plugin::getInstance()->getOauthProviderConfig($handle, false);
 
         if ($loginProvider) {
             return $this->renderTemplate('social/loginproviders/_oauth', [

@@ -1,6 +1,22 @@
 Changelog
 ===================
 
+## 2.0.2 - 2021-03-04
+
+### Changed
+- Updated `league/oauth1-client` to 1.9.
+- Updated `league/oauth2-client` to 2.5.
+- Check the OAuth state to mitigate CSRF attacks.
+- Improved environment variables and project config support.
+
+### Fixed
+- Fixed a bug where checking for locked domains could throw an error.
+- Fixed a bug where the social login buttons were not properly centered on the CP login page.
+- Fixed a compatibility issue with Guzzle 7 that could prevent the user image from being saved when registering with a Social login provider.
+- Fixed a bug where notices and errors were not working properly when logging into the Control Panel.
+- Fixed the padding of the login account manager pane on the user edit page.
+- Fixed the styles of the plugin’s settings.
+
 ## 2.0.1 - 2019-05-20
 
 ### Added

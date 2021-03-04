@@ -1,7 +1,7 @@
 <?php
 /**
  * @link      https://dukt.net/social/
- * @copyright Copyright (c) 2019, Dukt
+ * @copyright Copyright (c) 2021, Dukt
  * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
@@ -156,7 +156,7 @@ class LoginAccounts extends Component
     {
         $params['provider'] = $providerHandle;
 
-        return SocialHelper::siteActionUrl('social/login-accounts/login', $params);
+        return UrlHelper::actionUrl('social/login-accounts/login', $params);
     }
 
     /**
@@ -240,7 +240,7 @@ class LoginAccounts extends Component
         $client = new \GuzzleHttp\Client();
 
         $response = $client->request('GET', $photoUrl, [
-            'save_to' => $tempPath . $filename
+            'sink' => $tempPath . $filename
         ]);
 
         if ($response->getStatusCode() !== 200) {

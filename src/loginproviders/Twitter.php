@@ -1,7 +1,7 @@
 <?php
 /**
  * @link      https://dukt.net/social/
- * @copyright Copyright (c) 2019, Dukt
+ * @copyright Copyright (c) 2021, Dukt
  * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
@@ -112,7 +112,7 @@ class Twitter extends LoginProvider
         }
 
         return Craft::t('social', 'Query parameters are not allowed in Twitter callback URLs. {link}.', [
-            'link' => '<a href="https://docs.dukt.net/social/v2/twitter.html#oauth-configuration">'.Craft::t('social', 'More information').'</a>'
+            'link' => '<a href="https://dukt.net/docs/social/v2/twitter.html#oauth-configuration">'.Craft::t('social', 'More information').'</a>'
         ]);
     }
 }

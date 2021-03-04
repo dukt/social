@@ -2,7 +2,7 @@
 
 {% set title = "Social Settings"|t('social') %}
 
-{% set docsUrl = 'https://docs.dukt.net/social/v2/' %}
+{% set docsUrl = 'https://dukt.net/docs/social/v2/' %}
 
 {% set crumbs = [
     { label: "Settings"|t('social'), url: url('settings') },
@@ -16,7 +16,5 @@
 {% set docTitle = navItems[selectedNavItem].label~' - '~title %}
 
 {% block sidebar %}
-    <nav>
-        {% include "_includes/nav" with { items: navItems, selectedItem: selectedNavItem } only %}
-    </nav>
+    {% include "_includes/nav" with { items: navItems, selectedItem: selectedNavItem } only %}
 {% endblock %}

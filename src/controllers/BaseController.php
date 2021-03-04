@@ -1,7 +1,7 @@
 <?php
 /**
  * @link      https://dukt.net/social/
- * @copyright Copyright (c) 2019, Dukt
+ * @copyright Copyright (c) 2021, Dukt
  * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
@@ -49,7 +49,7 @@ abstract class BaseController extends Controller
     {
         $lockDomains = Plugin::getInstance()->getSettings()->lockDomains;
 
-        if (\count($lockDomains) > 0) {
+        if (is_array($lockDomains) && \count($lockDomains) > 0) {
             $domainRejected = true;
 
             foreach ($lockDomains as $lockDomain) {
