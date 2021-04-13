@@ -5,7 +5,10 @@ Changelog
 
 ### Added
 - Added environment variable suggestions support for the OAuth client ID and secret.
-- The OAuth settings page for the Google login provider now show the JavaScript origin URL.  
+- The OAuth settings page for the Google login provider now shows the JavaScript origin URL.  
+
+### Changed
+- The plugin’s icon has been updated.
 
 ## 2.0.2 - 2021-03-04
 
