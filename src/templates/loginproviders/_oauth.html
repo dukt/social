@@ -12,6 +12,14 @@
 
         <p>{{ 'Go to the {link}, create a new application or configure an existing one using the following settings:'|t('social', {link: '<a href="'~loginProvider.managerUrl~'">'~'{loginProvider} API Console'|t('social', { loginProvider: loginProvider.name })~'</a>'})|raw }}</p>
 
+        {% if loginProvider.getJavascriptOrigin() %}
+            {{ forms.textField({
+                readonly: true,
+                label: "Javascript Origin"|t('social'),
+                value: loginProvider.getJavascriptOrigin(),
+            }) }}
+        {% endif %}
+
         {{ forms.textField({
             readonly: true,
             label: "Redirect URI"|t('social'),
