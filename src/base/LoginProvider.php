@@ -211,6 +211,16 @@ abstract class LoginProvider implements LoginProviderInterface
     }
 
     /**
+     * Returns the Javascript origin URL.
+     *
+     * @return string|null
+     */
+    public function getJavascriptOrigin()
+    {
+        return null;
+    }
+
+    /**
      * Returns the URI users are redirected to after they have connected.
      *
      * @return string

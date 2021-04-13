@@ -1,8 +1,9 @@
 {
   "name": "dukt/social",
   "description": "Let your visitors log into Craft with web services like Facebook, Google, Twitter…",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "type": "craft-plugin",
+  "license": "proprietary",
   "keywords": [
     "social login",
     "facebook",

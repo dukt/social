@@ -7,6 +7,7 @@
 
 namespace dukt\social\loginproviders;
 
+use craft\helpers\UrlHelper;
 use dukt\social\base\LoginProvider;
 use dukt\social\models\Token;
 
@@ -94,5 +95,18 @@ class Google extends LoginProvider
         $config = $this->getOauthProviderConfig();
 
         return new \League\OAuth2\Client\Provider\Google($config['options']);
+    }
+
+    /**
+     * Returns the Javascript origin URL.
+     *
+     * @return string
+     * @throws \craft\errors\SiteNotFoundException
+     */
+    public function getJavascriptOrigin(): string
+    {
+        $url = UrlHelper::baseUrl();
+
+        return rtrim($url, '/');
     }
 }
