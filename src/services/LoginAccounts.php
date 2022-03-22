@@ -58,11 +58,10 @@ class LoginAccounts extends Component
     /**
      * Returns a social account from its ID.
      *
-     * @param int $id
      *
      * @return LoginAccount|null
      */
-    public function getLoginAccountById($id)
+    public function getLoginAccountById(int $id)
     {
         return Craft::$app->elements->getElementById($id);
     }
@@ -70,11 +69,10 @@ class LoginAccounts extends Component
     /**
      * Get a social account by provider handle for the currently logged in user.
      *
-     * @param string $providerHandle
      *
      * @return LoginAccount|null
      */
-    public function getLoginAccountByLoginProvider($providerHandle)
+    public function getLoginAccountByLoginProvider(string $providerHandle)
     {
         $currentUser = Craft::$app->getUser()->getIdentity();
 
@@ -89,12 +87,10 @@ class LoginAccounts extends Component
     /**
      * Get a social account by social UID.
      *
-     * @param string $providerHandle
-     * @param string $socialUid
      *
      * @return LoginAccount|null
      */
-    public function getLoginAccountByUid($providerHandle, $socialUid)
+    public function getLoginAccountByUid(string $providerHandle, string $socialUid)
     {
         return LoginAccount::find()->providerHandle($providerHandle)->socialUid($socialUid)->one();
     }
@@ -117,12 +113,11 @@ class LoginAccounts extends Component
     /**
      * Deletes a social login account by its ID.
      *
-     * @param int $id
      *
      * @return bool
      * @throws \Throwable
      */
-    public function deleteLoginAccountById($id): bool
+    public function deleteLoginAccountById(int $id): bool
     {
         $loginAccount = $this->getLoginAccountById($id);
 

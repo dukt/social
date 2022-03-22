@@ -37,15 +37,13 @@ class LoginProviders extends Component
 
     // Public Methods
     // =========================================================================
-
     /**
      * Disable a login provider by handle.
      *
-     * @param string $handle
      *
      * @return bool
      */
-    public function disableLoginProvider($handle): bool
+    public function disableLoginProvider(string $handle): bool
     {
         $settings = Plugin::getInstance()->getSettings();
 
@@ -63,11 +61,10 @@ class LoginProviders extends Component
     /**
      * Enable a login provider by handle.
      *
-     * @param string $handle
      *
      * @return bool
      */
-    public function enableLoginProvider($handle): bool
+    public function enableLoginProvider(string $handle): bool
     {
         $plugin = Craft::$app->getPlugins()->getPlugin('social');
         $settings = $plugin->getSettings();
@@ -86,12 +83,10 @@ class LoginProviders extends Component
     /**
      * Get a login provider by handle.
      *
-     * @param string $handle
      * @param bool|true $enabledOnly
-     *
      * @return LoginProvider|LoginProviderInterface|null
      */
-    public function getLoginProvider($handle, $enabledOnly = true)
+    public function getLoginProvider(string $handle, $enabledOnly = true)
     {
         $loginProviders = $this->getLoginProviders($enabledOnly);
 
@@ -116,15 +111,13 @@ class LoginProviders extends Component
 
     // Private Methods
     // =========================================================================
-
     /**
      * Get login providers and instantiate them.
      *
-     * @param bool $enabledOnly
      *
      * @return array
      */
-    private function _getLoginProviders($enabledOnly): array
+    private function _getLoginProviders(bool $enabledOnly): array
     {
         $loginProviderTypes = $this->_getLoginProviderTypes();
 

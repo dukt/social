@@ -57,12 +57,11 @@ class SocialVariable
     /**
      * Get the login account by provider handle
      *
-     * @param string $loginProviderHandle
      *
      * @return LoginAccount|null
      * @throws \yii\base\InvalidConfigException
      */
-    public function getLoginAccountByLoginProvider($loginProviderHandle)
+    public function getLoginAccountByLoginProvider(string $loginProviderHandle)
     {
         return Plugin::getInstance()->getLoginAccounts()->getLoginAccountByLoginProvider($loginProviderHandle);
     }
@@ -70,12 +69,11 @@ class SocialVariable
     /**
      * Get the login account connect URL
      *
-     * @param string $providerHandle
      *
      * @return string
      * @throws \yii\base\InvalidConfigException
      */
-    public function getLoginAccountConnectUrl($providerHandle)
+    public function getLoginAccountConnectUrl(string $providerHandle)
     {
         return Plugin::getInstance()->getLoginAccounts()->getLoginAccountConnectUrl($providerHandle);
     }
@@ -83,12 +81,11 @@ class SocialVariable
     /**
      * Get the login account disconnect URL
      *
-     * @param string $providerHandle
      *
      * @return string
      * @throws \yii\base\InvalidConfigException
      */
-    public function getLoginAccountDisconnectUrl($providerHandle)
+    public function getLoginAccountDisconnectUrl(string $providerHandle)
     {
         return Plugin::getInstance()->getLoginAccounts()->getLoginAccountDisconnectUrl($providerHandle);
     }

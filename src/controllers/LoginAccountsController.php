@@ -557,16 +557,12 @@ class LoginAccountsController extends BaseController
     /**
      * Login user from login account.
      *
-     * @param User $craftUser
-     * @param LoginAccount $account
-     * @param Token $token
-     * @param bool $registrationMode
      *
      * @return Response
      * @throws \craft\errors\MissingComponentException
      * @throws \yii\base\InvalidConfigException
      */
-    private function login(User $craftUser, LoginAccount $account, Token $token, $registrationMode = false): Response
+    private function login(User $craftUser, LoginAccount $account, Token $token, bool $registrationMode = false): Response
     {
         if (!$account->authenticate($token)) {
             return $this->_handleLoginFailure();
