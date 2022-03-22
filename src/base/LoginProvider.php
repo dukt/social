@@ -80,12 +80,7 @@ abstract class LoginProvider implements LoginProviderInterface
     public function isConfigured(): bool
     {
         $config = $this->getOauthProviderConfig();
-
-        if (!empty($config['options']['clientId'])) {
-            return true;
-        }
-
-        return false;
+        return !empty($config['options']['clientId']);
     }
 
     /**
@@ -200,12 +195,7 @@ abstract class LoginProvider implements LoginProviderInterface
     {
         // get plugin settings
         $enabledLoginProviders = Plugin::getInstance()->getSettings()->enabledLoginProviders;
-
-        if (in_array($this->getHandle(), $enabledLoginProviders, true)) {
-            return true;
-        }
-
-        return false;
+        return in_array($this->getHandle(), $enabledLoginProviders, true);
     }
 
     /**

@@ -297,7 +297,7 @@ class LoginAccounts extends Component
     {
         $loginAccountRecord = LoginAccountRecord::findOne($loginAccountId);
 
-        if ($loginAccountRecord === null) {
+        if (!$loginAccountRecord instanceof \dukt\social\records\LoginAccount) {
             throw new LoginAccountNotFoundException(sprintf('No login account exists with the ID \'%d\'', $loginAccountId));
         }
 

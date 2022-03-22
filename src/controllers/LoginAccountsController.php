@@ -172,7 +172,7 @@ class LoginAccountsController extends BaseController
 
             $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($providerHandle);
 
-            if ($loginProvider === null) {
+            if (!$loginProvider instanceof \dukt\social\base\LoginProviderInterface) {
                 throw new LoginException('Login provider is not configured');
             }
 
@@ -235,11 +235,7 @@ class LoginAccountsController extends BaseController
             $body = $response->getBody();
             $json = json_decode($body, true);
 
-            if ($json) {
-                $errorMsg = $json['error']['message'];
-            } else {
-                $errorMsg = 'Couldn’t login.';
-            }
+            $errorMsg = $json ? $json['error']['message'] : 'Couldn’t login.';
 
             Craft::error('Couldn’t login. ' . $badResponseException->getTraceAsString(), __METHOD__);
             $this->setError($errorMsg);
@@ -421,7 +417,7 @@ class LoginAccountsController extends BaseController
 
         // Save new login account
         $account = new LoginAccount;
-        $account->userId = $craftUser->id;
+        $account->userId = $craftUser->getId();
         $account->providerHandle = $socialLoginProvider->getHandle();
         $account->socialUid = $socialUid;
 
@@ -507,8 +503,8 @@ class LoginAccountsController extends BaseController
         }
 
         // Assign user to default group
-        if ($newUser->id !== null && !empty($settings['defaultGroup'])) {
-            Craft::$app->users->assignUserToGroups($newUser->id, [$settings['defaultGroup']]);
+        if ($newUser->getId() !== null && !empty($settings['defaultGroup'])) {
+            Craft::$app->users->assignUserToGroups($newUser->getId(), [$settings['defaultGroup']]);
         }
 
         Craft::$app->elements->saveElement($newUser);
