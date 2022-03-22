@@ -46,7 +46,7 @@ class Google extends LoginProvider
      */
     public function getManagerUrl()
     {
-        return 'https://code.google.com/apis/console/';
+        return 'https://console.developers.google.com/';
     }
 
     /**

@@ -1,6 +1,11 @@
 Changelog
 ===================
 
+## Unreleased
+
+### Fixed
+- Fixed URL to Google Developer Console.
+
 ## 2.0.3 - 2021-04-14
 
 ### Added
