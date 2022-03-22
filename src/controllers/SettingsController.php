@@ -33,6 +33,7 @@ class SettingsController extends BaseController
      */
     public function actionSettings(): Response
     {
+        $variables = [];
         if (Craft::$app->getEdition() !== Craft::Pro) {
             return $this->renderTemplate('social/settings/_pro-requirement');
         }
@@ -41,7 +42,7 @@ class SettingsController extends BaseController
         $variables['settings'] = $plugin->getSettings();
 
         $accounts = Plugin::getInstance()->getLoginAccounts()->getLoginAccounts();
-        $variables['totalAccounts'] = count($accounts);
+        $variables['totalAccounts'] = count((array) $accounts);
 
         return $this->renderTemplate('social/settings/settings', $variables);
     }

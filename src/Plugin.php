@@ -407,10 +407,7 @@ class Plugin extends \craft\base\Plugin
             // Check that those login accounts don’t conflict with existing login accounts from other users
             foreach ($loginAccounts as $loginAccount) {
                 // Check if there is another user with a login account using the same providerHandle/socialUid combo
-                $existingAccount = LoginAccount::find([
-                    'providerHandle' => $loginAccount['providerHandle'],
-                    'socialUid' => $loginAccount['socialUid']
-                ])->one();
+                $existingAccount = LoginAccount::find()->one();
 
                 if ($existingAccount) {
                     $conflicts = true;

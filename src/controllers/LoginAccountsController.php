@@ -38,17 +38,17 @@ class LoginAccountsController extends BaseController
     /**
      * @event LoginAccountEvent The event that is triggered before registering a user.
      */
-    const EVENT_BEFORE_REGISTER = 'beforeRegister';
+    public const EVENT_BEFORE_REGISTER = 'beforeRegister';
 
     /**
      * @event LoginAccountEvent The event that is triggered after registering a user.
      */
-    const EVENT_AFTER_REGISTER = 'afterRegister';
+    public const EVENT_AFTER_REGISTER = 'afterRegister';
 
     /**
      * @event LoginAccountEvent The event that is triggered after the OAuth callback.
      */
-    const EVENT_AFTER_OAUTH_CALLBACK = 'afterOauthCallback';
+    public const EVENT_AFTER_OAUTH_CALLBACK = 'afterOauthCallback';
 
     // Properties
     // =========================================================================

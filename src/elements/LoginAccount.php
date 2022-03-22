@@ -90,6 +90,7 @@ class LoginAccount extends Element
      */
     protected static function defineSortOptions(): array
     {
+        $attributes = [];
         $attributes['socialUid'] = Craft::t('social', 'Social User ID');
         $attributes['username'] = Craft::t('social', 'Username');
         $attributes['email'] = Craft::t('social', 'Email');
@@ -106,6 +107,7 @@ class LoginAccount extends Element
      */
     protected static function defineTableAttributes(): array
     {
+        $attributes = [];
         $attributes['socialUid'] = ['label' => Craft::t('social', 'Social User ID')];
         $attributes['username'] = ['label' => Craft::t('social', 'Username')];
         $attributes['fullName'] = ['label' => Craft::t('social', 'Full Name')];

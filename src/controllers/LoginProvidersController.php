@@ -90,7 +90,7 @@ class LoginProvidersController extends BaseController
             return $this->renderTemplate('social/settings/_pro-requirement');
         }
 
-        $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($handle, false, true);
+        $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($handle, false);
 
         if ($loginProvider) {
             return $this->renderTemplate('social/loginproviders/_user-field-mapping', [
