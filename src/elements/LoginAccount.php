@@ -262,7 +262,7 @@ class LoginAccount extends Element
         $user = $this->getUser();
 
         if ($user !== null) {
-            return $user->getFullName();
+            return $user->fullName;
         }
     }
 
@@ -308,7 +308,7 @@ class LoginAccount extends Element
     /**
      * @inheritdoc
      */
-    public function afterSave(bool $isNew)
+    public function afterSave(bool $isNew): void
     {
         if ($isNew) {
             Craft::$app->db->createCommand()
@@ -335,10 +335,9 @@ class LoginAccount extends Element
 
     // Private Methods
     // -------------------------------------------------------------------------
-
     /**
      * @return string
-     * @throws \Twig_Error_Loader
+     * @throws \Twig\Error\LoaderError
      * @throws \yii\base\Exception
      */
     private function _usernameTableAttributeHtml()
@@ -371,7 +370,7 @@ class LoginAccount extends Element
 
     /**
      * @return string
-     * @throws \Twig_Error_Loader
+     * @throws \Twig\Error\LoaderError
      * @throws \yii\base\Exception
      * @throws \yii\base\InvalidConfigException
      */

@@ -58,7 +58,7 @@ class LoginAccountsController extends BaseController
     /**
      * @inheritdoc
      */
-    protected $allowAnonymous = ['login', 'callback'];
+    protected array|bool|int $allowAnonymous = ['login', 'callback'];
 
     /**
      * URL to redirect to after login.

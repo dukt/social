@@ -44,12 +44,12 @@ class Plugin extends \craft\base\Plugin
     /**
      * @var bool
      */
-    public $hasCpSettings = true;
+    public bool $hasCpSettings = true;
 
     /**
      * @inheritdoc
      */
-    public $minVersionRequired = '1.1.0';
+    public string $minVersionRequired = '1.1.0';
 
     // Public Methods
     // =========================================================================
@@ -72,7 +72,7 @@ class Plugin extends \craft\base\Plugin
     /**
      * @inheritdoc
      */
-    public function getSettingsResponse()
+    public function getSettingsResponse(): mixed
     {
         $url = UrlHelper::cpUrl('settings/social/loginproviders');
 
@@ -185,7 +185,7 @@ class Plugin extends \craft\base\Plugin
     /**
      * @inheritdoc
      */
-    protected function createSettingsModel()
+    protected function createSettingsModel(): ?\craft\base\Model
     {
         return new Settings();
     }
