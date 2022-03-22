@@ -102,7 +102,7 @@ class Facebook extends LoginProvider
     /**
      * @inheritdoc
      */
-    public function getOauthProviderConfig(): array
+    protected function getOauthProviderConfig(): array
     {
         $config = parent::getOauthProviderConfig();
 

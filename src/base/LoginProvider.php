@@ -128,11 +128,10 @@ abstract class LoginProvider implements LoginProviderInterface
      */
     public function oauthConnect(): Response
     {
-        switch ($this->oauthVersion()) {
-            case 1:
-                return $this->oauth1Connect();
-            case 2:
-                return $this->oauth2Connect();
+        if ($this->oauthVersion() == 1) {
+            return $this->oauth1Connect();
+        } elseif ($this->oauthVersion() == 2) {
+            return $this->oauth2Connect();
         }
 
         throw new LoginException('OAuth version not supported');
@@ -147,11 +146,10 @@ abstract class LoginProvider implements LoginProviderInterface
      */
     public function oauthCallback(): array
     {
-        switch ($this->oauthVersion()) {
-            case 1:
-                return $this->oauth1Callback();
-            case 2:
-                return $this->oauth2Callback();
+        if ($this->oauthVersion() == 1) {
+            return $this->oauth1Callback();
+        } elseif ($this->oauthVersion() == 2) {
+            return $this->oauth2Callback();
         }
 
         throw new LoginException('OAuth version not supported');

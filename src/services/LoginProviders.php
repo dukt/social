@@ -29,9 +29,9 @@ class LoginProviders extends Component
 {
     // Constants
     // =========================================================================
-
     /**
      * @event RegisterLoginProviderTypesEvent The event that is triggered when registering login providers.
+     * @var string
      */
     public const EVENT_REGISTER_LOGIN_PROVIDER_TYPES = 'registerLoginProviderTypes';
 

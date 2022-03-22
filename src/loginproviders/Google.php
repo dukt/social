@@ -33,7 +33,7 @@ class Google extends LoginProvider
     /**
      * @inheritdoc
      */
-    public function getDefaultOauthScope(): array
+    protected function getDefaultOauthScope(): array
     {
         return [
             'https://www.googleapis.com/auth/userinfo.profile',
@@ -73,7 +73,7 @@ class Google extends LoginProvider
     /**
      * @inheritdoc
      */
-    public function getOauthProviderConfig(): array
+    protected function getOauthProviderConfig(): array
     {
         $config = parent::getOauthProviderConfig();
 

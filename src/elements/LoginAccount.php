@@ -219,7 +219,7 @@ class LoginAccount extends Element
     {
         $user = $this->getUser();
 
-        if ($user) {
+        if ($user !== null) {
             return $user->username;
         }
     }
@@ -233,7 +233,7 @@ class LoginAccount extends Element
     {
         $user = $this->getUser();
 
-        if ($user) {
+        if ($user !== null) {
             return $user->firstName;
         }
     }
@@ -247,7 +247,7 @@ class LoginAccount extends Element
     {
         $user = $this->getUser();
 
-        if ($user) {
+        if ($user !== null) {
             return $user->lastName;
         }
     }
@@ -261,7 +261,7 @@ class LoginAccount extends Element
     {
         $user = $this->getUser();
 
-        if ($user) {
+        if ($user !== null) {
             return $user->getFullName();
         }
     }
@@ -275,7 +275,7 @@ class LoginAccount extends Element
     {
         $user = $this->getUser();
 
-        if ($user) {
+        if ($user !== null) {
             return $user->email;
         }
     }

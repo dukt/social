@@ -34,19 +34,21 @@ class LoginAccountsController extends BaseController
 {
     // Constants
     // =========================================================================
-
     /**
      * @event LoginAccountEvent The event that is triggered before registering a user.
+     * @var string
      */
     public const EVENT_BEFORE_REGISTER = 'beforeRegister';
 
     /**
      * @event LoginAccountEvent The event that is triggered after registering a user.
+     * @var string
      */
     public const EVENT_AFTER_REGISTER = 'afterRegister';
 
     /**
      * @event LoginAccountEvent The event that is triggered after the OAuth callback.
+     * @var string
      */
     public const EVENT_AFTER_OAUTH_CALLBACK = 'afterOauthCallback';
 
@@ -170,7 +172,7 @@ class LoginAccountsController extends BaseController
 
             $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($providerHandle);
 
-            if (!$loginProvider) {
+            if ($loginProvider === null) {
                 throw new LoginException('Login provider is not configured');
             }
 
@@ -180,9 +182,9 @@ class LoginAccountsController extends BaseController
             Craft::$app->getSession()->set('social.loginProvider', $providerHandle);
 
             return $loginProvider->oauthConnect();
-        } catch (\Exception $e) {
-            $errorMsg = $e->getMessage();
-            Craft::error('Couldn’t login. ' . $e->getTraceAsString(), __METHOD__);
+        } catch (\Exception $exception) {
+            $errorMsg = $exception->getMessage();
+            Craft::error('Couldn’t login. ' . $exception->getTraceAsString(), __METHOD__);
             $this->setError($errorMsg);
 
             return $this->redirect($this->originUrl);
@@ -228,8 +230,8 @@ class LoginAccountsController extends BaseController
             }
 
             return $this->connectUser($token);
-        } catch (BadResponseException $e) {
-            $response = $e->getResponse();
+        } catch (BadResponseException $badResponseException) {
+            $response = $badResponseException->getResponse();
             $body = $response->getBody();
             $json = json_decode($body, true);
 
@@ -239,13 +241,13 @@ class LoginAccountsController extends BaseController
                 $errorMsg = 'Couldn’t login.';
             }
 
-            Craft::error('Couldn’t login. ' . $e->getTraceAsString(), __METHOD__);
+            Craft::error('Couldn’t login. ' . $badResponseException->getTraceAsString(), __METHOD__);
             $this->setError($errorMsg);
 
             return $this->redirect($this->originUrl);
-        } catch (\Exception $e) {
-            $errorMsg = $e->getMessage();
-            Craft::error('Couldn’t login. ' . $e->getTraceAsString(), __METHOD__);
+        } catch (\Exception $exception) {
+            $errorMsg = $exception->getMessage();
+            Craft::error('Couldn’t login. ' . $exception->getTraceAsString(), __METHOD__);
             $this->setError($errorMsg);
 
             return $this->redirect($this->originUrl);
@@ -346,7 +348,7 @@ class LoginAccountsController extends BaseController
 
         // Existing login account
 
-        if ($account) {
+        if ($account !== null) {
             if ($craftUser->id == $account->userId) {
                 Craft::$app->elements->saveElement($account);
 
@@ -396,7 +398,7 @@ class LoginAccountsController extends BaseController
         $account = Plugin::getInstance()->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
 
         // Existing user
-        if ($account) {
+        if ($account !== null) {
             $craftUser = Craft::$app->users->getUserById($account->userId);
 
             if (!$craftUser) {

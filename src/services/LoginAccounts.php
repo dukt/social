@@ -202,8 +202,8 @@ class LoginAccounts extends Component
         if (isset($userFieldMapping['photo'])) {
             try {
                 $photoUrl = html_entity_decode(Craft::$app->getView()->renderString($userFieldMapping['photo'], ['profile' => $profile]));
-            } catch (\Exception $e) {
-                Craft::warning('Could not map:' . print_r(['photo', $userFieldMapping['photo'], $profile, $e->getMessage()], true), __METHOD__);
+            } catch (\Exception $exception) {
+                Craft::warning('Could not map:' . print_r(['photo', $userFieldMapping['photo'], $profile, $exception->getMessage()], true), __METHOD__);
             }
         }
 
@@ -297,8 +297,8 @@ class LoginAccounts extends Component
     {
         $loginAccountRecord = LoginAccountRecord::findOne($loginAccountId);
 
-        if (!$loginAccountRecord) {
-            throw new LoginAccountNotFoundException("No login account exists with the ID '{$loginAccountId}'");
+        if ($loginAccountRecord === null) {
+            throw new LoginAccountNotFoundException(sprintf('No login account exists with the ID \'%d\'', $loginAccountId));
         }
 
         return $loginAccountRecord;

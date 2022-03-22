@@ -134,7 +134,7 @@ class Plugin extends \craft\base\Plugin
      */
     public function savePluginSettings(array $settings, Plugin $plugin = null)
     {
-        if (!$plugin) {
+        if ($plugin === null) {
             $plugin = Craft::$app->getPlugins()->getPlugin('social');
 
             if ($plugin === null) {

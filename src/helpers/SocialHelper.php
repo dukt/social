@@ -60,8 +60,8 @@ class SocialHelper
         if (array_key_exists($attribute, $newUser->getAttributes())) {
             try {
                 $newUser->{$attribute} = Craft::$app->getView()->renderString($template, ['profile' => $profile]);
-            } catch (\Exception $e) {
-                Craft::warning('Could not map:' . print_r([$attribute, $template, $profile, $e->getMessage()], true), __METHOD__);
+            } catch (\Exception $exception) {
+                Craft::warning('Could not map:' . print_r([$attribute, $template, $profile, $exception->getMessage()], true), __METHOD__);
             }
         }
     }
@@ -79,8 +79,8 @@ class SocialHelper
             try {
                 $value = Craft::$app->getView()->renderString($template, ['profile' => $profile]);
                 $newUser->setFieldValue($attribute, $value);
-            } catch (\Exception $e) {
-                Craft::warning('Could not map:' . print_r([$template, $profile, $e->getMessage()], true), __METHOD__);
+            } catch (\Exception $exception) {
+                Craft::warning('Could not map:' . print_r([$template, $profile, $exception->getMessage()], true), __METHOD__);
             }
         }
     }
