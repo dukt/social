@@ -24,7 +24,7 @@
                         {% endif %}
                     {% endfor %}
 
-                    {% spaceless %}
+                    {% apply spaceless %}
                     <tr
                         {% if connected %}
                             {% if loginAccountId %}
@@ -36,7 +36,7 @@
                             data-name="{{ loginProvider.name }}"
                         {% endif %}
                         >
-                    {% endspaceless %}
+                    {% endapply %}
                         <td class="provider">
                             <div class="thumb">
                                 <img width="20" src="{{ loginProvider.getIconUrl() }}" class="social-icon social-{{ loginProvider.handle }}" />
