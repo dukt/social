@@ -3,6 +3,9 @@ Changelog
 
 ## Unreleased
 
+### Changed
+- Improved code for PHP 7.2+.
+
 ### Fixed
 - Fixed URL to Google Developer Console.
 
