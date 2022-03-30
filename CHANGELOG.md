@@ -1,6 +1,11 @@
 Changelog
 ===================
 
+## 2.0.4 - 2022-03-30
+
+### Fixed
+- Fixed the Developer Console URL for the Google login provider.
+
 ## 2.0.3 - 2021-04-14
 
 ### Added

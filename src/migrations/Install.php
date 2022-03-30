@@ -1,7 +1,7 @@
 <?php
 /**
  * @link      https://dukt.net/craft/social/
- * @copyright Copyright (c) 2021, Dukt
+ * @copyright Copyright (c) Dukt
  * @license   https://dukt.net/craft/social/docs/license
  */
 
@@ -111,8 +111,8 @@ class Install extends Migration
      */
     protected function addForeignKeys()
     {
-        $this->addForeignKey($this->db->getForeignKeyName('{{%social_login_accounts}}', 'id'), '{{%social_login_accounts}}', 'id', '{{%elements}}', 'id', 'CASCADE', null);
-        $this->addForeignKey($this->db->getForeignKeyName('{{%social_login_accounts}}', 'userId'), '{{%social_login_accounts}}', 'userId', '{{%users}}', 'id', 'CASCADE', null);
+        $this->addForeignKey($this->db->getForeignKeyName(), '{{%social_login_accounts}}', 'id', '{{%elements}}', 'id', 'CASCADE', null);
+        $this->addForeignKey($this->db->getForeignKeyName(), '{{%social_login_accounts}}', 'userId', '{{%users}}', 'id', 'CASCADE', null);
     }
 
     /**

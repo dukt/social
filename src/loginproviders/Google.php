@@ -1,7 +1,7 @@
 <?php
 /**
  * @link      https://dukt.net/social/
- * @copyright Copyright (c) 2021, Dukt
+ * @copyright Copyright (c) Dukt
  * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
@@ -33,7 +33,7 @@ class Google extends LoginProvider
     /**
      * @inheritdoc
      */
-    public function getDefaultOauthScope(): array
+    protected function getDefaultOauthScope(): array
     {
         return [
             'https://www.googleapis.com/auth/userinfo.profile',
@@ -46,7 +46,7 @@ class Google extends LoginProvider
      */
     public function getManagerUrl()
     {
-        return 'https://code.google.com/apis/console/';
+        return 'https://console.developers.google.com/';
     }
 
     /**
@@ -73,7 +73,7 @@ class Google extends LoginProvider
     /**
      * @inheritdoc
      */
-    public function getOauthProviderConfig(): array
+    protected function getOauthProviderConfig(): array
     {
         $config = parent::getOauthProviderConfig();
 

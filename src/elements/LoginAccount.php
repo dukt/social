@@ -1,7 +1,7 @@
 <?php
 /**
  * @link      https://dukt.net/social/
- * @copyright Copyright (c) 2021, Dukt
+ * @copyright Copyright (c) Dukt
  * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
@@ -90,6 +90,7 @@ class LoginAccount extends Element
      */
     protected static function defineSortOptions(): array
     {
+        $attributes = [];
         $attributes['socialUid'] = Craft::t('social', 'Social User ID');
         $attributes['username'] = Craft::t('social', 'Username');
         $attributes['email'] = Craft::t('social', 'Email');
@@ -106,6 +107,7 @@ class LoginAccount extends Element
      */
     protected static function defineTableAttributes(): array
     {
+        $attributes = [];
         $attributes['socialUid'] = ['label' => Craft::t('social', 'Social User ID')];
         $attributes['username'] = ['label' => Craft::t('social', 'Username')];
         $attributes['fullName'] = ['label' => Craft::t('social', 'Full Name')];
@@ -201,7 +203,7 @@ class LoginAccount extends Element
      */
     public function getUser()
     {
-        if (!isset($this->_user) && $this->userId) {
+        if ($this->_user === null && $this->userId) {
             $this->_user = Craft::$app->users->getUserById($this->userId);
         }
 
@@ -217,7 +219,7 @@ class LoginAccount extends Element
     {
         $user = $this->getUser();
 
-        if ($user) {
+        if ($user !== null) {
             return $user->username;
         }
     }
@@ -231,7 +233,7 @@ class LoginAccount extends Element
     {
         $user = $this->getUser();
 
-        if ($user) {
+        if ($user !== null) {
             return $user->firstName;
         }
     }
@@ -245,7 +247,7 @@ class LoginAccount extends Element
     {
         $user = $this->getUser();
 
-        if ($user) {
+        if ($user !== null) {
             return $user->lastName;
         }
     }
@@ -259,7 +261,7 @@ class LoginAccount extends Element
     {
         $user = $this->getUser();
 
-        if ($user) {
+        if ($user !== null) {
             return $user->getFullName();
         }
     }
@@ -273,7 +275,7 @@ class LoginAccount extends Element
     {
         $user = $this->getUser();
 
-        if ($user) {
+        if ($user !== null) {
             return $user->email;
         }
     }

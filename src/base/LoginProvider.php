@@ -1,7 +1,7 @@
 <?php
 /**
  * @link      https://dukt.net/social/
- * @copyright Copyright (c) 2021, Dukt
+ * @copyright Copyright (c) Dukt
  * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
@@ -80,12 +80,7 @@ abstract class LoginProvider implements LoginProviderInterface
     public function isConfigured(): bool
     {
         $config = $this->getOauthProviderConfig();
-
-        if (!empty($config['options']['clientId'])) {
-            return true;
-        }
-
-        return false;
+        return !empty($config['options']['clientId']);
     }
 
     /**
@@ -128,11 +123,10 @@ abstract class LoginProvider implements LoginProviderInterface
      */
     public function oauthConnect(): Response
     {
-        switch ($this->oauthVersion()) {
-            case 1:
-                return $this->oauth1Connect();
-            case 2:
-                return $this->oauth2Connect();
+        if ($this->oauthVersion() == 1) {
+            return $this->oauth1Connect();
+        } elseif ($this->oauthVersion() == 2) {
+            return $this->oauth2Connect();
         }
 
         throw new LoginException('OAuth version not supported');
@@ -147,11 +141,10 @@ abstract class LoginProvider implements LoginProviderInterface
      */
     public function oauthCallback(): array
     {
-        switch ($this->oauthVersion()) {
-            case 1:
-                return $this->oauth1Callback();
-            case 2:
-                return $this->oauth2Callback();
+        if ($this->oauthVersion() == 1) {
+            return $this->oauth1Callback();
+        } elseif ($this->oauthVersion() == 2) {
+            return $this->oauth2Callback();
         }
 
         throw new LoginException('OAuth version not supported');
@@ -202,12 +195,7 @@ abstract class LoginProvider implements LoginProviderInterface
     {
         // get plugin settings
         $enabledLoginProviders = Plugin::getInstance()->getSettings()->enabledLoginProviders;
-
-        if (in_array($this->getHandle(), $enabledLoginProviders, true)) {
-            return true;
-        }
-
-        return false;
+        return in_array($this->getHandle(), $enabledLoginProviders, true);
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 /**
  * @link      https://dukt.net/social/
- * @copyright Copyright (c) 2021, Dukt
+ * @copyright Copyright (c) Dukt
  * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
@@ -65,7 +65,7 @@ class LoginProvidersController extends BaseController
         $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($handle, false);
         $oauthProviderConfig = Plugin::getInstance()->getOauthProviderConfig($handle, false);
 
-        if ($loginProvider) {
+        if ($loginProvider !== null) {
             return $this->renderTemplate('social/loginproviders/_oauth', [
                 'loginProvider' => $loginProvider,
                 'oauthProviderConfig' => $oauthProviderConfig,
@@ -90,9 +90,9 @@ class LoginProvidersController extends BaseController
             return $this->renderTemplate('social/settings/_pro-requirement');
         }
 
-        $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($handle, false, true);
+        $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($handle, false);
 
-        if ($loginProvider) {
+        if ($loginProvider !== null) {
             return $this->renderTemplate('social/loginproviders/_user-field-mapping', [
                 'loginProvider' => $loginProvider,
             ]);

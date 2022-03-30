@@ -1,7 +1,7 @@
 <?php
 /**
  * @link      https://dukt.net/social/
- * @copyright Copyright (c) 2021, Dukt
+ * @copyright Copyright (c) Dukt
  * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
@@ -34,21 +34,23 @@ class LoginAccountsController extends BaseController
 {
     // Constants
     // =========================================================================
-
     /**
      * @event LoginAccountEvent The event that is triggered before registering a user.
+     * @var string
      */
-    const EVENT_BEFORE_REGISTER = 'beforeRegister';
+    public const EVENT_BEFORE_REGISTER = 'beforeRegister';
 
     /**
      * @event LoginAccountEvent The event that is triggered after registering a user.
+     * @var string
      */
-    const EVENT_AFTER_REGISTER = 'afterRegister';
+    public const EVENT_AFTER_REGISTER = 'afterRegister';
 
     /**
      * @event LoginAccountEvent The event that is triggered after the OAuth callback.
+     * @var string
      */
-    const EVENT_AFTER_OAUTH_CALLBACK = 'afterOauthCallback';
+    public const EVENT_AFTER_OAUTH_CALLBACK = 'afterOauthCallback';
 
     // Properties
     // =========================================================================
@@ -170,7 +172,7 @@ class LoginAccountsController extends BaseController
 
             $loginProvider = Plugin::getInstance()->getLoginProviders()->getLoginProvider($providerHandle);
 
-            if (!$loginProvider) {
+            if (!$loginProvider instanceof \dukt\social\base\LoginProviderInterface) {
                 throw new LoginException('Login provider is not configured');
             }
 
@@ -180,9 +182,9 @@ class LoginAccountsController extends BaseController
             Craft::$app->getSession()->set('social.loginProvider', $providerHandle);
 
             return $loginProvider->oauthConnect();
-        } catch (\Exception $e) {
-            $errorMsg = $e->getMessage();
-            Craft::error('Couldn’t login. ' . $e->getTraceAsString(), __METHOD__);
+        } catch (\Exception $exception) {
+            $errorMsg = $exception->getMessage();
+            Craft::error('Couldn’t login. ' . $exception->getTraceAsString(), __METHOD__);
             $this->setError($errorMsg);
 
             return $this->redirect($this->originUrl);
@@ -228,24 +230,20 @@ class LoginAccountsController extends BaseController
             }
 
             return $this->connectUser($token);
-        } catch (BadResponseException $e) {
-            $response = $e->getResponse();
+        } catch (BadResponseException $badResponseException) {
+            $response = $badResponseException->getResponse();
             $body = $response->getBody();
             $json = json_decode($body, true);
 
-            if ($json) {
-                $errorMsg = $json['error']['message'];
-            } else {
-                $errorMsg = 'Couldn’t login.';
-            }
+            $errorMsg = $json ? $json['error']['message'] : 'Couldn’t login.';
 
-            Craft::error('Couldn’t login. ' . $e->getTraceAsString(), __METHOD__);
+            Craft::error('Couldn’t login. ' . $badResponseException->getTraceAsString(), __METHOD__);
             $this->setError($errorMsg);
 
             return $this->redirect($this->originUrl);
-        } catch (\Exception $e) {
-            $errorMsg = $e->getMessage();
-            Craft::error('Couldn’t login. ' . $e->getTraceAsString(), __METHOD__);
+        } catch (\Exception $exception) {
+            $errorMsg = $exception->getMessage();
+            Craft::error('Couldn’t login. ' . $exception->getTraceAsString(), __METHOD__);
             $this->setError($errorMsg);
 
             return $this->redirect($this->originUrl);
@@ -346,7 +344,7 @@ class LoginAccountsController extends BaseController
 
         // Existing login account
 
-        if ($account) {
+        if ($account !== null) {
             if ($craftUser->id == $account->userId) {
                 Craft::$app->elements->saveElement($account);
 
@@ -396,7 +394,7 @@ class LoginAccountsController extends BaseController
         $account = Plugin::getInstance()->getLoginAccounts()->getLoginAccountByUid($socialLoginProvider->getHandle(), $socialUid);
 
         // Existing user
-        if ($account) {
+        if ($account !== null) {
             $craftUser = Craft::$app->users->getUserById($account->userId);
 
             if (!$craftUser) {
@@ -419,7 +417,7 @@ class LoginAccountsController extends BaseController
 
         // Save new login account
         $account = new LoginAccount;
-        $account->userId = $craftUser->id;
+        $account->userId = $craftUser->getId();
         $account->providerHandle = $socialLoginProvider->getHandle();
         $account->socialUid = $socialUid;
 
@@ -505,8 +503,8 @@ class LoginAccountsController extends BaseController
         }
 
         // Assign user to default group
-        if ($newUser->id !== null && !empty($settings['defaultGroup'])) {
-            Craft::$app->users->assignUserToGroups($newUser->id, [$settings['defaultGroup']]);
+        if ($newUser->getId() !== null && !empty($settings['defaultGroup'])) {
+            Craft::$app->users->assignUserToGroups($newUser->getId(), [$settings['defaultGroup']]);
         }
 
         Craft::$app->elements->saveElement($newUser);
@@ -557,16 +555,12 @@ class LoginAccountsController extends BaseController
     /**
      * Login user from login account.
      *
-     * @param User $craftUser
-     * @param LoginAccount $account
-     * @param Token $token
-     * @param bool $registrationMode
      *
      * @return Response
      * @throws \craft\errors\MissingComponentException
      * @throws \yii\base\InvalidConfigException
      */
-    private function login(User $craftUser, LoginAccount $account, Token $token, $registrationMode = false): Response
+    private function login(User $craftUser, LoginAccount $account, Token $token, bool $registrationMode = false): Response
     {
         if (!$account->authenticate($token)) {
             return $this->_handleLoginFailure();

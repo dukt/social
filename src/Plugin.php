@@ -1,7 +1,7 @@
 <?php
 /**
  * @link      https://dukt.net/social/
- * @copyright Copyright (c) 2021, Dukt
+ * @copyright Copyright (c) Dukt
  * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
@@ -89,7 +89,7 @@ class Plugin extends \craft\base\Plugin
      * @return array
      * @throws \yii\base\InvalidConfigException
      */
-    public function getOauthProviderConfig($handle, bool $parse = true): array
+    public function getOauthProviderConfig(string $handle, bool $parse = true): array
     {
         $config = [
             'options' => $this->getOauthConfigItem($handle, 'options', $parse),
@@ -134,7 +134,7 @@ class Plugin extends \craft\base\Plugin
      */
     public function savePluginSettings(array $settings, Plugin $plugin = null)
     {
-        if (!$plugin) {
+        if ($plugin === null) {
             $plugin = Craft::$app->getPlugins()->getPlugin('social');
 
             if ($plugin === null) {
@@ -304,7 +304,7 @@ class Plugin extends \craft\base\Plugin
      */
     private function _registerCpRoutes()
     {
-        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event) {
+        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event): void {
             $rules = [
                 'social' => 'social/login-accounts/index',
 
@@ -327,7 +327,7 @@ class Plugin extends \craft\base\Plugin
      */
     private function _registerVariable()
     {
-        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function(Event $event) {
+        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function(Event $event): void {
             /** @var CraftVariable $variable */
             $variable = $event->sender;
             $variable->set('social', SocialVariable::class);
@@ -339,11 +339,11 @@ class Plugin extends \craft\base\Plugin
      */
     private function _registerTableAttributes()
     {
-        Event::on(User::class, User::EVENT_REGISTER_TABLE_ATTRIBUTES, function(RegisterElementTableAttributesEvent $event) {
+        Event::on(User::class, User::EVENT_REGISTER_TABLE_ATTRIBUTES, function(RegisterElementTableAttributesEvent $event): void {
             $event->tableAttributes['loginAccounts'] = Craft::t('social', 'Login Accounts');
         });
 
-        Event::on(User::class, User::EVENT_SET_TABLE_ATTRIBUTE_HTML, function(SetElementTableAttributeHtmlEvent $event) {
+        Event::on(User::class, User::EVENT_SET_TABLE_ATTRIBUTE_HTML, function(SetElementTableAttributeHtmlEvent $event): void {
             if ($event->attribute === 'loginAccounts') {
                 Craft::$app->getView()->registerAssetBundle(SocialAsset::class);
 
@@ -370,7 +370,7 @@ class Plugin extends \craft\base\Plugin
      */
     private function _registerEventHandlers()
     {
-        Event::on(User::class, User::EVENT_AFTER_SAVE, function(ModelEvent $event) {
+        Event::on(User::class, User::EVENT_AFTER_SAVE, function(ModelEvent $event): void {
             $user = $event->sender;
             $loginAccounts = Plugin::getInstance()->getLoginAccounts()->getLoginAccountsByUserId($user->id);
 
@@ -380,7 +380,7 @@ class Plugin extends \craft\base\Plugin
         });
 
         // Soft delete the related login accounts after deleting a user
-        Event::on(User::class, User::EVENT_AFTER_DELETE, function(Event $event) {
+        Event::on(User::class, User::EVENT_AFTER_DELETE, function(Event $event): void {
             $user = $event->sender;
 
             $loginAccounts = LoginAccount::find()
@@ -407,10 +407,7 @@ class Plugin extends \craft\base\Plugin
             // Check that those login accounts don’t conflict with existing login accounts from other users
             foreach ($loginAccounts as $loginAccount) {
                 // Check if there is another user with a login account using the same providerHandle/socialUid combo
-                $existingAccount = LoginAccount::find([
-                    'providerHandle' => $loginAccount['providerHandle'],
-                    'socialUid' => $loginAccount['socialUid']
-                ])->one();
+                $existingAccount = LoginAccount::find()->one();
 
                 if ($existingAccount) {
                     $conflicts = true;
@@ -430,7 +427,7 @@ class Plugin extends \craft\base\Plugin
         });
 
         // Initialize Social Login for CP after loading the plugins
-        Event::on(Plugins::class, Plugins::EVENT_AFTER_LOAD_PLUGINS, function() {
+        Event::on(Plugins::class, Plugins::EVENT_AFTER_LOAD_PLUGINS, function(): void {
             $this->initCpSocialLogin();
         });
     }

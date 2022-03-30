@@ -1,7 +1,7 @@
 <?php
 /**
  * @link      https://dukt.net/social/
- * @copyright Copyright (c) 2021, Dukt
+ * @copyright Copyright (c) Dukt
  * @license   https://github.com/dukt/social/blob/v2/LICENSE.md
  */
 
@@ -33,6 +33,7 @@ class SettingsController extends BaseController
      */
     public function actionSettings(): Response
     {
+        $variables = [];
         if (Craft::$app->getEdition() !== Craft::Pro) {
             return $this->renderTemplate('social/settings/_pro-requirement');
         }
@@ -41,7 +42,7 @@ class SettingsController extends BaseController
         $variables['settings'] = $plugin->getSettings();
 
         $accounts = Plugin::getInstance()->getLoginAccounts()->getLoginAccounts();
-        $variables['totalAccounts'] = count($accounts);
+        $variables['totalAccounts'] = count((array) $accounts);
 
         return $this->renderTemplate('social/settings/settings', $variables);
     }
