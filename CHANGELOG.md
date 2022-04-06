@@ -1,7 +1,7 @@
 Changelog
 ===================
 
-## Unreleased
+## 3.0.0-beta.1 - 2022-04-06
 
 ### Added
 - Initial Craft CMS 4 compatibility.
