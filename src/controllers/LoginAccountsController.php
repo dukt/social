@@ -487,6 +487,7 @@ class LoginAccountsController extends BaseController
         }
 
         $newUser = new User();
+        $newUser->active = true;
 
         // Fill user
         $this->fillUser($providerHandle, $newUser, $profile);
