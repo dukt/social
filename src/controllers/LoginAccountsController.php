@@ -344,8 +344,10 @@ class LoginAccountsController extends BaseController
 
         // Existing login account
 
+        // Logged in user tried to connect to a social account that is already linked to the socialUid
         if ($account !== null) {
             if ($craftUser->id == $account->userId) {
+                // The social account is linked to the users that is trying to sign in, we should do nothing
                 Craft::$app->elements->saveElement($account);
 
                 $this->setNotice(Craft::t('social', 'Logged in.'));
@@ -353,9 +355,11 @@ class LoginAccountsController extends BaseController
                 return $this->redirect($this->redirectUrl);
             }
 
+            // The social account is linked to another user
             throw new LoginException('This UID is already associated with another user. Disconnect from your current session and retry.');
         }
 
+        // The social account doesn’t exist, continue to creating a new login account
 
         // New login account
 
