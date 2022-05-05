@@ -3,6 +3,9 @@ Changelog
 
 ## Unreleased
 
+### Added
+- Added english translation file.
+
 ### Changed
 - Show an error message when users try to connect a social account that is already attached to their account.
 
