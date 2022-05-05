@@ -8,6 +8,7 @@
 namespace dukt\social\base;
 
 use Craft;
+use craft\helpers\UrlHelper;
 use craft\web\Response;
 use dukt\social\errors\LoginException;
 use dukt\social\helpers\SocialHelper;
@@ -215,7 +216,8 @@ abstract class LoginProvider implements LoginProviderInterface
      */
     public function getRedirectUri(): string
     {
-        return SocialHelper::siteActionUrl('social/login-accounts/callback');
+        $url = SocialHelper::siteActionUrl('social/login-accounts/callback');
+        return UrlHelper::removeParam($url, 'site');;
     }
 
     /**
