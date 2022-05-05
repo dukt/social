@@ -67,7 +67,7 @@ class LoginAccount extends Element
 
                 $sources[] = [
                     'key' => $key,
-                    'label' => Craft::t('social', $loginProvider->getName()),
+                    'label' => $loginProvider->getName(),
                     'criteria' => ['providerHandle' => $providerHandle],
                     'hasThumbs' => false
                 ];

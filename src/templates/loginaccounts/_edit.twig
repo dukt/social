@@ -40,7 +40,7 @@
                 {% set loginProvider = account.getLoginProvider() %}
 
                 {% if loginProvider %}
-                    <tr data-id="{{ account.id }}" data-name="{{ loginProvider.name|t('social') }}">
+                    <tr data-id="{{ account.id }}" data-name="{{ loginProvider.name }}">
                         <td class="provider">
                             <div class="thumb">
                                 <img width="20" src="{{ loginProvider.getIconUrl() }}" class="social-icon social-{{ loginProvider.handle }}" />
