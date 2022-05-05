@@ -599,8 +599,6 @@ class LoginAccountsController extends BaseController
     {
         if ($registrationMode) {
             $this->setNotice(Craft::t('social', 'Account created.'));
-        } else {
-            $this->setNotice(Craft::t('social', 'Logged in.'));
         }
 
         return $this->redirect($this->redirectUrl);
