@@ -43,5 +43,17 @@
     "schemaVersion": "1.0.3",
     "documentationUrl": "https://dukt.net/docs/social/v2",
     "changelogUrl": "https://raw.githubusercontent.com/dukt/social/develop/CHANGELOG.md"
+  },
+  "config": {
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true,
+      "craftcms/plugin-installer": true
+    }
+  },
+  "require-dev": {
+    "craftcms/phpstan": "dev-main"
+  },
+  "scripts": {
+    "phpstan": "phpstan --memory-limit=1G"
   }
 }
