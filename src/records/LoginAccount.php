@@ -34,33 +34,4 @@ class LoginAccount extends ActiveRecord
     {
         return '{{%social_login_accounts}}';
     }
-
-    /**
-     * Defines this model's relations to other models.
-     *
-     * @return array
-     */
-    public function defineRelations(): array
-    {
-        return [
-            'element' => [static::BELONGS_TO, 'ElementRecord', 'id', 'onDelete' => static::CASCADE, 'required' => true],
-            'user' => [static::BELONGS_TO, 'UserRecord', 'onDelete' => static::CASCADE, 'required' => true],
-        ];
-    }
-
-    // Protected Methods
-    // =========================================================================
-
-    /**
-     * Defines this model's attributes.
-     *
-     * @return array
-     */
-    public function defineAttributes(): array
-    {
-        return [
-            'providerHandle' => [AttributeType::String, 'required' => true],
-            'socialUid' => [AttributeType::String, 'required' => true],
-        ];
-    }
 }
