@@ -24,10 +24,12 @@ use dukt\social\web\assets\login\LoginAsset;
 use dukt\social\web\twig\variables\SocialVariable;
 use dukt\social\web\assets\social\SocialAsset;
 use yii\base\Event;
+use yii\web\NotFoundHttpException;
 
 /**
  * Social plugin class.
  *
+ * @method Settings getSettings()
  * @author  Dukt <support@dukt.net>
  * @since   1.0
  */
@@ -224,6 +226,8 @@ class Plugin extends \craft\base\Plugin
 
             Craft::$app->getView()->registerJs('var socialLoginForm = new Craft.SocialLoginForm(' . json_encode($jsLoginProviders) . ', ' . json_encode($error) . ');');
         }
+
+        return null;
     }
 
     /**
@@ -243,6 +247,8 @@ class Plugin extends \craft\base\Plugin
                 return Craft::$app->getView()->renderTemplate('social/_components/users/login-accounts-pane', $context);
             }
         });
+
+        return null;
     }
 
     /**

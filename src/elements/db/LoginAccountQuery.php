@@ -20,44 +20,45 @@ class LoginAccountQuery extends ElementQuery
     // -------------------------------------------------------------------------
 
     /**
-     * @var
+     * @var int|null
      */
-    public $userId;
+    public ?int $userId = null;
 
     /**
-     * @var
+     * @var string|null
      */
-    public $providerHandle;
+    public ?string $providerHandle = null;
 
     /**
-     * @var
+     * @var string|null
      */
-    public $socialUid;
+    public ?string $socialUid = null;
 
     /**
-     * @var
+     * @var string|null
      */
-    public $email;
+    public ?string $email = null;
 
     /**
-     * @var
+     * @var string|null
      */
-    public $username;
+    public ?string $username = null;
 
     /**
-     * @var
+     * @var string|null
      */
-    public $firstName;
+    public ?string $firstName = null;
 
     /**
-     * @var
+     * @var string|null
      */
-    public $lastName;
+    public ?string $lastName = null;
+
 
     /**
-     * @var
+     * @var mixed The last login date
      */
-    public $lastLoginDate;
+    public mixed $lastLoginDate = null;
 
     // Public Methods
     // =========================================================================

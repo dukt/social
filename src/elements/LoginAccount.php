@@ -132,24 +132,24 @@ class LoginAccount extends Element
     // =========================================================================
 
     /**
-     * @var
+     * @var int
      */
-    public $userId;
+    public int $userId;
 
     /**
-     * @var
+     * @var string
      */
-    public $providerHandle;
+    public string $providerHandle;
 
     /**
-     * @var
+     * @var string
      */
-    public $socialUid;
+    public string $socialUid;
 
     /**
-     * @var
+     * @var User|null
      */
-    private $_user;
+    private ?User $_user = null;
 
     // Public Methods
     // =========================================================================
@@ -157,8 +157,7 @@ class LoginAccount extends Element
     /**
      * @inheritdoc
      */
-    /** @noinspection PhpInconsistentReturnPointsInspection */
-    public function __toString()
+    public function __toString(): string
     {
         return (string)$this->socialUid;
     }
@@ -194,6 +193,8 @@ class LoginAccount extends Element
         if ($this->providerHandle) {
             return Plugin::getInstance()->getLoginProviders()->getLoginProvider($this->providerHandle);
         }
+
+        return null;
     }
 
     /**
@@ -222,6 +223,8 @@ class LoginAccount extends Element
         if ($user !== null) {
             return $user->username;
         }
+
+        return null;
     }
 
     /**
@@ -236,6 +239,8 @@ class LoginAccount extends Element
         if ($user !== null) {
             return $user->firstName;
         }
+
+        return null;
     }
 
     /**
@@ -250,6 +255,8 @@ class LoginAccount extends Element
         if ($user !== null) {
             return $user->lastName;
         }
+
+        return null;
     }
 
     /**
@@ -264,6 +271,8 @@ class LoginAccount extends Element
         if ($user !== null) {
             return $user->fullName;
         }
+
+        return null;
     }
 
     /**
@@ -278,6 +287,8 @@ class LoginAccount extends Element
         if ($user !== null) {
             return $user->email;
         }
+
+        return null;
     }
 
     // Indexes, etc.

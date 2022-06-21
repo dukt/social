@@ -7,7 +7,9 @@
 
 namespace dukt\social\events;
 
+use craft\web\User;
 use dukt\social\base\LoginProvider;
+use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use yii\base\Event;
 
 /**

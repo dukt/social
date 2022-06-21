@@ -10,6 +10,7 @@ namespace dukt\social\controllers;
 use Craft;
 use craft\web\Controller;
 use dukt\social\Plugin;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 /**
