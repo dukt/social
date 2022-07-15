@@ -8,6 +8,7 @@ Changelog
 
 ### Changed
 - Show an error message when users try to connect a social account that is already attached to their account.
+- Updated `league/oauth2-google` to 4.0.
 
 ### Fixed
 - Fixed a bug where the `site` query param was present in the OAuth redirect URI. 
