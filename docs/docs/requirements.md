@@ -1,7 +1,7 @@
 # Requirements
 
 ## Craft CMS
-Social requires Craft CMS 3.1.0 or later.
+Social requires Craft CMS 4.0.0 or later.
 
 ## PHP
-Social requires PHP 7.0 or later.
+Social requires PHP 8.0.2 or later.
