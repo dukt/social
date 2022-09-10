@@ -79,6 +79,7 @@ class Install extends Migration
      */
     protected function createTables()
     {
+      if (!$this->db->tableExists('{{%social_login_accounts}}')) {
         $this->createTable(
             '{{%social_login_accounts}}',
             [
@@ -93,6 +94,7 @@ class Install extends Migration
                 'PRIMARY KEY(id)',
             ]
         );
+      }
     }
 
     /**
