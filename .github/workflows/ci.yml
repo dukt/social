@@ -11,5 +11,3 @@ jobs:
     with:
       plugin_handle: social
     secrets: inherit
-
-
